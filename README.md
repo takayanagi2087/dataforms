@@ -16,7 +16,7 @@ Java Webアプリケーションフレームワークと、その開発ツール
 
 ## Licence
 
-[MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENCE)
+[MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)
 
 ## Author
 
