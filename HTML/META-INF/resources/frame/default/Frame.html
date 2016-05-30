@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+デフォルト言語フレーム
+ -->
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link type="text/css" href="Frame.css" rel="stylesheet" />
+		<link type="text/css" href="FrameSP.css" rel="stylesheet" media="screen and (max-width: 767px)"/>
+		<link type="text/css" href="FramePC.css" rel="stylesheet" media="screen and (min-width: 1025px)"/>
+		<link type="text/css" href="FrameTB.css" rel="stylesheet" media="screen and (min-width: 768px) and (max-width: 1024px)"/>
+		<title>layout</title>
+	</head>
+	<body>
+		<!-- ヘッダ -->
+		<div id="headerDiv">
+			<table>
+				<tbody>
+					<tr>
+						<td class="systemName">
+							<div id="showMenuButton"></div>
+							<div id="systemName">System Name</div>
+						</td>
+						<td id="pageName">Page Name</td>
+						<td id="loginInfo">
+							<form id="loginInfoForm"></form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<table id="bodyTable">
+			<tbody>
+				<tr>
+					<td id="leftbarTd">
+						<!-- 右サイドバー -->
+						<div id="menuDiv">
+							<div style="width:100%;text-align:center;">Menu</div>
+							<form id="sideMenuForm"></form>
+						</div>
+					</td>
+					<td id="mainTd">
+						<!-- メイン領域 -->
+						<div id="mainDiv">
+							Main Div
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="footerDiv">
+			<div id="dataformsInfo">
+				dataforms.jar ver. <span id="dataformsVersion"></span>
+			</div>
+		</div>
+		<div id="lockLayer" style="display:none;">
+		</div>
+	</body>
+</html>
+

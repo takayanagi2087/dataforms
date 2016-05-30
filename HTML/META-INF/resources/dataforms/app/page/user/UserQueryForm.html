@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>User Query Form</title>
+	</head>
+	<body>
+		<form id="queryForm">
+			<div class="formHeader">Query contition</div>
+			<table class="responsive">
+				<thead></thead>
+				<tbody>
+					<tr>
+						<th><label for="loginId">Login ID</label></th>
+						<td><input type="text" id="loginId" value=""/></td>
+					</tr>
+					<tr>
+						<th>Name</th>
+						<td><input type="text" id="userName" value=""/></td>
+					</tr>
+				</tbody>
+			</table>
+			User attribute<br/>
+			<div class="hScrollDiv">
+				<table id="attTable" class="editableTable">
+					<thead>
+						<tr>
+							<th class="buttonColumn">
+							</th>
+							<th class="buttonColumn">
+							</th>
+							<th>No.</th>
+							<th>User attribute name</th>
+							<th>User attribute value</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="button" id="attTable[0].addButton" value="+"/>
+							</td>
+							<td>
+								<input type="button" id="attTable[0].deleteButton" value="-"/>
+							</td>
+							<td>
+								<span id="attTable[0].no"></span>
+							</td>
+							<td>
+								<select id="attTable[0].userAttributeType"></select>
+							</td>
+							<td>
+								<select id="attTable[0].userAttributeValue"></select>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>
+								<input type="button" id="attTable.addButton" value="+"/>
+							</th>
+							<th colspan="4">
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<input type="submit" id="queryButton" value="Query">
+			<input type="button" id="resetButton" value="Reset">&nbsp;
+			<input type="button" id="newButton" value="New">
+		</form>
+	</body>
+</html>

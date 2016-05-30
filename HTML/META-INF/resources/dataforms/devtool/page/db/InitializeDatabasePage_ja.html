@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="databaseInfoForm">
+			</form>
+			<form id="editForm">
+				<div>
+					データベースの初期設定を行い、システム開発者を登録します。<br/>
+				</div>
+				<table >
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>ログインID</th>
+							<td><input type="hidden" id="userId" value=""/><input type="text" id="loginId" value=""/></td>
+						</tr>
+						<tr>
+							<th>パスワード</th>
+							<td><input type="password" id="password" value=""/></td>
+						</tr>
+						<tr>
+							<th>パスワード(確認)</th>
+							<td><input type="password" id="passwordCheck" value=""/></td>
+						</tr>
+						<tr>
+							<th>氏名</th>
+							<td><input type="text" id="userName" value=""/></td>
+						</tr>
+						<tr>
+							<th>メールアドレス</th>
+							<td><input type="text" id="mailAddress" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+		</div>
+	</body>
+</html>

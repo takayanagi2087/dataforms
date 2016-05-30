@@ -1,0 +1,4 @@
+/**
+ * ユーティリティパッケージ。
+ */
+package dataforms.util;

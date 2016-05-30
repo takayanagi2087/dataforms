@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Webリソース作成</title>
+	</head>
+	<body>
+		<form id="webResourceForm">
+			<table class="responsive">
+				<tbody>
+					<tr>
+						<th >
+							Webリソース出力先
+						</th>
+						<td>
+							<input type="text" id="webSourcePath"/>
+						</td>
+					</tr>
+					<tr>
+						<th >
+							種類
+						</th>
+						<td>
+							<select id="webComponentType"></select>
+						</td>
+					</tr>
+					<tr>
+						<th >
+							クラス名
+						</th>
+						<td>
+							<input type="text" id="className" />
+						</td>
+					</tr>
+					<tr id="htmlTr">
+						<th style="max-width:250px;">
+							HTML
+						</th>
+						<td>
+							<input type="text" id="htmlPath" style="width: calc(100% - 80px);"/>
+							<select id="htmlStatus"></select>&nbsp;
+							<input type="button" id="generateHtml" value="作成"/><br/>
+							<input type="checkbox" id="outputFormHtml" value="1" />
+							<label for="outputFormHtml">フォームは別ファイルに出力</label>
+						</td>
+					</tr>
+					<tr>
+						<th >
+							Javascript
+						</th>
+						<td>
+							<input type="text" id="javascriptPath" style="width: calc(100% - 80px);"/>
+							<select id="javascriptStatus"></select>&nbsp;
+							<input type="button" id="generateJavascript" value="作成"/>&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<th >
+							Javascriptクラス
+						</th>
+						<td>
+							<input type="text" id="javascriptClass"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="checkbox" id="forceOverwrite" value="1" />ソースファイルを上書きする。
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="button" id="closeButton" value="閉じる"/>&nbsp;
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</body>
+</html>

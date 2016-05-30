@@ -1,0 +1,210 @@
+@CHARSET "UTF-8";
+
+/**
+ * 各デバイス共通のスタイルシートです。
+ * Fontの指定や配色などを指定します。
+ */
+
+html,body {
+	font-weight: normal;
+	width: 98%;
+	height: 100%;
+	min-width: 320px;
+	margin: 4px;
+}
+
+table { font-weight:normal; border : 0px;}
+tr {height: 20px; border : 0px;}
+th {background-color: #E0E0FF; text-align:center; font-weight:normal; border : 0px;}
+td {border:0px;}
+h1 {font-size: 120%;}
+h2 {font-size: 120%;}
+
+
+/* テーブル奇数行のスタイル */
+.oddTr {
+	background-color:#ffffff
+}
+
+/* テーブルの偶数行のスタイル*/
+.evenTr {
+	background-color:rgb(232,242,254)
+}
+
+
+/* ヘッダブロック */
+#headerDiv {
+	width: 98%;
+	clear: both;
+}
+
+#bodyTable {
+	table-layout: fixed;
+	width: 98%;
+}
+
+#bodyTable td {
+	vertical-align: top;
+}
+
+#headerDiv table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+#headerDiv table td {
+	padding: 6px;
+}
+/* システム名ブロック */
+#headerDiv .systemName {
+	font-size: 140%;
+ 	text-align: left;
+	background-color: lavender;
+ 	vertical-align: middle;
+}
+
+/* ページ名ブロック */
+#headerDiv #pageName {
+	font-size: 120%;
+	background-color: beige;
+ 	text-align: left;
+}
+
+/* ユーザ情報 */
+#headerDiv #loginInfo {
+	height: 100%;
+	background-color: beige;
+ 	text-align: right;
+}
+
+body > #mainDiv {
+}
+
+/* フッター */
+#footerDiv {
+	clear: both;
+	background-color: lavender;
+	width: 98%;
+	height: 30px;
+}
+
+
+/*　エラーメッセージ領域のスタイル */
+.errorMessages {color: red;}
+/* エラーが発生したフィールドのスタイル */
+.errorField {background-color:mistyrose;}
+
+.warnTr {background-color:khaki;}
+
+.errorTr {background-color:mistyrose;}
+
+/* 必須入力フィールドのスタイル */
+.requiredFieldLabel:after {
+	content: " (*)";
+	display: inline;
+	color: red;
+}
+
+/* アコーディオンメニュー用スタイル(開始).*/
+li{
+	list-style: none;
+	text-align: left;
+}
+
+ul.accordion{
+	width:210px;
+	overflow: hidden;
+	padding:2px 2px 2px 2px;
+}
+
+ul.accordion ul{
+	display: none;
+	text-align: left;
+	padding:2px 2px 2px 2px;
+}
+
+
+ul.accordion li p{
+	background: #c0c0e0;
+	padding:2px 2px 2px 2px;
+	margin:1px 1px 1px 1px;
+	border-bottom: 1px solid #0f0f0f;
+	cursor: pointer;/*カーソルを通常の物に*/
+}
+
+ul.accordion ul li{
+	background: #f0f0f0;
+	padding:1px 1px 1px 10px;
+	border-bottom: 1px dashed #fff;
+}
+
+ul.accordion ul li:last-child{
+	border:none;
+}
+/* アコーディオンメニュー用スタイル(終了).*/
+
+/* 編集可能テーブル用スタイル */
+.editableTable {
+	table-layout: fixed;
+}
+
+
+/* 通信中ロック画面のスタイル */
+#lockLayer {
+    background: url(./image/loading.gif) center no-repeat;
+}
+
+/* 各フォームのスタイル */
+#mainDiv form {
+	margin:5px;
+	padding:10px;
+	background: #fff;
+	border: 1px #ccc solid;
+	box-shadow: 0 2px 3px 0 #ddd;
+	-moz-box-shadow: 0 2px 3px 0 #ddd;
+	-webkit-box-shadow: 0 2px 3px 0 #ddd;
+}
+
+/* 各フォームヘッダのスタイル */
+.formHeader {
+	font-size: 120%;
+	margin-top: 1px;
+	margin-bottom: 5px;
+	padding: 5px;
+	border-left: 10px solid #a9a9a9;
+	border-bottom: 1px dashed #a9a9a9;
+}
+
+
+/* カラムソート用のボタン関連 */
+.sortableMark {
+	display: inline-block;
+	position: relative;
+	top:3px;
+}
+
+.sortableLabel {
+	display: inline-block;
+	position: relative;
+	top: -4px;
+}
+
+.noscriptDiv {
+	position:fixed;
+	top:0px;
+	left:0px;
+}
+
+/* スクロールDIV */
+.hScrollDiv {
+	display: block;
+	width: 100%;
+	overflow-x:auto;
+}
+
+#dataformsInfo {
+	float: right;
+	height: 100%;
+	vertical-align: bottom;
+	padding-top: 15px;
+}

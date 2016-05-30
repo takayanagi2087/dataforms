@@ -1,0 +1,573 @@
+package dataforms.devtool.page.table;
+
+import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+
+import dataforms.annotation.WebMethod;
+import dataforms.controller.EditForm;
+import dataforms.controller.JsonResponse;
+import dataforms.dao.Table;
+import dataforms.devtool.field.common.FunctionSelectField;
+import dataforms.devtool.field.common.JavaSourcePathField;
+import dataforms.devtool.field.common.OverwriteModeField;
+import dataforms.devtool.field.common.PackageNameField;
+import dataforms.devtool.field.common.TableClassNameField;
+import dataforms.devtool.page.base.DeveloperPage;
+import dataforms.field.base.Field;
+import dataforms.field.common.CreateTimestampField;
+import dataforms.field.common.CreateUserIdField;
+import dataforms.field.common.FlagField;
+import dataforms.field.common.UpdateTimestampField;
+import dataforms.field.common.UpdateUserIdField;
+import dataforms.servlet.DataFormsServlet;
+import dataforms.util.ClassNameUtil;
+import dataforms.util.FileUtil;
+import dataforms.util.MessagesUtil;
+import dataforms.util.StringUtil;
+import dataforms.validator.RequiredValidator;
+import dataforms.validator.ValidationError;
+import net.arnx.jsonic.JSON;
+
+/**
+ * 編集フォームクラス。
+ *
+ *　TODO:項目長等がクリアされる不具合がある。
+ *
+ */
+public class TableGeneratorEditForm extends EditForm {
+
+	/**
+	 * Logger.
+	 */
+	private Logger log = Logger.getLogger(TableGeneratorEditForm .class);
+
+	/**
+	 * コンストラクタ。
+	 */
+	public TableGeneratorEditForm() {
+		this.addField(new JavaSourcePathField());
+//		this.addField(new ExistingFolderField("javaSourcePath")).setReadonly(true).addValidator(new RequiredValidator());
+		this.addField((new FunctionSelectField()).setPackageOption("dao"));
+		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
+		this.addField(new TableClassNameField()).setComment("テーブルクラス名").setAutocomplete(false).addValidator(new RequiredValidator());
+		this.addField(new OverwriteModeField());
+		this.addField(new FlagField("autoIncrementId")).setComment("主キー自動生成フラグ");
+		FieldListHtmlTable htmltbl = new FieldListHtmlTable();
+		this.addHtmlTable(htmltbl);
+		this.setFormData(htmltbl.getId(), new ArrayList<Map<String, Object>>());
+	}
+
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setFormData("overwriteMode", "error");
+		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
+	}
+
+	@Override
+	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		ret.putAll(data);
+		String packageName = (String) data.get("packageName");
+		String tableClassName = (String) data.get("tableClassName");
+		String fullClassName = packageName + "." + tableClassName;
+		ret.put("overwriteMode", "error");
+		Class<?> cls = Class.forName(fullClassName);
+		Table tbl = (Table) cls.newInstance();
+		if (tbl.isAutoIncrementId()) {
+			ret.put("autoIncrementId", "1");
+		} else {
+			ret.put("autoIncrementId", "0");
+		}
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		int no = 1;
+		for (Field<?> f: tbl.getFieldList()) {
+			if (f instanceof CreateUserIdField
+				|| f instanceof CreateTimestampField
+				|| f instanceof UpdateUserIdField
+				|| f instanceof UpdateTimestampField) {
+				continue;
+			}
+			Map<String, Object> m = new HashMap<String, Object>();
+			m.put("no", Integer.valueOf(no++));
+			String className = f.getClass().getName();
+			m.put("packageName", ClassNameUtil.getPackageName(className));
+			m.put("fieldClassName", ClassNameUtil.getSimpleClassName(className));
+			String baseClassName = f.getClass().getSuperclass().getName();
+			m.put("superPackageName", ClassNameUtil.getPackageName(baseClassName));
+			m.put("superSimpleClassName", ClassNameUtil.getSimpleClassName(baseClassName));
+			String pkflg = "0";
+			if (tbl.getPkFieldList().get(f.getId()) != null) {
+				pkflg = "1";
+			}
+			m.put("isDataformsField", (Field.isDataformsField(className) ? "1" : "0"));
+			m.put("pkFlag", pkflg);
+			m.put("fieldLength", f.getLengthParameter());
+			if (!f.idIsDefault()) {
+				m.put("fieldId", f.getId());
+			} else {
+				m.put("fieldId", "");
+			}
+			m.put("comment", f.getComment());
+			m.put("overwriteMode", "error");
+			list.add(m);
+		}
+		ret.put("fieldList", list);
+		ret.put("javaSourcePath", DeveloperPage.getJavaSourcePath());
+
+		return ret;
+	}
+
+
+	@Override
+	public void deleteData(final Map<String, Object> data) throws Exception {
+
+	}
+
+	/**
+	 * 引数の数が一番少ないコンストラクタを取得します。
+	 * @param cls フィールドクラス。
+	 * @return 引数の数が一番少ないコンストラクタ。
+	 */
+	private Constructor<?> getDefaultConstructor(final Class<?> cls) {
+		Constructor<?>[] clist = cls.getConstructors();
+		Constructor<?> cns = clist[0];
+		for (Constructor<?> c: clist) {
+			if (cns.getParameterCount() > c.getParameterCount()) {
+				cns = c;
+			}
+		}
+		return cns;
+	}
+
+	/**
+	 * 取り敢えずコンストラクタに渡さすことが可能なパラメータのインスタンスを作成します。
+	 * @param pcls パラメータクラス。
+	 * @return パラメータのインスタンス。
+	 * @throws Exception 例外。
+	 */
+	private Object newParameterInstance(final Class<?> pcls) throws Exception {
+		Object ret = null;
+		String classname = pcls.getName();
+		if ("byte".equals(classname)) {
+			ret = Byte.valueOf((byte) 0x00);
+		} else if ("short".equals(classname)) {
+			ret = Short.valueOf((short) 0x00);
+		} else if ("int".equals(classname)) {
+			ret = Integer.valueOf(0);
+		} else if ("long".equals(classname)) {
+			ret = Long.valueOf(0);
+		} else if ("boolean".equals(classname)) {
+			ret = Boolean.FALSE;
+		} else if ("float".equals(classname)) {
+			ret = Float.valueOf(0);
+		} else if ("double".equals(classname)) {
+			ret = Double.valueOf(0);
+		} else if ("char".equals(classname)) {
+			ret = Double.valueOf(0x00);
+		} else {
+			ret = pcls.newInstance();
+		}
+		return ret;
+
+	}
+
+	/**
+	 * 指定されたフィールドクラスのインスタンスを作成する。
+	 * @param cls フィールドクラス。
+	 * @return フィールドクラスのインスタンス。
+	 * @throws Exception 例外。
+	 */
+	private Field<?> newFieldInstance(final Class<?> cls) throws Exception {
+		Constructor<?> cns = getDefaultConstructor(cls);
+		Class<?>[] ptypes = cns.getParameterTypes();
+		Object[] p = new Object[ptypes.length];
+		for (int i = 0; i < p.length; i++) {
+			log.debug("parameter class = " + ptypes[i].getName());
+			p[i] = this.newParameterInstance(ptypes[i]);
+			log.debug("parameter value = " + p[i].toString());
+		}
+		return (Field<?>) cns.newInstance(p);
+	}
+
+
+	/**
+	 * 指定されたフィールドクラスの情報を返します。
+	 * @param param パラメータ。
+	 * @return 判定結果。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public JsonResponse getFieldClassInfo(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		try {
+			String classname = (String) param.get("classname");
+			Map<String, Object> ret = new HashMap<String, Object>();
+			Boolean isDataformsField = Field.isDataformsField(classname);
+			ret.put("isDataformsField", (isDataformsField ? "1" : "0"));
+			Class<?> cls = Class.forName(classname);
+			Class<?> scls = cls.getSuperclass();
+			String superClassPackage = scls.getPackage().getName();
+			String superClassSimpleName = scls.getSimpleName();
+			ret.put("superClassPackage", superClassPackage);
+			ret.put("superClassSimpleName", superClassSimpleName);
+			Field<?> field = this.newFieldInstance(cls);
+			// dataforms.jarの提供するFieldクラスを直接指定する場合。
+			ret.put("fieldLength", field.getLengthParameter());
+			ret.put("fieldComment", field.getComment());
+			JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, ret);
+			this.methodFinishLog(log, result);
+			return result;
+		} catch (ClassNotFoundException ex) {
+			// 未定義のフィールドの場合。
+			Map<String, Object> ret = new HashMap<String, Object>();
+			ret.put("isDataformsField", "0");
+			JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, ret);
+			this.methodFinishLog(log, result);
+			return result;
+		}
+	}
+
+
+	//
+	/**
+	 * 指定されたフィールドの親クラスの情報を取得します。
+	 * @param param パラメータ。
+	 * @return 判定結果。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public JsonResponse getSuperFieldClassInfo(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		JsonResponse result = null;
+		Map<String, Object> ret = new HashMap<String, Object>();
+		try {
+			String classname = (String) param.get("superclassname");
+			Class<?> cls = Class.forName(classname);
+			Field<?> field = this.newFieldInstance(cls);
+			ret.put("fieldLength", field.getLengthParameter());
+			result = new JsonResponse(JsonResponse.SUCCESS, ret);
+		} catch (Exception ex) {
+			result = new JsonResponse(JsonResponse.SUCCESS, ret);
+		}
+		this.methodFinishLog(log, result);
+		return result;
+	}
+
+	/**
+	 * ソースファイルの存在チェック。
+	 * @param data データ。
+	 * @return チェック結果。
+	 * @throws Exception 例外。
+	 */
+	private List<ValidationError> validateSourceExistence(final Map<String, Object> data) throws Exception {
+		List<ValidationError> ret = new ArrayList<ValidationError>();
+		log.debug("data=\n" + JSON.encode(data, true));
+		String packageName = (String) data.get("packageName");
+		String javaSrc = (String) data.get("javaSourcePath");
+		{
+			String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
+			String tableClassName = (String) data.get("tableClassName");
+			String overwriteMode = (String) data.get("overwriteMode");
+			if ("error".equals(overwriteMode)) {
+				File tbl = new File(srcPath + "/" + tableClassName + ".java");
+				if (tbl.exists()) {
+					ret.add(new ValidationError("tableClassName", this.getPage().getMessage("error.sourcefileexist", tableClassName + ".java")));
+				}
+			}
+		}
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
+//		for (Map<String, Object> m: fieldList) {
+		for (int i = 0; i < fieldList.size(); i++) {
+			Map<String, Object> m = fieldList.get(i);
+			String isDataformsField = (String) m.get("isDataformsField");
+			if (!"1".equals(isDataformsField)) {
+				String overwriteMode = (String) m.get("overwriteMode");
+				if ("error".equals(overwriteMode)) {
+					String fieldPackageName = (String) m.get("packageName");
+					String fieldClassName = (String) m.get("fieldClassName");
+					String fldSrcPath = javaSrc + "/" + fieldPackageName.replaceAll("\\.", "/");
+					File fld = new File(fldSrcPath + "/" + fieldClassName + ".java");
+					if (fld.exists()) {
+						ret.add(new ValidationError("fieldList[" + i + "].fieldClassName", this.getPage().getMessage("error.sourcefileexist", fieldClassName + ".java")));
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * 長さパラメータのチェックパターンを取得します。
+	 * @param className クラス名。
+	 * @return チェックパターン。
+	 * @throws Exception 例外。
+	 */
+	private String getLengthParameterPattern(final String className) throws Exception {
+		String pat = null;
+		Class<?> fcls = Class.forName(className);
+		if ((fcls.getModifiers() & Modifier.ABSTRACT) == 0) {
+			Field<?> field = this.newFieldInstance(fcls);
+			// アプリケーション用のフィールドを更新
+			if (Field.hasLengthParameter(fcls)) {
+				pat = field.getLengthParameterPattern();
+			}
+		}
+		return pat;
+	}
+
+	/**
+	 * フィールドのオプションパラメータのチェックを行います。
+	 * @param data フォームデータ。
+	 * @return チェック結果。
+	 * @throws Exception 例外。
+	 */
+	private List<ValidationError> validateFieldOption(final Map<String, Object> data) throws Exception {
+		List<ValidationError> ret = new ArrayList<ValidationError>();
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
+		for (int i = 0; i < fieldList.size(); i++) {
+			Map<String, Object> m = (Map<String, Object>) fieldList.get(i);
+			String pat = null;
+			String isDataformsField = (String) m.get("isDataformsField");
+			if ("1".equals(isDataformsField)) {
+				String fieldPackageName = (String) m.get("packageName");
+				String fieldClassSimpleName = (String) m.get("fieldClassName");
+				String className = fieldPackageName + "." + fieldClassSimpleName;
+				pat = this.getLengthParameterPattern(className);
+			} else {
+				// アプリケーション用フィールドの新規作成時の対応。
+				// 親クラスに長さパラメータがある場合チェックパターンを取得する。
+				String superPackageName = (String) m.get("superPackageName");
+				String superSimpleClassName = (String) m.get("superSimpleClassName");
+				String className = superPackageName + "." + superSimpleClassName;
+				pat = this.getLengthParameterPattern(className);
+			}
+			log.debug("pattern=" + pat);
+			if (!StringUtil.isBlank(pat)) {
+				String fieldLength = (String) m.get("fieldLength");
+				if (!Pattern.matches(pat, fieldLength)) {
+					ret.add(new ValidationError("fieldList[" + i + "].fieldLength", this.getPage().getMessage("error.regexp")));
+				}
+			} else {
+				String fieldLength = (String) m.get("fieldLength");
+				if (!StringUtil.isBlank(fieldLength)) {
+					ret.add(new ValidationError("fieldList[" + i + "].fieldLength", this.getPage().getMessage("error.regexp")));
+				}
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public List<ValidationError> validate(final Map<String, Object> param) throws Exception {
+		List<ValidationError> ret = super.validate(param);
+		if (ret.size() == 0) {
+			// 追加のバリデーション。
+			Map<String, Object> data = this.convertToServerData(param);
+			ret.addAll(this.validateFieldOption(data));
+			if (ret.size() == 0) {
+				ret.addAll(this.validateSourceExistence(data));
+
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
+		return false;
+	}
+
+	/**
+	 * テンプレートファイルを取得します。
+	 * @param name リソース名。
+	 * @return テンプレートの内容。
+	 * @throws Exception 例外。
+	 */
+	private String getTemplate(final String name) throws Exception {
+		String ret = "";
+		Class<?> cls = this.getClass();
+		InputStream is = cls.getResourceAsStream(name);
+		if (is != null) {
+			try {
+				ret = new String(FileUtil.readInputStream(is), DataFormsServlet.getEncoding());
+			} finally {
+				is.close();
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * フィールドクラスに応じたテンプレートを取得します。
+	 * @param superClassName スーパークラス名。
+	 * @return テンプレート。
+	 * @throws Exception 例外。
+	 */
+	private String getFieldTemplate(final String superClassName) throws Exception {
+		Class<?> c = Class.forName(superClassName);
+		String ret = "";
+		while (!"WebComponent".equals(c.getSimpleName())) {
+			ret = this.getTemplate("template/" + c.getSimpleName() + ".java.template");
+			if (!StringUtil.isBlank(ret)) {
+				break;
+			}
+			c = c.getSuperclass();
+		}
+		return ret;
+	}
+
+	/**
+	 * フィールドクラスの作成を行います。
+	 * @param m フィールド情報。
+	 * @return 生成されたソース。
+	 * @throws Exception 例外。
+	 *
+	 */
+	private String generateFieldClass(final Map<String, Object> m) throws Exception {
+//		String fsrc = this.getTemplate("template/Field.java.template");
+		String superPackageName = (String) m.get("superPackageName");
+		String superSimpleClassName = (String) m.get("superSimpleClassName");
+		String fsrc = this.getFieldTemplate(superPackageName + "." + superSimpleClassName);
+		String fieldPackageName = (String) m.get("packageName");
+		String fieldClassSimpleName = (String) m.get("fieldClassName");
+		String fieldLength = (String) m.get("fieldLength");
+		String importList = "";
+		String constList = "";
+		String validators = "";
+		if (!StringUtil.isBlank(fieldLength)) {
+			if (fieldLength.indexOf(",") < 0) {
+				constList = "\t/**\n";
+				constList += "\t * フィールド長。\n";
+				constList += "\t */\n";
+				constList += "\tprivate static final int LENGTH = " + fieldLength + ";\n";
+				validators = "\t\tthis.addValidator(new MaxLengthValidator(this.getLength()));\n";
+				importList = "import dataforms.validator.MaxLengthValidator;\n";
+				fieldLength = ", LENGTH";
+			} else {
+				fieldLength = ", " + fieldLength.replaceAll(",", ", ");
+			}
+		}
+		String fieldComment = (String) m.get("comment");
+		String superClassName = superPackageName + "." + superSimpleClassName;
+		String isDataformsField = (String) m.get("isDataformsField");
+		if (!"1".equals(isDataformsField)) {
+			fsrc = fsrc.replaceAll("\\$\\{fieldPackageName\\}", fieldPackageName);
+			fsrc = fsrc.replaceAll("\\$\\{superClassName\\}", superClassName);
+			fsrc = fsrc.replaceAll("\\$\\{importList\\}", importList);
+			fsrc = fsrc.replaceAll("\\$\\{constList\\}", constList);
+			fsrc = fsrc.replaceAll("\\$\\{fieldClassSimpleName\\}", fieldClassSimpleName);
+			fsrc = fsrc.replaceAll("\\$\\{superSimpleClassName\\}", superSimpleClassName);
+			fsrc = fsrc.replaceAll("\\$\\{fieldComment\\}", fieldComment);
+			fsrc = fsrc.replaceAll("\\$\\{fieldLength\\}", fieldLength);
+			fsrc = fsrc.replaceAll("\\$\\{validators\\}", validators);
+			log.debug("fsrc=\n" + fsrc);
+		} else {
+			fsrc = null;
+		}
+		return fsrc;
+	}
+
+	@Override
+	protected void insertData(final Map<String, Object> data) throws Exception {
+		log.debug("data=" + JSON.encode(data, true));
+		String tsrc = this.getTemplate("template/Table.java.template");
+		String tableOverwriteMode = (String) data.get("overwriteMode");
+		String packageName = (String) data.get("packageName");
+		String tableClassName = (String) data.get("tableClassName");
+		String autoIncrementId = (String) data.get("autoIncrementId");
+		tsrc = tsrc.replaceAll("\\$\\{packageName\\}", packageName);
+		tsrc = tsrc.replaceAll("\\$\\{TableClassShortName\\}", tableClassName);
+		StringBuilder implist = new StringBuilder();
+		StringBuilder constructor = new StringBuilder();
+		if ("1".equals(autoIncrementId)) {
+			constructor.append("\t\tthis.setAutoIncrementId(true);\n");
+		}
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
+		Map<String, String> srcmap = new HashMap<String, String>();
+		for (Map<String, Object> m: fieldList) {
+			String isDataformsField = (String) m.get("isDataformsField");
+			if (!"1".equals(isDataformsField)) {
+				String overwriteMode = (String) m.get("overwriteMode");
+				if (!"skip".equals(overwriteMode)) {
+					String fldsrc = this.generateFieldClass(m);
+					String fieldPackageName = (String) m.get("packageName");
+					String fieldClassSimpleName = (String) m.get("fieldClassName");
+					srcmap.put(fieldPackageName + "." + fieldClassSimpleName, fldsrc);
+				}
+			}
+			String fpackage = (String) m.get("packageName");
+			String fclass = (String) m.get("fieldClassName");
+			String pkFlag = (String) m.get("pkFlag");
+			String fieldId = (String) m.get("fieldId");
+			String fieldLength = (String) m.get("fieldLength");
+			implist.append("import ");
+			implist.append(fpackage);
+			implist.append(".");
+			implist.append(fclass);
+			implist.append(";\n");
+			if ("1".equals(pkFlag)) {
+				constructor.append("\t\tthis.addPkField(new ");
+			} else {
+				constructor.append("\t\tthis.addField(new ");
+			}
+			constructor.append(fclass);
+			constructor.append("(");
+			if (!StringUtil.isBlank(fieldId)) {
+				constructor.append("\"" + fieldId + "\"");
+			}
+			if ("1".equals(isDataformsField)) {
+				if (!StringUtil.isBlank(fieldLength)) {
+					constructor.append(", ");
+					constructor.append(fieldLength);
+				}
+			}
+			String comment = (String) m.get("comment");
+			constructor.append(")); //" + comment + "\n");
+		}
+		tsrc = tsrc.replaceAll("\\$\\{importList\\}", implist.toString());
+		tsrc = tsrc.replaceAll("\\$\\{constructor\\}", constructor.toString());
+		log.debug("tsrc=\n" + tsrc);
+		if (!"skip".equals(tableOverwriteMode)) {
+			srcmap.put(packageName + "." + tableClassName, tsrc);
+		}
+		log.debug("srcmap=" + JSON.encode(srcmap));
+		String path = (String) data.get("javaSourcePath");
+		this.writeJavaSource(path, srcmap);
+	}
+
+	/**
+	 * javaソース出力。
+	 * @param path javaソースパス。
+	 * @param srcmap ソースのマップ情報。
+	 * @throws Exception 例外。
+	 */
+	private void writeJavaSource(final String path, final Map<String, String> srcmap) throws Exception {
+		for (String key: srcmap.keySet()) {
+			String srcPath = path + "/" + key.replaceAll("\\.", "/") + ".java";
+			FileUtil.writeTextFileWithBackup(srcPath, srcmap.get(key), DataFormsServlet.getEncoding());
+		}
+	}
+
+	@Override
+	protected void updateData(final Map<String, Object> data) throws Exception {
+
+	}
+
+	@Override
+	protected String getSavedMessage(final Map<String, Object> data) {
+		return MessagesUtil.getMessage(this.getPage(), "message.javasourcecreated");
+	}
+}

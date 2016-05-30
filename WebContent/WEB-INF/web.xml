@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>dataforms</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<!--
+	JNDIデータソースのlookupにはjndi-prefixとdata-sourceを結合した文字列で行います。
+	WebLogicで実行する場合はjndi-prefixには空白文字を指定してください。
+	 -->
+	<!-- JNDIデータソースの前につける文字列 -->
+	<context-param>
+		<param-name>jndi-prefix</param-name>
+		<param-value>java:/comp/env/</param-value>
+	</context-param>
+	<!-- 使用するJNDIデータソースを指定する -->
+	<context-param>
+		<param-name>data-source</param-name>
+		<param-value>jdbc/dfdb</param-value>
+	</context-param>
+
+	<!--
+	このライブラリは、サーバ側の処理でdataforms.jar中のWEBリソース(html,css,jsファイル)を
+	アクセスしています。dataforms.jarのMETA-INF/resources中のファイルはhttp経由で
+	取得しているため、このパラメータで指定したURLを使用してアクセスします。
+	以下のURLが指定されていない場合、リクエストされたURLをそのまま使用してアクセスします。
+	そのためSSLを使用した場合、サーバー側のWEBリソースアクセスもSSL経由になってしまい、
+	JavaのHTTPClientのセキュリティ設定を適切に行わないと、セキュリティーエラーになってしまいます。
+	またHTTPClientを適切に設定をしても、SSL経由のため効率は良くありません。
+	SSLを使用する場合はアプリケーションサーバのhttpポートを指定したURLを指定してください。
+	 -->
+	<!--
+	<context-param>
+		<param-name>web-resource-url</param-name>
+		<param-value>http://localhost:8080</param-value>
+	</context-param>
+	-->
+	<!-- 使用する文字コードを指定します。-->
+	<!--  context-param>
+		<param-name>encoding</param-name>
+		<param-value>utf-8</param-value>
+	</context-param-->
+
+	<!-- debugログに出力するjsonを整形するかどうかを指定します。-->
+	<context-param>
+		<param-name>json-debug</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- 一時ファイルを置くパスを指定します。 -->
+	<!--  context-param>
+		<param-name>temp-dir</param-name>
+		<param-value>/tmp</param-value>
+	</context-param -->
+
+	<!-- 開発ツールでデータをエクスポート/インポートする際に使用するパスを指定します。 -->
+	<!--  context-param>
+		<param-name>export-import-dir</param-name>
+		<param-value>/tmp/data</param-value>
+	</context-param -->
+	<!-- jqueryなどの標準ライブラリなどを読み込むhtmlを指定します。 -->
+	<!-- context-param>
+		<param-name>css-and-scripts</param-name>
+		<param-value>/frame/jslib.html</param-value>
+	</context-param-->
+	<!-- エラーページのパスを指定します。 -->
+	<!--  context-param>
+		<param-name>error-page</param-name>
+		<param-value>/dataforms/app/errorpage/ErrorPage</param-value>
+	</context-param -->
+	<!--
+		 クライアントバリデーションの有無をしています。
+	 -->
+	<!-- context-param>
+		<param-name>client-validation</param-name>
+		<param-value>true</param-value>
+	</context-param-->
+	<!--
+		 クライアントログレベルを指定します。
+		 javascriptでのコンソール出力はconsoleではなくloggerを使用してください。
+		 loggerは基本的にconsoleをコピーしたものですが、以下の設定に応じて、
+		 log,info,warn,errorメソットが何もしないメソッドになります。
+	 -->
+	<context-param>
+		<param-name>client-log-level</param-name>
+		<param-value>debug</param-value>
+		<!-- param-value>debug</param-value -->
+		<!-- param-value>info</param-value -->
+		<!-- param-value>warn</param-value -->
+		<!-- param-value>error</param-value -->
+		<!-- param-value>none</param-value -->
+	</context-param>
+	<!-- アップロードデータを保存するフォルダを指定します。 -->
+	<!-- context-param>
+		<param-name>upload-data-folder</param-name>
+		<param-value>/uploadData</param-value>
+	</context-param-->
+	<!-- サポートする言語コードを指定します。
+		default以外の言語コードを","区切りで指定します。
+		EnumOptionNameTable等、言語ごとに名称を登録するテーブルで使用します。
+	-->
+	<!--  context-param>
+		<param-name>support-language</param-name>
+		<param-value>ja,xx,yy</param-value>
+	</context-param-->
+	<!--
+		CryptUtilで使用する暗号用デフォルトパスワードを指定します。
+		UserInfoTableのパスワードの暗号化で使用するので、 ユーザ登録後変更するとログインできなくなります。
+	-->
+	<!-- context-param>
+		<param-name>crypt-password</param-name>
+		<param-value>xxx_password_xxx</param-value>
+	</context-param-->
+	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
+	<!-- context-param>
+		<param-name>client-messages</param-name>
+		<param-value>/frame/messages/ClientMessages</param-value>
+	</context-param-->
+	<!-- サーバ側で使用するメッセージリソースの名称を指定します。 -->
+	<!-- context-param>
+		<param-name>messages</param-name>
+		<param-value>/frame/messages/Messages</param-value>
+	</context-param-->
+	<!-- フレームレイアウトのパスを指定します。 -->
+	<context-param>
+		<param-name>frame-path</param-name>
+		<param-value>/frame/default</param-value>
+	</context-param>
+
+	<!--
+		ページのオーバーライドを指定します。
+		既存ページを組み替える場合、新たにページクラスを作成し
+		既存ページクラスを置き換える設定を以下に記述します。
+		またdataforms.app.page.base.HiddenPageに置き換えれば
+		メニューにも表示されず、アクセスできないページになります。
+		つまり既存ページを隠すことができます。
+	 -->
+	<!--
+	<context-param>
+		<param-name>page-override:dataforms.app.page.user.ChangePasswordPage</param-name>
+		<param-value>dataforms.app.page.base.HiddenPage</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>page-override:dataforms.app.page.user.UserSelfEditPage</param-name>
+		<param-value>dataforms.app.page.base.HiddenPage</param-value>
+	</context-param>
+	 -->
+	<!--
+		開発ツールの無効フラグを設定します。
+		システムリリース時には無効にしたほうが安全です。
+	-->
+	<context-param>
+		<param-name>disable-developer-tools</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<!--
+		画面の解像度に応じたcssファイルを指定します。
+		この設定で以下のようなHTMLを生成します。
+
+		<link type="text/css" href="/dataforms/frame/default/FrameSP.css" rel="stylesheet" media="screen and (max-width: 767px)"/>
+		<link type="text/css" href="/dataforms/frame/default/FramePC.css" rel="stylesheet" media="screen and (min-width: 1025px)"/>
+		<link type="text/css" href="/dataforms/frame/default/FrameTB.css" rel="stylesheet" media="screen and (min-width: 768px) and (max-width: 1024px)"/>
+	-->
+	<context-param>
+		<param-name>css-media:FramePC.css</param-name>
+		<param-value>screen and (min-width: 1025px)</param-value>
+	</context-param>
+	<context-param>
+		<param-name>css-media:FrameTB.css</param-name>
+		<param-value>screen and (min-width: 768px) and (max-width: 1024px)</param-value>
+	</context-param>
+	<context-param>
+		<param-name>css-media:FrameSP.css</param-name>
+		<param-value>screen and (max-width: 767px)</param-value>
+	</context-param>
+	<!--
+		ブラウザの戻るボタンの動作を設定します。
+		disabledを指定した場合pushState popStateを使用して、戻るボタンを無効化するjavascriptを出力します。
+	 -->
+	<context-param>
+		<param-name>browser-back-button</param-name>
+		<param-value>disabled</param-value>
+		<!--
+		<param-value>enabled</param-value>
+		<param-value>disabled</param-value>
+		-->
+	</context-param>
+	<!--
+		トップページを指定します。
+		基本的にTopPage.dfを指定しておきます。
+		このページはシステムやユーザの状態に応じて、ログイン画面やサイトマップに遷移します。
+	 -->
+	<context-param>
+		<param-name>top-page</param-name>
+		<param-value>/dataforms/app/page/top/TopPage.df</param-value>
+	</context-param>
+	<!-- 開発ツールのjavaソース出力フォルダを指定します。 -->
+	<context-param>
+		<param-name>java-source-path</param-name>
+		<param-value>/eclipse/pleiades-e4.5/workspace/dataforms/src</param-value>
+	</context-param>
+	<!-- 開発ツールのhtml,javascript等のWEBリソース出力フォルダを指定します。 -->
+	<context-param>
+		<param-name>web-source-path</param-name>
+		<param-value>/eclipse/pleiades-e4.5/workspace/dataforms/WebContent</param-value>
+	</context-param>
+	<!-- セッションタイムアウト -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+</web-app>

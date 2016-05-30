@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Webリソース作成</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>
+								Webリソース出力先
+							</th>
+							<td colspan="3">
+								<input type="text" id="webSourcePath" />
+							</td>
+						</tr>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" value="" /></td>
+						</tr>
+						<tr>
+							<th>ページクラス名</th>
+							<td colspan="5"><input type="text" id="pageClassName" value="" /></td>
+						</tr>
+						<tr>
+							<th>コンポーネントタイプ</th>
+							<td colspan="5" style="height: auto; white-space: normal;">
+								<span>
+									<input type="checkbox" id="webComponentTypeList[0]" name="webComponentTypeList"/>
+								</span>
+								<input type="button" id="checkAllTypeButton" value="全選択"/>
+								<input type="button" id="uncheckAllTypeButton" value="全解除"/>
+							</td>
+						</tr>
+						<tr>
+							<th>ソース生成状況</th>
+							<td colspan="5"><input type="checkbox" id="generatableOnly" value="1" checked/>HTMLまたはjavascriptを生成できるもののみ表示
+						</tr>
+						<tr>
+							<th>クラス名</th>
+							<td colspan="5"><input type="text" id="className"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">&nbsp;
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">Webコンポーネント一覧</div>
+				<div class="hScrollDiv">
+					<table id="queryResult">
+						<thead>
+							<tr>
+								<th style="white-space: nowrap;">No.</th>
+								<th style="white-space: nowrap;">クラス名</th>
+								<th style="white-space: nowrap;">種類</th>
+								<th style="white-space: nowrap;">HTML有無</th>
+								<th style="white-space: nowrap;">Javascript有無</th>
+								<th style="white-space: nowrap;">javascriptクラス</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="text-align: right;white-space:nowrap;">
+									<span id="queryResult[0].rowNo"></span>
+								</td>
+								<td style="white-space: nowrap;">
+									<a href="javascript:void(0);" id="queryResult[0].className"></a>
+								</td>
+								<td style="white-space: nowrap;">
+									<select id="queryResult[0].webComponentType"></select>
+								</td>
+								<td style="white-space: nowrap;">
+									<select id="queryResult[0].htmlStatus"></select>
+								</td>
+								<td style="white-space: nowrap;">
+									<select id="queryResult[0].javascriptStatus"></select>
+								</td>
+								<td style="white-space: nowrap;">
+									<input type="text" id="queryResult[0].javascriptClass" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

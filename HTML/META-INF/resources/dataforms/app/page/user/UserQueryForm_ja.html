@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Query Form</title>
+</head>
+<body>
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th><label for="loginId">ログインID</label></th>
+							<td><input type="text" id="loginId" value=""/></td>
+						</tr>
+						<tr>
+							<th>氏名</th>
+							<td><input type="text" id="userName" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				ユーザ属性<br/>
+				<div class="hScrollDiv">
+					<table id="attTable" class="editableTable">
+						<thead>
+							<tr>
+								<th class="buttonColumn">
+								</th>
+								<th class="buttonColumn">
+								</th>
+								<th>No.</th>
+								<th>ユーザ属性</th>
+								<th>値</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<input type="button" id="attTable[0].addButton" value="+"/>
+								</td>
+								<td>
+									<input type="button" id="attTable[0].deleteButton" value="-"/>
+								</td>
+								<td>
+									<span id="attTable[0].no"></span>
+								</td>
+								<td>
+									<select id="attTable[0].userAttributeType"></select>
+								</td>
+								<td>
+									<select id="attTable[0].userAttributeValue"></select>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>
+									<input type="button" id="attTable.addButton" value="+"/>
+								</th>
+								<th colspan="4">
+								</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+</body>
+</html>

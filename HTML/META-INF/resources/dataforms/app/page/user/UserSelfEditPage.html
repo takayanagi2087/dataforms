@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>User information editing</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="editForm">
+				<table  class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>Login ID</th>
+							<td>
+								<input type="hidden" id="userId" value="" />
+								<input type="text" id="loginId" value="" />
+							</td>
+						</tr>
+						<tr>
+							<th>Name</th>
+							<td><input type="text" id="userName" value=""/></td>
+						</tr>
+						<tr>
+							<th>E-Mail</th>
+							<td><input type="text" id="mailAddress" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="Confirm"/>
+				<input type="button" id="saveButton" value="Save"/>
+				<input type="button" id="backButton" value="Back"/>
+				<input type="button" id="resetButton" value="Reset"/>
+			</form>
+		</div>
+	</body>
+</html>

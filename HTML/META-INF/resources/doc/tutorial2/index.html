@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<link type="text/css" href="../css/document.css" rel="stylesheet" />
+		<title>3.ページの作成</title>
+	</head>
+	<body>
+		<h1><span>3.</span>ページの作成</h1>
+		<h2>ページの作成手順</h2>
+		<p>
+			dataforms.jarでは、Javaクラスの作成から始めます。
+			例えばデータベースのテーブルの場合、dataforms.dao.Tableから派生したテーブルクラスを作成します。
+			そのテーブルクラスを元に、データベース中にテーブルを作成します。
+			またHTMLやJavascriptの場合、フォームを配置したページJavaクラスを作成し、そのJavaクラスを元にHTMLやJavascriptを作成します。
+			これらのJavaクラスの作成やデータベーステーブル、HTML、Javascriptの作成は全て開発ツールで作成することができます。
+		</p>
+		<p class="topic">
+			開発ツール自体も、dataforms.jarで作成されたWebアプリケーションです。
+			つまり開発ツールに実装されているユーザインターフェースは、dataforms.jarで標準的にサポートされていると考えて問題ありません。
+		</p>
+		<h3>開発者権限を持つユーザ</h3>
+		<p>
+			開発ツールを使うには、「データベースの初期設定」の際に登録した開発者ユーザでログインする必要があります。
+			ユーザのユーザレベルには「開発者」、「管理者」、「ユーザ」等の属性があり、開発ツールを使用できるのは、「開発者」権限を持つユーザのみです。
+			<figure>
+				<figcaption>開発者権限を持つユーザのサイトマップ</figcaption>
+				<img src="sitemap.png" style="width:50%; height:50%;"/>
+			</figure>
+			「開発者」は「管理者」の上位にあたり、「管理者」用の「ユーザ管理」機能を使い、「管理者」や通常の「ユーザ」レベルのユーザを登録することが可能です。
+			開発が終了すると、「管理者」権限をもつユーザを登録し、そのユーザで運用管理を行います。
+			また開発ツールは運用時には危険なツールです。
+			(開発ツールはサーバ上のシステムのJavascriptやHTMLを書き換えてしまう機能が存在します。)
+			そのため開発が終了し、運用を開始する段階では、web.xmlの設定で開発ツールの呼び出しを禁止できるようになっています。
+		</p>
+		<p>
+			開発ツールには以下のようなものがあります。
+		</p>
+		<table>
+			<caption>開発ツール一覧</caption>
+			<tbody>
+				<tr>
+					<th>
+						Webリソースエクスポート
+					</th>
+					<td>
+						dataforms.jarの中の*.html,*.css,*.js等のファイルをエクスポートします。
+					</td>
+				</tr>
+				<tr>
+					<th>
+						機能管理
+					</th>
+					<td>
+						機能の追加、削除を行います。
+					</td>
+				</tr>
+				<tr>
+					<th>
+						テーブルJavaクラス作成
+					</th>
+					<td>
+						テーブルJavaクラスと、それに属するフィールドJavaクラスを作成します。
+					</td>
+				</tr>
+				<tr>
+					<th>
+						テーブル管理
+					</th>
+					<td>
+						テーブルJavaクラスに対応したテーブルをDB上に作成します。
+					</td>
+				</tr>
+				<tr>
+					<th>
+						ページJavaクラス作成
+					</th>
+					<td>
+						ページJavaクラスとそれに属するフォームJavaクラスを作成します。
+					</td>
+				</tr>
+				<tr>
+					<th>
+						Webリソース作成
+					</th>
+					<td>
+						指定されたページ中のWebコンポーネントを検索し、それに対応したHTMLまたはJavascriptを作成します。
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<h3>ソースパスの設定</h3>
+		<p>
+			開発ツールには、JavaのソースパスとHTMLやJavascriptを出力するパスを指定する必要があります。
+			「2.開発環境構築」で作成したプロジェクトの場合、以下のようなパスになります。
+		</p>
+		<table>
+			<caption>出力パス一覧</caption>
+			<tbody>
+				<tr>
+					<th>
+						Javaソースパス
+					</th>
+					<td>
+						c:\pleiades-e4.5\workspace\sample\src
+					</td>
+				</tr>
+				<tr>
+					<th>
+						HTML,Javascript等のパス
+					</th>
+					<td>
+						c:\pleiades-e4.5\workspace\sample\WebContent
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			先ず、開発ツールにこれらのパスを認識させる必要があります。
+			これらのバスはweb.xmlに記述します。
+		</p>
+		<div class="filecaption">web.xmlのソースパス設定</div>
+		<div class="wrappre">
+			<pre>
+&lt;!-- &#38283;&#30330;&#12484;&#12540;&#12523;&#12398;java&#12477;&#12540;&#12473;&#20986;&#21147;&#12501;&#12457;&#12523;&#12480;&#12434;&#25351;&#23450;&#12375;&#12414;&#12377;&#12290; --&gt;
+&lt;context-param&gt;
+	&lt;param-name&gt;java-source-path&lt;/param-name&gt;
+	&lt;param-value&gt;/pleiades-e4.5/workspace/sample/src&lt;/param-value&gt;
+&lt;/context-param&gt;
+&lt;!-- &#38283;&#30330;&#12484;&#12540;&#12523;&#12398;html,javascript&#31561;&#12398;WEB&#12522;&#12477;&#12540;&#12473;&#20986;&#21147;&#12501;&#12457;&#12523;&#12480;&#12434;&#25351;&#23450;&#12375;&#12414;&#12377;&#12290; --&gt;
+&lt;context-param&gt;
+	&lt;param-name&gt;web-source-path&lt;/param-name&gt;
+	&lt;param-value&gt;/pleiades-e4.5/workspace/sample/WebContent&lt;/param-value&gt;
+&lt;/context-param&gt;
+			</pre>
+		</div>
+		<h3>システム名称設定</h3>
+		<p>
+			dataforms.jarのMETA-INF/resourcesには、HTML,Javascript等のWebリソースが組み込まれています。
+			Servlet3.0がサポートされたアプリケーションサーバでは、jar中のMETA-INF/resourcesに配置されたHTMLやJavascriptは、通常のWebリソースとしてアクセスすることができるようになりました。
+			sampleプロジェクトのWebContent内には、HTMLもJavascriptも存在しないのですが、以下のURLをアクセスすると、デフォルトレイアウトが表示されます。
+		</p>
+		<div>
+			http://localhost:8080/sample/frame/default/Frame_ja.html
+		</div>
+		<figure>
+			<figcaption>デフォルトレイアウト</figcaption>
+			<img src="layout.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			このようなファイルをカスタマイズするには、これらのファイルを「WEBリソースエクスポート」の機能でエクスポートする必要があります。
+			システム名称を変更するには、メッセージリソースファイルをエクスポートし、それを編集します。
+		</p>
+		<figure>
+			<figcaption>WEBリソースエクスポート</figcaption>
+			<img src="expwebres.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			dataforms.jarには/frame/messagesというパスにメッセージリソースが入っています。
+			上の図では、ファイル名に"frame/messages"を指定して検索しています。
+			これらのメッセージリソースをエクスポートし、WebContent/frame/messages/ClientMessages.properties,ClientMessages_ja.properties中の
+			message.systemnameの内容を修正すれば、各ページに表示されるシステム名称を変更することができます。
+		</p>
+		<figure>
+			<figcaption>システム名の編集</figcaption>
+			<img src="editsystemname.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			ここでは上記のように"サンプルシステム"と変更します。
+			変更後クリーンビルドを行い、システムをアクセスすると以下のようにシステム名称が変わります。
+		</p>
+		<figure>
+			<figcaption>システム名変更後のログイン画面</figcaption>
+			<img src="changedsystemname.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>機能の登録</h3>
+		<p>
+			dataforms.jarの中には既に「基本機能」と「開発ツール」という機能が入っています。
+			機能はJavaのパッケージに対応し、そのパッケージの配下に各種クラスを作成していきます。
+			メニューはこの機能でグルーピングされます。
+		</p>
+		<figure>
+			<figcaption>機能管理画面</figcaption>
+			<img src="function1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			「+」ボタンを押して行を追加し、以下のように機能を登録してください。
+			<figure>
+				<figcaption>機能追加後の画面</figcaption>
+				<img src="function2.png" style="width:50%; height:50%;"/>
+			</figure>
+		</p>
+		<p class="topic">
+			この画面では、編集可能テーブル(EditableHtmlTable)というコンポーネントを使用しています。
+			行の追加、削除、ドラッグによる順序変更をサポートしています。
+			順序を変更して保存すれば、メニューの表示順を変更することができます。
+		</p>
+		<p>
+			登録後WebContentの中を確認すると、sample/Function.propertiesというファイルが存在するはずです。
+			Function.propertiesには機能の名称が記録されています。
+		</p>
+		<p>
+			登録直後に再度機能管理画面を表示した場合、機能名が表示されません。
+			それは今作成したFuntion.propertiesがTomcatにデプロイされていないためです。
+			Eclipse上でプロジェクトのクリーンビルドを実行し、Tomcatに自動デプロイさせて初めて反映されます。
+		</p>
+		<figure>
+			<figcaption>機能追加の結果</figcaption>
+			<img src="function3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>テーブル定義</h3>
+		<p>
+			今回は簡単なテーブルを作成し、それを入力編集する簡単なページを作成してみます。
+			まず、入力編集対象のテーブルを作成します。
+			テーブルクラスはdataforms.dao.Tableから派生したクラスで、そのクラスに対しdataforms.field.*から派生したフィールドクラスを配置します。
+		</p>
+		<p>
+			テーブルクラスやそれに配置する各フィールドクラスを一々作成するのは面倒な作業なので、テーブルクラスの作成ツールが用意されています。
+			「テーブルJavaクラスの作成」のメニューを選択し、新規作成ボタンを押して、以下のように入力してください。
+			フィールド一覧の「クラス」は、今回作成するフィールドクラスになります。
+			「基本クラス」にdataforms.fieldで用意された適切なフィールドクラスを指定します。
+		</p>
+		<figure>
+			<figcaption>SampleTableの定義</figcaption>
+			<img src="table1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p class="topic">
+			クラス名には、dataforms.jar内に定義された既存のフィールドクラスを指定することもできますが、今回は全てのフィールドクラスを新規に作成しています。
+			各種フィールドクラスを毎回作成するのは、面倒だと思う気も知れません。
+			しかし、各種フィールドをクラス化しておくと、一気にフィールドの特性を変更することができるようになります。
+			例えば、フィールドクラスに特殊なバリデータを追加すれば、そのフィールドが配置された全てのフォームでバリデータが動作します。
+		</p>
+		<p class="topic">
+			「クラス」、「基本クラス」フィールドは、オートコンプリート機能で入力候補が表示されます。
+			候補を選択するとパッケージも適切に設定されます。
+			入力候補一覧は、指定されたパッケージ内に含まれるクラスを検索しています。
+		</p>
+		<p class="topic">
+			各フィールドのIDを省略した場合、クラス名を元に自動的にフィールドIDが設定されます。
+			SsampleIdFieldクラスのIDを省略すると、フィールドIDは"sampleId"となります。
+			同一テーブルの中に同じクラスのフィールドを配置する場合は、それぞれ別のフィールドIDを指定するようにしてください。
+		</p>
+		<p>
+			テーブルクラス、フィールドクラスの作成結果を以下に示します。
+			テーブルクラスと各種フィールドクラスが作成されていることがわかります。
+		</p>
+		<figure>
+			<figcaption>テーブルクラス、フィールドクラスの作成結果</figcaption>
+			<img src="table2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			この状態ではソースフィルが作成されただけですので、一度クリーンビルドを行なってください。
+			Tomcatのオートデプロイが完了したら、今回作成したテーブルクラスが検索対象になります。
+		</p>
+		<figure>
+			<figcaption>テーブルクラスの検索結果</figcaption>
+			<img src="table3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p class="topic">
+			Webアプリケーションは、各種ソースファイル作成した時点で、その存在を認識していません。
+			そのため必ずクリーンビルドを行い、Tomcatのオートデプロイを実行させてください。
+			デプロイが完了した後、各種開発ツールで作成されたクラスが検索できるようになります。
+		</p>
+		<h3>テーブルの作成</h3>
+		<p>
+			作成したJavaのテーブルクラスを元に、データベース中にテーブルを作成します。
+			「開発ツール」の「テーブル管理」機能を使用すると、作成したJavaクラスに対応したテーブルを簡単に作成することができます。
+			「テーブル管理」でテーブルクラスを検索すると以下のようになります。
+		</p>
+		<figure>
+			<figcaption>テーブルクラスの検索結果</figcaption>
+			<img src="table4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			作成したテーブルクラスをチェックし、「初期化」ボタンをクリックすると、テータベース上にテーブルが作成されます。
+		</p>
+		<figure>
+			<figcaption>テーブルクラス作成後の状態</figcaption>
+			<img src="table5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p class="topic">
+			「テーブル管理」ではテーブル構造の変更も簡単に行うことができます。
+			テーブルJavaクラスに対して、フィールドを追加し、クリーンビルド後にそのテーブルを検索すると、データベースの定義内容とJavaクラスの定義内容の差分が検出されます。
+			そのテーブルをチェックし「更新」ボタンを押すと、以下の手順でテーブルの再構築が行われます。
+		</p>
+		<div class="topic">
+			1.既存テーブルのバックアップを作成。<br/>
+			2.テーブルJavaクラスを元に新規テーブルを作成。<br/>
+			3.バックアップから、新規テーブルにデータを転記。<br/>
+		</div>
+		<h3>ページJavaクラスの作成</h3>
+		<p>
+			「開発ツール」の「ページJavaクラス作成」を使用すれば、作成したSampleTableを編集するページJavaクラスを簡単に作成することができます。
+			「ページJavaクラス作成」ではページに対して以下の3種類のフォームを配置することができます。
+		</p>
+		<table>
+			<caption>
+				フォームクラスの種類
+			</caption>
+			<thead>
+				<tr>
+					<th>
+						フォームクラス名
+					</th>
+					<th>
+						説明
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>QueryForm</td>
+					<td>
+						問い合わせのための条件を入力し、問い合わせを実行するフォームです。
+					</td>
+				</tr>
+				<tr>
+					<td>QueryResultForm</td>
+					<td>
+						QueryFormで入力した条件を元に問い合わせを行い、その結果を表示するフォームです。
+					</td>
+				</tr>
+				<tr>
+					<td>EditForm</td>
+					<td>
+						指定されたデータの入力、編集を行うためのフォームです。
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			今回は、この三種類のフォームをすべて配置し、問い合わせフォーム→問い合わせ結果表示フォーム→データ編集フォームの流れでデータ編集するページを作成します。
+			「ページJavaクラス作成」の新規作成フォームで以下のように入力し、ページJavaクラスを作成します。
+		</p>
+		<figure>
+			<figcaption>ページJavaクラス作成</figcaption>
+			<img src="page1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<figure>
+			<figcaption>ページJavaクラス作成結果</figcaption>
+			<img src="page2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			ソースの生成を確認したら、プロジェクトのクリーンビルドを行なってください。
+		</p>
+		<p class="topic">
+			PageとDialogはDataFormsクラスから派生しています。
+			DataFormsクラスは、これらのフォームが配置された場合、これらのフォームのイベント処理を適切に設定します。
+			そのためこのフォームを配置するだけで、「問い合わせフォーム→問い合わせ結果表示フォーム→データ編集フォーム」の流れで動作するようになっています。
+		</p>
+		<p class="topic">
+			ページには必ずしもQueryForm,QueryResultFor,EditFormの三種類すべてのフォームを配置する必要はありません。
+			EditFormを省略し、問い合わせ条件とその結果表示のみのページもあり得ますし、EditFormのみで、特定のレコードを編集するページもあり得ます。
+			このようなページは、既に「基本機能」や「開発ツール」内に既に存在します。
+		</p>
+		<p class="topic">
+			Formクラスから派生した上記三種類以外のフォームも、PageやDialogに配置することができます。
+			この場合ツールで作成したソースファイルを編集してください。
+		</p>
+		<h3>Webリソースの作成</h3>
+		<p>
+			「Webリソース作成」を使用し、ページJavaクラスを元にHTMLを作成します。
+			「Webリソース作成」は指定されたページJavaクラスに含まれるWebコンポーネントを検索し、そのWebコンポーネントに対応するHTMLやJavascriptを作成するツールです。
+			ページJavaクラスが動作するには、ページJavaクラスに対応したHTMLが必要になります。
+			ページクラスは複数のフォームクラスを持っており、フォームクラスは複数のフィールドクラスを持っています。
+			今回は以下のように条件を指定し、sample.page.SamplePageクラス中のページクラスを検索します。
+		</p>
+		<figure>
+			<figcaption>SamplePage内のコンポーネント検索</figcaption>
+			<img src="page3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			ページクラスは、sample.page.SamplePageの1件がヒットします。
+			このリンクをクリックすると、以下のようなダイアログが表示されます。
+		</p>
+		<figure>
+			<figcaption>Webリソース作成ダイアログ</figcaption>
+			<img src="page4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			ここでHTMLの作成ボタンを押下し、HTMLを作成します。
+			HTML中には、sample.page.SamplePageに定義されたフォームやフィールドの情報が自動的に展開されます。
+		</p>
+		<figure>
+			<figcaption>HTMLの作成結果</figcaption>
+			<img src="page5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>アプリケーションの実行</h3>
+		<p>
+			ここまでは開発ツールだけで、Javaソースやhtmlを作成してきました。
+			この段階で、SampleTableを編集するためのページが出来上がっています。
+			プロジェクトをクリーンビルドし、サイトマップを表示してください。
+			以下のように「サンプルページ」へのリンクが追加されているはずです。
+		</p>
+		<figure>
+			<figcaption>サイトマップ</figcaption>
+			<img src="samplepage1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			「サンプルページ」のリンクをクリックすると、以下のように問い合わせフォームだけが表示されます。
+			生成されたHTMLには、問い合わせフォームの他に、問い合わせ結果フォームと、編集フォームが存在しますが、初期状態では問い合わせフォームのみが表示され、
+			「新規作成」ボタンを押下すると、編集フォームを新規追加モードで表示します。
+		</p>
+		<figure>
+			<figcaption>問い合わせフォーム</figcaption>
+			<img src="samplepage2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			新規追加画面ではSampleTableに定義したフィールドが配置されています。
+			日付のフィールドには自動的にDatapickerが設定されます。
+			データを入力し、確認ボタンを押すと次の確認画面に遷移します。
+		</p>
+		<figure>
+			<figcaption>新規追加画面</figcaption>
+			<img src="samplepage3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			既存の開発では、確認画面も1つのページとして実装するケースが多かったのですが、dataforms.jarでは編集フォームの各フィールドを編集不可にすることで実現しています。
+			そのため、確認画面用のHTMLを作成する必要はありません。
+		</p>
+		<p class="topic">
+			確認画面が不要な場合は、HTML中の編集フォームから「確認」ボタンを削除してください。
+			そうすると新規追加画面に「登録」ボタンが表示され、確認画面を経由せずに保存することが可能になります。
+		</p>
+		<figure>
+			<figcaption>確認画面</figcaption>
+			<img src="samplepage4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			「登録」ボタンを押下するとsampleテーブル中にデータが保存されます。
+			この状態で、問い合わせフォームの検索ボタンを押下すると以下のように検索結果が表示されます。
+			問い合わせフォームの検索条件を適当に入力してみてください、入力した条件が効いていることがわかると思います。
+		</p>
+		<figure>
+			<figcaption>問い合わせ結果表示画面</figcaption>
+			<img src="samplepage5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			表示された一覧のリンクをクリックすると、データの更新画面が表示されます。
+			これも編集フォームで実現しています。
+		</p>
+		<figure>
+			<figcaption>データ更新画面</figcaption>
+			<img src="samplepage6.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			開発ツールで作成されたHTMLは非常にシンプルなもので、単純に見た目の要素だけが記述されています。
+		</p>
+
+		<div class="filecaption">生成されたHTMLソース(SamplePage.html)</div>
+		<div class="wrappre">
+			<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;UTF-8&quot;&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;div id=&quot;mainDiv&quot;&gt;
+			&lt;form id=&quot;queryForm&quot;&gt;
+				&lt;div class=&quot;formHeader&quot;&gt;&#26908;&#32034;&#26465;&#20214;&lt;/div&gt;
+				&lt;table class=&quot;responsive&quot;&gt;
+					&lt;tbody&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#12486;&#12461;&#12473;&#12488;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleText&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#25968;&#20516;(from)&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleNumFrom&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#25968;&#20516;(to)&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleNumTo&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#26085;&#20184;(from)&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleDateFrom&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#26085;&#20184;(to)&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleDateTo&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/tbody&gt;
+				&lt;/table&gt;
+				&lt;input type=&quot;submit&quot; id=&quot;queryButton&quot; value=&quot;&#26908;&#32034;&quot;&gt;
+				&lt;input type=&quot;button&quot; id=&quot;resetButton&quot; value=&quot;&#12522;&#12475;&#12483;&#12488;&quot;&gt;
+				&lt;input type=&quot;button&quot; id=&quot;newButton&quot; value=&quot;&#26032;&#35215;&#30331;&#37682;&quot;&gt;
+			&lt;/form&gt;
+			&lt;form id=&quot;queryResultForm&quot;&gt;
+				&lt;div class=&quot;formHeader&quot;&gt;&#26908;&#32034;&#32080;&#26524;&lt;/div&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;sampleId&quot; /&gt;
+				&lt;table class=&quot;responsive&quot;&gt;
+					&lt;tbody&gt;
+					&lt;/tbody&gt;
+				&lt;/table&gt;
+				&lt;div class=&quot;hScrollDiv&quot;&gt;
+					&lt;table id=&quot;queryResult&quot;&gt;
+						&lt;thead&gt;
+						&lt;tr&gt;
+							&lt;th&gt;
+								No.
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#12486;&#12461;&#12473;&#12488;
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#25968;&#20516;
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#26085;&#20184;
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#25805;&#20316;
+							&lt;/th&gt;
+						&lt;/tr&gt;
+					&lt;/thead&gt;
+						&lt;tbody&gt;
+						&lt;tr&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].rowNo&quot;&gt;&lt;/span&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].sampleId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].createUserId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].createTimestamp&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].updateUserId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].updateTimestamp&quot; /&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;a id=&quot;queryResult[0].updateButton&quot; href=&quot;javascript:void(0);&quot;&gt;&lt;span id=&quot;queryResult[0].sampleText&quot;&gt;&lt;/span&gt;&lt;/a&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].sampleNum&quot;&gt;&lt;/span&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].sampleDate&quot;&gt;&lt;/span&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].viewButton&quot; value=&quot;&#34920;&#31034;&quot;&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].referButton&quot; value=&quot;&#21442;&#29031;&#30331;&#37682;&quot;&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].deleteButton&quot; value=&quot;&#21066;&#38500;&quot;&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/tbody&gt;
+						&lt;/table&gt;
+				&lt;/div&gt;
+			&lt;/form&gt;
+			&lt;form id=&quot;editForm&quot;&gt;
+				&lt;div class=&quot;formHeader&quot;&gt;&lt;span id=&quot;editFormTitle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;sampleId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;createUserId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;createTimestamp&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;updateUserId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;updateTimestamp&quot; /&gt;
+				&lt;table class=&quot;responsive&quot;&gt;
+					&lt;tbody&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#12486;&#12461;&#12473;&#12488;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleText&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#25968;&#20516;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleNum&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#26085;&#20184;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleDate&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/tbody&gt;
+				&lt;/table&gt;
+				&lt;input type=&quot;button&quot; id=&quot;confirmButton&quot; value=&quot;&#30906;&#35469;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;saveButton&quot; value=&quot;&#30331;&#37682;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;resetButton&quot; value=&quot;&#12522;&#12475;&#12483;&#12488;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;deleteButton&quot; value=&quot;&#21066;&#38500;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;backButton&quot; value=&quot;&#25147;&#12427;&quot;/&gt;
+			&lt;/form&gt;
+
+		&lt;/div&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+			</pre>
+		</div>
+		<p>
+			これだけでは何も動作しませんが、DataFormsServlet経由でページをアクセスすると、以下のようなスクリプトが自動的に生成されます。
+			このスクリプトがSamplePageクラスに設定された構造情報をサーバから取得し、その情報を元に各種コンポーネントを初期化し、イベント処理等を登録するようになっています。
+		</p>
+		<figure>
+			<figcaption>ブラウザに出力されたスクリプト</figcaption>
+			<img src="samplepage7.png" style="width:50%; height:50%;"/>
+		</figure>
+		<hr/>
+	</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ImageFieldの追加コンポーネントのレイアウト</title>
+	</head>
+	<body>
+		<div>
+			<div style='width:${width}px;height:${height}px;line-height:${height}px;display:table-cell;text-align:center;vertical-align:middle;border-style:solid;border-width:1px;'>
+				<img id='${fieldId}_thm' style='vertical-align:middle;'/>
+			</div>
+			<div>
+				<a id='${fieldId}_link' href=''></a>
+				<input type='checkbox' id='${fieldId}_ck'><label for='${fieldId}_ck'>Delete</label>
+				<input type='hidden' id='${fieldId}_fn' name='${fieldId}_fn' value=''>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>テーブルJavaクラス作成</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
+							<th>クラス名</th>
+							<td><input type="text" id="className" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<div class="hScrollDiv">
+					<table id="queryResult">
+						<thead>
+							<tr>
+								<th>
+									No.
+								</th>
+								<th>
+									クラス名
+								</th>
+								<th>
+									テーブル名
+								</th>
+								<th>
+									テーブル有無
+								</th>
+								<th>
+									シーケンス有無
+								</th>
+								<th>
+									構造の差分
+								</th>
+								<th>
+									レコード件数
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span id="queryResult[0].rowNo"></span>
+								</td>
+								<td>
+									<input type="hidden" id="queryResult[0].packageName" />
+									<input type="hidden" id="queryResult[0].tableClassName" />
+									<a href="javascript:void(0);" id="queryResult[0].updateButton">
+										<span id="queryResult[0].fullClassName"></span>
+									</a>
+								</td>
+								<td>
+									<span id="queryResult[0].tableName"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].status"></span>
+									<input type="hidden" id="queryResult[0].statusVal" value=""/>
+								</td>
+								<td>
+									<span id="queryResult[0].sequenceGeneration"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].difference"></span>
+									<input type="hidden" id="queryResult[0].differenceVal" value=""/>
+								</td>
+								<td>
+									<span id="queryResult[0].recordCount"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>Javaソース出力先</th>
+							<td>
+								<input type="text" id="javaSourcePath"/>
+							</td>
+						</tr>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ</th>
+							<td><input type="text" id="packageName"/></td>
+						</tr>
+						<tr>
+							<th>テーブルクラス名</th>
+							<td>
+								<input type="text" id="tableClassName"/>
+							</td>
+						</tr>
+						<tr>
+							<th>上書モード</th>
+							<td>
+								<select id="overwriteMode"></select>
+							</td>
+						</tr>
+						<tr>
+							<th>主キー自動生成</th>
+							<td><input type="checkbox" id="autoIncrementId" value="1"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<table style="width:100%;">
+					<tbody>
+						<tr>
+							<td>
+								フィールド一覧
+							</td>
+							<td style="text-align:right;">
+								<div style="width:100%;text-align:right;">
+									<input type="button" id="allErrorButton" value="全て上書きはエラー"/>
+									<input type="button" id="allSkipButton" value="全て上書きしない"/>
+									<input type="button" id="allForceOverwriteButton" value="全て強制上書き"/>
+									<input type="button" id="errorSkipButton" value="エラーしたものは上書きしない"/>
+									<input type="button" id="errorForceButton" value="エラーしたものも強制上書き"/>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="hScrollDiv">
+					<table id="fieldList" class="editableTable">
+						<thead>
+							<tr>
+								<th class="buttonColumn">
+								</th>
+								<th class="buttonColumn">
+								</th>
+								<th nowrap>
+									No.
+								</th>
+								<th>
+									パッケージ
+								</th>
+								<th>
+									クラス
+								</th>
+								<th>
+									基本クラスパッケージ
+								</th>
+								<th>
+									基本クラス
+								</th>
+								<th>
+									フィールドID
+								</th>
+								<th>
+									長さ
+								</th >
+								<th>
+									PK
+								</th>
+								<th>
+									コメント
+								</th>
+								<th>
+									上書
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="buttonColumn">
+									<input type="button" id="fieldList[0].addButton" value="+"/>
+								</td>
+								<td class="buttonColumn">
+									<input type="button" id="fieldList[0].deleteButton" value="-"/>
+								</td>
+								<td style="text-align: right;">
+									<span id="fieldList[0].no"></span>
+									<input type="hidden" id="fieldList[0].isDataformsField" />
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].packageName" style="width:120px;"/>
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].fieldClassName" style="width:120px;"/>
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].superPackageName" style="width:140px;"/>
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].superSimpleClassName" style="width:120px;"/>
+								</td>
+								<td style="width:50px;">
+									<input type="text" id="fieldList[0].fieldId" style="width:70px;"/>
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].fieldLength" style="width:48px;"/>
+								</td>
+								<td style="width:32px;">
+									<input type="checkbox" id="fieldList[0].pkFlag" value="1"/>
+								</td>
+								<td>
+									<input type="text" id="fieldList[0].comment" style="width:120px;"/>
+								</td>
+								<td nowrap>
+									<select id="fieldList[0].overwriteMode"></select>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th>
+									<input type="button" id="fieldList.addButton" value="+"/>
+								</th>
+								<th colspan="11">
+								</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+
+		</div>
+	</body>
+</html>

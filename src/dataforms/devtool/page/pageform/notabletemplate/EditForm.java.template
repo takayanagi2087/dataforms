@@ -1,0 +1,54 @@
+package ${packageName};
+
+import java.util.Map;
+import dataforms.controller.EditForm;
+
+/**
+ * 編集フォームクラス。
+ */
+public class ${editFormClassName} extends EditForm {
+	/**
+	 * コンストラクタ。
+	 */
+	public ${editFormClassName}() {
+		// TODO:編集フィールドの設定を実装してください。
+	}
+
+	@Override
+	public void init() throws Exception {
+		super.init();
+	}
+
+	@Override
+	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
+		// TODO:編集対象データ(PK指定)の取得処理を実装してください。
+		return null;
+	}
+
+	@Override
+	protected Map<String, Object> queryDataByQueryFormCondition(final Map<String, Object> data) throws Exception {
+		// TODO:編集対象データ(問い合わせフォームの検索条件指定)の取得処理を実装してください。
+		return null;
+	}
+
+	@Override
+	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
+		// TODO:入力されたデータが更新対象データであるかを判定します。
+		return false;
+	}
+
+	@Override
+	protected void insertData(final Map<String, Object> data) throws Exception {
+		// TODO:データの追加処理を実装します。
+	}
+
+	@Override
+	protected void updateData(final Map<String, Object> data) throws Exception {
+		// TODO:データの更新処理を実装します。
+	}
+
+	@Override
+	public void deleteData(final Map<String, Object> data) throws Exception {
+		// TODO:データの削除処理を実装します。
+	}
+}

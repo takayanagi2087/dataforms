@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<!-- ********************** 標準出力への出力 ********************** -->
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<param name="threshold" value="debug" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="threshold" value="info" />
+		<param name="File" value="log/dataforms.log" />
+		<param name="Append" value="true" />
+		<param name="Encoding" value="utf-8" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- ********************** root定義 ***************************** -->
+	<root>
+		<priority value="debug" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+</log4j:configuration>

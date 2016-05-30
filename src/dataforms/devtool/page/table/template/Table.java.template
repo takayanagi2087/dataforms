@@ -1,0 +1,18 @@
+package ${packageName};
+
+import dataforms.dao.Table;
+${importList}
+
+/**
+ * ${TableClassShortName}クラス。
+ *
+ */
+public class ${TableClassShortName} extends Table {
+	/**
+	 * コンストラクタ。
+	 */
+	public ${TableClassShortName}() {
+${constructor}
+		this.addUpdateInfoFields();
+	}
+}

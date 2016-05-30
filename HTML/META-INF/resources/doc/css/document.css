@@ -1,0 +1,66 @@
+@CHARSET "UTF-8";
+
+body {
+}
+
+p {
+	max-width: 1024px;
+}
+
+table {
+	max-width: 1024px;
+	font-weight:normal;
+	border : 0px;
+	margin-left: 40px;
+	margin-bottom: 20px;
+}
+
+.filecaption {
+	margin-left: 40px;
+	text-align: left;
+	font-weight: bold;
+}
+
+figure figcaption,
+table caption {
+	text-align: left;
+	font-weight: bold;
+}
+
+tr {height: 20px; border : 0px;}
+th {background-color: #E0E0FF; text-align:center; font-weight:normal; border : 0px;}
+td {border:0px;}
+
+/* 番号付きリストのタイトルに使用 */
+h4 {
+	max-width: 1024px;
+	font-weight: normal;
+	margin-left: 40px;
+	margin-bottom: 2px;
+}
+
+ol {
+	max-width: 1024px;
+	margin-top: 2px;
+	margin-left: 40px;
+}
+
+pre {
+}
+
+
+.wrappre {
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	padding: 4px;
+	margin-left: 40px;
+	margin-bottom: 10px;
+	overflow-x: auto;
+}
+
+.topic {
+	margin-left: 40px;
+	font-size: 10pt;
+	color: 	blue;
+}

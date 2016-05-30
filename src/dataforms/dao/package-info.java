@@ -1,0 +1,4 @@
+/**
+ * データオブジェクトパッケージ。
+ */
+package dataforms.dao;

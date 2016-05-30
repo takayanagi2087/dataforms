@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<link type="text/css" href="../css/document.css" rel="stylesheet" />
+		<title></title>
+	</head>
+	<body>
+		<h1><span>4.</span>ページのカスタマイズ</h1>
+		<h2>カスタマイズの概要</h2>
+		<p>
+			WebComponentのサブクラスにはPage,Form,HtmlTable,Field,FieldValidator等が存在します。
+			これらのJavaクラスには、対応したJavascriptクラスを作成することができます。
+		</p>
+		<p>
+			Javaクラス"dataforms.controller.EditForm"には、すでに対応するJavasciptクラス"dataforms/dataforms/controller/EditForm.js"が存在します。
+			EditFormから派生したXXXEditFormを作成し、それを持つページを実行すると、ページのロード時にEditForm.jsに記載された初期化処理が動作します。
+			開発ツールを使い、XXXEditFormに対応するJavascriptクラスXXXEditForm.jsを作成すると、XXXEditForm.jsに記載された初期化処理が動作するようになります。
+		</p>
+		<p>
+			サーバ側の処理をカスタマイズする場合は、開発ツールで作成したJavaクラスを修正していきます。
+			クライアント側の処理をカスタマイズする場合は、開発ツールで対応するJavascriptクラスを作成し、そのJavascriptクラスを修正していきます。
+		</p>
+		<h3>ページの使用権限の変更</h3>
+		<p>
+			最初、システムに登録されているユーザはdeveloperだけです。
+			そのため、「基本機能」の「ユーザ管理」を使用し、ユーザを登録していく必要があります。
+			また、ユーザには「開発者」、「管理者」、「ユーザ」、「ゲスト」のレベルが設定できるようになっています。
+		</p>
+		<figure>
+			<figcaption>登録ユーザの一覧</figcaption>
+			<img src="userManagement.png" style="width:50%; height:50%;"/>
+		</figure>
+		<figure>
+			<figcaption>ユーザの追加</figcaption>
+			<img src="userManagement2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			既に存在するページ(「ユーザ管理」や「パスワード変更」等)は、ユーザレベルで使用できるユーザかどうかを判定しています。
+			例を挙げると、「ユーザ管理」ページは「管理者」、「開発者」しか使用できませんが、「パスワード変更」は「ユーザ」でも使用可能です。
+		</p>
+		<p>
+			開発ツールで作成したページクラスは、"dataforms.app.page.base.BasePage"から派生しています。
+			このクラスから派生したページは、ログインしなくても使用できるページになります。
+			ログインしないと使用できないページにするには、ページの基本クラスを以下のクラスに変更します。
+		</p>
+		<table>
+			<caption>
+				ページの基本クラス一覧
+			</caption>
+			<thead>
+				<tr>
+					<th>
+						ページクラス名
+					</th>
+					<th>
+						使用できるユーザレベル
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>dataforms.app.page.base.DeveloperPage</td>
+					<td>
+						「開発者」のみ使用可能。
+					</td>
+				</tr>
+				<tr>
+					<td>dataforms.app.page.base.AdminPage</td>
+					<td>
+						「開発者」、「管理者」が使用可能。
+					</td>
+				</tr>
+				<tr>
+					<td>dataforms.app.page.base.UserPage</td>
+					<td>
+						「開発者」、「管理者」、「ユーザ」が使用可能。
+					</td>
+				</tr>
+				<tr>
+					<td>dataforms.app.page.base.GuestPage</td>
+					<td>
+						「開発者」、「管理者」、「ユーザ」、「ゲスト」が使用可能。
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			SamplePageを以下のように修正すると、SamplePageは「ゲスト」用ページとなり、ログインしないとメニューに表示されないページになります。
+		</p>
+		<div class="filecaption">SamplePageを「ゲスト」用に修正</div>
+		<div class="wrappre">
+			<pre>
+import dataforms.app.page.base.GuestPage;
+import dataforms.dao.Dao;
+import dataforms.dao.Table;
+import sample.dao.SampleDao;
+import sample.dao.SampleTable;
+
+
+/**
+ * ページクラス。
+ */
+public class SamplePage extends <b>GuestPage</b> {
+	/**
+	 * コンストラクタ。
+	 */
+	public SamplePage() {
+		this.addForm(new SampleQueryForm());
+		this.addForm(new SampleQueryResultForm());
+		this.addForm(new SampleEditForm());
+
+	}
+
+	・
+	・
+	・
+}
+			</pre>
+		</div>
+
+		<figure>
+			<figcaption>ログイン前のサイトマップ</figcaption>
+			<img src="userManagement3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<figure>
+			<figcaption>userでログインした際のサイトマップ</figcaption>
+			<img src="userManagement4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			AdminPage.java等のソースを確認すればわかると思いますが、認証のチェックはisAuthenticatedというメソッドで実現しています。
+		</p>
+		<div class="filecaption">AdminPageのisAuthenticatedメソッド</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * {@inheritDoc}
+ * &#38283;&#30330;&#32773;&#12289;&#30435;&#29702;&#32773;&#27177;&#38480;&#12434;&#25345;&#12388;&#12518;&#12540;&#12470;&#12398;&#12415;&#34920;&#31034;&#21487;&#33021;&#12391;&#12377;&#12290;
+ */
+@Override
+public boolean isAuthenticated(final Map&lt;String, Object&gt; params) throws Exception {
+	return this.checkUserAttribute(&quot;userLevel&quot;, &quot;admin&quot;) || this.checkUserAttribute(&quot;userLevel&quot;, &quot;developer&quot;);
+}
+			</pre>
+		</div>
+		<p>
+			これらのクラスは「ユーザレベル」のチェックのみですが、独自クラスを作成し、isAuthenticatedメソッドで独自の認証処理を作成することができます。
+		</p>
+		<h3>フィールドのマッチングパターンの変更</h3>
+		<p>
+			SampleQueryForm.javaは以下のように生成されています。
+		</p>
+		<div class="filecaption">SampleQueryForm.javaの生成結果</div>
+		<div class="wrappre">
+			<pre>
+package sample.page;
+
+import dataforms.controller.QueryForm;
+import dataforms.dao.Table;
+import sample.dao.SampleTable;
+import dataforms.field.base.Field.MatchType;
+import sample.field.SampleNumField;
+import sample.field.SampleDateField;
+
+
+
+/**
+ * &#21839;&#12356;&#21512;&#12431;&#12379;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleQueryForm extends QueryForm {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleQueryForm() {
+		Table table = new SampleTable();
+		this.addField(table.getField(&quot;sampleText&quot;)).setMatchType(MatchType.FULL);
+		this.addField(new SampleNumField(&quot;sampleNumFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
+		this.addField(new SampleNumField(&quot;sampleNumTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
+		this.addField(new SampleDateField(&quot;sampleDateFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
+		this.addField(new SampleDateField(&quot;sampleDateTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
+
+	}
+}
+
+			</pre>
+		</div>
+		<p>
+			SQLのwhere句は、QueryFormに設定されたフィールド情報とQueryFormから入力されたデータから自動的に作成されます。
+			この機能はQueryクラスとDaoクラスで実現しています。
+			Queryクラスは、SQLの問い合わせ(select文)の機能をJavaのクラスで実現したもので、複数のテーブルのjoinの機能もサポートしています。
+		</p>
+		<p>
+			フィールド"sampleText"は、setMatchType(MatchType.FULL)と設定されています。
+			これは、"sampleText"フィールドを「完全一致で検索する」という設定です。
+			これをsetMatchType(MatchType.PART)に変更すれば、部分一致で検索されるようになります。
+		</p>
+		<h3>検索結果のカラムソートの設定</h3>
+		<p>
+			SampleQueryResultForm.javaは、以下のように生成されています。
+		</p>
+		<div class="filecaption">SampleQueryResultForm.javaの生成結果</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#21839;&#12356;&#21512;&#12431;&#12379;&#32080;&#26524;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleQueryResultForm extends QueryResultForm {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleQueryResultForm() {
+		Table table = new SampleTable();
+		this.addPkFieldList(table.getPkFieldList());
+		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
+		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true);
+
+		this.addHtmlTable(htmltable);
+	}
+				・
+				・
+				・
+			</pre>
+		</div>
+		<p>
+			このコードでは、htmltableに配置された表示フィールドのSortableプロパティをtrueに設定しています。
+			この設定だけで、各カラムにソートアイコンが表示され、カラムヘッダをクリックするとそのカラムをソートしてくれます。
+		</p>
+		<figure>
+			<figcaption>検索結果のカラムソート</figcaption>
+			<img src="columnSort1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			生成されたソースでは、ソート順の指定はされていません。
+			そこで、デフォルトのソート順を設定してみます。
+			以下のように、setSortableの第二引数にソート順を指定してください。
+		</p>
+		<div class="filecaption">日付のデフォルトソート順を降順に設定</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#21839;&#12356;&#21512;&#12431;&#12379;&#32080;&#26524;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleQueryResultForm extends QueryResultForm {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleQueryResultForm() {
+		Table table = new SampleTable();
+		this.addPkFieldList(table.getPkFieldList());
+		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
+		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true, <b>SortOrder.DESC</b>);
+
+		this.addHtmlTable(htmltable);
+	}
+				・
+				・
+				・
+			</pre>
+		</div>
+		<figure>
+			<figcaption>デフォルトソート順の設定結果</figcaption>
+			<img src="columnSort2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>フィールドバリデーション</h3>
+		<p>
+			dataforms.jarの各種フィールドクラスには、すでに適切なバリデータが設定されています。
+			新規追加フォームの数値フィールドに英字を入力すると、以下のように数値バリデータが動作します。
+		</p>
+		<figure>
+			<figcaption>バリデータの動作</figcaption>
+			<img src="validator1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			フィールドには、必要に応じてバリデータを追加することができます。
+			編集フォームのSampleTextFieldを必須入力フィールドにするには、以下のようにコードを修正します。
+		</p>
+		<div class="filecaption">必須バリデータの追加</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#32232;&#38598;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleEditForm extends EditForm {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleEditForm() {
+		Table table = new SampleTable();
+		this.addTableFields(table);
+		<b>this.getFieldList().get(&quot;sampleText&quot;).addValidator(new RequiredValidator());</b>
+	}
+	・
+	・
+	・
+			</pre>
+		</div>
+		<p>
+			上のコードは、編集フォームに配置されたSampleTextFieldに、RequiredValidatorを追加しています。
+			このコードを実行すると、以下のように必須チェックが行われます。
+			また、RequiredValidatorを持つフィールドのラベルには、自動的に必須入力マークが付くようになっています。
+		</p>
+		<figure>
+			<figcaption>必須バリデータの実行結果</figcaption>
+			<img src="validator2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			また、SampleTextFieldを英数字のみ許可するようにするには、フィールドクラスにバリデータを追加します。
+			以下のソースでは、SampleTextFieldのonBindメソッドで、バリデータを追加しています。
+			このメソッドは、フィールドがフォームに追加されたタイミングで呼び出されます。
+			フィールドにバリデータを追加すれば、そのフィールドを配置したすべてのフォームでバリデータが動作します。
+		</p>
+		<div class="filecaption">フィールドクラスにバリデータを追加</div>
+		<div class="wrappre">
+			<pre>
+package sample.field;
+
+import dataforms.field.sqltype.VarcharField;
+import dataforms.validator.AsciiValidator;
+import dataforms.validator.MaxLengthValidator;
+
+
+/**
+ * SampleTextField&#12501;&#12451;&#12540;&#12523;&#12489;&#12463;&#12521;&#12473;&#12290;
+ *
+ */
+public class SampleTextField extends VarcharField {
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#38263;&#12290;
+	 */
+	private static final int LENGTH = 64;
+
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#12467;&#12513;&#12531;&#12488;&#12290;
+	 */
+	private static final String COMMENT = &quot;&#12486;&#12461;&#12473;&#12488;&quot;;
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleTextField() {
+		super(null, LENGTH);
+		this.setComment(COMMENT);
+
+	}
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 * @param id &#12501;&#12451;&#12540;&#12523;&#12489;ID&#12290;
+	 */
+	public SampleTextField(final String id) {
+		super(id, LENGTH);
+		this.setComment(COMMENT);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new MaxLengthValidator(this.getLength()));
+		<b>this.addValidator(new AsciiValidator());</b>
+	}
+}
+			</pre>
+		</div>
+		<figure>
+			<figcaption>半角文字バリデータの実行結果</figcaption>
+			<img src="validator3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p class="topic">
+			バリデータは必ずJavaのクラスで実装されています。
+			当然チェックはサーバ側で行われます。
+			ただしRequiredValidator.java等には、それに対応するJavascriptクラス(RequiredValidate.js)も用意されています。
+			このようなJavascriptクラスが存在する場合、チェックはブラウザ側で行われ、サーバへのアクセスは発生しません。
+			ブラウザを使用せず直接送信するようなアクセスがあった場合は、RequiredValidator.javaが動作し不正なデータをはじくようになっています。
+		</p>
+		<h3>フォームバリデーション(サーバー側)</h3>
+		<p>
+			複数のフィールドの関係をチェックする場合は、すでに存在するフォームバリデーションメソッドをオーバーライドします。
+			フォームクラスのバリデーションメソッドは、全てのフィールドのバリデータを呼び出すようになっています。
+			全てのフィールドバリデータのチェックで問題なければ、validateFormメソッドを呼び出すようになっています。
+			FormクラスのvalidateFormメソッドは何もしないメソッドになっているため、SampleEditFormクラスでオーバーライドし、フォームのチェック処理を実装します。
+			以下のようにvalidateFormメソッドを実装すると、数値を入力した場合、日付の入力も必要になります。
+		</p>
+		<div class="filecaption">フォームバリデーションの実装(SampleEditForm.java)</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#32232;&#38598;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleEditForm extends EditForm {
+
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(SampleEditForm.class);
+
+
+	&#12539;
+	&#12539;
+	&#12539;
+
+	<b>
+	@Override
+	protected List&lt;ValidationError&gt; validateForm(Map&lt;String, Object&gt; data) throws Exception {
+		log.debug(&quot;data=&quot; + data);
+		List&lt;ValidationError&gt; list = new ArrayList&lt;ValidationError&gt;();
+		BigDecimal sampleNum = (BigDecimal) data.get(&quot;sampleNum&quot;);
+		Date sampleDate = (Date) data.get(&quot;sampleDate&quot;);
+		if (sampleNum != null &amp;&amp; sampleDate == null) {
+			list.add(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(this.getPage(), &quot;error.requireddate&quot;)));
+		}
+		return list;
+	}
+	</b>
+}
+			</pre>
+		</div>
+		<p>
+			また、各ページのみで使用するメッセージリソースは、SamplePage.htmlと同じパスのSamplePage.propertiesというファイルに登録することができます。
+		</p>
+		<div class="filecaption">メッセージリソースの作成(SamplePage.properties)</div>
+		<div class="wrappre">
+			<pre>
+error.requireddate = 数値が入力された場合、日付を入力してください。
+			</pre>
+		</div>
+		<p>
+			この修正で、数値のみが入力された場合、日付も入力するように指示するエラーメッセージが表示されます。
+			フィールド単位のチェックは各種バリデータの*.jsファイルで行われるため、サーバのアクセスは発生しません。
+			しかし、このフォームバリデーションはJavaで記述されたものであるため、サーバ側で動作することになります。
+			Eclipseのコンソールのログに、その動作結果が出力されているはずです。
+		</p>
+		<figure>
+			<figcaption>フォームバリデーションの実行結果</figcaption>
+			<img src="validator4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>フォームバリデーション(クライアント側)</h3>
+		<p>
+			上記と同様のバリデーションは、Javascriptでも実現することができます。
+			Javascriptに処理を記述する場合は、開発ツールでSampleEditForm.javaに対応するJavascriptクラスSampleEditForm.jsを作成する必要があります。
+			「開発ツール」の「Webリソース作成」を選択し、SamplePage中のFormクラスを検索します。
+		</p>
+		<figure>
+			<figcaption>Webリソース作成でFormクラスを検索</figcaption>
+			<img src="validator5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			SampleEditFormのリンクをクリックし、表示されたダイアログで、SampleEditForm.jsを作成します。
+		</p>
+		<figure>
+			<figcaption>SampleEditForm.jsの作成</figcaption>
+			<img src="validator6.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			作成が終了した後Eclipseのプロジェクトを確認すると、以下のようにソースファイルが作成されています。
+		</p>
+		<figure>
+			<figcaption>SampleEditForm.jsの作成結果</figcaption>
+			<img src="validator7.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			SampleEditForm.jsにvalidateFormメソッドを実装します。
+			コードの意味は、jQueryに慣れていれば、簡単に理解できると思います。
+			また、ロジックはSampleEditForm.javaのvalidateFormと同じものになります。
+		</p>
+		<div class="filecaption">フォームバリデーションの実装(SampleEditForm.js)</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * @fileOverview {@link SampleEditForm}&#12463;&#12521;&#12473;&#12434;&#35352;&#36848;&#12375;&#12383;&#12501;&#12449;&#12452;&#12523;&#12391;&#12377;&#12290;
+ */
+
+/**
+ * @class SampleEditForm
+ *
+ * @extends EditForm
+ */
+SampleEditForm = createSubclass(&quot;SampleEditForm&quot;, {}, &quot;EditForm&quot;);
+
+
+/**
+ * HTML&#12456;&#12524;&#12513;&#12531;&#12488;&#12392;&#12398;&#23550;&#24540;&#20184;&#12369;&#12434;&#34892;&#12356;&#12414;&#12377;&#12290;
+ */
+SampleEditForm.prototype.attach = function() {
+	EditForm.prototype.attach.call(this);
+};
+
+<b>
+SampleEditForm.prototype.validateForm = function() {
+	var ret = EditForm.prototype.validateForm.call(this);
+	var fv = new FieldValidator();
+	if ((!fv.isBlank(this.find(&quot;#sampleNum&quot;))) &amp;&amp; fv.isBlank(this.find(&quot;#sampleDate&quot;))) {
+		ret.push(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(&quot;error.requireddate&quot;)))
+	}
+	return ret;
+};
+</b>
+			</pre>
+		</div>
+		<p>
+			この処理を実装した後、バリデーションを動作させると、Javaのみで記述したバリデーションと同じ動作になります。
+			今までと違う点は、チェック時にサーバへのアクセスは発生しないということです。
+			Eclipseのコンソールを見ると、フォームバリデータでエラーした場合、サーバ側のメソッドが動作していないことが確認できるはずです。
+		</p>
+		<p>
+			このようにバリデータは、Java,Javascriptの両方で同じように実装することができます。
+			Javaで実装すれば、通信が発生しますが、直接アクセスするような不正プログラムの入力内容もチェックされます。
+			Javascriptで実装すれば、通信が発生せず高速に動作しますが、直接アクセスする不正プログラムには対応できません。
+			両方実装すれば、高速かつ安全ですが、修正が発生したときにはJava,Javascriptを同時に修正する必要があります。
+			Javaで実装するのか、Javascriptで実装するのか、それとも両方で実装するのかは、システムの性質やバリデーションの内容を十分考量して決定してください。
+		</p>
+		<h3>オートコンプリート機能の実装</h3>
+		<p>
+			開発ツールのクラス名フィールドは、オートコンプリート機能をサポートしています。
+			フィールドクラスは、jQuery UIのオートコンプリート機能をサポートしています。
+			フィールドクラスのautocompleteプロパティをtrueに設定し、入力候補の問い合わせメソッドを実装するだけで、オートコンプリート機能が動作するようになっています。
+		</p>
+		<div class="filecaption">フィールドクラスにオートコンプリート機能を実装</div>
+		<div class="wrappre">
+			<pre>
+package sample.field;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import dataforms.field.base.FieldList;
+import dataforms.field.sqltype.VarcharField;
+import dataforms.validator.AsciiValidator;
+import dataforms.validator.MaxLengthValidator;
+import sample.dao.SampleDao;
+
+
+/**
+ * SampleTextField&#12501;&#12451;&#12540;&#12523;&#12489;&#12463;&#12521;&#12473;&#12290;
+ *
+ */
+public class SampleTextField extends VarcharField {
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#38263;&#12290;
+	 */
+	private static final int LENGTH = 64;
+
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#12467;&#12513;&#12531;&#12488;&#12290;
+	 */
+	private static final String COMMENT = &quot;&#12486;&#12461;&#12473;&#12488;&quot;;
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleTextField() {
+		super(null, LENGTH);
+		this.setComment(COMMENT);
+	}
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 * @param id &#12501;&#12451;&#12540;&#12523;&#12489;ID&#12290;
+	 */
+	public SampleTextField(final String id) {
+		super(id, LENGTH);
+		this.setComment(COMMENT);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new MaxLengthValidator(this.getLength()));
+		this.addValidator(new AsciiValidator());
+		<b>this.setAutocomplete(true);</b>
+
+	}
+	<b>
+	@Override
+	protected List&lt;Map&lt;String, Object&gt;&gt; queryAutocompleteSourceList(final Map&lt;String, Object&gt; data) throws Exception {
+		String id = (String) data.get(&quot;currentFieldId&quot;); // &#23550;&#35937;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+		String text = (String) data.get(id); // &#12501;&#12451;&#12540;&#12523;&#12489;&#12398;&#20837;&#21147;&#20516;&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+		SampleDao dao = new SampleDao(this); // Dao&#20351;&#29992;&#12375;&#12289;&#37096;&#20998;&#19968;&#33268;&#12391;&#26908;&#32034;&#12377;&#12427;&#12290;
+		Map&lt;String, Object&gt; p = new HashMap&lt;String, Object&gt;();
+		p.put(id, text);
+		FieldList flist = new FieldList();
+		flist.add((new SampleTextField()).setMatchType(MatchType.PART));
+		List&lt;Map&lt;String, Object&gt;&gt; list = dao.query(p, flist);
+		// &#20837;&#21147;&#20505;&#35036;&#12522;&#12473;&#12488;&#12434;&#36820;&#12377;&#12290;
+		return this.convertToAutocompleteList(
+				this.getHtmlTableRowId(id), // EditableHtmlTable&#20013;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12395;&#23550;&#24540;&#12377;&#12427;&#12383;&#12417;&#12289;HtmlTable&#12398;&#34892;&#12398;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+				list,	// &#26908;&#32034;&#32080;&#26524;&#12522;&#12473;&#12488;&#12290;
+				&quot;sampleText&quot;,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				&quot;sampleText&quot;	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
+		);
+	}
+	</b>
+
+}
+
+			</pre>
+		</div>
+		<p>
+			上記ソースをビルドした後、問い合わせフォームのテキストフィールドに値を入力すると、合致する入力候補が表示されます。
+			SampleTextField.javaでオートコンプリート機能をサポートしたため、このフィールドが配置された問い合わせフォームと編集フォームの両方でオートコンプリート機能が動作します。
+		</p>
+		<figure>
+			<figcaption>オートコンプリート機能の動作</figcaption>
+			<img src="autocomplete1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>関連データの自動取得</h3>
+		<p>
+			編集フォームのテキストを入力した際に、すでに一致するテキストが入力されていたら、それに一致するデータから数値、日付を取得する処理を書いてみます。
+			このコード自体はあまり意味がないかもしれません。
+			しかしコードを入力した際に、それに対応する名称を取得するような機能が必要なケースはよくあります。
+			このような処理が必要な場合は、この処理を参考にしてください。
+		</p>
+		<div class="filecaption">SampleTextField.javaにqueryRelationDataメソッドを実装</div>
+		<div class="wrappre">
+			<pre>
+package sample.field;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import dataforms.field.base.FieldList;
+import dataforms.field.sqltype.VarcharField;
+import dataforms.validator.AsciiValidator;
+import dataforms.validator.MaxLengthValidator;
+import sample.dao.SampleDao;
+
+
+/**
+ * SampleTextField&#12501;&#12451;&#12540;&#12523;&#12489;&#12463;&#12521;&#12473;&#12290;
+ *
+ */
+public class SampleTextField extends VarcharField {
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#38263;&#12290;
+	 */
+	private static final int LENGTH = 64;
+
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#12467;&#12513;&#12531;&#12488;&#12290;
+	 */
+	private static final String COMMENT = &quot;&#12486;&#12461;&#12473;&#12488;&quot;;
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleTextField() {
+		super(null, LENGTH);
+		this.setComment(COMMENT);
+	}
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 * @param id &#12501;&#12451;&#12540;&#12523;&#12489;ID&#12290;
+	 */
+	public SampleTextField(final String id) {
+		super(id, LENGTH);
+		this.setComment(COMMENT);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new MaxLengthValidator(this.getLength()));
+		this.addValidator(new AsciiValidator());
+		this.setAutocomplete(true);
+	}
+
+	@Override
+	protected List&lt;Map&lt;String, Object&gt;&gt; queryAutocompleteSourceList(final Map&lt;String, Object&gt; data) throws Exception {
+		String id = (String) data.get(&quot;currentFieldId&quot;); // &#23550;&#35937;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+		String text = (String) data.get(id); // &#12501;&#12451;&#12540;&#12523;&#12489;&#12398;&#20837;&#21147;&#20516;&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+		SampleDao dao = new SampleDao(this); // Dao&#20351;&#29992;&#12375;&#12289;&#37096;&#20998;&#19968;&#33268;&#12391;&#26908;&#32034;&#12377;&#12427;&#12290;
+		Map&lt;String, Object&gt; p = new HashMap&lt;String, Object&gt;();
+		p.put(id, text);
+		FieldList flist = new FieldList();
+		flist.add((new SampleTextField()).setMatchType(MatchType.PART));
+		List&lt;Map&lt;String, Object&gt;&gt; list = dao.query(p, flist);
+		// &#20837;&#21147;&#20505;&#35036;&#12522;&#12473;&#12488;&#12434;&#36820;&#12377;&#12290;
+		return this.convertToAutocompleteList(
+				this.getHtmlTableRowId(id), // EditableHtmlTable&#20013;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12395;&#23550;&#24540;&#12377;&#12427;&#12383;&#12417;&#12289;HtmlTable&#12398;&#34892;&#12398;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
+				list,	// &#26908;&#32034;&#32080;&#26524;&#12522;&#12473;&#12488;&#12290;
+				&quot;sampleText&quot;,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				&quot;sampleText&quot;	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
+		);
+	}
+	<b>
+	@Override
+	protected Map<String, Object> queryRelationData(Map<String, Object> data) throws Exception {
+		String id = (String) data.get("currentFieldId");
+		String text = (String) data.get(id);
+		SampleDao dao = new SampleDao(this); // Dao使用し、完全一致で検索する。
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put(id, text);
+		FieldList flist = new FieldList();
+		flist.add((new SampleTextField()).setMatchType(MatchType.FULL));
+		List<Map<String, Object>> list = dao.query(p, flist);
+		if (list.size() >= 1) {
+			Map<String, Object> r = list.get(0);
+			Map<String, Object> ret = new HashMap<String, Object>();
+			ret.put("sampleNum", r.get("sampleNum"));
+			ret.put("sampleDate", r.get("sampleDate"));
+			return ret;
+		} else {
+			return new HashMap<String, Object>();
+		}
+	}
+</b>
+}
+
+			</pre>
+		</div>
+		<p>
+			この機能を有効にするには、フィールドのrelationDataAcquisitionプロパティにtrueを設定する必要があります。
+			フィールドクラスでこのプロパティの設定を行うと、問い合わせフォームでも動作してしまうため、編集フォームのコンストラクタで設定します。
+		</p>
+		<div class="filecaption">SampleEditForm.javaのsampleTextのrelationDataAcquisitionプロパティを設定</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#32232;&#38598;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleEditForm extends EditForm {
+
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(SampleEditForm.class);
+
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleEditForm() {
+		Table table = new SampleTable();
+		this.addTableFields(table);
+		this.getFieldList().get(&quot;sampleText&quot;).addValidator(new RequiredValidator())<b>.setRelationDataAcquisition(true)</b>;
+	}
+
+			</pre>
+		</div>
+		テキストにすでに入力された値を入力しフィールドを抜けると、過去に入力された数値と日付が表示されます。
+		<figure>
+			<figcaption>関連データ取得の実行結果</figcaption>
+			<img src="reference1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>独自処理ボタンの追加</h3>
+		<p>
+			編集フォームにボタンを追加して、そこに処理を割り当ててみます。
+			先ずSamplePage.html中のeditFormにボタンを追加します。
+		</p>
+		<div class="filecaption">SamplePage.htmlの修正箇所</div>
+		<div class="wrappre">
+			<pre>
+	&lt;form id=&quot;editForm&quot;&gt;
+		&lt;div class=&quot;formHeader&quot;&gt;&lt;span id=&quot;editFormTitle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+		&lt;input type=&quot;hidden&quot; id=&quot;sampleId&quot; /&gt;
+		&lt;input type=&quot;hidden&quot; id=&quot;createUserId&quot; /&gt;
+		&lt;input type=&quot;hidden&quot; id=&quot;createTimestamp&quot; /&gt;
+		&lt;input type=&quot;hidden&quot; id=&quot;updateUserId&quot; /&gt;
+		&lt;input type=&quot;hidden&quot; id=&quot;updateTimestamp&quot; /&gt;
+		&lt;table class=&quot;responsive&quot;&gt;
+			&lt;tbody&gt;
+				&lt;tr&gt;
+					&lt;th&gt;&#12486;&#12461;&#12473;&#12488;&lt;/th&gt;
+					&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleText&quot; /&gt;&lt;/td&gt;
+				&lt;/tr&gt;
+				&lt;tr&gt;
+					&lt;th&gt;&#25968;&#20516;&lt;/th&gt;
+					&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleNum&quot; /&gt;&lt;/td&gt;
+				&lt;/tr&gt;
+				&lt;tr&gt;
+					&lt;th&gt;&#26085;&#20184;&lt;/th&gt;
+					&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleDate&quot; /&gt;&lt;/td&gt;
+				&lt;/tr&gt;
+			&lt;/tbody&gt;
+		&lt;/table&gt;
+		&lt;input type=&quot;button&quot; id=&quot;confirmButton&quot; value=&quot;&#30906;&#35469;&quot;/&gt;
+		&lt;input type=&quot;button&quot; id=&quot;saveButton&quot; value=&quot;&#30331;&#37682;&quot;/&gt;
+		&lt;input type=&quot;button&quot; id=&quot;resetButton&quot; value=&quot;&#12522;&#12475;&#12483;&#12488;&quot;/&gt;
+		&lt;input type=&quot;button&quot; id=&quot;deleteButton&quot; value=&quot;&#21066;&#38500;&quot;/&gt;
+		&lt;input type=&quot;button&quot; id=&quot;backButton&quot; value=&quot;&#25147;&#12427;&quot;/&gt;
+		<b>&lt;input type=&quot;button&quot; id=&quot;printButton&quot; value=&quot;&#21360;&#21047;&quot;/&gt;</b>
+	&lt;/form&gt;
+
+			</pre>
+		</div>
+		<p>
+			このボタンに処理を割り当てるには、SampleEditFormのattachメソッドでイベント処理を追加します。
+			フォームのfindメソッドはjQueryのセレクタを指定することができます。
+			この処理で、「印刷」ボタンにイベントハンドラを登録しています。
+		</p>
+		<div class="filecaption">SampleEditForm.jsの修正箇所</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * @fileOverview {@link SampleEditForm}&#12463;&#12521;&#12473;&#12434;&#35352;&#36848;&#12375;&#12383;&#12501;&#12449;&#12452;&#12523;&#12391;&#12377;&#12290;
+ */
+
+/**
+ * @class SampleEditForm
+ *
+ * @extends EditForm
+ */
+SampleEditForm = createSubclass(&quot;SampleEditForm&quot;, {}, &quot;EditForm&quot;);
+
+
+/**
+ * HTML&#12456;&#12524;&#12513;&#12531;&#12488;&#12392;&#12398;&#23550;&#24540;&#20184;&#12369;&#12434;&#34892;&#12356;&#12414;&#12377;&#12290;
+ */
+SampleEditForm.prototype.attach = function() {
+	EditForm.prototype.attach.call(this);
+<b>
+	this.find(&quot;#testButton&quot;).click(function () {
+		alert("印刷処理を実装予定");
+	});
+</b>
+};
+
+SampleEditForm.prototype.validateForm = function() {
+	var ret = EditForm.prototype.validateForm.call(this);
+	var fv = new FieldValidator();
+	if ((!fv.isBlank(this.find(&quot;#sampleNum&quot;))) &amp;&amp; fv.isBlank(this.find(&quot;#sampleDate&quot;))) {
+		ret.push(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(&quot;error.requireddate&quot;)))
+	}
+	return ret;
+};
+			</pre>
+		</div>
+		<p>
+			「印刷」ボタンを押下すると、以下のようにalertが実行されます。
+		</p>
+		<figure>
+			<figcaption>印刷ボタンの動作</figcaption>
+			<img src="function1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>印刷処理の実装</h3>
+		<p>
+			次に「印刷」ボタンのイベント処理で、サーバのメソッドを呼び出しExcel形式のレポートを出力します。
+			先ずSampleEditForm.javaにサーバ側の処理を記述します。
+		</p>
+		<p>
+			クライアントから直接呼び出せるメソッドは、以下のprintメソッドのようにMap&lt;String, Object&gt;の引数を持ち、Response型の戻り値を返すメソッドです。
+		</p>
+		<p>
+			printメソッドに渡される引数には、editFormから入力された情報が展開されています。
+			各フィールドの入力内容は、たいてい文字列のまま入ってきます。
+			この入力内容をvalidateメソッドでチェックし、問題がなければそれをサーバ形式に変換することができます。
+			メソッドconvertToServerDataで変換すると、文字列形式で渡ってきたsampleNumがBigDecimalに変換され、sampleDateはjava.sql.Dateに変換されます。
+		</p>
+		<p>
+			printメソッドは、バリデーションが成功した場合BinaryResponseでExcelレポートを返します。
+			バリデーションで問題がある場合は、JsonResponseでエラー情報を返します。
+		</p>
+		<p>
+			また、@WebMethodアノテーションを指定しないと、クライアントから呼び出すことはできないようになっています。
+			さらに、メソッドが呼び出される前には必ず、Pageの認証チェックが行われます。
+			つまり、UserPageを継承したページは、Userでログインしていないと呼び出すことはできません。
+		</p>
+		<div class="filecaption">SampleEditForm.javaの修正箇所</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * &#32232;&#38598;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleEditForm extends EditForm {
+
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(SampleEditForm.class);
+
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleEditForm() {
+		Table table = new SampleTable();
+		this.addTableFields(table);
+		this.getFieldList().get(&quot;sampleText&quot;).addValidator(new RequiredValidator());
+	}
+
+	&#12539;
+	&#12539;
+	&#12539;
+
+	<b>
+	@WebMethod
+	public Response print(final Map&lt;String, Object&gt; param) throws Exception {
+		this.methodStartLog(log, param);
+		List&lt;ValidationError&gt; list = this.validate(param);
+		Response resp = null;
+		if (list.size() == 0) {
+			Map&lt;String, Object&gt; data = this.convertToServerData(param);
+			log.debug(&quot;&#22793;&#25563;&#24460;&#12398;&#12487;&#12540;&#12479;=&quot; + data);
+			String template = AllTypeEditForm.getServlet().getServletContext().getRealPath(&quot;/exceltemplate/sample.xlsx&quot;);
+			SampleExcelReport rep = new SampleExcelReport(template);
+			BinaryResponse bresp = new BinaryResponse(rep.print(data));
+			bresp.setFileName(&quot;sample.xlsx&quot;);
+			resp = bresp;
+		} else {
+			resp = new JsonResponse(JsonResponse.INVALID, list);
+		}
+		this.methodFinishLog(log, resp);
+		return resp;
+	}
+	</b>
+};
+
+			</pre>
+		</div>
+		<p>
+			Excelレポートのクラスのコンストラクタは、SampleTable中のフィールドを配置しているだけです。
+		</p>
+		<div class="filecaption">SampleExcelReport.javaの内容</div>
+		<div class="wrappre">
+			<pre>
+package sample.report;
+
+import dataforms.report.ExcelReport;
+import sample.dao.SampleTable;
+
+/**
+ * Excel&#12524;&#12509;&#12540;&#12488;&#12463;&#12521;&#12473;&#12290;
+ *
+ */
+public class SampleExcelReport extends ExcelReport {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 * @param template Excel&#12486;&#12531;&#12503;&#12524;&#12540;&#12488;&#12501;&#12449;&#12452;&#12523;&#12398;&#12497;&#12473;&#12290;
+	 */
+	public SampleExcelReport(final String template) {
+		this.setTemplatePath(template);
+		this.addTableFields(new SampleTable());
+
+	}
+}
+			</pre>
+		</div>
+		<p>
+			次に、Excelのテンプレートとして以下のようなsample.xlsxを用意します。
+		</p>
+		<figure>
+			<figcaption>Excelテンプレートの内容</figcaption>
+			<img src="function3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			常にJsonResponseを返すサーバメソッドの場合、submitメソッドを使用しますが、今回呼び出すprintメソッドは、成功した場合BinaryResponseを返します。
+			そのため、以下のようにsubmitForDownloadメソッドを使用します。
+		</p>
+		<div class="filecaption">SampleEditForm.jsの修正箇所</div>
+		<div class="wrappre">
+			<pre>
+/**
+ * @fileOverview {@link SampleEditForm}&#12463;&#12521;&#12473;&#12434;&#35352;&#36848;&#12375;&#12383;&#12501;&#12449;&#12452;&#12523;&#12391;&#12377;&#12290;
+ */
+
+/**
+ * @class SampleEditForm
+ *
+ * @extends EditForm
+ */
+SampleEditForm = createSubclass(&quot;SampleEditForm&quot;, {}, &quot;EditForm&quot;);
+
+
+/**
+ * HTML&#12456;&#12524;&#12513;&#12531;&#12488;&#12392;&#12398;&#23550;&#24540;&#20184;&#12369;&#12434;&#34892;&#12356;&#12414;&#12377;&#12290;
+ */
+SampleEditForm.prototype.attach = function() {
+	EditForm.prototype.attach.call(this);
+	var thisForm = this;
+	this.find(&quot;#printButton&quot;).click(function () {
+		<b>thisForm.print();</b>
+	});
+};
+
+SampleEditForm.prototype.validateForm = function() {
+	var ret = EditForm.prototype.validateForm.call(this);
+	var fv = new FieldValidator();
+	if ((!fv.isBlank(this.find(&quot;#sampleNum&quot;))) &amp;&amp; fv.isBlank(this.find(&quot;#sampleDate&quot;))) {
+		ret.push(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(&quot;error.requireddate&quot;)))
+	}
+	return ret;
+};
+
+<b>
+SampleEditForm.prototype.print = function() {
+	var thisForm = this;
+	thisForm.parent.resetErrorStatus();
+	if (thisForm.validate()) {
+		thisForm.submitForDownload(&quot;print&quot;, function(r) {
+			if (r.status == ServerMethod.INVALID) {
+				thisForm.parent.setErrorInfo(thisForm.getValidationResult(r), thisForm);
+			}
+		});
+	}
+};</b>
+			</pre>
+		</div>
+		<p>
+			これを実行すると、Excelファイルがダウンロードされます。
+		</p>
+		<figure>
+			<figcaption>印刷ボタンを押下した状態</figcaption>
+			<img src="function4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			ダウンロードされたExcelファイルの内容は以下のようになっています。
+		</p>
+		<figure>
+			<figcaption>出力されたExcelファイルの内容</figcaption>
+			<img src="function5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<hr/>
+	</body>
+</html>

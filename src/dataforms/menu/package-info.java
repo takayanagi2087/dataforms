@@ -1,0 +1,4 @@
+/**
+ * メニューパッケージ。
+ */
+package dataforms.menu;

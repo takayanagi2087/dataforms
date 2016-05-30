@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ページJavaクラス作成</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
+							<th>クラス名</th>
+							<td><input type="text" id="className" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<div class="hScrollDiv">
+					<table id="queryResult">
+						<thead>
+							<tr>
+								<th>
+									No.
+								</th>
+								<th>
+									ページクラス名
+								</th>
+								<th>
+									操作テーブルクラス名
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span id="queryResult[0].rowNo"></span>
+								</td>
+								<td>
+									<input type="hidden" id="queryResult[0].packageName" />
+									<input type="hidden" id="queryResult[0].pageClassName" />
+									<a href="javascript:void(0);" id="queryResult[0].updateButton">
+										<span id="queryResult[0].fullClassName"></span>
+									</a>
+								</td>
+								<td>
+									<span id="queryResult[0].tableClassName"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form id="editForm">
+				指定されたパッケージに、ページクラスとその中に配置する各種フォームクラスのjavaソースファイルを作成します。
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th colspan="2">Javaソース出力先</th>
+							<td colspan="5">
+								<input type="text" id="javaSourcePath" >
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2">機能</th>
+							<td colspan="5"><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th rowspan="3">ページ</th>
+							<th>ページ名</th>
+							<td colspan="5">
+								<input type="text" id="pageName">
+							</td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td colspan="5">
+								<input type="text" id="packageName">
+							</td>
+						</tr>
+						<tr>
+							<th>クラス名</th>
+							<td>
+								<input type="text" id="pageClassName" >
+							</td>
+							<th>上書モード</th>
+							<td  colspan="3">
+								<select id="pageClassOverwriteMode"></select>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2">テーブル操作</th>
+							<td colspan="5">
+								<span>
+									<input type="radio" id="updateTable[0]" name="updateTable">有
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th rowspan="3">操作テーブル</th>
+							<th>テーブルパッケージ名</th>
+							<td colspan="5">
+								<input type="text" id="tablePackageName">
+							</td>
+						</tr>
+						<tr>
+							<th>テーブルクラス名</th>
+							<td colspan="5">
+								<input type="text" id="tableClassName">
+							</td>
+						</tr>
+						<tr>
+							<th>DAOクラス名</th>
+							<td>
+								<input type="text" id="daoClassName">
+							</td>
+							<th>上書モード</th>
+							<td colspan="3">
+								<select id="daoClassOverwriteMode"></select>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2">問い合わせフォームクラス名</th>
+							<td>
+								<input type="text" id="queryFormClassName">
+							</td>
+							<th>上書モード</th>
+							<td>
+								<select id="queryFormClassOverwriteMode"></select>
+							</td>
+							<th>生成</th>
+							<td>
+								<input type="checkbox" id="queryFormClassFlag" value="1"><br/>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2">問い合わせ結果フォームクラス名</th>
+							<td>
+								<input type="text" id="queryResultFormClassName">
+							</td>
+							<th>上書モード</th>
+							<td>
+								<select id="queryResultFormClassOverwriteMode"></select>
+							</td>
+							<th>生成</th>
+							<td>
+								<input type="checkbox" id="queryResultFormClassFlag" value="1"><br/>
+							</td>
+						</tr>
+						<tr>
+							<th colspan="2">編集フォームクラス名</th>
+							<td>
+								<input type="text" id="editFormClassName">
+							</td>
+							<th>上書モード</th>
+							<td>
+								<select id="editFormClassOverwriteMode"></select>
+							</td>
+							<th>生成</th>
+							<td>
+								<input type="checkbox" id="editFormClassFlag" value="1"><br/>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="allErrorButton" value="全て上書きはエラー"/>
+				<input type="button" id="allSkipButton" value="全て上書きしない"/>
+				<input type="button" id="allForceOverwriteButton" value="全て強制上書き"/>
+				<input type="button" id="errorSkipButton" value="エラーしたものは上書きしない"/>
+				<input type="button" id="errorForceButton" value="エラーしたものも強制上書き"/><br/>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+		</div>
+	</body>
+</html>

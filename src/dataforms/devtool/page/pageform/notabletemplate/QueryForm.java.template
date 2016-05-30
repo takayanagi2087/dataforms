@@ -1,0 +1,15 @@
+package ${packageName};
+
+import dataforms.controller.QueryForm;
+
+/**
+ * 問い合わせフォームクラス。
+ */
+public class ${queryFormClassName} extends QueryForm {
+	/**
+	 * コンストラクタ。
+	 */
+	public ${queryFormClassName}() {
+		// TODO:検索条件フィールドの設定を実装してください。
+	}
+}

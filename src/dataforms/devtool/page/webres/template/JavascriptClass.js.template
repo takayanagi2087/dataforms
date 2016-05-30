@@ -1,0 +1,19 @@
+/**
+ * @fileOverview {@link ${className}}クラスを記述したファイルです。
+ */
+
+/**
+ * @class ${className}
+ *
+ * @extends ${superClassName}
+ */
+${className} = createSubclass("${className}", {}, "${superClassName}");
+
+
+/**
+ * HTMLエレメントとの対応付けを行います。
+ */
+${className}.prototype.attach = function() {
+	${superClassName}.prototype.attach.call(this);
+};
+

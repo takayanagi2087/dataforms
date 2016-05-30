@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>機能管理</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
+			<form id="editForm">
+				機能を配置するパスを登録します。
+				機能として登録されたパスに対応したパッケージ内のPageクラスを検索し、メニューに表示します。<br/>
+				メニューは機能でグループ分けされます。<br/>
+				各機能,ページの名称は各パスのFunction.propertiesに登録します。<br/>
+				リストのドラッグで表示順の変更が可能です。<br/>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>
+								Webリソース出力先
+							</th>
+							<td>
+								<input type="text" id="webSourcePath" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<br/>
+				<div class="hScrollDiv">
+					<table id="funcTable" class="editableTable" style="min-width: 530px;">
+						<thead>
+							<tr>
+								<th class="buttonColumn"></th>
+								<th class="buttonColumn"></th>
+								<th>No.</th>
+								<th>パス</th>
+								<th>機能名称(Function.properties設定値)</th>
+								<th>無効</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<input type="button" id="funcTable[0].addButton" value="+"/>
+								</td>
+								<td>
+									<input type="button" id="funcTable[0].deleteButton" value="-"/>
+								</td>
+								<td>
+									<span id="funcTable[0].no"></span>
+									<input type="hidden" id="funcTable[0].funcId" />
+									<input type="hidden" id="funcTable[0].sortOrder" />
+								</td>
+								<td nowrap>
+									<input type="text" id="funcTable[0].funcPath" />
+								</td>
+								<td nowrap>
+									<input type="text" id="funcTable[0].funcName"/>
+								</td>
+								<td nowrap>
+									<input type="checkbox" id="funcTable[0].deleteFlag" value="1"/>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th class="buttonColumn">
+									<input type="button" id="funcTable.addButton" value="+"/>
+								</th>
+								<th colspan="7">&nbsp;</th>
+							</tr>
+
+						</tfoot>
+					</table>
+				</div>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+		</div>
+	</body>
+</html>

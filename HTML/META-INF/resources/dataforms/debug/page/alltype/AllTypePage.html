@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>DBデータ型テスト</title>
+		<style type="text/css">
+/*			#editForm th {width: 100px;}
+			#queryForm th {width: 100px;}*/
+		</style>
+		<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>固定長文字列</th>
+							<td><input type="text" id="charField" value=""/></td>
+							<th>可変長文字列</th>
+							<td><input type="text" id="varcharField" value=""/></td>
+						</tr>
+						<tr>
+							<th>数値フィールド</th>
+							<td><input type="text" id="numericField" value=""/></td>
+							<th>日付フィールド</th>
+							<td><input type="text" id="dateFieldFrom" value="" class="dateRangeField">&nbsp;～&nbsp;<input type="text" id="dateFieldTo" value="" class="dateRangeField"/></td>
+						</tr>
+						<tr>
+							<th>ドロップダウン</th>
+							<td><span><input type="checkbox" id="dropdownField[0]" name="dropdownField"/></span></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<table id="queryResult">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>固定長文字列</th>
+							<th>可変長文字列</th>
+							<th>数値</th>
+							<th>処理</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align:right;">
+								<span id="queryResult[0].rowNo" ></span>
+								<input type="hidden" id="queryResult[0].recordIdField">
+							</td>
+							<td>
+								<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].charField"></span></a>&nbsp;
+							</td>
+							<td><span id="queryResult[0].varcharField"></span></td>
+							<td><span id="queryResult[0].numericField"></span></td>
+							<td>
+								<input type="button" id="queryResult[0].viewButton" value="参照">
+								<input type="button" id="queryResult[0].referButton" value="参照登録">
+								<input type="button" id="queryResult[0].deleteButton" value="削除">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<h2>ヘッダ情報</h2>
+				<input type="hidden" id="recordIdField"/>
+				<input type="hidden" id="updateUserId" />
+				<input type="hidden" id="updateTimestamp" />
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>固定長文字列</th>
+							<td><input type="text" id="charField" value=""/></td>
+						</tr>
+						<tr>
+							<th>可変長文字列</th>
+							<td><input type="text" id="varcharField" value=""/></td>
+						</tr>
+						<tr>
+							<th>単精度整数</th>
+							<td><input type="text" id="smallintField" value=""/></td>
+						</tr>
+						<tr>
+							<th>整数</th>
+							<td><input type="text" id="integerField" value=""/></td>
+						</tr>
+						<tr>
+							<th>倍精度整数</th>
+							<td><input type="text" id="bigintField" value=""/></td>
+						</tr>
+						<tr>
+							<th>実数</th>
+							<td><input type="text" id="doubleField" value=""/></td>
+						</tr>
+						<tr>
+							<th>数値</th>
+							<td><input type="text" id="numericField" value=""/></td>
+						</tr>
+						<tr>
+							<th>日付</th>
+							<td><input type="text" id="dateField" value=""/></td>
+						</tr>
+						<tr>
+							<th>時刻</th>
+							<td><input type="text" id="timeField" value=""/></td>
+						</tr>
+						<tr>
+							<th>日付時刻</th>
+							<td><input type="text" id="timestampField" value=""/></td>
+						</tr>
+						<tr>
+							<th>郵便番号</th>
+							<td><input type="text" id="zipCode" value="" style="width:64px;"/></td>
+						</tr>
+						<tr>
+							<th>住所</th>
+							<td>
+								<input type="text" id="address" value="" style="width:200px;"/>
+								<input type="text" id="address2" name="address2" value="" style="width:200px;"/>
+								<input type="text" id="address3" name="address3" value="" style="width:200px;"/>
+							</td>
+						</tr>
+						<tr>
+							<th>ドロップダウン</th>
+							<td><select id="dropdownField" ></select></td>
+						</tr>
+						<tr>
+							<th>マルチ選択リストボックス</th>
+							<td>
+								<span>
+									<select id="multiSelectListField" size="5" multiple="multiple"></select>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>ラジオボタン</th>
+							<td>
+								<!--
+									ラジオボタンの場合idは配列形式で設定し、nameを指定する。
+								 	スクリプトの都合上spanでラジオボタングループを囲っておく。
+								-->
+								<span>
+									<input type="radio" id="radioField[0]" name="radioField"/>aaa
+									<input type="radio" id="radioField[1]" name="radioField"/>bbb
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>チェックボックスリスト</th>
+							<td>
+								<!--
+									チェックボックスリストの場合idは配列形式で設定し、nameを指定する。
+								 	スクリプトの都合上spanでチェックボックスグループを囲っておく。
+								-->
+								<span>
+									<input type="checkbox" id="checkboxField[0]" name="checkboxField"/>aaa
+									<input type="checkbox" id="checkboxField[1]" name="checkboxField"/>bbb
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th>選択テキスト</th>
+							<td>
+								<span id="selectTextField"></span>
+							</td>
+						</tr>
+						<tr>
+							<th>選択テキストリスト</th>
+							<td>
+								<span id="selectTextListField"></span>
+							</td>
+						</tr>
+
+						<tr>
+							<th>ファイル(BLOB)</th>
+							<td>
+								<input type="file" id="uploadBlobData"/>
+							</td>
+						</tr>
+						<tr>
+							<th>ファイル(FILE)</th>
+							<td>
+								<input type="file" id="uploadFileData"/>
+							</td>
+						</tr>
+						<tr>
+							<th>TEXT(CLOB)</th>
+							<td style="height: 200px;">
+								<textarea id="clobField" ></textarea>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2>明細情報</h2>
+				<div class="hScrollDiv">
+					<table id="attachFileTable" class="editableTable">
+						<thead>
+							<tr>
+								<th class="buttonColumn"></th>
+								<th class="buttonColumn"></th>
+								<th style="width: 24px;" nowrap>No.</th>
+								<th style="white-space:nowrap;">コメント</th>
+								<th style="white-space:nowrap;width:120px;">日付</th>
+								<th style="white-space:nowrap;">BLOB</th>
+								<th style="width: 300px;white-space:nowrap;">ファイル</th>
+								<th style="width: 300px;white-space:nowrap;">ドロップダウン</th>
+								<th style="width: 300px;white-space:nowrap;">マルチ選択リストボックス</th>
+								<th style="width: 300px;white-space:nowrap;">ラジオボタン</th>
+								<th style="width: 300px;white-space:nowrap;">チェックボックスリスト</th>
+								<th style="width: 300px;white-space:nowrap;">住所</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="buttonColumn">
+									<input type="button" id="attachFileTable[0].addButton" value="+"/>
+								</td>
+								<td class="buttonColumn">
+									<input type="button" id="attachFileTable[0].deleteButton" value="-"/>
+								</td>
+								<td style="text-align: right; width:24px;">
+									<span id="attachFileTable[0].no"></span>
+									<input type="hidden" id="attachFileTable[0].fileKey" value=""/>
+									<input type="hidden" id="attachFileTable[0].sortOrder" value=""/>
+									<input type="hidden" id="attachFileTable[0].updateUserId" />
+									<input type="hidden" id="attachFileTable[0].updateTimestamp" />
+
+								</td>
+								<td style="width: 82px;">
+									<input type="text" style="width:80px;" id="attachFileTable[0].fileComment" value=""/>
+								</td>
+								<td style="width: 120px; white-space: nowrap;">
+									<input type="text" id="attachFileTable[0].dateField" value="" style="width: 90px !important;"/>
+								</td>
+								<td style="width: 300px;" nowrap>
+									<input type="file" id="attachFileTable[0].blobData" value=""/>
+								</td>
+								<td style="width: 300px;" nowrap>
+									<input type="file" id="attachFileTable[0].fileData" value=""/>
+								</td>
+								<td style="width: 300px;">
+									<select id="attachFileTable[0].dropdownField" ></select>
+								</td>
+								<td style="width: 300px;">
+									<select id="attachFileTable[0].multiSelectListField" size="1" multiple="multiple"></select>
+								</td>
+								<td style="width: 300px;" nowrap>
+									<span>
+										<input type="radio" id="attachFileTable[0].radioField[0]" name="attachFileTable[0].radioField"/>aaa
+										<input type="radio" id="attachFileTable[0].radioField[1]" name="attachFileTable[0].radioField"/>bbb
+									</span>
+								</td>
+								<td style="width: 300px;" nowrap>
+									<span>
+										<input type="checkbox" id="attachFileTable[0].checkboxField[0]" name="attachFileTable[0].checkboxField"/>aaa
+										<input type="checkbox" id="attachFileTable[0].checkboxField[1]" name="attachFileTable[0].checkboxField"/>bbb
+									</span>
+								</td>
+								<td style="width: 300px;" nowrap>
+									<span>
+										<input type="text" id="attachFileTable[0].zipCode" style="width:64px;"/>
+										<input type="text" id="attachFileTable[0].address" />
+									</span>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th class="buttonColumn">
+									<input type="button" id="attachFileTable.addButton" value="+"/>
+								</th>
+								<th colspan="11">&nbsp;</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="printButton" value="印刷"/>
+				<input type="button" id="getValueTestButton" value="getValue()"/>
+				<input type="button" id="userDialogButton" value="ユーザ検索"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ユーザ登録</title>
+		<style type="text/css">
+			/**
+			 * 各画面のフィールドのスタイル.
+			 */
+			/* ログインIDフィールド */
+			#loginId {width:300px; }
+			/* ログインIDフィールド */
+			#loginIdCheck {width:300px; }
+			/* ユーザ名 */
+			#userName {width:200px; }
+			/* ユーザ名(カナ) */
+			#userNameKana {width:200px; }
+			/* 郵便番号 */
+			#zipCode {width:60px; }
+			/* 県名 */
+			#prefName {width:80px; }
+			/* 住所1 */
+			#address1 {width:400px; }
+			/* 住所2 */
+			#address2 {width:400px; }
+			/* 電話番号 */
+			#telNo {width:100px; }
+			/* 電話番号 */
+			#faxNo {width:100px; }
+		</style>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="editForm">
+				<table >
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>ユーザID</th>
+							<td><input type="text" id="loginId" value=""/></td>
+						</tr>
+						<tr>
+							<th>ユーザID(確認)</th>
+							<td><input type="text" id="loginIdCheck" value=""/></td>
+						</tr>
+						<tr>
+							<th>パスワード</th>
+							<td><input type="password" id="password" value=""/></td>
+						</tr>
+						<tr>
+							<th>パスワード(確認)</th>
+							<td><input type="password" id="passwordCheck" value=""/></td>
+						</tr>
+						<tr>
+							<th>氏名</th>
+							<td><input type="text" id="userName" value=""/></td>
+						</tr>
+						<tr>
+							<th>氏名(カナ)</th>
+							<td><input type="text" id="userNameKana" value=""/></td>
+						</tr>
+						<tr>
+							<th>郵便番号</th>
+							<td><input type="text" id="zipCode" value=""/></td>
+						</tr>
+						<tr>
+							<th>県名</th>
+							<td><input type="text" id="prefName" value=""/></td>
+						</tr>
+						<tr>
+							<th>住所1</th>
+							<td><input type="text" id="address1" value=""/></td>
+						</tr>
+						<tr>
+							<th>住所2</th>
+							<td><input type="text" id="address2" value=""/></td>
+						</tr>
+						<tr>
+							<th>電話番号</th>
+							<td><input type="text" id="telNo" value=""/></td>
+						</tr>
+						<tr>
+							<th>FAX番号</th>
+							<td><input type="text" id="faxNo" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<br/>
+				<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
+				<input type="button" id="confirmButton" value="確認">&nbsp;
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+			</form>
+		</div>
+	</body>
+</html>

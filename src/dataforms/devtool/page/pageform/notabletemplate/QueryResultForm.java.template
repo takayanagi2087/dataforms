@@ -1,0 +1,29 @@
+package ${packageName};
+
+import java.util.Map;
+import dataforms.controller.QueryResultForm;
+import dataforms.field.base.FieldList;
+
+
+/**
+ * 問い合わせ結果フォームクラス。
+ */
+public class ${queryResultFormClassName} extends QueryResultForm {
+	/**
+	 * コンストラクタ。
+	 */
+	public ${queryResultFormClassName}() {
+		// TODO:結果リストのフィールド設定を実装してください。
+	}
+
+	@Override
+	protected Map<String, Object> queryPage(final Map<String, Object> data, final FieldList queryFormFieldList) throws Exception {
+		// TODO:結果リストの取得を実装してください。
+		return null;
+	}
+
+	@Override
+	protected void deleteData(final Map<String, Object> data) throws Exception {
+		// TODO:レコードの削除を実装してください。
+	}
+}

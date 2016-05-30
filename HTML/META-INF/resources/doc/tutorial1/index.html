@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<link type="text/css" href="../css/document.css" rel="stylesheet" />
+		<title>開発環境構築</title>
+	</head>
+	<body>
+		<h1><span>2.</span>開発環境構築</h1>
+		<h2>Eclipseを用意する</h2>
+		<p>
+			日本語環境でよく使われているEclipse 4.5 Mars Pleiades All in Oneを例に、開発環境の構築と簡単なアプリケーションの開発手順を説明します。
+			基本的にjava8 + tomcat8の開発ができるものであれば、開発環境の構築が可能だと思いますが、まだ試していません。
+		</p>
+		<p>
+			<a href="http://mergedoc.osdn.jp/index.html#pleiades.html" target="_blank">Pleiades - Eclipse プラグイン日本語化プラグイン</a>のサイトからEclipse 4.5 Mars Pleiades All in Oneを
+			ダウンロードします。今回はpleiades-e4.5-java-jre_20160312.zipというファイル名のものを使用しました。
+			このzipファイルをC:\pleiades-e4.5に展開します。
+		</p>
+		<p>
+			展開したEclipseを起動し、デフォルトのWorkspaceを作成します。
+			その後JavaEEのパースペクティブを開きます。
+			この状態でサーバビューを開きます。
+		</p>
+		<figure>
+			<figcaption>Eclipseを起動しサーバービューを表示した状態</figcaption>
+			<img src="eclipse_start00.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			サーバービューのリンクをクリックし、新規にTomcat8サーバを追加します。
+		</p>
+		<figure>
+			<figcaption>新規サーバダイアログ</figcaption>
+			<img src="eclipse_start01.png" style="width:50%; height:50%;"/>
+		</figure>
+		<figure>
+			<figcaption>Tomcat8が追加された状態</figcaption>
+			<img src="eclipse_start02.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h2>データベースを用意する</h2>
+		<p>
+			dataforms.jarを動かすためには、何らかのデータベースが必要になります。
+			通常Tomcatからデータベースを使うには、サーバソフトを別にセットアップし、それに接続するためのjdbcドライバをTomcatにインストールします。<br/>
+			サーバーソフトの設定はいろいろ面倒なので、ここでは組込み用Apache Derbyを使用します。<br/>
+			<a href="https://db.apache.org/derby/" target="_blank">Apache Derby</a>のサイトよりdb-derby-&lt;version&gt;-bin.zipダウンロードし、
+			その中に含まれているderby.jar,derby_ja_JP.jarをTOMCAT_HOME/lib(今回はC:\pleiades-e4.5\tomcat\8\lib)にコピーしてください。
+			これだけでデータベース(apache derby)が使えるようになります。
+		</p>
+		<h2>プロジェクトの作成</h2>
+		<p>
+			<a href="http://woontai.dip.jp/dataformsdl/" target="_blank">ブランクアプリケーションダウンロードサイト</a>から、dataforms.jarのブランクアプリケーション(dfblank_xxx.war)をダウンロードして下さい。
+			ダウンロードしたwarファイルは、eclipseプロジェクトとしてインポートすることができます。
+			Eclipseのプロジェクト・エクスプローラーを右クリックし「インポート」→「WARファイル」とメニューを選択します。
+		</p>
+		<figure>
+			<figcaption>WARインポートダイアログ</figcaption>
+			<img src="eclipse_proj00.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			プロジェクト名は何でもよいのですが、とりあえずsampleとし、ターゲットランタイムはTomcat8(java8)を選択し、「完了」ボタンを押してください。
+			dataforms.jarはServlet 3.0とjava8の機能を使用しています。そのためtomcat7 + java8でも動作します。
+		</p>
+		<figure>
+			<figcaption>インポートされたプロジェクト</figcaption>
+			<img src="eclipse_proj01.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			作成したプロジェクトをtomcat8に追加します。サーバビューのtomcat8を右クリックし、「追加および消去」を選択します。
+		</p>
+		<figure>
+			<figcaption>Tomcat8に作成したプロジェクトを追加</figcaption>
+			<img src="eclipse_proj03.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			以下のダイアログが表示されるので、sampleを追加し、完了ボタンを押下します。
+		</p>
+		<figure>
+			<figcaption>追加および消去ダイアログ</figcaption>
+			<img src="eclipse_proj04.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			この操作の結果、以下のようにtomcat8にsampleプロジェクトが追加されます。
+		</p>
+		<figure>
+			<figcaption>プロジェクト追加後のサーバビュー</figcaption>
+			<img src="eclipse_proj05.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			これでEclipseで空の動的WEBプロジェクトが作成されました。
+			作成された結果は以下のようになっています。
+		</p>
+		<div class="filecaption">プロジェクトファイル一覧</div>
+		<div class="wrappre">
+			<pre>
+./src
+./src/log4j.dtd
+./src/log4j.xml
+./WebContent
+./WebContent/index.html
+./WebContent/META-INF
+./WebContent/META-INF/context.xml
+./WebContent/META-INF/MANIFEST.MF
+./WebContent/WEB-INF
+./WebContent/WEB-INF/lib
+./WebContent/WEB-INF/lib/commons-codec-1.9.jar
+./WebContent/WEB-INF/lib/commons-fileupload-1.2.2.jar
+./WebContent/WEB-INF/lib/commons-io-2.3.jar
+./WebContent/WEB-INF/lib/commons-lang3-3.4.jar
+./WebContent/WEB-INF/lib/commons-logging.jar
+./WebContent/WEB-INF/lib/commons-validator.jar
+./WebContent/WEB-INF/lib/dataforms.jar
+./WebContent/WEB-INF/lib/jsonic-1.2.10.jar
+./WebContent/WEB-INF/lib/junit-4.12.jar
+./WebContent/WEB-INF/lib/log4j-1.2.17.jar
+./WebContent/WEB-INF/lib/poi-3.12-20150511.jar
+./WebContent/WEB-INF/lib/poi-excelant-3.12-20150511.jar
+./WebContent/WEB-INF/lib/poi-ooxml-3.12-20150511.jar
+./WebContent/WEB-INF/lib/poi-ooxml-schemas-3.12-20150511.jar
+./WebContent/WEB-INF/lib/poi-scratchpad-3.12-20150511.jar
+./WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar
+./WebContent/WEB-INF/web.xml
+			</pre>
+		</div>
+		<p>
+			「/src」以下は、log4jの設定ファイルのみで、Javaのソースファイルはありません。
+			「/WebContent/META-INF/context.xml」には、テータベース(組込みdevby用)への接続設定が記載されています。
+			もしPostgreSQL,MySQL,Oracle等のデータベースを使用したい場合、tomcat8に該当のjdbcドライバをインストールし、context.xmlを書き換えてください。
+		</p>
+		<p>
+			「/WebContent/WEB-INF/lib」には、dataforms.jarとdataforms.jarが使用しているjarファイルが入っています。
+			もしExcelレポート機能が不要であれば、poi関連のjarを削除することができます。
+		</p>
+		<p>
+			「/WebContent/WEB-INF/web.xml」にはアプリケーションの各種設定が記録されています。
+			dataforms.jar固有の設定も、web.xmlに記述するようになっています。
+			設定項目はweb.xml中のコメントを参照してください。
+			この状態でプロジェクトのクリーンビルドを行い、tomcat8を起動してください。
+		</p>
+		<figure>
+			<figcaption>tomcat8を起動した状態</figcaption>
+			<img src="eclipse_proj07.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h2>プロジェクトの実行</h2>
+		<p>
+			tomcatを起動した後、WEBブラウザから"http://localhost:8080/sample/をアクセスすると以下のページが表示されます。
+			dataforms.jarの中には、Webアプリケーションを構築するためのライブラリだけでなく、ユーザ管理などの基本機能や開発ツールを含んでいます。
+			初回の起動時にはデータベースの初期設定を行い、開発者権限を持ったユーザの登録するためのページが表示されます。
+		</p>
+		<figure>
+			<figcaption>データベース初期設定</figcaption>
+			<img src="eclipse_proj08.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			このページで開発者を登録すると、データベース中に必要なテーブルが作成され、開発者が登録されます。
+			データベースが作成されると、ログイン画面が表示されます。
+		</p>
+		<figure>
+			<figcaption>ログイン画面</figcaption>
+			<img src="eclipse_proj09.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			この画面から、先ほど登録した開発者権限を持つユーザでログインすることができます。
+			開発者権限でログインすると、以下のようなサイトマップが表示されます。
+		</p>
+		<figure>
+			<figcaption>サイトマップ</figcaption>
+			<img src="eclipse_proj10.png" style="width:50%; height:50%;"/>
+		</figure>
+		<hr/>
+	</body>
+</html>

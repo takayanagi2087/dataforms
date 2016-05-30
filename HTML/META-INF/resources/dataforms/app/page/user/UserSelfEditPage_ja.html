@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>ユーザ情報変更</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="editForm">
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>ログインID</th>
+							<td>
+								<input type="hidden" id="userId" value="" />
+								<input type="text" id="loginId" value="" />
+							</td>
+						</tr>
+						<tr>
+							<th>氏名</th>
+							<td><input type="text" id="userName" value=""/></td>
+						</tr>
+						<tr>
+							<th>メールアドレス</th>
+							<td><input type="text" id="mailAddress" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="backButton" value="戻る"/>
+				<input type="button" id="resetButton" value="リセット"/>
+			</form>
+		</div>
+	</body>
+</html>

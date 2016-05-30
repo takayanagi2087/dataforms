@@ -1,0 +1,4 @@
+/**
+ * フィールドクラスパッケージ。
+ */
+package dataforms.field;

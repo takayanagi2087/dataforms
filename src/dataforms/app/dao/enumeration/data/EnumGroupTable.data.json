@@ -1,0 +1,32 @@
+[
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"updateUserId": "0",
+		"sortOrder": "0",
+		"enumTypeCode": "userLevel",
+		"enumGroupCode": "userAttribute",
+		"updateTimestamp": "20150716223424455",
+		"createTimestamp": "20150716223424455"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "post",
+		"enumGroupCode": "userAttribute",
+		"updateTimestamp": "20150716223424479",
+		"createTimestamp": "20150716223424479"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "section",
+		"enumGroupCode": "userAttribute",
+		"updateTimestamp": "20150716223424505",
+		"createTimestamp": "20150716223424505"
+	}
+]

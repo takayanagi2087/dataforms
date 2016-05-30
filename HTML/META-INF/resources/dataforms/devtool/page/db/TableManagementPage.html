@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>テーブルマネージャ</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
+			<form id="databaseInfoForm">
+			</form>
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<thead></thead>
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" value=""/></td>
+							<th>クラス名</th>
+							<td><input type="text" id="className" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">&nbsp;
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">テーブルクラス一覧</div>
+				<input type="hidden" id="datapath" name="datapath" value=""/>
+				<div style="width:100%;" align="left">
+					<input type="button" id="selectAllButton" value="全選択" title="全てのテーブルクラスを選択します。"/>&nbsp;
+					<input type="button" id="selectNothingButton" value="未作成を選択" title="DB中のテーブルが存在しないテーブルクラスを選択します。"/>&nbsp;
+					<input type="button" id="selectDiffButton" value="構造が異なる物を選択" title="DBのテーブルと構造が異なるテーブルクラスを選択します。"/>&nbsp;
+					<input type="button" id="unselectAllButton" value="全解除" title="全てのテーブルクラスの選択を解除します。"/>&nbsp;
+				</div>
+				<div class="hScrollDiv">
+					<table id="queryResult" style="min-width: 880px;">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>選択</th>
+								<th>クラス名</th>
+								<th>テーブル名</th>
+								<th>テーブル有無</th>
+								<th>シーケンス生成</th>
+								<th>構造の差分</th>
+								<th>レコード件数</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td  style="text-align: right;">
+									<span id="queryResult[0].rowNo"></span>
+								</td>
+								<td>
+									<input type="checkbox" id="queryResult[0].checkedClass" name="checkedClass">
+								</td>
+								<td>
+									<a href="javascript:void(0);" id="queryResult[0].className"></a>
+								</td>
+								<td>
+									<span id="queryResult[0].tableName"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].status"></span>
+									<input type="hidden" id="queryResult[0].statusVal" value=""/>
+								</td>
+								<td>
+									<span id="queryResult[0].sequenceGeneration"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].difference"></span>
+									<input type="hidden" id="queryResult[0].differenceVal" value=""/>
+								</td>
+								<td style="text-align: right;">
+									<span id="queryResult[0].recordCount"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div style="width:100%;" align="left">
+					<input type="button" id="updateTableButton" value="更新"/>&nbsp;
+					<input type="button" id="initTableButton" value="初期化"/>&nbsp;
+					<input type="button" id="dropTableButton" value="削除"/>&nbsp;
+					<input type="button" id="exportTableButton" value="エクスポート"/>&nbsp;
+					<input type="button" id="importTableButton" value="インポート"/>&nbsp;
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

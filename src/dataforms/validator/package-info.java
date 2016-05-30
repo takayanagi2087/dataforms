@@ -1,0 +1,4 @@
+/**
+ * フィールドバリデータパッケージ.
+ */
+package dataforms.validator;

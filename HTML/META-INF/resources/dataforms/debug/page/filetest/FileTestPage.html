@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>title</title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table>
+					<tbody>
+						<tr>
+							<th>ファイルコメント</th>
+							<td><input type="text" id="fileComment" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<table>
+					<tbody>
+					</tbody>
+				</table>
+				<table id="queryResult">
+					<thead>
+						<tr>
+							<th>
+								No.
+							</th>
+							<th>
+								ファイルコメント
+							</th>
+							<th>
+								操作
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<span id="queryResult[0].rowNo"></span>
+								<input type="hidden" id="queryResult[0].recordId">
+							</td>
+							<td>
+								<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].fileComment"></span></a>
+							</td>
+							<td>
+								<input type="button" id="queryResult[0].viewButton" value="表示">
+								<input type="button" id="queryResult[0].referButton" value="参照登録">
+								<input type="button" id="queryResult[0].deleteButton" value="削除">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<input type="hidden" id="recordId" />
+				<input type="hidden" id="createUserId" />
+				<input type="hidden" id="createTimestamp" />
+				<input type="hidden" id="updateUserId" />
+				<input type="hidden" id="updateTimestamp" />
+				<table>
+					<tbody>
+						<tr>
+							<th>ファイルコメント</th>
+							<td><input type="text" id="fileComment" /></td>
+						</tr>
+						<tr>
+							<th>BLOB保存ファイル</th>
+							<td><input type="file" id="blobFile"/></td>
+						</tr>
+						<tr>
+							<th>フォルダ保存ファイル</th>
+							<td><input type="file" id="folderFile"/></td>
+						</tr>
+						<tr>
+							<th>BLOB保存画像ファイル</th>
+							<td>
+								<input type="file" id="blobImage" accept="image/*"/>
+							</td>
+						</tr>
+						<tr>
+							<th>フォルダ保存画像ファイル</th>
+							<td><input type="file" id="folderImage" accept="image/*"/></td>
+						</tr>
+						<tr>
+							<th>メニュー画像</th>
+							<td><div id="menuImage"></div></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+
+		</div>
+	</body>
+</html>

@@ -1,0 +1,212 @@
+[
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "admin",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "userLevel",
+		"updateTimestamp": "20150716223425266",
+		"createTimestamp": "20150716223425266"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "user",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "userLevel",
+		"updateTimestamp": "20150716223425284",
+		"createTimestamp": "20150716223425284"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "guest",
+		"updateUserId": "0",
+		"sortOrder": "3",
+		"enumTypeCode": "userLevel",
+		"updateTimestamp": "20150716223425303",
+		"createTimestamp": "20150716223425303"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "developer",
+		"updateUserId": "0",
+		"sortOrder": "0",
+		"enumTypeCode": "userLevel",
+		"updateTimestamp": "20150716223425332",
+		"createTimestamp": "20150716223425332"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "develop",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "section",
+		"updateTimestamp": "20150716223425351",
+		"createTimestamp": "20150716223425351"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "sales",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "section",
+		"updateTimestamp": "20150716223425368",
+		"createTimestamp": "20150716223425368"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "generalAffairs",
+		"updateUserId": "0",
+		"sortOrder": "0",
+		"enumTypeCode": "section",
+		"updateTimestamp": "20150716223425396",
+		"createTimestamp": "20150716223425396"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "staff",
+		"updateUserId": "0",
+		"sortOrder": "0",
+		"enumTypeCode": "post",
+		"updateTimestamp": "20150716223425415",
+		"createTimestamp": "20150716223425415"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "manager",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "post",
+		"updateTimestamp": "20150716223425434",
+		"createTimestamp": "20150716223425434"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "generalManager",
+		"updateUserId": "0",
+		"sortOrder": "3",
+		"enumTypeCode": "post",
+		"updateTimestamp": "20150716223425448",
+		"createTimestamp": "20150716223425448"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "chief",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "post",
+		"updateTimestamp": "20150716223425458",
+		"createTimestamp": "20150716223425458"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "exectiveManager",
+		"updateUserId": "0",
+		"sortOrder": "3",
+		"enumTypeCode": "post",
+		"updateTimestamp": "20150716223425478",
+		"createTimestamp": "20150716223425478"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "page",
+		"updateUserId": "0",
+		"sortOrder": "0",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730211847545",
+		"createTimestamp": "20150730211847545"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "form",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730211936363",
+		"createTimestamp": "20150730211936363"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "table",
+		"updateUserId": "0",
+		"sortOrder": "3",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730212016953",
+		"createTimestamp": "20150730212016953"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "field",
+		"updateUserId": "0",
+		"sortOrder": "4",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730212107352",
+		"createTimestamp": "20150730212107352"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "dialog",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730212229643",
+		"createTimestamp": "20150730212229643"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "validator",
+		"updateUserId": "0",
+		"sortOrder": "5",
+		"enumTypeCode": "webCompType",
+		"updateTimestamp": "20150730212327322",
+		"createTimestamp": "20150730212327322"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "error",
+		"updateUserId": "0",
+		"sortOrder": "1",
+		"enumTypeCode": "overwriteMode",
+		"updateTimestamp": "20150716223425266",
+		"createTimestamp": "20150716223425266"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "skip",
+		"updateUserId": "0",
+		"sortOrder": "2",
+		"enumTypeCode": "overwriteMode",
+		"updateTimestamp": "20150716223425284",
+		"createTimestamp": "20150716223425284"
+	},
+	{
+		"deleteFlag": "0",
+		"createUserId": "0",
+		"enumOptionCode": "force",
+		"updateUserId": "0",
+		"sortOrder": "3",
+		"enumTypeCode": "overwriteMode",
+		"updateTimestamp": "20150716223425284",
+		"createTimestamp": "20150716223425284"
+	}
+]

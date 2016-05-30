@@ -1,0 +1,40 @@
+package ${fieldPackageName};
+
+import ${superClassName};
+${importList}
+
+/**
+ * ${fieldClassSimpleName}フィールドクラス。
+ *
+ */
+public class ${fieldClassSimpleName} extends ${superSimpleClassName} {
+	/**
+	 * 列挙グループ名称。
+	 */
+	private static final String ENUM_TYPE = "enumTypeGroupCode"; // 適切に修正して使用してください。
+	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "${fieldComment}";
+	/**
+	 * コンストラクタ。
+	 */
+	public ${fieldClassSimpleName}() {
+		super(null, ENUM_TYPE);
+		this.setComment(COMMENT);
+	}
+	/**
+	 * コンストラクタ。
+	 * @param id フィールドID。
+	 */
+	public ${fieldClassSimpleName}(final String id) {
+		super(id, ENUM_TYPE);
+		this.setComment(COMMENT);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+${validators}
+	}
+}

@@ -1,0 +1,209 @@
+@CHARSET "UTF-8";
+
+/**
+ * 基本レイアウト用のスタイルシート(スマートフォン).
+ */
+
+/* 表示制御用クラス */
+.pc {
+	display:none;
+}
+
+.tb {
+	display:none;
+}
+
+.sp {
+	display:block;
+}
+
+/* 基本フォントサイズ */
+html,body {
+	font-size:11pt;
+}
+
+input,select,textarea {
+	font-size:11pt;
+}
+
+/* ヘッダ周りのスタイル */
+/* ヘッダ部の高さ指定 */
+#headerDiv td {
+}
+
+/* メニューボタン指定 */
+#showMenuButton {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: url(./image/menu.png) left top no-repeat;
+}
+
+#headerDiv table {
+	height: 120px;
+}
+
+#headerDiv table tbody tr {
+	display: block;
+}
+
+#headerDiv table tbody tr th,
+#headerDiv table tbody tr td
+{
+	display: block;
+	width: 100%;
+	margin: 1px;
+}
+
+/* システム名ブロックサイズ指定 */
+#headerDiv td.systemName {
+	white-space: nowrap;
+}
+
+#headerDiv #systemName {
+	position:relative;
+	top: -8px;
+	display: inline-block;
+}
+
+/* ページ名ブロック */
+#headerDiv #pageName {
+	display: block;
+}
+
+
+/* ユーザ情報 */
+#headerDiv #loginInfo {
+	font-size:10pt;
+	display: block;
+	width: 100%;
+}
+
+#bodyTable #leftbarTd {
+	width: 0px;
+}
+
+/* 左サイドバー(携帯の場合はプルダウンメニュー) */
+#menuDiv,
+#leftbarDiv {
+	display: none;
+	position: absolute;
+	top: 122px;
+	left: 10px;
+	width: 220px;
+	background-color: rgba(192,192,192,1.0);
+}
+
+#bodyTable #mainTd {
+	width: 100%;
+}
+
+/* メインDIV */
+body #mainDiv {
+	width: 100%;
+	padding: 4px;
+}
+
+/* テーブル行の高さ指定 */
+#mainDiv table th,
+#mainDiv table td {
+}
+
+
+/* レスポンシブテーブルの制御設定 */
+table.responsive {
+	width: 100%;
+}
+
+table.responsive tbody tr th,
+table.responsive tbody tr td
+{
+	display: inline-block;
+	vertical-align: middle;
+	width: 100%;
+	margin: 1px;
+}
+
+
+table.responsive tbody tr th {
+	padding-top: 12px;
+}
+
+/* 入力フィールドの高さ */
+input[type="text"], input[type="email"], input[type="search"],input[type="password"] {
+	height: 32px;
+	width: calc(100% - 4px);
+}
+
+textarea {
+	width: calc(100% - 4px);
+	height: calc(100% - 4px);
+}
+
+select {
+	height: 38px;
+	width: 100%;
+}
+
+
+/* フィールド値を表示するspanに適したスタイル */
+.fieldSpan {
+	display:table-cell;
+	height: 20px;
+	vertical-align: middle;
+}
+
+
+#mainDiv table th,
+#mainDiv table td {
+	height: 40px;
+}
+
+
+/* ボタンサイズを指定 */
+#mainDiv input[type='button'],
+#mainDiv input[type='submit'],
+#mainDiv button {
+	height: 32px;
+}
+
+
+/* 編集可能テーブル(追加削除ボタンカラムのスタイル) */
+.editableTable .buttonColumn {
+	width: 34px;
+}
+
+.editableTable [id$='addButton'],
+.editableTable [id$='deleteButton'] {
+	width: 32px;
+}
+
+
+/* 検索結果フォームのページ制御関連のスタイル */
+#queryResultForm #linesPerPage,
+#queryResultForm #pageNo {
+	width: 64px;
+}
+
+#queryResultForm #topPageButton,
+#queryResultForm #prevPageButton,
+#queryResultForm #nextPageButton,
+#queryResultForm #bottomPageButton {
+	width: 48px;
+}
+
+/* Datepickerの設定されたフィールド */
+.hasDatepicker {
+	width: calc(100% - 42px) !important;
+}
+
+/* 範囲フィールドのクラス */
+.rangeField {
+	width: calc((100% - 32px) / 2) !important;
+}
+
+/* 日付範囲フィールドのクラス */
+.dateRangeField {
+	width: calc((100% - 32px) / 2 - 32px) !important;
+}
+
