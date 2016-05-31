@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<link type="text/css" href="../css/document.css" rel="stylesheet" />
+		<title>作成したアプリのデプロイ</title>
+	</head>
+	<body>
+		<h1><span>5.</span>作成したアプリのデプロイ</h1>
+		<p>
+			作成したアプリケーションを実際のサーバにデプロイし、運用するまでの手順は以下のようになります。
+		</p>
+		<ol>
+			<li>WARファイルの作成</li>
+			<li>作成したWARファイルをTomcatにデプロイ</li>
+			<li>アプリケーションの初期化</li>
+		</ol>
+		それぞれの詳細を以下に示します。
+		<h2>WARファイルの作成</h2>
+		<h3>DB初期化データのエクスポート</h3>
+		<p>
+			dataforms.appパッケージには、いくつかのテーブルが定義されています。
+			これらのテーブルは、データベースの構築時に自動的に作成され、初期データも登録されます。
+		</p>
+		<p>
+			開発の初期段階で機能を追加しましたが、これはFunctionTableへパスを追加する処理になります。
+			この登録された機能をDBの初期化時に自動的に登録させるために、開発環境で使用しているFunctionTableの内容を初期化用データとしてエクスポートしておきます。
+		</p>
+		<h3>開発ツールの実行停止</h3>
+		<h3>WARファイルのエクスポート</h3>
+		<h2>デプロイ</h2>
+		<h3>Tomcat8の設定</h2>
+		<h3>warのデプロイ</h2>
+		<h2>アプリケーションの初期化</h2>
+		<hr/>
+	</body>
+</html>
