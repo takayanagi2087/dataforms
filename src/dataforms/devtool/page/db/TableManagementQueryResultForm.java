@@ -13,7 +13,6 @@ import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.field.common.ClassNameField;
-import dataforms.field.base.Field.SortOrder;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.MultiSelectField;
 import dataforms.field.common.PresenceField;
@@ -43,7 +42,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 			, new ClassNameField("checkedClass")
 			, new RowNoField()
 			, (new ClassNameField()).setSortable(true)
-			, (new VarcharField("tableName", 64)).setSortable(true, SortOrder.DESC)
+			, (new VarcharField("tableName", 64)).setSortable(true)
 			, new PresenceField("status").setSortable(true)
 			, new PresenceField("statusVal")
 			, new PresenceField("sequenceGeneration").setSortable(true)
