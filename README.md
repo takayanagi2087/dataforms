@@ -4,11 +4,10 @@
 Java Webアプリケーションフレームワークと、その開発ツールです。
 
 ## Demo
-デモサイトでGuest/Guestでログインしてください。
-
-[sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)
-
-[ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)
+デモサイトでGuest/Guestでログインしてください。  
+[sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
+またドキュメントは以下のリンクを参照してください。  
+[ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
 
 ## Requirement
 Eclipse4.5 + Java8 + Tomcat8で動作します。
