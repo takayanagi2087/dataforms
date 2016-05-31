@@ -1184,9 +1184,6 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * ソート可能フラグを設定します。
 	 * @param sortable ソート可能フラグ。
 	 * @param order デフォルトソート順。
-	 * <pre>
-	 * 	
-	 * </pre>
 	 * @return 設定したフィールド。
 	 */
 	public Field<?>  setSortable(final boolean sortable, final SortOrder order) {

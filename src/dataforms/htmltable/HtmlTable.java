@@ -16,7 +16,6 @@ import dataforms.validator.ValidationError;
  * &lt;table&gt;中に表示するリストのフィールドを管理します。
  * <a href="../../../jsdoc/HtmlTable.html" target="_blank">jsdocを参照</a>
  * </pre>
- * TODO:テーブルのカラムソート機能を実装したい。
  */
 public class HtmlTable extends WebComponent {
 
