@@ -85,6 +85,18 @@ TableManagementQueryResultForm.prototype.attach = function() {
 		}
 	});
 
+	this.find("#exportAsInitialDataButton").click(function() {
+		if (confirm(MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"))) {
+			thisForm.submit("exportTableAsInitialData", function(result) {
+				if (result.status == ServerMethod.SUCCESS) {
+					var path = result.result;
+					alert(MessagesUtil.getMessage("message.exportInitialDataResult", path));
+				}
+			});
+
+		}
+	});
+	
 	this.find("#exportTableButton").click(function() {
 		if (confirm(MessagesUtil.getMessage("message.dexportTableConfirm"))) {
 			thisForm.submit("exportTable", function(result) {
@@ -141,12 +153,14 @@ TableManagementQueryResultForm.prototype.controlButton = function() {
 		this.find("#updateTableButton").prop("disabled", false);
 		this.find("#initTableButton").prop("disabled", false);
 		this.find("#dropTableButton").prop("disabled", false);
+		this.find("#exportAsInitialDataButton").prop("disabled", false);
 		this.find("#exportTableButton").prop("disabled", false);
 		this.find("#importTableButton").prop("disabled", false);
 	} else {
 		this.find("#updateTableButton").prop("disabled", true);
 		this.find("#initTableButton").prop("disabled", true);
 		this.find("#dropTableButton").prop("disabled", true);
+		this.find("#exportAsInitialDataButton").prop("disabled", true);
 		this.find("#exportTableButton").prop("disabled", true);
 		this.find("#importTableButton").prop("disabled", true);
 	}

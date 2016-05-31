@@ -8,11 +8,13 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import dataforms.annotation.WebMethod;
+import dataforms.controller.ApplicationException;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.field.common.ClassNameField;
+import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.MultiSelectField;
 import dataforms.field.common.PresenceField;
@@ -21,6 +23,7 @@ import dataforms.field.sqltype.IntegerField;
 import dataforms.field.sqltype.VarcharField;
 import dataforms.htmltable.HtmlTable;
 import dataforms.servlet.DataFormsServlet;
+import dataforms.util.StringUtil;
 
 /**
  * DB管理ページの検索結果フォームクラス。
@@ -166,7 +169,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 	/**
 	 * テーブルのデータをエクスポートします。
 	 * @param params パラメータ。
-	 * @return 各テーブル情報。
+	 * @return 出力パス情報。
 	 * @throws Exception 例外。
 	 */
 	@WebMethod
@@ -181,6 +184,32 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 			dao.exportData(cls, DataFormsServlet.getExportImportDir());
 		}
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, DataFormsServlet.getExportImportDir());
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
+	
+	/**
+	 * 選択されたテーブルの初期化データを作成します。
+	 * @param params パラメータ。
+	 * @return 出力パス情報。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public JsonResponse exportTableAsInitialData(final Map<String, Object> params) throws Exception {
+		this.methodStartLog(log,  params);
+		Map<String, Object> p = this.convertToServerData(params);
+
+		TableManagerDao dao = new TableManagerDao(this);
+		@SuppressWarnings("unchecked")
+		List<String> classlist = (List<String>) p.get("checkedClass");
+		if (StringUtil.isBlank(DeveloperPage.getWebSourcePath())) {
+			throw new ApplicationException(this.getPage(), "error.webresourcepathnotfound");
+		}
+		String initialDataPath = DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
+		for (String cls : classlist) {
+			dao.exportData(cls, initialDataPath);
+		}
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, initialDataPath);
 		this.methodFinishLog(log, ret);
 		return ret;
 	}

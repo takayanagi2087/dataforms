@@ -31,9 +31,10 @@ TableInfoForm.prototype.attach = function() {
 	this.find("#dropTableButton").click(function() {
 		thisForm.dropTable();
 	});
+	/*
 	this.find("#exportDataButton").click(function() {
 		thisForm.exportData();
-	});
+	});*/
 	this.find("#closeButton").click(function() {
 		thisForm.parent.close();
 	});

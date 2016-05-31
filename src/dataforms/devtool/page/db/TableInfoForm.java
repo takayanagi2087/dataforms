@@ -118,6 +118,7 @@ public class TableInfoForm extends Form {
 	 * @return テーブル情報。
 	 * @throws Exception 例外。
 	 */
+	/*
 	@WebMethod
 	public JsonResponse importData(final Map<String, Object> p) throws Exception {
 		this.methodStartLog(logger, p);
@@ -128,6 +129,6 @@ public class TableInfoForm extends Form {
 		JsonResponse r = new JsonResponse(JsonResponse.SUCCESS, dao.getTableInfo(className));
 		this.methodFinishLog(logger, r);
 		return r;
-	}
+	}*/
 
 }
