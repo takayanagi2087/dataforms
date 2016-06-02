@@ -11,11 +11,11 @@
 		<h1><span>4.</span>ページのカスタマイズ</h1>
 		<h2>カスタマイズの概要</h2>
 		<p>
-			WebComponentのサブクラスにはPage,Form,HtmlTable,Field,FieldValidator等が存在します。
+			WebComponentのサブクラスには、Page,Form,HtmlTable,Field,FieldValidator等が存在します。
 			これらのJavaクラスには、対応したJavascriptクラスを作成することができます。
 		</p>
 		<p>
-			Javaクラス"dataforms.controller.EditForm"には、すでに対応するJavasciptクラス"dataforms/dataforms/controller/EditForm.js"が存在します。
+			Javaクラス"dataforms.controller.EditForm"には、対応するJavasciptクラス"dataforms/dataforms/controller/EditForm.js"が存在します。
 			EditFormから派生したXXXEditFormを作成し、それを持つページを実行すると、ページのロード時にEditForm.jsに記載された初期化処理が動作します。
 			開発ツールを使い、XXXEditFormに対応するJavascriptクラスXXXEditForm.jsを作成すると、XXXEditForm.jsに記載された初期化処理が動作するようになります。
 		</p>
@@ -493,7 +493,7 @@ SampleEditForm.prototype.attach = function() {
 SampleEditForm.prototype.validateForm = function() {
 	var ret = EditForm.prototype.validateForm.call(this);
 	var fv = new FieldValidator();
-	if ((!fv.isBlank(this.find(&quot;#sampleNum&quot;))) &amp;&amp; fv.isBlank(this.find(&quot;#sampleDate&quot;))) {
+	if ((!fv.isBlank(this.find(&quot;#sampleNum&quot;).val())) &amp;&amp; fv.isBlank(this.find(&quot;#sampleDate&quot;).val())) {
 		ret.push(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(&quot;error.requireddate&quot;)))
 	}
 	return ret;
@@ -836,7 +836,7 @@ SampleEditForm.prototype.validateForm = function() {
 		</figure>
 		<h3>印刷処理の実装</h3>
 		<p>
-			次に「印刷」ボタンのイベント処理で、サーバのメソッドを呼び出しExcel形式のレポートを出力します。
+			次に、「印刷」ボタンのイベント処理で、サーバのメソッドを呼び出しExcel形式のレポートを出力します。
 			先ずSampleEditForm.javaにサーバ側の処理を記述します。
 		</p>
 		<p>
@@ -1011,8 +1011,291 @@ SampleEditForm.prototype.print = function() {
 			<img src="function5.png" style="width:50%; height:50%;"/>
 		</figure>
 		<h3>プルダウンの選択肢の設定</h3>
+		<p>
+			&lt;select&gt;タグの選択肢をデータベースから取得し設定する手法は、一般的なものです。
+			しかしこれをやろうとすると、結構面倒なコーディングが必要になります。
+			dataforms.jarではSelectFieldクラスが用意されており、これから派生したクラスを使用することにより、
+			簡単にテータベースから選択肢を取得するフィールドを作成することがてきます。
+		</p>
+		<p>
+			このようなフィールドは、基本機能ページですでに使用されています。
+			一例をあげると、ユーザの登録画面で指定するユーザ属性があります。
+		</p>
+		<figure>
+			<figcaption>ユーザ属性の選択肢</figcaption>
+			<img src="userManagement2.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			上の画面表示されているユーザレベルの選択肢は、以下のように列挙型管理テーブルに登録されています。
+		</p>
+		<figure>
+			<figcaption>ユーザレベルの登録内容</figcaption>
+			<img src="enum1.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			今回は、サンプルとして以下のような列挙型を登録します。
+		</p>
+		<figure>
+			<figcaption>sample選択肢の登録内容</figcaption>
+			<img src="enum2.png" style="width:50%; height:50%;"/>
+		</figure>
 		<h3>テーブル構造の更新</h3>
-		<h3>ページの更新</h3>
+		<p>
+			列挙型として登録したsampleSelectをSampleTableに追加します。
+			テーブルJavaクラス作成でSampleTableを編集します。
+			最後の行にEnumOptionSingleSelectFieldから派生したSampleSelectFieldというクラスを割り当てます。
+			このまま保存しようとすると、テーブルクラスと既存のフィールドクラスが存在するので、上書きできないというエラーになります。
+			そこでテーブルクラスは上書きし、既存のフィールドクラスは上書きしないように設定して保存します。
+		</p>
+		<figure>
+			<figcaption>テーブルにフィールドを追加</figcaption>
+			<img src="enum3.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			その結果、以下のようにソースファイルが作成されます。
+		</p>
+		<figure>
+			<figcaption>更新されたテーブルと新規作成されたフィールドクラス</figcaption>
+			<img src="enum4.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			作成されたSampleSelectField.javaには、仮の列挙型コードが指定されているので、列挙型コードを&quot;sampleSelect&quot;に修正します。
+		</p>
+		<div class="filecaption">SampleSelectFieldに列挙型コードを指定</div>
+		<div class="wrappre">
+			<pre>
+package sample.field;
+
+import dataforms.field.common.EnumOptionSingleSelectField;
+
+
+/**
+ * SampleSelectField&#12501;&#12451;&#12540;&#12523;&#12489;&#12463;&#12521;&#12473;&#12290;
+ *
+ */
+public class SampleSelectField extends EnumOptionSingleSelectField {
+	/**
+	 * &#21015;&#25369;&#21517;&#31216;&#12290;
+	 */
+	private static final String ENUM_TYPE = &quot;<b>sampleSelect</b>&quot;; // &#36969;&#20999;&#12395;&#20462;&#27491;&#12375;&#12390;&#20351;&#29992;&#12375;&#12390;&#12367;&#12384;&#12373;&#12356;&#12290;
+	/**
+	 * &#12501;&#12451;&#12540;&#12523;&#12489;&#12467;&#12513;&#12531;&#12488;&#12290;
+	 */
+	private static final String COMMENT = &quot;&#12469;&#12531;&#12503;&#12523;&#36984;&#25246;&#32930;&quot;;
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleSelectField() {
+		super(null, ENUM_TYPE);
+		this.setComment(COMMENT);
+	}
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 * @param id &#12501;&#12451;&#12540;&#12523;&#12489;ID&#12290;
+	 */
+	public SampleSelectField(final String id) {
+		super(id, ENUM_TYPE);
+		this.setComment(COMMENT);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+
+	}
+}
+			</pre>
+		</div>
+		<p>
+			プロジェクトをクリーンビルドし、テーブル管理でSampleTableを検索すると、以下のようにSampleTable.javaで定義されたテーブル構造と、
+			テータベース中のテーブル構造に差があることが検出されます。
+			ここでSampleTableをチェックし、「更新」ボタンを押下すると、テーブル構造を構成しなおすことができます。
+		</p>
+		<figure>
+			<figcaption>テーブル構造の更新</figcaption>
+			<img src="enum5.png" style="width:50%; height:50%;"/>
+		</figure>
+		<p>
+			「更新」を使うと既存のデータは保持されます。
+			更新後の画面は以下のようになり、データ件数が変わらないことが確認できます。
+		</p>
+		<figure>
+			<figcaption>テーブル構造更新後の状態</figcaption>
+			<img src="enum6.png" style="width:50%; height:50%;"/>
+		</figure>
+		<h3>ページの修正</h3>
+		<p>
+			テーブルに追加したsampleSelectを入力できるようにするには、以下のように編集フォームに&lt;select&gt;タグを追加するだけで完了です。
+		</p>
+		<div class="filecaption">編集フォームにフィールドを追加(SamplePage.html)</div>
+		<div class="wrappre">
+			<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;meta charset=&quot;UTF-8&quot;&gt;
+		&lt;title&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;div id=&quot;mainDiv&quot;&gt;
+		
+					&#12539;
+					&#12539;
+					&#12539;
+		
+			&lt;form id=&quot;editForm&quot;&gt;
+				&lt;div class=&quot;formHeader&quot;&gt;&lt;span id=&quot;editFormTitle&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;sampleId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;createUserId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;createTimestamp&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;updateUserId&quot; /&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;updateTimestamp&quot; /&gt;
+				&lt;table class=&quot;responsive&quot;&gt;
+					&lt;tbody&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#12486;&#12461;&#12473;&#12488;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleText&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#25968;&#20516;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleNum&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						&lt;tr&gt;
+							&lt;th&gt;&#26085;&#20184;&lt;/th&gt;
+							&lt;td&gt;&lt;input type=&quot;text&quot; id=&quot;sampleDate&quot; /&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						<b>
+						&lt;tr&gt;
+							&lt;th&gt;&#36984;&#25246;&lt;/th&gt;
+							&lt;td&gt;&lt;select id=&quot;sampleSelect&quot;&gt;&lt;/select&gt;&lt;/td&gt;
+						&lt;/tr&gt;
+						</b>
+					&lt;/tbody&gt;
+				&lt;/table&gt;
+				&lt;input type=&quot;button&quot; id=&quot;confirmButton&quot; value=&quot;&#30906;&#35469;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;saveButton&quot; value=&quot;&#30331;&#37682;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;resetButton&quot; value=&quot;&#12522;&#12475;&#12483;&#12488;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;deleteButton&quot; value=&quot;&#21066;&#38500;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;backButton&quot; value=&quot;&#25147;&#12427;&quot;/&gt;
+				&lt;input type=&quot;button&quot; id=&quot;printButton&quot; value=&quot;&#21360;&#21047;&quot;/&gt;
+			&lt;/form&gt;
+
+		&lt;/div&gt;
+	&lt;/body&gt;
+&lt;/html&gt;				
+			</pre>
+		</div>
+		<p>
+			クリーンビルドの後、新規登録フォームを表示すると、以下のように選択肢が自動的に取得されているのがわかります。
+			SampleEditForm.javaでは、SampleTable中のフィールドをすべて配置するようになっているため、この状態でデータの登録も可能になっています。
+		</p>
+		<figure>
+			<figcaption>選択項目追加後の新規登録画面</figcaption>
+			<img src="enum7.png" style="width:50%; height:50%;"/>
+		</figure>
+		
+		<p>
+			さらに検索結果リストに"sampleSelect"を表示するには、以下のように修正します。
+		</p>
+		<div class="filecaption">検索結果フォームにフィールドを追加(SampleQueryResultForm.java)</div>
+		<div class="wrappre">
+			<pre>
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleQueryResultForm() {
+		Table table = new SampleTable();
+		this.addPkFieldList(table.getPkFieldList());
+		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
+		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
+		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true, SortOrder.DESC);
+		<b>htmltable.getFieldList().get(&quot;sampleSelect&quot;).setSortable(true);</b>
+
+		this.addHtmlTable(htmltable);
+	}
+
+			</pre>
+		</div>
+		<div class="filecaption">検索結果フォームにフィールドを追加(SamplePage.html)</div>
+		<div class="wrappre">
+			<pre>
+			&lt;form id=&quot;queryResultForm&quot;&gt;
+				&lt;div class=&quot;formHeader&quot;&gt;&#26908;&#32034;&#32080;&#26524;&lt;/div&gt;
+				&lt;input type=&quot;hidden&quot; id=&quot;sampleId&quot; /&gt;
+				&lt;table class=&quot;responsive&quot;&gt;
+					&lt;tbody&gt;
+					&lt;/tbody&gt;
+				&lt;/table&gt;
+				&lt;div class=&quot;hScrollDiv&quot;&gt;
+					&lt;table id=&quot;queryResult&quot;&gt;
+						&lt;thead&gt;
+						&lt;tr&gt;
+							&lt;th&gt;
+								No.
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#12486;&#12461;&#12473;&#12488;
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#25968;&#20516;
+							&lt;/th&gt;
+							&lt;th&gt;
+								&#26085;&#20184;
+							&lt;/th&gt;
+							<b>
+							&lt;th&gt;
+								&#36984;&#25246;
+							&lt;/th&gt;
+							</b>
+							&lt;th&gt;
+								&#25805;&#20316;
+							&lt;/th&gt;
+						&lt;/tr&gt;
+					&lt;/thead&gt;
+						&lt;tbody&gt;
+						&lt;tr&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].rowNo&quot;&gt;&lt;/span&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].sampleId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].createUserId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].createTimestamp&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].updateUserId&quot; /&gt;
+								&lt;input type=&quot;hidden&quot; id=&quot;queryResult[0].updateTimestamp&quot; /&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;a id=&quot;queryResult[0].updateButton&quot; href=&quot;javascript:void(0);&quot;&gt;&lt;span id=&quot;queryResult[0].sampleText&quot;&gt;&lt;/span&gt;&lt;/a&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].sampleNum&quot;&gt;&lt;/span&gt;
+							&lt;/td&gt;
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].sampleDate&quot;&gt;&lt;/span&gt;
+							&lt;/td&gt;
+							<b>
+							&lt;td&gt;
+								&lt;span id=&quot;queryResult[0].sampleSelect&quot;&gt;&lt;/span&gt;
+							&lt;/td&gt;
+							</b>
+							&lt;td&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].viewButton&quot; value=&quot;&#34920;&#31034;&quot;&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].referButton&quot; value=&quot;&#21442;&#29031;&#30331;&#37682;&quot;&gt;
+								&lt;input type=&quot;button&quot; id=&quot;queryResult[0].deleteButton&quot; value=&quot;&#21066;&#38500;&quot;&gt;
+							&lt;/td&gt;
+						&lt;/tr&gt;
+					&lt;/tbody&gt;
+						&lt;/table&gt;
+				&lt;/div&gt;
+			&lt;/form&gt;
+			</pre>
+		</div>
+		<p>
+			上記修正で、以下のように検索結果リストにも"sampleSelect"フィールドが表示されます。
+		</p>
+		<figure>
+			<figcaption>選択項目追加後の検索結果画面</figcaption>
+			<img src="enum8.png" style="width:50%; height:50%;"/>
+		</figure>
 		<hr/>
 	</body>
 </html>
