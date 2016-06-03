@@ -94,8 +94,8 @@
 			</pre>
 		</div>
 		<p>
-			完成したアプリケーションでは、開発ツールは不要であり、危険な存在です。
-			そのため、アプリケーションが完成したら、以下の設定を行い開発ツールを停止します。
+			アプリケーションが完成し公開する段階になると、開発ツールは不要で、かつ危険な存在になってしまいます。
+			そのため、以下の設定で開発ツールを停止できるようになっています。
 		</p>
 		<div class="filecaption">開発ツールの停止設定(web.xml)</div>
 		<div class="wrappre">
@@ -153,12 +153,13 @@
 		<h3>Tomcat8の設定</h3>
 		<p>
 			dataforms.jarで作成されたアプリケーションを動作させるには、Java8とServlet3.0に対応したアプリケーションサーバが必要です。
-			基本的にJava8+Tomcat8を稼働したサーバを用意してください。
+			Java8+Tomcat8が稼働したサーバを用意してください。
 		</p>
 		<p>
-			Tomcat8には組み込みApache DerbyのJDBCドライバderby.jarとderbyLocale_ja_JP.jarを$TOMCAT_HOME/libにコピーしてください。
+			Tomcat8にはApache DerbyのJDBCドライバderby.jarとderbyLocale_ja_JP.jarをインストールしてください。
+			$TOMCAT_HOME/libに、この2つのjarファイルをコピーするだけで完了です。
 		</p>
-		<h3>WARのデプロイ</h3>
+		<h3>WARファイルのデプロイ</h3>
 		<p>
 			作成したWARファイルのデプロイを行うには、作成した*.warファイルを$TOMCAT_HOME/webappsにコピーするだけです。
 			これで自動的にデプロイが行われます。
@@ -166,7 +167,7 @@
 		<h3>アプリケーションの初期化</h3>
 		<p>
 			今回作成したアプリケーションのURLをアクセスすると、開発者の登録とデータベースの初期化を行う画面が表示されます。
-			開発者の登録を行うと、dataforms.app,sampleパッケージ中のテーブルが初期化されます。
+			開発者の登録を行うと、dataforms.app,sampleパッケージ中のテーブルが作成され、初期データがインポートされます。
 		</p>
 		<figure>
 			<figcaption>アプリケーションの初期化</figcaption>
