@@ -213,6 +213,18 @@
 		<param-name>web-source-path</param-name>
 		<param-value>/eclipse/pleiades-e4.5/workspace/dataforms/WebContent</param-value>
 	</context-param>
+	<!-- 
+		データベースの作成時に、初期化するパッケージリストを指定します。 
+		パッケージ名は,区切りで複数設定することができます。
+		データベースを作成するときに、このパッケージリストを参照し、このパッケージ中のテーブルクラスに対応するテーブルを作成します。
+		なおdataforms.appパッケージは必ず指定してください。
+	-->
+	<context-param>
+		<param-name>initialize-package-list</param-name>
+		<param-value>
+			dataforms.app
+		</param-value>
+	</context-param>
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>

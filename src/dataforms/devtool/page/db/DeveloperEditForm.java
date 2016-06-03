@@ -9,6 +9,7 @@ import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.EditForm;
+import dataforms.controller.Page;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.util.MessagesUtil;
 import dataforms.util.StringUtil;
@@ -92,6 +93,21 @@ public class DeveloperEditForm extends EditForm {
 		return (!StringUtil.isBlank(userId));
 	}
 
+	
+	/**
+	 * 初期化するパッケージリストを取得します。
+	 * @return 初期化するパッケージリスト。
+	 */
+	private List<String> getInitializePackageList() {
+		List<String> ret = new ArrayList<String>();
+		String plist = Page.getServlet().getServletContext().getInitParameter("initialize-package-list");
+		String[] a = plist.split(",");
+		for (String pkg: a) {
+			ret.add(pkg.trim());
+		}
+		return ret;
+	}
+	
 	/**
 	 * データベースの初期化を行います。
 	 * <pre>
@@ -102,12 +118,15 @@ public class DeveloperEditForm extends EditForm {
 	 */
 	private void initDb() throws Exception {
 		TableManagerDao tmdao = new TableManagerDao(this);
-		Map<String, Object> p = new HashMap<String, Object>();
-		p.put("packageName", "dataforms.app");
-		List<Map<String, Object>> list  = tmdao.queryTableClass(p);
-		for (Map<String, Object> m: list) {
-			String className = (String) m.get("className");
-			tmdao.updateTable(className);
+		List<String> plist = this.getInitializePackageList();
+		for (String pkg: plist) {
+			Map<String, Object> p = new HashMap<String, Object>();
+			p.put("packageName", pkg);
+			List<Map<String, Object>> list  = tmdao.queryTableClass(p);
+			for (Map<String, Object> m: list) {
+				String className = (String) m.get("className");
+				tmdao.updateTable(className);
+			}
 		}
 	}
 
