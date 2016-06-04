@@ -7,6 +7,7 @@ import dataforms.controller.ApplicationException;
 import dataforms.controller.EditForm;
 import dataforms.controller.QueryForm;
 import dataforms.dao.Table;
+import dataforms.field.base.Field;
 import ${tableClassFullName};
 import ${daoClassFullName};
 
@@ -47,6 +48,25 @@ public class ${editFormClassName} extends EditForm {
 		${daoClassName} dao = new ${daoClassName}(this);
 		return dao.query(data);
 	}
+
+	/**
+	 * 参照登録対象対象のデータを取得します。
+	 * <pre>
+	 * queryDataから取得したデータから、PK項目を削除します。
+	 * </pre>
+	 * @param data 取得するデータのPKの値が入ってきます。
+	 * @return 編集対象データ。
+	 */
+	@Override
+	protected Map<String, Object> queryReferData(Map<String, Object> data) throws Exception {
+		Table table = new ${tableClassName}();
+		Map<String, Object> ret = this.queryData(data);
+		for (Field<?> f: table.getPkFieldList()) {
+			ret.remove(f.getId());
+		}
+		return ret;
+	}
+
 
 	/**
 	 * 編集対象のデータを取得します。
