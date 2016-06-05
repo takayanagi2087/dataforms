@@ -48,7 +48,6 @@ public abstract class QueryResultForm extends Form {
 	 * </pre>
 	 * @param field 追加するフィールド。
 	 * @return 追加されたフィールド。
-	 * TODO:このメソッドを使用しているフォームの動作確認。
 	 */
 	public Field<?> addPkField(final Field<?> field) {
 		this.addField(field);
