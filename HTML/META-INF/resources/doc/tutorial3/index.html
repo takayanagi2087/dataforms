@@ -41,6 +41,7 @@
 		<p>
 			既に存在するページ(「ユーザ管理」や「パスワード変更」等)は、ユーザレベルで使用できるユーザかどうかを判定しています。
 			例を挙げると、「ユーザ管理」ページは「管理者」、「開発者」しか使用できませんが、「パスワード変更」は「ユーザ」でも使用可能です。
+			ここでは、UserレベルとGuestレベルのユーザを追加しておいてください。
 		</p>
 		<p>
 			開発ツールで作成したページクラスは、"dataforms.app.page.base.BasePage"から派生しています。
@@ -94,7 +95,7 @@
 		<div class="filecaption">SamplePageを「ゲスト」用に修正</div>
 		<div class="wrappre">
 			<pre>
-import dataforms.app.page.base.GuestPage;
+<b>import dataforms.app.page.base.GuestPage;</b>
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
 import sample.dao.SampleDao;
@@ -197,6 +198,42 @@ public class SampleQueryForm extends QueryForm {
 			これは、"sampleText"フィールドを「完全一致で検索する」という設定です。
 			これをsetMatchType(MatchType.PART)に変更すれば、部分一致で検索されるようになります。
 		</p>
+		
+		
+		<div class="filecaption">"sampleText"の検索方法を変更</div>
+		<div class="wrappre">
+			<pre>
+package sample.page;
+
+import dataforms.controller.QueryForm;
+import dataforms.dao.Table;
+import dataforms.field.base.Field.MatchType;
+import sample.dao.SampleTable;
+import sample.field.SampleDateField;
+import sample.field.SampleNumField;
+
+
+
+/**
+ * &#21839;&#12356;&#21512;&#12431;&#12379;&#12501;&#12457;&#12540;&#12512;&#12463;&#12521;&#12473;&#12290;
+ */
+public class SampleQueryForm extends QueryForm {
+	/**
+	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
+	 */
+	public SampleQueryForm() {
+		Table table = new SampleTable();
+		this.addField(table.getField(&quot;sampleText&quot;)).setMatchType(MatchType.<b>PART</b>);
+		this.addField(new SampleNumField(&quot;sampleNumFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
+		this.addField(new SampleNumField(&quot;sampleNumTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
+		this.addField(new SampleDateField(&quot;sampleDateFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
+		this.addField(new SampleDateField(&quot;sampleDateTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
+
+	}
+}
+			</pre>
+		</div>
+		
 		<h3>検索結果のカラムソートの設定</h3>
 		<p>
 			SampleQueryResultForm.javaは、以下のように生成されています。
@@ -322,7 +359,7 @@ public class SampleEditForm extends EditForm {
 package sample.field;
 
 import dataforms.field.sqltype.VarcharField;
-import dataforms.validator.AsciiValidator;
+<b>import dataforms.validator.AsciiValidator;</b>
 import dataforms.validator.MaxLengthValidator;
 
 
@@ -502,7 +539,7 @@ SampleEditForm.prototype.validateForm = function() {
 			</pre>
 		</div>
 		<p>
-			この処理を実装した後、バリデーションを動作させると、Javaのみで記述したバリデーションと同じ動作になります。
+			この処理を実装した後、バリデーションを動作させると、Javaで記述したバリデーションと同じ動作になります。
 			今までと違う点は、チェック時にサーバへのアクセスは発生しないということです。
 			Eclipseのコンソールを見ると、フォームバリデータでエラーした場合、サーバ側のメソッドが動作していないことが確認できるはずです。
 		</p>
@@ -524,15 +561,16 @@ SampleEditForm.prototype.validateForm = function() {
 			<pre>
 package sample.field;
 
+<b>
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import dataforms.field.base.FieldList;
+</b>
+<b>import dataforms.field.base.FieldList;</b>
 import dataforms.field.sqltype.VarcharField;
 import dataforms.validator.AsciiValidator;
 import dataforms.validator.MaxLengthValidator;
-import sample.dao.SampleDao;
+<b>import sample.dao.SampleDao;</b>
 
 
 /**
@@ -687,23 +725,23 @@ public class SampleTextField extends VarcharField {
 	}
 	<b>
 	@Override
-	protected Map<String, Object> queryRelationData(Map<String, Object> data) throws Exception {
-		String id = (String) data.get("currentFieldId");
+	protected Map&lt;String, Object&gt; queryRelationData(Map&lt;String, Object&gt; data) throws Exception {
+		String id = (String) data.get(&quot;currentFieldId&quot;);
 		String text = (String) data.get(id);
-		SampleDao dao = new SampleDao(this); // Dao使用し、完全一致で検索する。
-		Map<String, Object> p = new HashMap<String, Object>();
+		SampleDao dao = new SampleDao(this); // Dao&#20351;&#29992;&#12375;&#12289;&#23436;&#20840;&#19968;&#33268;&#12391;&#26908;&#32034;&#12377;&#12427;&#12290;
+		Map&lt;String, Object&gt; p = new HashMap&lt;String, Object&gt;();
 		p.put(id, text);
 		FieldList flist = new FieldList();
 		flist.add((new SampleTextField()).setMatchType(MatchType.FULL));
-		List<Map<String, Object>> list = dao.query(p, flist);
-		if (list.size() >= 1) {
-			Map<String, Object> r = list.get(0);
-			Map<String, Object> ret = new HashMap<String, Object>();
-			ret.put("sampleNum", r.get("sampleNum"));
-			ret.put("sampleDate", r.get("sampleDate"));
+		List&lt;Map&lt;String, Object&gt;&gt; list = dao.query(p, flist);
+		if (list.size() &gt;= 1) {
+			Map&lt;String, Object&gt; r = list.get(0);
+			Map&lt;String, Object&gt; ret = new HashMap&lt;String, Object&gt;();
+			ret.put(&quot;sampleNum&quot;, r.get(&quot;sampleNum&quot;));
+			ret.put(&quot;sampleDate&quot;, r.get(&quot;sampleDate&quot;));
 			return ret;
 		} else {
-			return new HashMap<String, Object>();
+			return new HashMap&lt;String, Object&gt;();
 		}
 	}
 </b>
@@ -747,7 +785,7 @@ public class SampleEditForm extends EditForm {
 		<h3>独自処理ボタンの追加</h3>
 		<p>
 			編集フォームにボタンを追加して、そこに処理を割り当ててみます。
-			先ずSamplePage.html中のeditFormにボタンを追加します。
+			先ず、SamplePage.html中のeditFormにボタンを追加します。
 		</p>
 		<div class="filecaption">SamplePage.htmlの修正箇所</div>
 		<div class="wrappre">
@@ -811,7 +849,7 @@ SampleEditForm = createSubclass(&quot;SampleEditForm&quot;, {}, &quot;EditForm&q
 SampleEditForm.prototype.attach = function() {
 	EditForm.prototype.attach.call(this);
 <b>
-	this.find(&quot;#testButton&quot;).click(function () {
+	this.find(&quot;#printButton&quot;).click(function () {
 		alert("印刷処理を実装予定");
 	});
 </b>
@@ -892,7 +930,7 @@ public class SampleEditForm extends EditForm {
 		if (list.size() == 0) {
 			Map&lt;String, Object&gt; data = this.convertToServerData(param);
 			log.debug(&quot;&#22793;&#25563;&#24460;&#12398;&#12487;&#12540;&#12479;=&quot; + data);
-			String template = AllTypeEditForm.getServlet().getServletContext().getRealPath(&quot;/exceltemplate/sample.xlsx&quot;);
+			String template = SampleEditForm.getServlet().getServletContext().getRealPath(&quot;/exceltemplate/sample.xlsx&quot;);
 			SampleExcelReport rep = new SampleExcelReport(template);
 			BinaryResponse bresp = new BinaryResponse(rep.print(data));
 			bresp.setFileName(&quot;sample.xlsx&quot;);
@@ -967,7 +1005,7 @@ SampleEditForm = createSubclass(&quot;SampleEditForm&quot;, {}, &quot;EditForm&q
  */
 SampleEditForm.prototype.attach = function() {
 	EditForm.prototype.attach.call(this);
-	var thisForm = this;
+	<b>var thisForm = this;</b>
 	this.find(&quot;#printButton&quot;).click(function () {
 		<b>thisForm.print();</b>
 	});
@@ -1013,9 +1051,9 @@ SampleEditForm.prototype.print = function() {
 		<h3>プルダウンの選択肢の設定</h3>
 		<p>
 			&lt;select&gt;タグの選択肢をデータベースから取得し設定する手法は、一般的なものです。
-			しかしこれをやろうとすると、結構面倒なコーディングが必要になります。
+			しかし、これをやろうとすると結構面倒なコーディングが必要になります。
 			dataforms.jarではSelectFieldクラスが用意されており、これから派生したクラスを使用することにより、
-			簡単にテータベースから選択肢を取得するフィールドを作成することがてきます。
+			簡単にテータベースから選択肢を取得することがてきます。
 		</p>
 		<p>
 			このようなフィールドは、基本機能ページですでに使用されています。
@@ -1039,6 +1077,11 @@ SampleEditForm.prototype.print = function() {
 			<figcaption>sample選択肢の登録内容</figcaption>
 			<img src="enum2.png" style="width:50%; height:50%;"/>
 		</figure>
+		
+		<p class="topic">
+			列挙型関連テーブルの言語指定は、デフォルト言語(default)と日本語(ja)が指定できるようになっています。
+			これは、web.xmlのsupport-languageパラメータで変更することができます。
+		</p>
 		<h3>テーブル構造の更新</h3>
 		<p>
 			列挙型として登録したsampleSelectをSampleTableに追加します。
