@@ -4,13 +4,13 @@
 Java Webアプリケーションフレームワークと、その開発ツールです。  
 特徴を以下にまとめます。  
 
-*依存ライブラリは少なく(jQuery,jQuery-ui,jsonic,apache-commonsのいくつかとpoi)、シンプルな構造です。
-*Viewは、Javascriptやonxxx等のイベントアトリビュートを一切記述していない単純なHTMLで定義します。jsp,jsfは使用しません。
-*Page,Form,Field等のJavaクラスと、それに対応したJavascriptのクラスが、HTMLを自動的に制御します。
-*開発ツールを装備し、とりあえず動作するJava,Javascript,HTMLを自動生成することができます。
-*データベースのテーブルや問い合わせは、JavaのTable,Queryクラスで定義するため、ほとんどSQLの記述は不要です。
-*データベースのテーブル作成やテーブル構造の変更は、開発ツールで簡単に行うことができます。
-*現在のところApache Derby,PostgreSQL,MySQL,Oralceに対応しています。
+* 依存ライブラリは少なく(jQuery,jQuery-ui,jsonic,apache-commonsのいくつかとpoi)、シンプルな構造です。
+* Viewは、Javascriptやonxxx等のイベントアトリビュートを一切記述していない単純なHTMLで定義します。jsp,jsfは使用しません。
+* Page,Form,Field等のJavaクラスと、それに対応したJavascriptのクラスが、HTMLを自動的に制御します。
+* 開発ツールを装備し、とりあえず動作するJava,Javascript,HTMLを自動生成することができます。
+* データベースのテーブルや問い合わせは、JavaのTable,Queryクラスで定義するため、ほとんどSQLの記述は不要です。
+* データベースのテーブル作成やテーブル構造の変更は、開発ツールで簡単に行うことができます。
+* 現在のところApache Derby,PostgreSQL,MySQL,Oralceに対応しています。
   
   
 ## Demo
