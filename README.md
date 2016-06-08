@@ -6,10 +6,11 @@ Javaクラスでデータベースのテーブル構造を定義し、そのテ�
   
   
 ## Demo
-デモサイトでGuest/Guestでログインしてください。  
-[sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
-またドキュメントは以下のリンクを参照してください。  
+ドキュメントは以下のリンクを参照してください。  
 [ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
+
+ドキュメントに記述されているサンプルは、以下のデモサイトで動作を確認できます。
+[sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
 
 ## Requirement
 主に、Eclipse4.5 + Java8 + Tomcat8でテストしています。  
