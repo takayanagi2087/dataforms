@@ -9,7 +9,10 @@ import dataforms.controller.Response;
 import dataforms.devtool.dao.db.TableManagerDao;
 
 /**
- * ユーザ情報入力ページクラス。
+ * トップページクラス。
+ * <pre>
+ * アプリケーション、ユーザの状態に応じて、適切なページにリダイレクトします。
+ * </pre>
  *
  */
 public class TopPage extends BasePage {
