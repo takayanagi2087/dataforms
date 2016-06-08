@@ -10,7 +10,7 @@ Javaクラスでデータベースのテーブル構造を定義し、そのテ�
 [ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
 
 ドキュメントに記述されているサンプルは、以下のデモサイトで動作を確認できます。  
-[sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
+[サンプルページ](http://woontai.dip.jp/dfsample/sample/page/SamplePage.df)  
 
 ## Requirement
 主に、Eclipse4.5 + Java8 + Tomcat8でテストしています。  
