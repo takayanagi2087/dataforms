@@ -9,7 +9,7 @@ Javaクラスでデータベースのテーブル構造を定義し、そのテ�
 ドキュメントは以下のリンクを参照してください。  
 [ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
 
-ドキュメントに記述されているサンプルは、以下のデモサイトで動作を確認できます。
+ドキュメントに記述されているサンプルは、以下のデモサイトで動作を確認できます。  
 [sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
 
 ## Requirement
