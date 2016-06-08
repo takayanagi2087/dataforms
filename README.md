@@ -1,9 +1,10 @@
 #dataforms.jar
 
 ## Description
-Java Webアプリケーションフレームワークと、その開発ツールです。
-
-
+Java Webアプリケーションフレームワークと、その開発ツールです。  
+Javaクラスでデータベースのテーブル構造を定義し、そのテーブルの検索や入力を行うフォームを簡単に作成することができます。  
+  
+  
 ## Demo
 デモサイトでGuest/Guestでログインしてください。  
 [sample](http://woontai.dip.jp/dfsample/dataforms/app/page/login/LoginPage.df)  
@@ -11,7 +12,14 @@ Java Webアプリケーションフレームワークと、その開発ツール
 [ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
 
 ## Requirement
-Eclipse4.5 + Java8 + Tomcat8で動作します。
+主に、Eclipse4.5 + Java8 + Tomcat8でテストしています。  
+基本的に、Servlet 3.0に対応したアプリケーションサーバで動作するはずです。  
+最近評価していませんが、以下のアプリケーションサーバで一度動作させています。  
+  
+glassfish-4.1  
+wildfly-8.2.1.Final  
+Oracle WebLogic Server 12.1.3.0  
+  
 
 ## Install
 [リリース](https://github.com/takayanagi2087/dataforms/releases)から、dfblank_xxx.warファイルをダウンロードし、Eclipseプロジェクトとしてインポートしてください。
@@ -23,8 +31,6 @@ Eclipse4.5 + Java8 + Tomcat8で動作します。
 高柳　正彦
 
 ## Status
-フレームワークの本体はそれなりに安定してきました。
-公開はできませんが、すでに数件のプロジェクトで使用しています。
-開発ツールはBUGもいくつか確認しています。
-また今後機能を追加していく予定です。
-現在、ドキュメントの作成を優先して進めています。
+現在開発ツールのBUGをいくつか確認しており、それの修正後Ver1.00を正式リリースする予定です。  
+
+
