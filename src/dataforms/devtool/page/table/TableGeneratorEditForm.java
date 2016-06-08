@@ -40,8 +40,6 @@ import net.arnx.jsonic.JSON;
 /**
  * 編集フォームクラス。
  *
- *　TODO:項目長等がクリアされる不具合がある。
- *
  */
 public class TableGeneratorEditForm extends EditForm {
 

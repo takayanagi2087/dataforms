@@ -180,14 +180,22 @@ TableGeneratorEditForm.prototype.onCalcClass = function(element) {
 				tbl.getComponent(bcls.attr("id")).lock(true);
 				owm.hide();
 			} else {
-				len.val(ret.result.fieldLength);
+				if (ret.result.fieldLength != null && ret.result.fieldLength.length > 0) {
+					if (len.val().length == 0) {
+						len.val(ret.result.fieldLength);
+					}
+				}
 				if (ret.result.superClassPackage != null) {
 					bpkg.val(ret.result.superClassPackage);
 				}
 				if (ret.result.superClassSimpleName != null) {
 					bcls.val(ret.result.superClassSimpleName);
 				}
-				cmnt.val(ret.result.fieldComment);
+				if (ret.result.fieldComment != null && ret.result.fieldComment.length > 0) {
+					if (cmnt.val().length == 0) {
+						cmnt.val(ret.result.fieldComment);
+					}
+				}
 				tbl.getComponent(bpkg.attr("id")).lock(false);
 				tbl.getComponent(bcls.attr("id")).lock(false);
 				owm.show();
