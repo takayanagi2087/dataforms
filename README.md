@@ -5,14 +5,14 @@ Java Webアプリケーションフレームワークと、その開発ツール
 特徴を以下にまとめます。  
 
 * 依存ライブラリは少なく(jQuery,jQuery-ui,jsonic,apache-commonsのいくつかとpoi)、シンプルな構造です。
+* dataforms.jar、上記の依存ライブラリ、対応するデータベースサーバがあれば、データベースを使用したWEBアプリケーションの構築が可能です。
 * Viewは、Javascriptやonxxx等のイベントアトリビュートを一切記述していない単純なHTMLで定義します。jsp,jsfは使用しません。
 * Page,Form,Field等のJavaクラスと、それに対応したJavascriptのクラスが、HTMLを自動的に制御します。
 * 開発ツールを装備し、とりあえず動作するJava,Javascript,HTMLを自動生成することができます。
 * データベースのテーブルや問い合わせは、JavaのTable,Queryクラスで定義するため、ほとんどSQLの記述は不要です。
 * データベースのテーブル作成やテーブル構造の変更は、開発ツールで簡単に行うことができます。
-* 現在のところApache Derby,PostgreSQL,MySQL,Oralceに対応しています。
-  
-  
+* 複数のベースサーバ(Apache Derby,PostgreSQL,MySQL,Oralce)に対応し、データベースサーバに依存しないアプリケーションの構築が可能です。
+
 ## Demo
 ドキュメントは以下のリンクを参照してください。  
 [ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
@@ -31,7 +31,7 @@ Oracle WebLogic Server 12.1.3.0
   
 
 ## Install
-[リリース](https://github.com/takayanagi2087/dataforms/releases)から、dfblank_xxx.warファイルをダウンロードし、Eclipseプロジェクトとしてインポートしてください。
+[リリース](https://github.com/takayanagi2087/dataforms/releases)から、dfblank_xxx.warファイルをダウンロードし、Eclipseでインポートしてください。
 
 ## Licence
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)
