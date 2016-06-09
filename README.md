@@ -46,7 +46,7 @@ Java Webアプリケーションフレームワークと、その開発ツール
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)
 
 ## Status
-ライブラリ本体は安定してきており、dataforms.jarを応用したシステムもいくつか運用しています。  
+ライブラリ本体は安定してきており、既にdataforms.jarを応用したシステムをいくつか運用しています。  
 現在開発ツールのBUGをいくつか確認しており、それの修正後Ver1.00を正式リリースする予定です。  
 
 
