@@ -100,14 +100,14 @@ public class PageGeneratorEditForm extends EditForm {
 		super.init();
 		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
 		this.setFormData("updateTable", "1");
-		this.setFormData("pageClassOverwriteMode", "error");
-		this.setFormData("daoClassOverwriteMode", "error");
+		this.setFormData("pageClassOverwriteMode", OverwriteModeField.ERROR);
+		this.setFormData("daoClassOverwriteMode", OverwriteModeField.ERROR);
 		this.setFormData("queryFormClassFlag", "1");
-		this.setFormData("queryFormClassOverwriteMode", "error");
+		this.setFormData("queryFormClassOverwriteMode", OverwriteModeField.ERROR);
 		this.setFormData("queryResultFormClassFlag", "1");
-		this.setFormData("queryResultFormClassOverwriteMode", "error");
+		this.setFormData("queryResultFormClassOverwriteMode", OverwriteModeField.ERROR);
 		this.setFormData("editFormClassFlag", "1");
-		this.setFormData("editFormClassOverwriteMode", "error");
+		this.setFormData("editFormClassOverwriteMode", OverwriteModeField.ERROR);
 
 	}
 
@@ -140,8 +140,8 @@ public class PageGeneratorEditForm extends EditForm {
 			ret.put("tableClassName", tblcls.getSimpleName());
 			ret.put("daoClassName", daocls.getSimpleName());
 		}
-		ret.put("pageClassOverwriteMode", "error");
-		ret.put("daoClassOverwriteMode", "error");
+		ret.put("pageClassOverwriteMode", OverwriteModeField.ERROR);
+		ret.put("daoClassOverwriteMode", OverwriteModeField.ERROR);
 		ret.put("functionSelect", functionPath);
 
 
@@ -161,15 +161,15 @@ public class PageGeneratorEditForm extends EditForm {
 				if (cmp instanceof QueryForm) {
 					ret.put("queryFormClassName", cmp.getClass().getSimpleName());
 					ret.put("queryFormClassFlag", "1");
-					ret.put("queryFormClassOverwriteMode", "error");
+					ret.put("queryFormClassOverwriteMode", OverwriteModeField.ERROR);
 				} else if (cmp instanceof QueryResultForm) {
 					ret.put("queryResultFormClassName", cmp.getClass().getSimpleName());
 					ret.put("queryResultFormClassFlag", "1");
-					ret.put("queryResultFormClassOverwriteMode", "error");
+					ret.put("queryResultFormClassOverwriteMode", OverwriteModeField.ERROR);
 				} else if (cmp instanceof EditForm) {
 					ret.put("editFormClassName", cmp.getClass().getSimpleName());
 					ret.put("editFormClassFlag", "1");
-					ret.put("editFormClassOverwriteMode", "error");
+					ret.put("editFormClassOverwriteMode", OverwriteModeField.ERROR);
 				}
 			}
 		}
@@ -198,7 +198,7 @@ public class PageGeneratorEditForm extends EditForm {
 			String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
 			String pageClassOverwriteMode = (String) data.get("pageClassOverwriteMode");
 			File f3 = new File(srcPath + "/" + pageClassName + ".java");
-			if ("error".equals(pageClassOverwriteMode)) {
+			if (OverwriteModeField.ERROR.equals(pageClassOverwriteMode)) {
 				if (f3.exists()) {
 					ret.add(new ValidationError("pageClassName", this.getPage().getMessage("error.sourcefileexist", pageClassName + ".java")));
 				}
@@ -208,7 +208,7 @@ public class PageGeneratorEditForm extends EditForm {
 				String tablePackageName = (String) data.get("tablePackageName");
 				String daoSrcPath = javaSrc + "/" + tablePackageName.replaceAll("\\.", "/");
 				String daoClassOverwriteMode = (String) data.get("daoClassOverwriteMode");
-				if ("error".equals(daoClassOverwriteMode)) {
+				if (OverwriteModeField.ERROR.equals(daoClassOverwriteMode)) {
 					File f0 = new File(daoSrcPath + "/" + daoClassName + ".java");
 					if (f0.exists()) {
 						ret.add(new ValidationError("daoClassName", this.getPage().getMessage("error.sourcefileexist", queryFormClassName + ".java")));
@@ -217,21 +217,21 @@ public class PageGeneratorEditForm extends EditForm {
 			}
 
 			String queryFormClassOverwriteMode = (String) data.get("queryFormClassOverwriteMode");
-			if ("error".equals(queryFormClassOverwriteMode)) {
+			if (OverwriteModeField.ERROR.equals(queryFormClassOverwriteMode)) {
 				File f0 = new File(srcPath + "/" + queryFormClassName + ".java");
 				if (f0.exists()) {
 					ret.add(new ValidationError("queryFormClassName", this.getPage().getMessage("error.sourcefileexist", queryFormClassName + ".java")));
 				}
 			}
 			String queryResultFormClassOverwriteMode = (String) data.get("queryResultFormClassOverwriteMode");
-			if ("error".equals(queryResultFormClassOverwriteMode)) {
+			if (OverwriteModeField.ERROR.equals(queryResultFormClassOverwriteMode)) {
 				File f1 = new File(srcPath + "/" + queryResultFormClassName + ".java");
 				if (f1.exists()) {
 					ret.add(new ValidationError("queryResultFormClassName", this.getPage().getMessage("error.sourcefileexist", queryResultFormClassName + ".java")));
 				}
 			}
 			String editFormClassOverwriteMode = (String) data.get("editFormClassOverwriteMode");
-			if ("error".equals(editFormClassOverwriteMode)) {
+			if (OverwriteModeField.ERROR.equals(editFormClassOverwriteMode)) {
 				File f2 = new File(srcPath + "/" + editFormClassName + ".java");
 				if (f2.exists()) {
 					ret.add(new ValidationError("editFormClassName", this.getPage().getMessage("error.sourcefileexist", editFormClassName + ".java")));
@@ -325,11 +325,12 @@ public class PageGeneratorEditForm extends EditForm {
 	 * @param packageNameId パッケージ名フィールドのID。
 	 * @param formFieldId フォーム名称のフィールドID。
 	 * @param template テンプレートリソース。
+	 * @param overWriteMode 上書きモード。
 	 * @return 作成されたクラス名。
 	 * @throws Exception 例外。
 	 *
 	 */
-	private String generateFormClass(final Map<String, Object> data, final String packageNameId, final String formFieldId, final String template) throws Exception {
+	private String generateFormClass(final Map<String, Object> data, final String packageNameId, final String formFieldId, final String template, final String overWriteMode) throws Exception {
 		String javaSrc = (String) data.get("javaSourcePath");
 		String tablePackageName = (String) data.get("tablePackageName");
 		String tableClassName = (String) data.get("tableClassName");
@@ -358,7 +359,9 @@ public class PageGeneratorEditForm extends EditForm {
 			String srcfile = srcPath + "/" + formClassName + ".java";
 			log.debug("srcpath=" + srcfile);
 			log.debug("src=" + javasrc);
-			FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
+			if (!OverwriteModeField.SKIP.equals(overWriteMode)) {
+				FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
+			}
 		}
 		return formClassName;
 	}
@@ -366,10 +369,11 @@ public class PageGeneratorEditForm extends EditForm {
 	/**
 	 * Daoクラスの生成処理。
 	 * @param data 入力データ。
+	 * @param overWriteMode 上書きモード。
 	 * @return 作成されたクラス名。
 	 * @throws Exception 例外。
 	 */
-	private String generateDaoClass(final Map<String, Object> data) throws Exception {
+	private String generateDaoClass(final Map<String, Object> data, final String overWriteMode) throws Exception {
 		String javaSrc = (String) data.get("javaSourcePath");
 		String packageName = (String) data.get("tablePackageName");
 		String tableClassName = (String) data.get("tableClassName");
@@ -386,7 +390,9 @@ public class PageGeneratorEditForm extends EditForm {
 		String srcfile = srcPath + "/" + daoClassName + ".java";
 		log.debug("srcpath=" + srcfile);
 		log.debug("src=" + javasrc);
-		FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
+		if (!OverwriteModeField.SKIP.equals(overWriteMode)) {
+			FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
+		}
 		return daoClassName;
 	}
 
@@ -401,7 +407,6 @@ public class PageGeneratorEditForm extends EditForm {
 	}
 
 
-	// TODO:上書きしない場合の対処が漏れているので修正が必要
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
 		String javaSrc = (String) data.get("javaSourcePath");
@@ -412,12 +417,19 @@ public class PageGeneratorEditForm extends EditForm {
 		String tableClassName = (String) data.get("tableClassName");
 		String daoClassName = (String) data.get("daoClassName");
 
-		String queryFormClass = this.generateFormClass(data, "packageName", "queryFormClassName", "QueryForm.java.template");
-		String queryResultFormClass = this.generateFormClass(data, "packageName", "queryResultFormClassName", "QueryResultForm.java.template");
-		String editFormClass = this.generateFormClass(data, "packageName", "editFormClassName", "EditForm.java.template");
+		String daoClassOverwriteMode = (String) data.get("daoClassOverwriteMode"); 
+		String queryFormClassOverwriteMode = (String) data.get("queryFormClassOverwriteMode");
+		String queryResultFormClassOverwriteMode = (String) data.get("queryResultFormClassOverwriteMode");
+		String editFormClassOverwriteMode = (String) data.get("editFormClassOverwriteMode");
+		String pageClassOverwriteMode = (String) data.get("pageClassOverwriteMode");
+
+		
+		String queryFormClass = this.generateFormClass(data, "packageName", "queryFormClassName", "QueryForm.java.template", queryFormClassOverwriteMode);
+		String queryResultFormClass = this.generateFormClass(data, "packageName", "queryResultFormClassName", "QueryResultForm.java.template", queryResultFormClassOverwriteMode);
+		String editFormClass = this.generateFormClass(data, "packageName", "editFormClassName", "EditForm.java.template", editFormClassOverwriteMode);
 
 		if (this.isUpdateTable(data)) {
-			this.generateDaoClass(data);
+			this.generateDaoClass(data, daoClassOverwriteMode);
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -444,8 +456,9 @@ public class PageGeneratorEditForm extends EditForm {
 		String srcfile = srcPath + "/" + pageClassName + ".java";
 //		log.debug("srcpath=" + srcfile);
 //		log.debug("src=" + javasrc);
-		FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
-
+		if (!OverwriteModeField.SKIP.equals(pageClassOverwriteMode)) {
+			FileUtil.writeTextFileWithBackup(srcfile, javasrc, DataFormsServlet.getEncoding());
+		}
 		String pageName = (String) data.get("pageName");
 		this.updatePageName(functionPath, packageName, pageClassName, pageName);
 

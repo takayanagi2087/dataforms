@@ -35,7 +35,7 @@ Java Webアプリケーションフレームワークと、その開発ツール
 * wildfly-8.2.1.Final  
 * Oracle WebLogic Server 12.1.3.0  
 
-またデータベースサーバは以下の物に対応しています。  
+対応しているデータベースサーバは以下の通りです。  
 
 * Apache Derby
 * PostgreSQL

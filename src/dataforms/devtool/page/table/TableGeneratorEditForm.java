@@ -67,7 +67,7 @@ public class TableGeneratorEditForm extends EditForm {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		this.setFormData("overwriteMode", "error");
+		this.setFormData("overwriteMode", OverwriteModeField.ERROR);
 		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
 	}
 
@@ -78,7 +78,7 @@ public class TableGeneratorEditForm extends EditForm {
 		String packageName = (String) data.get("packageName");
 		String tableClassName = (String) data.get("tableClassName");
 		String fullClassName = packageName + "." + tableClassName;
-		ret.put("overwriteMode", "error");
+		ret.put("overwriteMode", OverwriteModeField.ERROR);
 		Class<?> cls = Class.forName(fullClassName);
 		Table tbl = (Table) cls.newInstance();
 		if (tbl.isAutoIncrementId()) {
@@ -116,7 +116,7 @@ public class TableGeneratorEditForm extends EditForm {
 				m.put("fieldId", "");
 			}
 			m.put("comment", f.getComment());
-			m.put("overwriteMode", "error");
+			m.put("overwriteMode", OverwriteModeField.ERROR);
 			list.add(m);
 		}
 		ret.put("fieldList", list);
@@ -276,7 +276,7 @@ public class TableGeneratorEditForm extends EditForm {
 			String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
 			String tableClassName = (String) data.get("tableClassName");
 			String overwriteMode = (String) data.get("overwriteMode");
-			if ("error".equals(overwriteMode)) {
+			if (OverwriteModeField.ERROR.equals(overwriteMode)) {
 				File tbl = new File(srcPath + "/" + tableClassName + ".java");
 				if (tbl.exists()) {
 					ret.add(new ValidationError("tableClassName", this.getPage().getMessage("error.sourcefileexist", tableClassName + ".java")));
@@ -291,7 +291,7 @@ public class TableGeneratorEditForm extends EditForm {
 			String isDataformsField = (String) m.get("isDataformsField");
 			if (!"1".equals(isDataformsField)) {
 				String overwriteMode = (String) m.get("overwriteMode");
-				if ("error".equals(overwriteMode)) {
+				if (OverwriteModeField.ERROR.equals(overwriteMode)) {
 					String fieldPackageName = (String) m.get("packageName");
 					String fieldClassName = (String) m.get("fieldClassName");
 					String fldSrcPath = javaSrc + "/" + fieldPackageName.replaceAll("\\.", "/");
@@ -499,7 +499,7 @@ public class TableGeneratorEditForm extends EditForm {
 			String isDataformsField = (String) m.get("isDataformsField");
 			if (!"1".equals(isDataformsField)) {
 				String overwriteMode = (String) m.get("overwriteMode");
-				if (!"skip".equals(overwriteMode)) {
+				if (!OverwriteModeField.SKIP.equals(overwriteMode)) {
 					String fldsrc = this.generateFieldClass(m);
 					String fieldPackageName = (String) m.get("packageName");
 					String fieldClassSimpleName = (String) m.get("fieldClassName");
@@ -538,7 +538,7 @@ public class TableGeneratorEditForm extends EditForm {
 		tsrc = tsrc.replaceAll("\\$\\{importList\\}", implist.toString());
 		tsrc = tsrc.replaceAll("\\$\\{constructor\\}", constructor.toString());
 		log.debug("tsrc=\n" + tsrc);
-		if (!"skip".equals(tableOverwriteMode)) {
+		if (!OverwriteModeField.SKIP.equals(tableOverwriteMode)) {
 			srcmap.put(packageName + "." + tableClassName, tsrc);
 		}
 		log.debug("srcmap=" + JSON.encode(srcmap));

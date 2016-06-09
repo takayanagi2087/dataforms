@@ -7,6 +7,20 @@ import dataforms.field.common.EnumOptionSingleSelectField;
  *
  */
 public class OverwriteModeField extends EnumOptionSingleSelectField {
+
+	/**
+	 * エラー.
+	 */
+	public static final String ERROR = "error";
+	/**
+	 * 上書きしない.
+	 */
+	public static final String SKIP = "skip";
+	/**
+	 * 強制的に上書き.
+	 */
+	public static final String FORCE_OVERWRITE = "force";
+	
 	/**
 	 * コンストラクタ。
 	 */
