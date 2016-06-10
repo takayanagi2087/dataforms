@@ -242,6 +242,7 @@ public class TableManagerDao extends Dao {
 					Object value = m.get(id);
 					fld.setValueObject(value);
 					if (fld instanceof FileField) 	{
+						// TODO:将来的にFileFieldもExportできるようにする。
 						rec.put(id, null);
 					} else if (fld.getClientValue() != null) {
 						rec.put(id, fld.getClientValue().toString());
@@ -269,7 +270,7 @@ public class TableManagerDao extends Dao {
 	 * 作成者ユーザID, 更新者ユーザIDを適切に設定します。
 	 * @param data ユーザIDを設定するデータマップ。
 	 */
-	private void setUserIdValue(Map<String, Object> data) {
+	private void setUserIdValue(final Map<String, Object> data) {
 		if (data.get("createUserId") == null) {
 			data.put("createUserId", Long.valueOf(0));
 		}
