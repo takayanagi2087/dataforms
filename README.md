@@ -2,7 +2,6 @@
 
 ## Description
 Java Webアプリケーションフレームワークと、その開発ツールです。  
-開発環境の指定がないプロジェクトで使用してきたものです。  
 ドキュメント、開発ツールが整ってきたので公開します。  
 
 特徴を以下にまとめます。  
@@ -48,8 +47,6 @@ Servlet 3.0に対応したアプリケーションサーバで動作するはず
 ## Licence
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)  
 
-## Status
-ライブラリ本体は安定してきており、既にdataforms.jarを応用したシステムをいくつか運用しています。  
 
 
 
