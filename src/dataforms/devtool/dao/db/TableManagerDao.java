@@ -16,6 +16,7 @@ import dataforms.dao.Table;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.FileField;
 import dataforms.util.ClassFinder;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
@@ -240,7 +241,9 @@ public class TableManagerDao extends Dao {
 					String id = fld.getId();
 					Object value = m.get(id);
 					fld.setValueObject(value);
-					if (fld.getClientValue() != null) {
+					if (fld instanceof FileField) 	{
+						rec.put(id, null);
+					} else if (fld.getClientValue() != null) {
 						rec.put(id, fld.getClientValue().toString());
 					} else {
 						rec.put(id, null);
