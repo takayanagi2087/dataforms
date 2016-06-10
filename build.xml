@@ -138,6 +138,7 @@
             <attribute name="CreatedTime" value="${build.time}" />
 		</manifest>
 		<copy file="dataforms.mf" todir="./HTML/META-INF/resources" overwrite="true"/>
+		<copy file="dataforms.mf" todir="./build/classes/META-INF/resources" overwrite="true"/>
 		<!--　
 			以下のタスクでjarを作るとなぜかダメ...
 			SqlGeneratorのアノテーション取得でエラーとなる.
