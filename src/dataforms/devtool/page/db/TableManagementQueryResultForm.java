@@ -28,7 +28,6 @@ import dataforms.util.StringUtil;
 /**
  * DB管理ページの検索結果フォームクラス。
  *
- *TODO:テーブルのインポート時にcreateUserId,createTimestap,updateUserId,updateTimestampがなくてもインポートできるようにする。
  */
 public class TableManagementQueryResultForm extends QueryResultForm {
 	/**

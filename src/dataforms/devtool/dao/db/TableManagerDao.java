@@ -23,7 +23,6 @@ import net.arnx.jsonic.JSON;
 
 /**
  * TableManagerPage用のDAOクラス。
- * TODO:export/import時のデータ変換の見直し。
  *
  */
 public class TableManagerDao extends Dao {
@@ -264,6 +263,20 @@ public class TableManagerDao extends Dao {
 	}
 
 	/**
+	 * 作成者ユーザID, 更新者ユーザIDを適切に設定します。
+	 * @param data ユーザIDを設定するデータマップ。
+	 */
+	private void setUserIdValue(Map<String, Object> data) {
+		if (data.get("createUserId") == null) {
+			data.put("createUserId", Long.valueOf(0));
+		}
+		if (data.get("updateUserId") == null) {
+			data.put("updateUserId", Long.valueOf(0));
+		}
+	}
+
+	
+	/**
 	 * 初期データをインポートします。
 	 * @param classname クラス名。
 	 * @throws Exception 例外。
@@ -275,18 +288,16 @@ public class TableManagerDao extends Dao {
 		if (list != null) {
 			String sql = this.getSqlGenerator().generateInsertSql(tbl);
 			for (int i = 0; i < list.size(); i++) {
-				Map<String, Object> rec = new HashMap<String, Object>();
 				Map<String, Object> m = list.get(i);
-				for (Field<?> f : tbl.getFieldList()) {
-					f.setClientValue(m.get(f.getId()));
-					rec.put(f.getId(), f.getValue());
-				}
-				this.executeUpdate(sql, rec);
+				Map<String, Object> data = tbl.getFieldList().convertClientToServer(m);
+				this.setUserIdValue(data);
+				this.executeUpdate(sql, data);
 			}
 		}
 		String initialDataPath = Page.getServlet().getServletContext().getRealPath("/WEB-INF/initialdata");
 		this.importData(classname, initialDataPath);
 	}
+
 
 	/**
 	 * 指定フォルダのデータをインポートします。
@@ -300,6 +311,7 @@ public class TableManagerDao extends Dao {
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> data = tbl.getFieldList().convertClientToServer(list.get(i));
+				this.setUserIdValue(data);
 				if (this.existRecord(tbl, tbl.getPkFieldList(), data)) {
 					this.executeUpdate(tbl, data);
 				} else {
