@@ -242,7 +242,7 @@ public class TableManagerDao extends Dao {
 					Object value = m.get(id);
 					fld.setValueObject(value);
 					if (fld instanceof FileField) 	{
-						// TODO:将来的にFileFieldもExportできるようにする。
+						// TODO:FileFieldもExportできるようにする。
 						rec.put(id, null);
 					} else if (fld.getClientValue() != null) {
 						rec.put(id, fld.getClientValue().toString());
