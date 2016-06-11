@@ -48,5 +48,13 @@ Servlet 3.0に対応したアプリケーションサーバで動作するはず
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)  
 
 
+## Status
+* Fileフィールドのエクスポート,インポートの実装中。
+* 開発ツールにテーブル編集機能を追加予定。
+* 開発ツールにテーブル問い合わせ機能を追加予定。
+
+
+## History
+* 2016/06/10 Ver 1.00リリース。
 
 
