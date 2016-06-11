@@ -103,7 +103,8 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		FileObject fobj = newFileObject();
 		try {
 			FileStore store = this.newFileStore();
-			fobj = store.convertFromDBValue(value);
+			FileObject o = store.convertFromDBValue(value);
+			fobj.copy(o);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new ApplicationError(e);

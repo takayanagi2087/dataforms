@@ -1,5 +1,7 @@
 package dataforms.field.common;
 
+import dataforms.dao.file.FileObject;
+import dataforms.dao.file.ImageData;
 import dataforms.dao.sqldatatype.SqlVarchar;
 
 /**
@@ -27,4 +29,9 @@ public class FolderStoreImageField extends ImageField implements SqlVarchar {
 		this.setLength(LENGTH);
 	}
 
+	
+	@Override
+	protected FileObject newFileObject() {
+		return new ImageData();
+	}
 }

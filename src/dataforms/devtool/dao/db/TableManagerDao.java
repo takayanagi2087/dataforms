@@ -13,10 +13,15 @@ import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
+import dataforms.dao.file.FileObject;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.BlobStoreFileField;
+import dataforms.field.common.BlobStoreImageField;
 import dataforms.field.common.FileField;
+import dataforms.field.common.FolderStoreFileField;
+import dataforms.field.common.FolderStoreImageField;
 import dataforms.util.ClassFinder;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
@@ -214,6 +219,45 @@ public class TableManagerDao extends Dao {
 		return newname;
 	}
 
+	/**
+	 * フィールドに対応したファイル情報を取得します。
+	 * @param f フィールド。
+	 * @param value DBから取得したオブジェクト。
+	 * @param filePath ファイルの出力パス。
+	 * @param data 1レコードのデータ。
+	 * @return ファイル情報。
+	 * @throws Exception 例外。
+	 */
+	private Map<String, Object> getFileInfo(final FileField<?> f, final Object value, final String filePath, final Map<String, Object> data) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		File dir = new File(filePath);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		FileObject fo = null;
+		if (f instanceof FolderStoreFileField) {
+			FolderStoreFileField ff = (FolderStoreFileField) f;
+			ff.setDBValue(value);
+			fo = ff.getValue();
+		} else if (f instanceof FolderStoreImageField) {
+			FolderStoreImageField ff = (FolderStoreImageField) f;
+			ff.setDBValue(value);
+			fo = ff.getValue();
+		} else 	if (f instanceof BlobStoreFileField) {
+			BlobStoreFileField ff = (BlobStoreFileField) f;
+			ff.setDBValue(value);
+			fo = ff.getValue();
+			fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
+		} else 	if (f instanceof BlobStoreImageField) {
+			BlobStoreImageField ff = (BlobStoreImageField) f;
+			ff.setDBValue(value);
+			fo = ff.getValue();
+			fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
+		}
+		ret.put("filename", fo.getFileName());
+		ret.put("downloadParam", fo.getDownloadParameter());
+		return ret;
+	}
 
 	/**
 	 * テーブルのバックアップを取得します。
@@ -225,6 +269,7 @@ public class TableManagerDao extends Dao {
 	public String exportData(final String classname, final String outdir) throws Exception {
 		final Table tbl = Table.newInstance(classname);
 		String datapath = outdir + "/" + classname.replaceAll("\\.", "/") + ".data.json";
+		String filePath = outdir + "/" + classname.replaceAll("\\.", "/");
 		if (this.tableExists(tbl.getTableName())) {
 			File f = new File(datapath);
 			File dir = f.getParentFile();
@@ -240,11 +285,11 @@ public class TableManagerDao extends Dao {
 				for (Field<?> fld : flist) {
 					String id = fld.getId();
 					Object value = m.get(id);
-					fld.setValueObject(value);
 					if (fld instanceof FileField) 	{
 						// TODO:FileFieldもExportできるようにする。
-						rec.put(id, null);
+						rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, m));
 					} else if (fld.getClientValue() != null) {
+						fld.setValueObject(value);
 						rec.put(id, fld.getClientValue().toString());
 					} else {
 						rec.put(id, null);
