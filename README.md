@@ -18,10 +18,17 @@ Java Webアプリケーションフレームワークと、その開発ツール
 * フレームデザインは単純なHTML,CSSで記述してあるので、簡単にカスタマイズすることができます。
 
 ## Install
-以下のリンクから、dfblank_xxx.warファイルをダウンロードし、Eclipseでインポートしてください。  
-[リリース](https://github.com/takayanagi2087/dataforms/releases)  
-インポートの手順は以下のドキュメントを参照してください。  
-[ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)  
+インストールの手順をまとめると以下のようになります。  
+
+* [Pleiades - Eclipse プラグイン日本語化プラグイン](http://mergedoc.osdn.jp/index.html#pleiades.html)をダウンロードしインストール。
+* Pleiadesに付属するtomcat8のlibフォルダに[Apache Derby](https://db.apache.org/derby/)からダウンロードした組み込みDerbyのドライバ(derby.jar,derby_ja_JP.jar)をコピー。
+* EclipseのサーバービューにTomcat8(java8)を追加。
+* [リリース](https://github.com/takayanagi2087/dataforms/releases)から、dfblank_xxx.warファイルをダウンロードし、Eclipseでインポート。
+* Tomcat8(Java8)にインポートしたプロジェクトを追加し、クリーンビルドの後Tomcat8を起動。
+* ブラウザからアプリをアクセスし、開発者ユーザを登録。
+  
+詳細は[ドキュメント](http://woontai.dip.jp/dfsample/dataforms/devtool/page/doc/DocFramePage.df)を参照してください。  
+  
 
 ## Demo
 ドキュメントに記述されているサンプルは、以下のデモサイトで動作しています。  
