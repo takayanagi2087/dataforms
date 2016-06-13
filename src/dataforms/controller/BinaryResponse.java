@@ -2,6 +2,7 @@ package dataforms.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
@@ -131,6 +132,36 @@ public class BinaryResponse extends FileResponse {
 			resp.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(this.getFileName(), DataFormsServlet.getEncoding()));
 		}
 		ServletOutputStream os = resp.getOutputStream();
+		try {
+			InputStream is = this.inputStream;
+			try {
+				byte[] buf = new byte[16 * 1024];
+				while (true) {
+					int len = is.read(buf);
+					if (len <= 0) {
+						break;
+					}
+					os.write(buf, 0, len);
+				}
+			} finally {
+				is.close();
+			}
+		} finally {
+			os.flush();
+			os.close();
+		}
+		if (this.getTempFile() != null) {
+			this.getTempFile().delete();
+		}
+	}
+	
+	/**
+	 * ファイルへの保存。
+	 * @param path 保存先。
+	 * @throws Exception 例外。
+	 */
+	public void saveFile(final String path) throws Exception {
+		FileOutputStream os = new FileOutputStream(path);
 		try {
 			InputStream is = this.inputStream;
 			try {

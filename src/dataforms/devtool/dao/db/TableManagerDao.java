@@ -2,12 +2,14 @@ package dataforms.devtool.dao.db;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import dataforms.app.dao.func.FuncInfoTable;
+import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
@@ -218,17 +220,54 @@ public class TableManagerDao extends Dao {
 		this.executeUpdate(sql, (Map<String, Object>) null);
 		return newname;
 	}
+	
+/*	private void parse(String queryString) {
+	    for (String pair : queryString.split("&")) {
+	        int eq = pair.indexOf("=");
+	        if (eq < 0) {
+	            // key with no value
+	            addParam(URLDecoder.decode(pair), "");
+	        } else {
+	            // key=value
+	            String key = URLDecoder.decode(pair.substring(0, eq));
+	            String value = URLDecoder.decode(pair.substring(eq + 1));
+	            query.add(new KVP(key, value));
+	        }
+	    }
+	}
+*/
 
+	/**
+	 * ダウンロードパラメータをマップに変換する。
+	 * @param param ダウンロードパラメータ。
+	 * @return マップへの返還結果。
+	 * @throws Exception 例外。
+	 */
+	private Map<String, Object> getDownloadParamMap(final String param) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		String [] sp = param.split("&");
+		for (String pair: sp) {
+			String [] p = pair.split("=");
+			if (p.length == 2) {
+	            String key = URLDecoder.decode(p[0], "utf-8");
+	            String value = URLDecoder.decode(p[1], "utf-8");
+	            ret.put(key, value);
+			}
+		}
+		return ret;
+	}
+	
 	/**
 	 * フィールドに対応したファイル情報を取得します。
 	 * @param f フィールド。
 	 * @param value DBから取得したオブジェクト。
 	 * @param filePath ファイルの出力パス。
+	 * @param table テーブル。
 	 * @param data 1レコードのデータ。
 	 * @return ファイル情報。
 	 * @throws Exception 例外。
 	 */
-	private Map<String, Object> getFileInfo(final FileField<?> f, final Object value, final String filePath, final Map<String, Object> data) throws Exception {
+	private Map<String, Object> getFileInfo(final FileField<?> f, final Object value, final String filePath, final Table table, final Map<String, Object> data) throws Exception {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		File dir = new File(filePath);
 		if (!dir.exists()) {
@@ -254,8 +293,19 @@ public class TableManagerDao extends Dao {
 			fo = ff.getValue();
 			fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
 		}
+		Map<String, Object> dlp = this.getDownloadParamMap(fo.getDownloadParameter());
 		ret.put("filename", fo.getFileName());
-		ret.put("downloadParam", fo.getDownloadParameter());
+		String key = "";
+		for (Field<?> pkf: table.getPkFieldList()) {
+			if (key.length() > 0) {
+				key += "_";
+			}
+			key += data.get(pkf.getId()).toString();
+		}
+		BinaryResponse resp = f.download(dlp);
+		String fn = key + "_" + fo.getFileName();
+		resp.saveFile(dir + "/" + fn);
+		ret.put("saveFile", fn);
 		return ret;
 	}
 
@@ -286,13 +336,15 @@ public class TableManagerDao extends Dao {
 					String id = fld.getId();
 					Object value = m.get(id);
 					if (fld instanceof FileField) 	{
-						// TODO:FileFieldもExportできるようにする。
-						rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, m));
-					} else if (fld.getClientValue() != null) {
-						fld.setValueObject(value);
-						rec.put(id, fld.getClientValue().toString());
+						rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, tbl, m));
 					} else {
-						rec.put(id, null);
+						fld.setValueObject(value);
+						if (fld.getClientValue() != null) {
+							fld.setValueObject(value);
+							rec.put(id, fld.getClientValue().toString());
+						} else {
+							rec.put(id, null);
+						}
 					}
 				}
 				list.add(rec);
