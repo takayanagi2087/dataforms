@@ -101,6 +101,12 @@ public class FileObject implements Serializable {
 
 
 	/**
+	 * PDFのコンテントタイプ。
+	 */
+	public static final String CONTENT_TYPE_PDF = "application/pdf";
+
+	
+	/**
 	 * 拡張子とContent-typeの対応表。
 	 */
 	private static final String [][] CONTENT_TYPE_TABLE = {
@@ -109,6 +115,7 @@ public class FileObject implements Serializable {
 		, {"(?i).*\\.gif$", CONTENT_TYPE_GIF}
 		, {"(?i).*\\.svg$", CONTENT_TYPE_SVG}
 		, {"(?i).*\\.xlsx$", CONTENT_TYPE_XLSX}
+		, {"(?i).*\\.pdf$", CONTENT_TYPE_PDF}
 	};
 
 
