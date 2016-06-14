@@ -1,6 +1,7 @@
 package dataforms.dao.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -111,6 +112,18 @@ public class BlobFileStore extends FileStore {
 		return file;
 	}
 
+	@Override
+	public File makeTemp(final String filename, final File orgfile) throws Exception {
+		FileInputStream is = new FileInputStream(orgfile);
+		File file = null;
+		try {
+			file = this.makeBlobTempFile(filename, orgfile.length(), is);
+		} finally {
+			is.close();
+		}
+		return file;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * <pre>

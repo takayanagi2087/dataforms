@@ -2,16 +2,23 @@ package dataforms.debug.page.filetest;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.controller.EditForm;
 import dataforms.debug.dao.filetest.FileFieldTestDao;
 import dataforms.debug.dao.filetest.FileFieldTestTable;
 import dataforms.field.common.WebResourceImageField;
 import dataforms.util.StringUtil;
+import net.arnx.jsonic.JSON;
 
 /**
  * 編集フォームクラス。
  */
 public class FileTestEditForm extends EditForm {
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(FileTestEditForm.class);
 	/**
 	 * コンストラクタ。
 	 */
@@ -41,6 +48,7 @@ public class FileTestEditForm extends EditForm {
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
 		this.setUserInfo(data);
+		log.debug("insert data=" + JSON.encode(data, true));
 		FileFieldTestDao dao = new FileFieldTestDao(this);
 		dao.executeInsert(new FileFieldTestTable(), data);
 	}
@@ -48,6 +56,7 @@ public class FileTestEditForm extends EditForm {
 	@Override
 	protected void updateData(final Map<String, Object> data) throws Exception {
 		this.setUserInfo(data);
+		log.debug("updatet data=" + JSON.encode(data, true));
 		FileFieldTestDao dao = new FileFieldTestDao(this);
 		dao.executeUpdate(new FileFieldTestTable(), data);
 	}

@@ -39,6 +39,18 @@ public class WebResourceFileStore extends FileStore {
 		return null;
 	}
 
+	
+	/**
+	 * {@inheritDoc}
+	 * <pre>
+	 * 読み取り専用なので、何もせずnullを返します。
+	 * </pre>
+	 */
+	@Override
+	public File makeTemp(final String filename, final File orgfile) throws Exception {
+		return null;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * <pre>

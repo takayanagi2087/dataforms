@@ -1,5 +1,6 @@
 package dataforms.field.common;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,7 +105,9 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		try {
 			FileStore store = this.newFileStore();
 			FileObject o = store.convertFromDBValue(value);
-			fobj.copy(o);
+			if (o != null) {
+				fobj.copy(o);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new ApplicationError(e);
@@ -224,4 +227,22 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		return MatchType.NONE;
 	}
 
+	/**
+	 * インポートデータからファイルオブジェクトを取得します。
+	 * @param map インポートフィールドマップ。
+	 * @param filePath ファイルの保存パス。
+	 * @return FileObject形式のデータ。
+	 * @throws Exception 例外。
+	 */
+	public FileObject getFileObjectFromImportMap(final Map<String, Object> map, final String filePath) throws Exception {
+		FileObject ret = this.newFileObject();
+		File f = new File(filePath + "/" + (String) map.get("saveFile"));
+		ret.setFileName((String) map.get("filename"));
+		ret.setLength(f.length());
+		ret.setDownloadParameter((String) map.get("downloadParameter"));
+		FileStore fs = this.newFileStore();
+		File tf = fs.makeTemp(ret.getFileName(), f);
+		ret.setTempFile(tf);
+		return ret;
+	}
 }

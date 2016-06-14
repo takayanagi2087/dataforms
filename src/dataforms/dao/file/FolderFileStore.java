@@ -1,6 +1,7 @@
 package dataforms.dao.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -153,6 +154,25 @@ public class FolderFileStore extends FileStore {
 		FileOutputStream os = new FileOutputStream(file);
 		try {
 			InputStream is = fileItem.getInputStream();
+			try {
+				FileUtil.copyStream(is, os);
+			} finally {
+				is.close();
+			}
+		} finally {
+			os.close();
+		}
+		return file;
+	}
+	
+	@Override
+	public File makeTemp(final String filename, final File orgfile) throws Exception {
+		this.fileName = filename; //FileUtil.getFileName(orgfile.getAbsolutePath());
+
+		File file = this.makeUniqFile();
+		FileOutputStream os = new FileOutputStream(file);
+		try {
+			InputStream is = new FileInputStream(orgfile);
 			try {
 				FileUtil.copyStream(is, os);
 			} finally {

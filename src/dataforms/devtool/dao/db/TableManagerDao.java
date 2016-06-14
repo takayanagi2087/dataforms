@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.app.dao.func.FuncInfoTable;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
@@ -37,7 +39,7 @@ public class TableManagerDao extends Dao {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
+    private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
 
 	/**
 	 * コンストラクタ。
@@ -306,6 +308,8 @@ public class TableManagerDao extends Dao {
 		String fn = key + "_" + fo.getFileName();
 		resp.saveFile(dir + "/" + fn);
 		ret.put("saveFile", fn);
+		ret.put("downloadParameter", fo.getDownloadParameter());
+		ret.put("length", fo.getLength());
 		return ret;
 	}
 
@@ -336,7 +340,9 @@ public class TableManagerDao extends Dao {
 					String id = fld.getId();
 					Object value = m.get(id);
 					if (fld instanceof FileField) 	{
-						rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, tbl, m));
+						if (value != null) {
+							rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, tbl, m));
+						}
 					} else {
 						fld.setValueObject(value);
 						if (fld.getClientValue() != null) {
@@ -376,6 +382,31 @@ public class TableManagerDao extends Dao {
 		}
 	}
 
+	/**
+	 * インポートデータのファイルフィールド関連の変換を行います。
+	 * 
+	 * @param data インポートデータ。
+	 * @param datadir データディレクトリ。
+	 * @param table テーブル。
+	 * @throws Exception 例外.
+	 */
+	private void convertImportData(final Map<String, Object> data, final String datadir, final Table table) throws Exception {
+		String filePath = datadir + "/" + table.getClass().getName().replaceAll("\\.", "/");
+		for (Field<?> f: table.getFieldList()) {
+			if (f instanceof FileField) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> m = (Map<String, Object>) data.get(f.getId());
+				if (m != null) {
+					FileObject obj = ((FileField<?>) f).getFileObjectFromImportMap(m, filePath);
+					data.put(f.getId(), obj);
+				}
+			} else {
+				f.setClientValue(data.get(f.getId()));
+				data.put(f.getId(), f.getValue());
+			}
+		}
+	}
+	
 	
 	/**
 	 * 初期データをインポートします。
@@ -411,7 +442,12 @@ public class TableManagerDao extends Dao {
 		List<Map<String, Object>> list = tbl.getImportData(path);
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
-				Map<String, Object> data = tbl.getFieldList().convertClientToServer(list.get(i));
+				Map<String, Object> m = list.get(i);
+				this.convertImportData(m, path, tbl);
+				log.debug("m=" + JSON.encode(m, true));
+//				Map<String, Object> data = tbl.getFieldList().convertClientToServer(m);
+				Map<String, Object> data = m;
+				log.debug("m=" + JSON.encode(data, true));
 				this.setUserIdValue(data);
 				if (this.existRecord(tbl, tbl.getPkFieldList(), data)) {
 					this.executeUpdate(tbl, data);

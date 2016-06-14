@@ -31,6 +31,15 @@ public abstract class FileStore {
 	protected abstract File makeTempFromFileItem(final FileItem fileItem) throws Exception;
 
 	/**
+	 * テーブル保存用一時ファイルを作成します。
+	 * @param filename ファイル名。
+	 * @param orgfile 元ファイル。
+	 * @return 作成された一時ファイル。
+	 * @throws Exception 例外。
+	 */
+	public abstract File makeTemp(final String filename, final File orgfile) throws Exception;
+
+	/**
 	 * ダウンロードパラメータを指定してファイルストアを作成した場合の初期化処理です。
 	 * @param param ダウンロードパラメータ。
 	 */
