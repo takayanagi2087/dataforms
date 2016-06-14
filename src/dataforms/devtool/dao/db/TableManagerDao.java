@@ -324,6 +324,14 @@ public class TableManagerDao extends Dao {
 		final Table tbl = Table.newInstance(classname);
 		String datapath = outdir + "/" + classname.replaceAll("\\.", "/") + ".data.json";
 		String filePath = outdir + "/" + classname.replaceAll("\\.", "/");
+		File ff = new File(filePath);
+		if (ff.exists()) {
+			// 既にファイルが存在する場合は削除。
+			File[] flist = ff.listFiles();
+			for (File f: flist) {
+				f.delete();
+			}
+		}
 		if (this.tableExists(tbl.getTableName())) {
 			File f = new File(datapath);
 			File dir = f.getParentFile();
