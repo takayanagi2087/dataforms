@@ -49,6 +49,11 @@ public  class Form extends WebComponent {
 	private Map<String, Object> formDataMap = new HashMap<String, Object>();
 
 	/**
+	 * 変換後のサーバデータ。
+	 */
+	private Map<String, Object> convertedServerData = null;
+	
+	/**
 	 * コンストラクタ。
 	 * @param id フォームID.
 	 */
@@ -58,6 +63,7 @@ public  class Form extends WebComponent {
 		} else {
 			this.setId(id);
 		}
+		this.convertedServerData = null;
 	}
 
 
@@ -281,6 +287,9 @@ public  class Form extends WebComponent {
 	 * @return 変換したマップ。
 	 */
 	public Map<String, Object> convertToServerData(final Map<String, Object> param) {
+		if (this.convertedServerData != null) {
+			return this.convertedServerData;
+		}
 		Map<String, Object> ret = new HashMap<String, Object>();
 		for (Field<?> f : this.fieldList) {
 			String id = f.getId();
@@ -306,6 +315,7 @@ public  class Form extends WebComponent {
 				ret.put(key, list);
 			}
 		}
+		this.convertedServerData = ret;
 		return ret;
 	}
 

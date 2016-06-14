@@ -99,6 +99,7 @@ public class BlobFileStore extends FileStore {
 	 */
 	@Override
 	protected File makeTempFromFileItem(final FileItem fileItem) throws Exception {
+//		log.error("makeTempFromFileItem", new Exception());
 		String fileName = FileUtil.getFileName(fileItem.getName());
 		long length = fileItem.getSize();
 		File file = null;

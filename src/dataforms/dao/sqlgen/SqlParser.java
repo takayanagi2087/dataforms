@@ -237,8 +237,10 @@ public class SqlParser {
 				Object v = this.getParam(p, param);
 				if (v != null) {
 					if (v instanceof FileObject) {
+						log.debug("removeBlobTempFile class=" + v.getClass().getName());
 						FileObject f = (FileObject) v;
 						if (f.getTempFile() != null) {
+							log.debug("tempfile=" + f.getTempFile().getAbsolutePath());
 							f.getTempFile().delete();
 						}
 					}
