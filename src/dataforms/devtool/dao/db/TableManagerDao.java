@@ -305,7 +305,7 @@ public class TableManagerDao extends Dao {
 			key += data.get(pkf.getId()).toString();
 		}
 		BinaryResponse resp = f.download(dlp);
-		String fn = key + "_" + fo.getFileName();
+		String fn =  key + "_" + f.getId() + "_" + fo.getFileName();
 		resp.saveFile(dir + "/" + fn);
 		ret.put("saveFile", fn);
 		ret.put("downloadParameter", fo.getDownloadParameter());
