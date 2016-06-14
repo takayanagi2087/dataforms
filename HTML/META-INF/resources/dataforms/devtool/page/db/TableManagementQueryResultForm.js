@@ -298,8 +298,9 @@ TableManagementQueryResultForm.prototype.import = function(path) {
 	$("#datapath").val(path);
 	thisForm.submit("importTable", function(result) {
 		if (result.status == ServerMethod.SUCCESS) {
-			var path = result.result;
-			alert(MessagesUtil.getMessage("message.importInitialDataResult", path));
+			thisForm.updateTableInfoList(result);
+//			var path = result.result;
+//			alert(MessagesUtil.getMessage("message.importInitialDataResult", path));
 		}
 	});
 

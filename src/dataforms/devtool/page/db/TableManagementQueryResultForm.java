@@ -230,7 +230,8 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		for (String cls : classlist) {
 			dao.importData(cls, datapath);
 		}
-		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, DataFormsServlet.getExportImportDir());
+		List<Map<String, Object>> result = dao.getTableInfoList(classlist);
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, result);
 		this.methodFinishLog(log, ret);
 		return ret;
 	}
