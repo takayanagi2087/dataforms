@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
+							<th>問合せクラス名</th>
+							<td><input type="text" id="queryClassName" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<input type="hidden" id="packageName" />
+				<input type="hidden" id="queryClassName" />
+				<table class="responsive">
+					<tbody>
+					</tbody>
+				</table>
+					<div class="hScrollDiv">
+						<table id="queryResult">
+							<thead>
+								<tr>
+									<th>
+										No.
+									</th>
+									<th>
+										問合せクラス名
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<span id="queryResult[0].rowNo"></span>
+								<input type="hidden" id="queryResult[0].packageName" />
+								<input type="hidden" id="queryResult[0].queryClassName" />
+									</td>
+									<td>
+										<span id="queryResult[0].fullClassName"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
+							<th>問合せクラス名</th>
+							<td><input type="text" id="queryClassName" /></td>
+						</tr>
+						<tr>
+							<th>主テーブルの機能</th>
+							<td><select id="mainTableFunctionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>主テーブルのパッケージ</th>
+							<td><input type="text" id="mainTablePackageName" /></td>
+						</tr>
+						<tr>
+							<th>主テーブルクラス名</th>
+							<td><input type="text" id="mainTableClassName" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="overflow-x:scroll;width:100%">
+					<div class="hScrollDiv">
+						<table id="joinTableList" class="editableTable">
+							<caption>JOINするテーブルリスト</caption>
+							<thead>
+								<tr>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th nowrap>
+										No.
+									</th>
+									<th>
+										機能
+									</th>
+									<th>
+										パッケージ名
+									</th>
+									<th>
+										テーブルクラス名
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="width: 21px;">
+										<input type="button" id="joinTableList[0].addButton" value="+"/>
+									</td>
+									<td style="width: 21px;">
+										<input type="button" id="joinTableList[0].deleteButton" value="-"/>
+									</td>
+									<td style="text-align: right;">
+										<span id="joinTableList[0].no"></span>
+									</td>
+									<td>
+										<select id="joinTableList[0].functionSelect"></select>
+									</td>
+									<td>
+										<input type="text" id="joinTableList[0].packageName" />
+									</td>
+									<td>
+										<input type="text" id="joinTableList[0].tableClassName" />
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th style="width: 21px;">
+										<input type="button" id="joinTableList.addButton" value="+"/>
+									</th>
+									<th colspan="5">
+									</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<div style="overflow-x:scroll;width:100%">
+					<div class="hScrollDiv">
+						<table id="leftJoinTableList" class="editableTable">
+							<caption>LEFT JOINするテーブルリスト</caption>
+							<thead>
+								<tr>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th nowrap>
+										No.
+									</th>
+									<th>
+										機能
+									</th>
+									<th>
+										パッケージ名
+									</th>
+									<th>
+										テーブルクラス名
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="width: 21px;">
+										<input type="button" id="leftJoinTableList[0].addButton" value="+"/>
+									</td>
+									<td style="width: 21px;">
+										<input type="button" id="leftJoinTableList[0].deleteButton" value="-"/>
+									</td>
+									<td style="text-align: right;">
+										<span id="leftJoinTableList[0].no"></span>
+									</td>
+									<td>
+										<select id="leftJoinTableList[0].functionSelect"></select>
+									</td>
+									<td>
+										<input type="text" id="leftJoinTableList[0].packageName" />
+									</td>
+									<td>
+										<input type="text" id="leftJoinTableList[0].tableClassName" />
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th style="width: 21px;">
+										<input type="button" id="leftJoinTableList.addButton" value="+"/>
+									</th>
+									<th colspan="5">
+									</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<div style="overflow-x:scroll;width:100%">
+					<div class="hScrollDiv">
+						<table id="rightJoinTableList" class="editableTable">
+							<caption>RIGHT JOINするテーブルリスト</caption>
+							<thead>
+								<tr>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th class="buttonColumn" nowrap>
+										
+									</th>
+									<th nowrap>
+										No.
+									</th>
+									<th>
+										機能
+									</th>
+									<th>
+										パッケージ名
+									</th>
+									<th>
+										テーブルクラス名
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="width: 21px;">
+										<input type="button" id="rightJoinTableList[0].addButton" value="+"/>
+									</td>
+									<td style="width: 21px;">
+										<input type="button" id="rightJoinTableList[0].deleteButton" value="-"/>
+									</td>
+									<td style="text-align: right;">
+										<span id="rightJoinTableList[0].no"></span>
+									</td>
+									<td>
+										<select id="rightJoinTableList[0].functionSelect"></select>
+									</td>
+									<td>
+										<input type="text" id="rightJoinTableList[0].packageName" />
+									</td>
+									<td>
+										<input type="text" id="rightJoinTableList[0].tableClassName" />
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th style="width: 21px;">
+										<input type="button" id="rightJoinTableList.addButton" value="+"/>
+									</th>
+									<th colspan="5">
+									</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+
+		</div>
+	</body>
+</html>

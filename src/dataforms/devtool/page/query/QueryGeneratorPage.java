@@ -1,21 +1,21 @@
 package dataforms.devtool.page.query;
 
-import dataforms.app.page.base.BasePage;
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
+import dataforms.devtool.page.base.DeveloperPage;
 
 
 /**
  * ページクラス。
  */
-public class QueryPage extends BasePage {
+public class QueryGeneratorPage extends DeveloperPage {
 	/**
 	 * コンストラクタ。
 	 */
-	public QueryPage() {
-		this.addForm(new QueryQueryForm());
-		this.addForm(new QueryQueryResultForm());
-
+	public QueryGeneratorPage() {
+		this.addForm(new QueryGeneratorQueryForm());
+		this.addForm(new QueryGeneratorQueryResultForm());
+		this.addForm(new QueryGeneratorEditForm());
 	}
 
 	/**

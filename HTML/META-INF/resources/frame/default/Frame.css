@@ -14,6 +14,10 @@ html,body {
 }
 
 table { font-weight:normal; border : 0px;}
+table caption { 
+	font-weight: bold;
+	text-align: left; 
+}
 tr {height: 20px; border : 0px;}
 th {background-color: #E0E0FF; text-align:center; font-weight:normal; border : 0px;}
 td {border:0px;}

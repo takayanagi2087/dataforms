@@ -713,9 +713,9 @@ public class WebResourceForm extends Form {
 					continue;
 				}
 				this.columnCount++;
-				sb.append(tabs + "\t\t\t<th>\n");
-				sb.append(tabs + "\t\t\t\t" + this.getFieldLabel(f) + "\n");
-				sb.append(tabs + "\t\t\t</th>\n");
+				sb.append(tabs + "\t\t\t\t\t<th>\n");
+				sb.append(tabs + "\t\t\t\t\t\t" + this.getFieldLabel(f) + "\n");
+				sb.append(tabs + "\t\t\t\t\t</th>\n");
 			}
 		}
 
@@ -727,11 +727,11 @@ public class WebResourceForm extends Form {
 		protected String generateTableHeader(final HtmlTable t) {
 			String tabs = getTabs();
 			StringBuilder sb = new StringBuilder();
-			sb.append(tabs + "\t<thead>\n");
-			sb.append(tabs + "\t\t<tr>\n");
+			sb.append(tabs + "\t\t\t<thead>\n");
+			sb.append(tabs + "\t\t\t\t<tr>\n");
 			this.addFieldHeader(t, sb);
-			sb.append(tabs + "\t\t</tr>\n");
-			sb.append(tabs + "\t</thead>\n");
+			sb.append(tabs + "\t\t\t\t</tr>\n");
+			sb.append(tabs + "\t\t\t</thead>\n");
 			return sb.toString();
 		}
 
@@ -744,11 +744,11 @@ public class WebResourceForm extends Form {
 		protected String generateTableBody(final HtmlTable t) {
 			String tabs = getTabs();
 			StringBuilder sb = new StringBuilder();
-			sb.append(tabs + "\t<tbody>\n");
-			sb.append(tabs + "\t\t<tr>\n");
+			sb.append(tabs + "\t\t\t<tbody>\n");
+			sb.append(tabs + "\t\t\t\t<tr>\n");
 			this.addFields(t,  sb);
-			sb.append(tabs + "\t\t</tr>\n");
-			sb.append(tabs + "\t</tbody>\n");
+			sb.append(tabs + "\t\t\t\t</tr>\n");
+			sb.append(tabs + "\t\t\t</tbody>\n");
 			return sb.toString();
 		}
 
@@ -774,13 +774,13 @@ public class WebResourceForm extends Form {
 				if (f.isHidden() || f instanceof DeleteFlagField) {
 					continue;
 				}
-				sb.append(tabs + "\t\t\t<td>\n");
-				sb.append(tabs + "\t\t\t\t" + this.generateVisibleField(t.getId(), f)+ "\n");
+				sb.append(tabs + "\t\t\t\t\t<td>\n");
+				sb.append(tabs + "\t\t\t\t\t\t" + this.generateVisibleField(t.getId(), f)+ "\n");
 				if (first) {
 					this.addHiddenFields(t, sb);
 					first = false;
 				}
-				sb.append(tabs + "\t\t\t</td>\n");
+				sb.append(tabs + "\t\t\t\t\t</td>\n");
 			}
 		}
 
@@ -794,13 +794,16 @@ public class WebResourceForm extends Form {
 			String tabs = getTabs();
 			HtmlTable t = this.getTable();
 			StringBuilder sb = new StringBuilder();
-			sb.append(tabs + "<div class=\"hScrollDiv\">\n");
-			sb.append("\t" + tabs + this.generateStartTableTag(t));
-			sb.append("\t" + this.generateTableHeader(t));
-			sb.append("\t" + this.generateTableBody(t));
-			sb.append("\t" + this.generateTableFooter(t));
-			sb.append("\t" + tabs + "</table>\n");
-			sb.append(tabs + "</div>\n");
+			sb.append(tabs + "\t<div class=\"hScrollDiv\">\n");
+			sb.append("\t\t" + tabs + this.generateStartTableTag(t));
+			if (t.getCaption() != null) {
+				sb.append(tabs + "\t\t\t<caption>" + t.getCaption() + "</caption>\n");
+			}
+			sb.append(this.generateTableHeader(t));
+			sb.append(this.generateTableBody(t));
+			sb.append(this.generateTableFooter(t));
+			sb.append("\t\t" + tabs + "</table>\n");
+			sb.append(tabs + "\t</div>\n");
 			return sb.toString();
 		}
 	}
@@ -888,15 +891,15 @@ public class WebResourceForm extends Form {
 		@Override
 		protected void addFieldHeader(final HtmlTable t, final StringBuilder sb) {
 			String tabs = this.getTabs();
-			sb.append(tabs + "\t\t\t<th class=\"buttonColumn\" nowrap>\n");
-			sb.append(tabs + "\t\t\t\t\n");
-			sb.append(tabs + "\t\t\t</th>\n");
-			sb.append(tabs + "\t\t\t<th class=\"buttonColumn\" nowrap>\n");
-			sb.append(tabs + "\t\t\t\t\n");
-			sb.append(tabs + "\t\t\t</th>\n");
-			sb.append(tabs + "\t\t\t<th nowrap>\n");
-			sb.append(tabs + "\t\t\t\tNo.\n");
-			sb.append(tabs + "\t\t\t</th>\n");
+			sb.append(tabs + "\t\t\t\t\t<th class=\"buttonColumn\" nowrap>\n");
+			sb.append(tabs + "\t\t\t\t\t\t\n");
+			sb.append(tabs + "\t\t\t\t\t</th>\n");
+			sb.append(tabs + "\t\t\t\t\t<th class=\"buttonColumn\" nowrap>\n");
+			sb.append(tabs + "\t\t\t\t\t\t\n");
+			sb.append(tabs + "\t\t\t\t\t</th>\n");
+			sb.append(tabs + "\t\t\t\t\t<th nowrap>\n");
+			sb.append(tabs + "\t\t\t\t\t\tNo.\n");
+			sb.append(tabs + "\t\t\t\t\t</th>\n");
 			super.addFieldHeader(t, sb);
 			this.setColumnCount(this.getColumnCount() + 3);
 		}
@@ -904,15 +907,15 @@ public class WebResourceForm extends Form {
 		@Override
 		protected void addFields(final HtmlTable t, final StringBuilder sb) {
 			String tabs = this.getTabs();
-			sb.append(tabs + "\t\t\t<td style=\"width: 21px;\">\n");
-			sb.append(tabs + "\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].addButton\" value=\"+\"/>\n");
-			sb.append(tabs + "\t\t\t</td>\n");
-			sb.append(tabs + "\t\t\t<td style=\"width: 21px;\">\n");
-			sb.append(tabs + "\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].deleteButton\" value=\"-\"/>\n");
-			sb.append(tabs + "\t\t\t</td>\n");
-			sb.append(tabs + "\t\t\t<td style=\"text-align: right;\">\n");
-			sb.append(tabs + "\t\t\t\t<span id=\"" + t.getId() + "[0].no\"></span>\n");
-			sb.append(tabs + "\t\t\t</td>\n");
+			sb.append(tabs + "\t\t\t\t\t<td style=\"width: 21px;\">\n");
+			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].addButton\" value=\"+\"/>\n");
+			sb.append(tabs + "\t\t\t\t\t</td>\n");
+			sb.append(tabs + "\t\t\t\t\t<td style=\"width: 21px;\">\n");
+			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].deleteButton\" value=\"-\"/>\n");
+			sb.append(tabs + "\t\t\t\t\t</td>\n");
+			sb.append(tabs + "\t\t\t\t\t<td style=\"text-align: right;\">\n");
+			sb.append(tabs + "\t\t\t\t\t\t<span id=\"" + t.getId() + "[0].no\"></span>\n");
+			sb.append(tabs + "\t\t\t\t\t</td>\n");
 			super.addFields(t, sb);
 
 		}
@@ -921,15 +924,15 @@ public class WebResourceForm extends Form {
 		protected String generateTableFooter(final HtmlTable t) {
 			StringBuilder sb = new StringBuilder();
 			String tabs = this.getTabs();
-			sb.append(tabs + "\t<tfoot>\n");
-			sb.append(tabs + "\t\t<tr>\n");
-			sb.append(tabs + "\t\t\t<th style=\"width: 21px;\">\n");
-			sb.append(tabs + "\t\t\t\t<input type=\"button\" id=\"" + t.getId() + ".addButton\" value=\"+\"/>\n");
-			sb.append(tabs + "\t\t\t</th>\n");
-			sb.append(tabs + "\t\t\t<th colspan=\"" + (this.getColumnCount() - 1) + "\">\n");
-			sb.append(tabs + "\t\t\t</th>\n");
-			sb.append(tabs + "\t\t</tr>\n");
-			sb.append(tabs + "\t</tfoot>\n");
+			sb.append(tabs + "\t\t\t<tfoot>\n");
+			sb.append(tabs + "\t\t\t\t<tr>\n");
+			sb.append(tabs + "\t\t\t\t\t<th style=\"width: 21px;\">\n");
+			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + ".addButton\" value=\"+\"/>\n");
+			sb.append(tabs + "\t\t\t\t\t</th>\n");
+			sb.append(tabs + "\t\t\t\t\t<th colspan=\"" + (this.getColumnCount() - 1) + "\">\n");
+			sb.append(tabs + "\t\t\t\t\t</th>\n");
+			sb.append(tabs + "\t\t\t\t</tr>\n");
+			sb.append(tabs + "\t\t\t</tfoot>\n");
 			return sb.toString();
 		}
 
@@ -937,9 +940,9 @@ public class WebResourceForm extends Form {
 		public String generateTableHtml() {
 			StringBuilder sb = new StringBuilder();
 			String tabs = this.getTabs();
-			sb.append(tabs + "\t\t\t<div style=\"overflow:scroll;width:100%\">\n");
+			sb.append(tabs + "<div style=\"overflow-x:scroll;width:100%\">\n");
 			sb.append(super.generateTableHtml());
-			sb.append(tabs + "\t\t\t</div>\n");
+			sb.append(tabs + "</div>\n");
 			return sb.toString();
 		}
 	}

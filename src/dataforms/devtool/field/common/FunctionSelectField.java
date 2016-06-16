@@ -97,10 +97,12 @@ public class FunctionSelectField extends SingleSelectField<Long> {
 
 	/**
 	 * パッケージ名を展開するフィールドを設定します。
-	 * @param packageFieldId パッケージ名を展開するフィールド、
+	 * @param packageFieldId パッケージ名を展開するフィールド。
+	 * @return 設定したフィールド。
 	 */
-	public void setPackageFieldId(final String packageFieldId) {
+	public FunctionSelectField setPackageFieldId(final String packageFieldId) {
 		this.packageFieldId = packageFieldId;
+		return this;
 	}
 
 	@Override

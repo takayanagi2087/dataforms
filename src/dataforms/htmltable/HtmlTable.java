@@ -25,6 +25,11 @@ public class HtmlTable extends WebComponent {
 //	private static Logger log = Logger.getLogger(HtmlTable.class.getName());
 
 	/**
+	 * テーブルのキャプション。
+	 */
+	private String caption = null;
+	
+	/**
 	 * フィールドリスト.
 	 */
 	private FieldList fieldList = new FieldList();
@@ -52,6 +57,26 @@ public class HtmlTable extends WebComponent {
 			this.fieldList.add(f);
 		}
 	}
+
+
+	/**
+	 * テーブルのキャプションを取得します。
+	 * @return テーブルのキャプション。
+	 */
+	public String getCaption() {
+		return caption;
+	}
+
+	/**
+	 * テーブルのキャプションを設定します。
+	 * @param caption テーブルのキャプション。
+	 * @return 設定を行ったテーブル。
+	 */
+	public HtmlTable setCaption(final String caption) {
+		this.caption = caption;
+		return this;
+	}
+
 
 	/**
 	 * フィールドリストをコンポーネントマップに登録します。
