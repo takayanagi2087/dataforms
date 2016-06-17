@@ -225,6 +225,19 @@
 			dataforms.app
 		</param-value>
 	</context-param>
+	<!-- 
+		DataFormsServlet#init,destoryで何らかの処理が必要な場合、ServletInstanceBeanから派生したクラスを作成し、そのクラスを設定してください。
+	 -->
+	 <!--  
+	<context-param>
+		<param-name>servlet-instance-bean</param-name>
+		<param-value>
+			dataforms.servlet.ServletInstanceBean
+		</param-value>
+	</context-param>
+	-->
+	
+	
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>

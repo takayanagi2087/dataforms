@@ -155,7 +155,11 @@ public class DataFormsServlet extends HttpServlet {
      */
     private static Map<String, String> pageOverrideMap = new HashMap<String, String>();
 
-
+    /**
+     * サーブレットインスタンス設定Bean.
+     */
+    private static ServletInstanceBean servletInstanceBean = null;
+    
     /**
      * Pageの拡張子を取得します。
      * <pre>
@@ -344,6 +348,21 @@ public class DataFormsServlet extends HttpServlet {
 		DeveloperPage.setJavaSourcePath(this.getServletContext().getInitParameter("java-source-path"));
 		DeveloperPage.setWebSourcePath(this.getServletContext().getInitParameter("web-source-path"));
 
+		
+		String beanClass = this.getServletContext().getInitParameter("servlet-instance-bean");
+		log.info("beanClass = " + beanClass);
+		if (beanClass != null) {
+			try {
+				@SuppressWarnings("unchecked")
+				Class<? extends ServletInstanceBean> clazz = (Class<? extends ServletInstanceBean>) Class.forName(beanClass);
+				DataFormsServlet.servletInstanceBean = clazz.newInstance();
+				DataFormsServlet.servletInstanceBean.init();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+
+		
 		super.init();
 		WebComponent.setServlet(this);
 		// DB存在チェック.
@@ -842,5 +861,17 @@ public class DataFormsServlet extends HttpServlet {
 	 */
 	public static String getClientLogLevel() {
 		return clientLogLevel;
+	}
+	
+	@Override
+	public void destroy() {
+		if (DataFormsServlet.servletInstanceBean != null) {
+			try {
+				DataFormsServlet.servletInstanceBean.destroy();
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+		super.destroy();
 	}
 }
