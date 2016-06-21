@@ -10,13 +10,17 @@ import dataforms.field.sqltype.TimestampField;
  */
 public class CreateTimestampField extends TimestampField implements DoNotUpdateField {
 	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "作成日時";
+	/**
 	 * コンストラクタ。
 	 */
 	public CreateTimestampField() {
 		super(null);
 		this.getValidatorList().clear();
 		this.setDateFormat("format.updatetimestampfield");
-		this.setComment("レコード作成日時");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 	/**
@@ -27,7 +31,7 @@ public class CreateTimestampField extends TimestampField implements DoNotUpdateF
 		super(id);
 		this.getValidatorList().clear();
 		this.setDateFormat("format.updatetimestampfield");
-		this.setComment("レコード作成日時");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 }

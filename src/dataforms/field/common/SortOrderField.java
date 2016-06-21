@@ -12,11 +12,17 @@ import dataforms.field.sqltype.SmallintField;
  */
 public class SortOrderField extends SmallintField {
 	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "ソート順";
+
+	/**
 	 * コンストラクタ。
 	 */
 	public SortOrderField() {
 		super(null);
 		this.setHidden(true);
+		this.setComment(COMMENT);
 	}
 
 	/**
@@ -26,5 +32,6 @@ public class SortOrderField extends SmallintField {
 	public SortOrderField(final String id) {
 		super(id);
 		this.setHidden(true);
+		this.setComment(COMMENT);
 	}
 }

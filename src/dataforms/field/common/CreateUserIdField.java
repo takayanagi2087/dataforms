@@ -10,11 +10,16 @@ import dataforms.field.sqltype.BigintField;
  */
 public class CreateUserIdField extends BigintField implements DoNotUpdateField {
 	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "作成者ID";
+
+	/**
 	 * コンストラクタ。
 	 */
 	public CreateUserIdField() {
 		super(null);
-		this.setComment("レコード作成者");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 
@@ -24,7 +29,7 @@ public class CreateUserIdField extends BigintField implements DoNotUpdateField {
 	 */
 	public CreateUserIdField(final String id) {
 		super(id);
-		this.setComment("レコード作成者");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 

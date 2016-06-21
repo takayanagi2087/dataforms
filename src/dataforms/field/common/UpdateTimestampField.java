@@ -11,13 +11,18 @@ import dataforms.field.sqltype.TimestampField;
  */
 public class UpdateTimestampField extends TimestampField {
 	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "更新日時";
+
+	/**
 	 * コンストラクタ.
 	 */
 	public UpdateTimestampField() {
 		super(null);
 		this.getValidatorList().clear();
 		this.setDateFormat("format.updatetimestampfield");
-		this.setComment("レコード更新日時");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 
@@ -29,7 +34,7 @@ public class UpdateTimestampField extends TimestampField {
 		super(id);
 		this.getValidatorList().clear();
 		this.setDateFormat("format.updatetimestampfield");
-		this.setComment("レコード更新日時");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 }

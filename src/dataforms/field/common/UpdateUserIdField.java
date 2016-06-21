@@ -7,11 +7,16 @@ import dataforms.field.sqltype.BigintField;
  */
 public class UpdateUserIdField extends BigintField {
 	/**
+	 * フィールドコメント。
+	 */
+	private static final String COMMENT = "更新者ID";
+
+	/**
 	 * コンストラクタ。
 	 */
 	public UpdateUserIdField() {
 		super(null);
-		this.setComment("更新者ID");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 
@@ -21,7 +26,7 @@ public class UpdateUserIdField extends BigintField {
 	 */
 	public UpdateUserIdField(final String id) {
 		super(id);
-		this.setComment("更新者ID");
+		this.setComment(COMMENT);
 		this.setHidden(true);
 	}
 }
