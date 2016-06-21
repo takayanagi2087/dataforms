@@ -276,8 +276,9 @@
 						</table>
 					</div>
 				</div>
+				<div style="overflow-x:scroll;width:100%">
 					<div class="hScrollDiv">
-						<table id="id">
+						<table id="selectFieldList">
 							<caption>選択フィールドリスト</caption>
 							<thead>
 								<tr>
@@ -291,6 +292,9 @@
 										フィールドクラス名
 									</th>
 									<th>
+										コメント
+									</th>
+									<th>
 										テーブルクラス名
 									</th>
 								</tr>
@@ -298,21 +302,25 @@
 							<tbody>
 								<tr>
 									<td>
-										<input type="checkbox" id="id[0].selectFlag" value="1"/>
+										<input type="checkbox" id="selectFieldList[0].selectFlag" value="1"/>
 									</td>
 									<td>
-										<input type="text" id="id[0].fieldId" />
+										<span id="selectFieldList[0].fieldId"></span>
 									</td>
 									<td>
-										<input type="text" id="id[0].fieldClassName" />
+										<span id="selectFieldList[0].fieldClassName" ></span>
 									</td>
 									<td>
-										<input type="text" id="id[0].tableClassName" />
+										<span id="selectFieldList[0].comment" ></span>
+									</td>
+									<td>
+										<span id="selectFieldList[0].tableClassName" ></span>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
+				</div>
 				<input type="button" id="confirmButton" value="確認"/>
 				<input type="button" id="saveButton" value="登録"/>
 				<input type="button" id="resetButton" value="リセット"/>
