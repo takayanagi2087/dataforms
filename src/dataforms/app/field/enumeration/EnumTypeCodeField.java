@@ -18,7 +18,7 @@ public class EnumTypeCodeField extends VarcharField {
 	/**
 	 * コメント。
 	 */
-	private static final String COMMENT = "列挙型を示すコード.";
+	private static final String COMMENT = "列挙型コード.";
 
 	/**
 	 * コンストラクタ。

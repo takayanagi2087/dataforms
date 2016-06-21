@@ -18,7 +18,7 @@ public class EnumGroupCodeField extends VarcharField {
 	/**
 	 * フィールドコメント。
 	 */
-	private static final String COMMENT = "複数のをまとめるためのコード.";
+	private static final String COMMENT = "列挙型グループコード.";
 
 	/**
 	 * コンストラクタ。
