@@ -14,7 +14,7 @@ public class FieldClassNameField extends SimpleClassNameField {
 	/**
 	 * フィールドコメント。
 	 */
-	private static final String COMMENT = "テーブルクラス名";
+	private static final String COMMENT = "フィールドクラス名";
 	/**
 	 * コンストラクタ。
 	 */

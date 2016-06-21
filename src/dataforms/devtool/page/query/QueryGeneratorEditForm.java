@@ -3,12 +3,16 @@ package dataforms.devtool.page.query;
 import java.util.Map;
 
 import dataforms.controller.EditForm;
+import dataforms.devtool.field.common.FieldClassNameField;
+import dataforms.devtool.field.common.FieldIdField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.PackageNameField;
 import dataforms.devtool.field.common.QueryClassNameField;
 import dataforms.devtool.field.common.TableClassNameField;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.FlagField;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.htmltable.HtmlTable;
 import dataforms.validator.RequiredValidator;
 
 /**
@@ -21,7 +25,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * Joinテーブルクラス。
 	 *
 	 */
-	private class JoinHtmlTable extends EditableHtmlTable {
+	private static class JoinHtmlTable extends EditableHtmlTable {
 		/**
 		 * コンストラクタ。
 		 * @param id デーブルID。
@@ -34,6 +38,21 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 	};
 
+	/**
+	 * 選択フィールドクラス。
+	 *
+	 */
+	private static class SelectFieldHtmlTable extends HtmlTable {
+		/**
+		 * コンストラクタ。
+		 * @param id デーブルID。
+		 */
+		public SelectFieldHtmlTable(final String id) {
+			super("id");
+			FieldList flist = new FieldList(new FlagField("selectFlag"), new FieldIdField(), new FieldClassNameField(), new TableClassNameField());
+			this.setFieldList(flist);
+		}
+	}
 
 	/**
 	 * コンストラクタ。
@@ -54,6 +73,9 @@ public class QueryGeneratorEditForm extends EditForm {
 		EditableHtmlTable rightJoinTableList = new JoinHtmlTable("rightJoinTableList");
 		rightJoinTableList.setCaption("RIGHT JOINするテーブルリスト");
 		this.addHtmlTable(rightJoinTableList);
+		SelectFieldHtmlTable slectFieldList = new SelectFieldHtmlTable("selectFieldList");
+		slectFieldList.setCaption("選択フィールドリスト");
+		this.addHtmlTable(slectFieldList);
 		
 	}
 	

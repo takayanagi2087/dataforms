@@ -3,7 +3,12 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-	</head>
+	<style type="text/css">
+		#editForm > table th {
+			min-width: 160px;
+		}
+	</style>
+</head>
 	<body>
 		<div id="mainDiv">
 			<form id="queryForm">
@@ -66,28 +71,26 @@
 			<form id="editForm">
 				<div class="formHeader"><span id="editFormTitle"></span></div>
 				<table class="responsive">
+					<caption>生成する問合せクラス</caption>
 					<tbody>
 						<tr>
 							<th>機能</th>
 							<td><select id="functionSelect"></select></td>
-						</tr>
-						<tr>
 							<th>パッケージ名</th>
 							<td><input type="text" id="packageName" /></td>
-						</tr>
-						<tr>
 							<th>問合せクラス名</th>
 							<td><input type="text" id="queryClassName" /></td>
 						</tr>
+					</tbody>
+				</table>
+				<table class="responsive">
+					<caption>問合せる主テーブル</caption>
+					<tbody>
 						<tr>
 							<th>主テーブルの機能</th>
 							<td><select id="mainTableFunctionSelect"></select></td>
-						</tr>
-						<tr>
 							<th>主テーブルのパッケージ</th>
 							<td><input type="text" id="mainTablePackageName" /></td>
-						</tr>
-						<tr>
 							<th>主テーブルクラス名</th>
 							<td><input type="text" id="mainTableClassName" /></td>
 						</tr>
@@ -273,6 +276,43 @@
 						</table>
 					</div>
 				</div>
+					<div class="hScrollDiv">
+						<table id="id">
+							<caption>選択フィールドリスト</caption>
+							<thead>
+								<tr>
+									<th>
+										<input type="checkbox" id="selectAll" value="1"/>
+									</th>
+									<th>
+										フィールドID
+									</th>
+									<th>
+										フィールドクラス名
+									</th>
+									<th>
+										テーブルクラス名
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="checkbox" id="id[0].selectFlag" value="1"/>
+									</td>
+									<td>
+										<input type="text" id="id[0].fieldId" />
+									</td>
+									<td>
+										<input type="text" id="id[0].fieldClassName" />
+									</td>
+									<td>
+										<input type="text" id="id[0].tableClassName" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				<input type="button" id="confirmButton" value="確認"/>
 				<input type="button" id="saveButton" value="登録"/>
 				<input type="button" id="resetButton" value="リセット"/>
