@@ -641,7 +641,7 @@ public class DataFormsServlet extends HttpServlet {
 			try {
 				page = this.getPage(req);
 				try {
-					Map<String, Object> param = this.getParamaterMap(req);
+					Map<String, Object> param = this.getParameterMap(req);
 
 					String method = (String) param.get("dfMethod");
 					if (method == null) {
@@ -737,11 +737,11 @@ public class DataFormsServlet extends HttpServlet {
      * @return パラメータマップ。
      * @throws Exception 例外。
      */
-	protected Map<String, Object> getParamaterMap(final HttpServletRequest req) throws Exception {
+	protected Map<String, Object> getParameterMap(final HttpServletRequest req) throws Exception {
 		if (ServletFileUpload.isMultipartContent(req)) {
-			return this.getParamaterMapForMultipart(req);
+			return this.getParameterMapForMultipart(req);
 		} else {
-			return this.getParamaterMapForUrlencoded(req);
+			return this.getParameterMapForUrlencoded(req);
 		}
 	}
 
@@ -753,7 +753,7 @@ public class DataFormsServlet extends HttpServlet {
 	 * @return パラメータ解析結果。
 	 * @throws Exception 例外。
 	 */
-	private Map<String, Object> getParamaterMapForUrlencoded(final HttpServletRequest req) throws Exception {
+	private Map<String, Object> getParameterMapForUrlencoded(final HttpServletRequest req) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, String[]> m = req.getParameterMap();
 		for (String key : m.keySet()) {
@@ -809,7 +809,7 @@ public class DataFormsServlet extends HttpServlet {
 	 * @return パラメータ解析結果。
 	 * @throws Exception 例外。
 	 */
-	private Map<String, Object> getParamaterMapForMultipart(final HttpServletRequest req) throws Exception {
+	private Map<String, Object> getParameterMapForMultipart(final HttpServletRequest req) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setRepository(new File(tempDir)); //一時的に保存する際のディレクトリ

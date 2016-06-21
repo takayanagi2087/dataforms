@@ -12,7 +12,7 @@ import dataforms.dao.sqlgen.SqlParser;
  * Oracle用SqlParserクラス。
  * <pre>
  * OracleはParatemerMetaDataのサポートに問題があるため
- * ParamaterMetaDataを使用しないパラメータ設定ロジックを設定する。
+ * ParameterMetaDataを使用しないパラメータ設定ロジックを設定する。
  * </pre>
  */
 public class OracleSqlParser extends SqlParser {
