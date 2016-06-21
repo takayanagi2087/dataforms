@@ -276,6 +276,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * </pre>
 	 * @deprecated typoなので。。。
 	 */
+	@Deprecated
 	public enum AjaxParamater {
 		/** サーバに対し該当フィールドのみ送信します。*/
 		FIELD_ONLY,
@@ -342,6 +343,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * @return ajaxパラメータモード。
 	 * @deprecated typoなので。。。
 	 */
+	@Deprecated
 	public AjaxParamater getAjaxParamater() {
 		if (this.ajaxParameter == AjaxParameter.FIELD_ONLY) {
 			return AjaxParamater.FIELD_ONLY;
@@ -356,6 +358,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * @return 設定したフィールド。
 	 * @deprecated typoなので。。。
 	 */
+	@Deprecated
 	public Field<?> setAjaxParamater(final AjaxParamater ajaxParamater) {
 		if (AjaxParamater.FORM == ajaxParamater) {
 			this.ajaxParameter = AjaxParameter.FORM; 
