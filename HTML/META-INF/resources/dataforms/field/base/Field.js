@@ -34,7 +34,7 @@ Field.prototype.initValidator = function(vlist) {
  * @returns {String} サーバに送信するQueryString形式のパラメータ。
  */
 Field.prototype.getAjaxParameter = function() {
-	if (this.ajaxParamater == "FORM") {
+	if (this.ajaxParameter == "FORM") {
 		return this.getParentForm().get().serialize() + "&currentFieldId=" + this.id;
 	} else {
 		return this.id + "=" + this.get().val() + "&currentFieldId=" + this.id;

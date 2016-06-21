@@ -52,7 +52,7 @@ public class SimpleClassNameField extends VarcharField {
 		super(null, LENGTH);
 		this.setComment(COMMENT);
 		this.setAutocomplete(true);
-		this.setAjaxParamater(AjaxParamater.FORM);
+		this.setAjaxParameter(AjaxParameter.FORM);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class SimpleClassNameField extends VarcharField {
 		super(id, LENGTH);
 		this.setComment(COMMENT);
 		this.setAutocomplete(true);
-		this.setAjaxParamater(AjaxParamater.FORM);
+		this.setAjaxParameter(AjaxParameter.FORM);
 	}
 
 	/**

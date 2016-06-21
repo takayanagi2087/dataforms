@@ -274,7 +274,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * FIELD_ONLYを設定します。
 	 * FORM全体の値を送信する場合FORMを指定します。
 	 * </pre>
-	 *
+	 * @deprecated typoなので。。。
 	 */
 	public enum AjaxParamater {
 		/** サーバに対し該当フィールドのみ送信します。*/
@@ -286,9 +286,30 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	/**
 	 * ajax呼び出しの際のパラメータモード。
 	 */
-	private AjaxParamater ajaxParamater = AjaxParamater.FIELD_ONLY;
+	//private AjaxParamater ajaxParamater = AjaxParamater.FIELD_ONLY;
 
 
+	/**
+	 * ajax呼び出しの際のパラメータモード。
+	 * <pre>
+	 * フィールドに定義されたサーバメソッドを呼び出す際に、フィールドが保持する値のみを送信する場合
+	 * FIELD_ONLYを設定します。
+	 * FORM全体の値を送信する場合FORMを指定します。
+	 * </pre>
+	 */
+	public enum AjaxParameter {
+		/** サーバに対し該当フィールドのみ送信します。*/
+		FIELD_ONLY,
+		/** サーバに対しフォームの全データを送信します。*/
+		FORM
+	}
+
+	/**
+	 * ajax呼び出しの際のパラメータモード。
+	 */
+	private AjaxParameter ajaxParameter = AjaxParameter.FIELD_ONLY;
+
+	
 	/**
 	 * 計算イベント発生フィールドフラグ。
 	 */
@@ -319,21 +340,51 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	/**
 	 * ajaxパラメータモードを取得します。
 	 * @return ajaxパラメータモード。
+	 * @deprecated typoなので。。。
 	 */
 	public AjaxParamater getAjaxParamater() {
-		return ajaxParamater;
+		if (this.ajaxParameter == AjaxParameter.FIELD_ONLY) {
+			return AjaxParamater.FIELD_ONLY;
+		} else {
+			return AjaxParamater.FORM;
+		}
 	}
 
 	/**
 	 * ajaxパラメータモードを設定します。
 	 * @param ajaxParamater ajaxパラメータモード。
 	 * @return 設定したフィールド。
+	 * @deprecated typoなので。。。
 	 */
 	public Field<?> setAjaxParamater(final AjaxParamater ajaxParamater) {
-		this.ajaxParamater = ajaxParamater;
+		if (AjaxParamater.FORM == ajaxParamater) {
+			this.ajaxParameter = AjaxParameter.FORM; 
+		} else {
+			this.ajaxParameter = AjaxParameter.FIELD_ONLY;
+		}
 		return this;
 	}
 
+	
+	/**
+	 * ajaxパラメータモードを取得します。
+	 * @return ajaxパラメータモード。
+	 */
+	public AjaxParameter getAjaxParameter() {
+		return ajaxParameter;
+	}
+
+	/**
+	 * ajaxパラメータモードを設定します。
+	 * @param ajaxParameter ajaxパラメータモード。
+	 * @return 設定したフィールド。
+	 */
+	public Field<?> setAjaxParameter(final AjaxParameter ajaxParameter) {
+		this.ajaxParameter = ajaxParameter;
+		return this;
+	}
+
+	
 	/**
 	 * コンストラクタ。
 	 * <pre>
@@ -628,12 +679,8 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		} else {
 			map.put("calcEventField", false);
 		}
-/*		if (this.getAjaxParamater() == AjaxParamater.FIELD_ONLY) {
-			map.put("ajaxParamater", "FIELD_ONLY");
-		} else {
-			map.put("ajaxParamater", "FORM");
-		}*/
-		map.put("ajaxParamater", this.getAjaxParamater().name());
+		map.put("ajaxParamater", this.getAjaxParamater().name()); // TODO:後で消す。
+		map.put("ajaxParameter", this.getAjaxParameter().name());
 		map.put("readonly", this.isReadonly());
 		map.put("sortable", this.isSortable());
 		map.put("sortOrder", this.getSortOrder().name());
