@@ -278,12 +278,16 @@
 				</div>
 				<div style="overflow-x:scroll;width:100%">
 					<div class="hScrollDiv">
+						<table><tbody><tr><td id="tdtest">
 						<table id="selectFieldList">
 							<caption>選択フィールドリスト</caption>
 							<thead>
 								<tr>
 									<th>
 										<input type="checkbox" id="selectAll" value="1"/>
+									</th>
+									<th>
+										テーブルクラス名
 									</th>
 									<th>
 										フィールドID
@@ -294,15 +298,15 @@
 									<th>
 										コメント
 									</th>
-									<th>
-										テーブルクラス名
-									</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<td>
 										<input type="checkbox" id="selectFieldList[0].selectFlag" value="1"/>
+									</td>
+									<td>
+										<span id="selectFieldList[0].tableClassName" ></span>
 									</td>
 									<td>
 										<span id="selectFieldList[0].fieldId"></span>
@@ -313,12 +317,10 @@
 									<td>
 										<span id="selectFieldList[0].comment" ></span>
 									</td>
-									<td>
-										<span id="selectFieldList[0].tableClassName" ></span>
-									</td>
 								</tr>
 							</tbody>
 						</table>
+						</td></tr></tbody></table>
 					</div>
 				</div>
 				<input type="button" id="confirmButton" value="確認"/>

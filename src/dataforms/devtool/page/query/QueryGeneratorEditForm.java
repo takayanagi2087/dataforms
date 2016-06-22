@@ -11,18 +11,13 @@ import dataforms.annotation.WebMethod;
 import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
 import dataforms.dao.Table;
-import dataforms.devtool.field.common.FieldClassNameField;
-import dataforms.devtool.field.common.FieldIdField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.PackageNameField;
 import dataforms.devtool.field.common.QueryClassNameField;
 import dataforms.devtool.field.common.TableClassNameField;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
-import dataforms.field.common.FlagField;
-import dataforms.field.sqltype.VarcharField;
 import dataforms.htmltable.EditableHtmlTable;
-import dataforms.htmltable.HtmlTable;
 import dataforms.util.MessagesUtil;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
@@ -54,23 +49,6 @@ public class QueryGeneratorEditForm extends EditForm {
 			this.setFieldList(flist);
 		}
 	};
-
-	/**
-	 * 選択フィールドクラス。
-	 *
-	 */
-	private static class SelectFieldHtmlTable extends HtmlTable {
-		/**
-		 * コンストラクタ。
-		 * @param id デーブルID。
-		 */
-		public SelectFieldHtmlTable(final String id) {
-			super(id);
-			FieldList flist = new FieldList(new FlagField("selectFlag"), new FieldIdField(), new FieldClassNameField(), new VarcharField("comment", 1024), new TableClassNameField());
-			flist.get("tableClassName").setCalcEventField(true);
-			this.setFieldList(flist);
-		}
-	}
 
 	/**
 	 * コンストラクタ。
@@ -164,7 +142,7 @@ public class QueryGeneratorEditForm extends EditForm {
 			ent.put("fieldId", f.getId());
 			ent.put("fieldClassName", f.getClass().getName());
 			ent.put("comment", f.getComment());
-			ent.put("tableClassName", table.getClass().getName());
+			ent.put("tableClassName", table.getClass().getSimpleName());
 			ret.add(ent);
 		}
 		return ret;
