@@ -471,6 +471,7 @@ HtmlTable.prototype.onAddTr = function(rowid) {
  * @param {Array} list テーブルデータ。
  */
 HtmlTable.prototype.setTableData = function(list) {
+	this.tableData = list;
 	if (list != null) {
 		this.find("tbody").empty();
 		// 表の行を追加.
@@ -601,3 +602,39 @@ HtmlTable.prototype.getRowIndex = function(el) {
 HtmlTable.prototype.setRequiredMark = function() {
 };
 
+/**
+ * 指定行の指定フィールドをもつtd要素を取得します。
+ * @param {Number} row 行。
+ * @param {String} id フィールドID。
+ * @returns {jQuery} td要素。
+ */
+HtmlTable.prototype.getTd = function(row, id) {
+	var fid = this.id + "[" + row + "]." + id;
+	return this.find("#" + this.selectorEscape(fid)).parents("td:first");
+};
+
+/**
+ * 指定されたフィールドの同じ値のものをまとめます。
+ * @param {String} id フィールドID。
+ */
+HtmlTable.prototype.setRowSpan = function(id) {
+	if (this.tableData != null) {
+		var v0 = null;
+		var rowspan = 1;
+		var startrow = 0;
+		for (var i = 0; i < this.tableData.length; i++) {
+			var v = this.tableData[i][id];
+			logger.log("v=" + v);
+			if (v != v0) {
+				this.getTd(startrow, id).prop("rowspan", rowspan);
+				v0 = v;
+				rowspan = 1;
+				startrow = i;
+			} else {
+				rowspan++;
+				this.getTd(i, id).remove();
+			}
+		}
+		this.getTd(startrow, id).prop("rowspan", rowspan);
+	}
+};
