@@ -27,13 +27,22 @@ SelectFieldHtmlTable.prototype.attach = function() {
  */
 SelectFieldHtmlTable.prototype.setTableData = function(list) {
 	HtmlTable.prototype.setTableData.call(this, list);
+	var form = this.getParentForm();
 	this.setRowSpan("tableClassName");
 	var thisTable = this;
 	this.find("[id$='selectTableClass']").click(function() {
+		// 確認画面のロック対応
+		if (form.mode == "confirm") {
+			return false;
+		}
 		thisTable.checkTableField($(this));
 		thisTable.disableDuplicate();
 	});
 	this.find("[id$='selectFieldId']").click(function() {
+		// 確認画面のロック対応
+		if (form.mode == "confirm") {
+			return false;
+		}
 		thisTable.disableDuplicate();
 	});
 	thisTable.disableDuplicate();

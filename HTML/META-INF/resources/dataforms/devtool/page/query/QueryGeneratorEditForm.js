@@ -15,6 +15,20 @@ QueryGeneratorEditForm = createSubclass("QueryGeneratorEditForm", {}, "EditForm"
  */
 QueryGeneratorEditForm.prototype.attach = function() {
 	EditForm.prototype.attach.call(this);
+	var thisForm = this;
+	this.find("#selectAll").click(function() {
+		if (thisForm.mode == "confirm") {
+			return false;
+		}
+		var ck = $(this).prop("checked");
+		thisForm.find("[id$='selectFieldId']").each(function() {
+			$(this).prop("checked", ck);
+		});
+		thisForm.find("[id$='selectTableClass']").each(function() {
+			$(this).prop("checked", ck);
+		});
+		thisForm.getComponent("selectFieldList").disableDuplicate();
+	});
 };
 
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
