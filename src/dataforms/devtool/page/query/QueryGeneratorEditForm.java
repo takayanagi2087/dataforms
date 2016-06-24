@@ -139,6 +139,8 @@ public class QueryGeneratorEditForm extends EditForm {
 		FieldList flist = table.getFieldList();
 		for (Field<?> f: flist) {
 			Map<String, Object> ent = new HashMap<String, Object>();
+			ent.put("selectTableClass", table.getClass().getName());
+			ent.put("selectFieldId", f.getId());
 			ent.put("fieldId", f.getId());
 			ent.put("fieldClassName", f.getClass().getName());
 			ent.put("comment", f.getComment());
