@@ -31,6 +31,10 @@ QueryGeneratorEditForm.prototype.attach = function() {
 	});
 };
 
+/**
+ * テーブルクラス入力時のフィールドリスト取得。
+ * @param {jQuery} f 更新されたフィールド。 
+ */
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
 	logger.log("onCalc");
 	if (f == null) {

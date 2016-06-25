@@ -78,8 +78,15 @@
 							<td><select id="functionSelect"></select></td>
 							<th>パッケージ名</th>
 							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
 							<th>問合せクラス名</th>
 							<td><input type="text" id="queryClassName" /></td>
+							<th>オプション</th>
+							<td>
+								<input type="checkbox" id="distinctFlag" value="1"/><label for="distinctFlag">Distinct</label>
+								<input type="checkbox" id="forceOverwrite" value="1"><label for="forceOverwrite">強制的に上書する</label>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -87,12 +94,16 @@
 					<caption>問合せる主テーブル</caption>
 					<tbody>
 						<tr>
-							<th>主テーブルの機能</th>
+							<th>機能</th>
 							<td><select id="mainTableFunctionSelect"></select></td>
-							<th>主テーブルのパッケージ</th>
+							<th>パッケージ</th>
 							<td><input type="text" id="mainTablePackageName" /></td>
-							<th>主テーブルクラス名</th>
+						</tr>
+						<tr>
+							<th>クラス名</th>
 							<td><input type="text" id="mainTableClassName" /></td>
+							<th>別名</th>
+							<td><input type="text" id="aliasName" /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -120,6 +131,9 @@
 									<th>
 										テーブルクラス名
 									</th>
+									<th>
+										別名
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -142,6 +156,9 @@
 									<td>
 										<input type="text" id="joinTableList[0].tableClassName" />
 									</td>
+									<td>
+										<input type="text" id="joinTableList[0].aliasName" />
+									</td>
 								</tr>
 							</tbody>
 							<tfoot>
@@ -149,7 +166,7 @@
 									<th style="width: 21px;">
 										<input type="button" id="joinTableList.addButton" value="+"/>
 									</th>
-									<th colspan="5">
+									<th colspan="6">
 									</th>
 								</tr>
 							</tfoot>
@@ -180,6 +197,9 @@
 									<th>
 										テーブルクラス名
 									</th>
+									<th>
+										別名
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -202,6 +222,9 @@
 									<td>
 										<input type="text" id="leftJoinTableList[0].tableClassName" />
 									</td>
+									<td>
+										<input type="text" id="leftJoinTableList[0].aliasName" />
+									</td>
 								</tr>
 							</tbody>
 							<tfoot>
@@ -209,7 +232,7 @@
 									<th style="width: 21px;">
 										<input type="button" id="leftJoinTableList.addButton" value="+"/>
 									</th>
-									<th colspan="5">
+									<th colspan="6">
 									</th>
 								</tr>
 							</tfoot>
@@ -240,6 +263,9 @@
 									<th>
 										テーブルクラス名
 									</th>
+									<th>
+										別名
+									</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -262,6 +288,9 @@
 									<td>
 										<input type="text" id="rightJoinTableList[0].tableClassName" />
 									</td>
+									<td>
+										<input type="text" id="rightJoinTableList[0].aliasName" />
+									</td>
 								</tr>
 							</tbody>
 							<tfoot>
@@ -269,7 +298,7 @@
 									<th style="width: 21px;">
 										<input type="button" id="rightJoinTableList.addButton" value="+"/>
 									</th>
-									<th colspan="5">
+									<th colspan="6">
 									</th>
 								</tr>
 							</tfoot>

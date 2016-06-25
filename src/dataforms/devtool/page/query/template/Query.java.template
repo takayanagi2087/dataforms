@@ -1,0 +1,22 @@
+package ${packageName};
+
+import dataforms.dao.Query;
+${importTables}
+
+
+/**
+ * 問い合わせクラスです。
+ *
+ */
+public class ${queryClassName} extends Query {
+	/**
+	 * コンストラクタ.
+	 */
+	public ${queryClassName}() {
+		this.setDistinct(${distinctFlag});
+${newTables}
+${selectFields}
+		this.setMainTable(${mainTable});
+${joinTables}
+	}
+}

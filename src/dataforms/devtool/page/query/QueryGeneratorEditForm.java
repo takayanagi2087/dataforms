@@ -11,12 +11,14 @@ import dataforms.annotation.WebMethod;
 import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
 import dataforms.dao.Table;
+import dataforms.devtool.field.common.AliasNameField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.PackageNameField;
 import dataforms.devtool.field.common.QueryClassNameField;
 import dataforms.devtool.field.common.TableClassNameField;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.FlagField;
 import dataforms.htmltable.EditableHtmlTable;
 import dataforms.util.MessagesUtil;
 import dataforms.validator.RequiredValidator;
@@ -44,7 +46,12 @@ public class QueryGeneratorEditForm extends EditForm {
 		 */
 		public JoinHtmlTable(final String id) {
 			super(id);
-			FieldList flist = new FieldList(new FunctionSelectField(), new PackageNameField(), new TableClassNameField());
+			FieldList flist = new FieldList(
+				new FunctionSelectField()
+				, new PackageNameField()
+				, new TableClassNameField()
+				, new AliasNameField()
+			);
 			flist.get("tableClassName").setAutocomplete(true).setCalcEventField(true);
 			this.setFieldList(flist);
 		}
@@ -56,7 +63,12 @@ public class QueryGeneratorEditForm extends EditForm {
 	public QueryGeneratorEditForm() {
 		this.addField(new FunctionSelectField());
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
-		this.addField(new QueryClassNameField()).setAutocomplete(true).addValidator(new RequiredValidator());
+		this.addField(new QueryClassNameField()).setAutocomplete(false).addValidator(new RequiredValidator());
+		this.addField(new AliasNameField());
+
+		this.addField(new FlagField("distinctFlag"));
+		this.addField(new FlagField("forceOverwrite"));
+		
 		this.addField((new FunctionSelectField("mainTableFunctionSelect")).setPackageFieldId("mainTablePackageName")).setComment("主テーブルの機能");
 		this.addField(new PackageNameField("mainTablePackageName")).setComment("主テーブルのパッケージ").addValidator(new RequiredValidator());
 		this.addField((new TableClassNameField("mainTableClassName")).setPackageNameFieldId("mainTablePackageName"))
@@ -220,26 +232,103 @@ public class QueryGeneratorEditForm extends EditForm {
 
 	@Override
 	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
 		return false;
 	}
 
+
+	/**
+	 * 各JOINリストのインポート文を作成します。
+	 * @param list  POSTされたデータ。
+	 * @return インポート文。
+	 */
+	private String getImportTableList(final List<Map<String, Object>> list) {
+		StringBuilder sb = new StringBuilder();
+		for (Map<String, Object> m:list) {
+			String packageName = (String) m.get("packageName");
+			String tableClassName = (String) m.get("tableClassName");
+			sb.append("import " + packageName + "." + tableClassName + ";\n");
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * テーブルクラスのインポート文を作成。
+	 * @param data POSTされたデータ。
+	 * @return インポート文。
+	 */
+	@SuppressWarnings("unchecked")
+	private String getImportTables(final Map<String, Object> data) {
+		StringBuilder sb = new StringBuilder();
+		String packageName = (String) data.get("mainTablePackageName");
+		String mainTableClassName = (String) data.get("mainTableClassName");
+		sb.append("import " + packageName + "." + mainTableClassName + ";\n");
+		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("joinTableList")));
+		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
+		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
+		return sb.toString();
+	}
+
+	/**
+	 * テーブルクラスのインスタンス変数名を取得します。
+	 * @param classname クラス名。
+	 * @return テーブルクラスのインスタンス変数名。
+	 */
+	private String getTableVariableName(final String classname) {
+		String ret = classname.substring(0, 1).toLowerCase() + classname.substring(1);
+		return ret;
+	}
+	
+	/**
+	 * 各JOINリストのインポート文を作成します。
+	 * @param list  POSTされたデータ。
+	 * @return インポート文。
+	 */
+	private String getNewTableList(final List<Map<String, Object>> list) {
+		StringBuilder sb = new StringBuilder();
+		for (Map<String, Object> m:list) {
+			String tableClassName = (String) m.get("tableClassName");
+			sb.append("\t\tTable " + this.getTableVariableName(tableClassName) + " = new " + tableClassName + "();\n");
+		}
+		return sb.toString();
+	}
+	
+
+	/**
+	 * テーブルクラスのインポート文を作成。
+	 * @param data POSTされたデータ。
+	 * @return インポート文。
+	 */
+	@SuppressWarnings("unchecked")
+	private String getNewTables(final Map<String, Object> data) {
+		StringBuilder sb = new StringBuilder();
+		String mainTableClassName = (String) data.get("mainTableClassName");
+		sb.append("\t\tTable " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
+		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("joinTableList")));
+ 		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
+		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
+		return sb.toString();
+	}
+
+	
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
-
+		String javasrc = this.getStringResourse("template/Query.java.template");
+		String packageName = (String) data.get("packageName");
+		String queryClassName = (String) data.get("queryClassName");
+		javasrc = javasrc.replaceAll("\\$\\{packageName\\}", packageName);
+		javasrc = javasrc.replaceAll("\\$\\{queryClassName\\}", queryClassName);
+		javasrc = javasrc.replaceAll("\\$\\{importTables\\}", this.getImportTables(data));
+		javasrc = javasrc.replaceAll("\\$\\{newTables\\}", this.getNewTables(data));
+		log.debug("javasrc=\n" + javasrc);
+		throw new Exception("a");
 	}
 
 	@Override
 	protected void updateData(final Map<String, Object> data) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 
 	@Override
 	public void deleteData(final Map<String, Object> data) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 
 }
