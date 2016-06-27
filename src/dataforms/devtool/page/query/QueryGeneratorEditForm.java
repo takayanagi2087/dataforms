@@ -1,5 +1,6 @@
 package dataforms.devtool.page.query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,13 +14,17 @@ import dataforms.controller.JsonResponse;
 import dataforms.dao.Table;
 import dataforms.devtool.field.common.AliasNameField;
 import dataforms.devtool.field.common.FunctionSelectField;
+import dataforms.devtool.field.common.JavaSourcePathField;
 import dataforms.devtool.field.common.PackageNameField;
 import dataforms.devtool.field.common.QueryClassNameField;
 import dataforms.devtool.field.common.TableClassNameField;
+import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.FlagField;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.servlet.DataFormsServlet;
+import dataforms.util.FileUtil;
 import dataforms.util.MessagesUtil;
 import dataforms.util.StringUtil;
 import dataforms.validator.RequiredValidator;
@@ -62,7 +67,8 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * コンストラクタ。
 	 */
 	public QueryGeneratorEditForm() {
-		this.addField(new FunctionSelectField());
+		this.addField(new JavaSourcePathField());
+		((FunctionSelectField) this.addField(new FunctionSelectField())).setPackageOption("dao");
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
 		this.addField(new QueryClassNameField()).setAutocomplete(false).addValidator(new RequiredValidator());
 		this.addField(new AliasNameField());
@@ -88,6 +94,12 @@ public class QueryGeneratorEditForm extends EditForm {
 		slectFieldList.setCaption("選択フィールドリスト");
 		this.addHtmlTable(slectFieldList);
 		
+	}
+	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
 	}
 	
 	/**
@@ -135,6 +147,19 @@ public class QueryGeneratorEditForm extends EditForm {
 		ret.addAll(this.validateJoinTable("joinTableList", (List<Map<String, Object>>) data.get("joinTableList")));
 		ret.addAll(this.validateJoinTable("leftJoinTableList", (List<Map<String, Object>>) data.get("leftJoinTableList")));
 		ret.addAll(this.validateJoinTable("rightJoinTableList", (List<Map<String, Object>>) data.get("rightJoinTableList")));
+		
+		String packageName = (String) data.get("packageName");
+		String queryClassName = (String) data.get("queryClassName");
+		String javaSrc = (String) data.get("javaSourcePath");
+		String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
+		String query = srcPath + "/" + queryClassName + ".java";
+		String forceOverwrite = (String) data.get("forceOverwrite");
+		if (!"1".equals(forceOverwrite)) {
+			File f = new File(query);
+			if (f.exists()) {
+				ret.add(new ValidationError("queryClassName", this.getPage().getMessage("error.sourcefileexist", queryClassName + ".java")));
+			}
+		}
 		return ret;
 	}
 	
@@ -291,6 +316,10 @@ public class QueryGeneratorEditForm extends EditForm {
 		for (Map<String, Object> m:list) {
 			String tableClassName = (String) m.get("tableClassName");
 			sb.append("\t\tTable " + this.getTableVariableName(tableClassName) + " = new " + tableClassName + "();\n");
+			String aliasName = (String) m.get("aliasName");
+			if (!StringUtil.isBlank(aliasName)) {
+				sb.append("\t\t" + this.getTableVariableName(tableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
+			}
 		}
 		return sb.toString();
 	}
@@ -306,6 +335,10 @@ public class QueryGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		String mainTableClassName = (String) data.get("mainTableClassName");
 		sb.append("\t\tTable " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
+		String aliasName = (String) data.get("aliasName");
+		if (!StringUtil.isBlank(aliasName)) {
+			sb.append("\t\t" + this.getTableVariableName(mainTableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
+		}
 		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("joinTableList")));
  		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
 		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
@@ -405,9 +438,11 @@ public class QueryGeneratorEditForm extends EditForm {
 			javasrc = javasrc.replaceAll("\\$\\{distinctFlag\\}", "false");
 		}
 		javasrc = javasrc.replaceAll("\\$\\{joinTables\\}", this.getJoinTables(data));
-		
+		String javaSrc = (String) data.get("javaSourcePath");
+		String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
+		String query = srcPath + "/" + queryClassName + ".java";
+		FileUtil.writeTextFileWithBackup(query, javasrc, DataFormsServlet.getEncoding());
 		log.debug("javasrc=\n" + javasrc);
-		throw new Exception("a");
 	}
 
 	@Override
