@@ -18,8 +18,14 @@ public class SelectFieldHtmlTable extends HtmlTable {
 	 */
 	public SelectFieldHtmlTable(final String id) {
 		super(id);
-		FieldList flist = new FieldList(new TableClassNameField("selectTableClass"), new TableClassNameField(), new FieldIdField("selectFieldId"), new FieldIdField(), new FieldClassNameField(), new VarcharField("comment", 1024));
-		flist.get("tableClassName").setCalcEventField(true);
+		FieldList flist = new FieldList(
+			new TableClassNameField("selectTableClass")
+			, new TableClassNameField()
+			, new TableClassNameField("selectTableClassName")
+			, new FieldIdField("selectFieldId")
+			, new FieldIdField()
+			, new FieldClassNameField()
+			, new VarcharField("comment", 1024));
 		this.setFieldList(flist);
 	}
 

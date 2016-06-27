@@ -21,6 +21,7 @@ import dataforms.field.base.FieldList;
 import dataforms.field.common.FlagField;
 import dataforms.htmltable.EditableHtmlTable;
 import dataforms.util.MessagesUtil;
+import dataforms.util.StringUtil;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
 
@@ -152,6 +153,8 @@ public class QueryGeneratorEditForm extends EditForm {
 		for (Field<?> f: flist) {
 			Map<String, Object> ent = new HashMap<String, Object>();
 			ent.put("selectTableClass", table.getClass().getName());
+			ent.put("tableClassName", table.getClass().getName());
+			ent.put("selectTableClassName", table.getClass().getSimpleName());
 			ent.put("selectFieldId", f.getId());
 			ent.put("fieldId", f.getId());
 			ent.put("fieldClassName", f.getClass().getName());
@@ -309,6 +312,79 @@ public class QueryGeneratorEditForm extends EditForm {
 		return sb.toString();
 	}
 
+	/**
+	 * 選択フィールド設定ソースを生成します。
+	 * @param data POSTされたデータ。
+	 * @return 選択フィールド設定ソース。
+	 */
+	private String getSelectFieldList(final Map<String, Object> data) {
+		StringBuilder sb = new StringBuilder();
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("selectFieldList");
+		for (Map<String, Object> m: list) {
+			String selectFieldId = (String) m.get("selectFieldId");
+			if (!StringUtil.isBlank(selectFieldId)) {
+				if (sb.length() > 0) {
+					sb.append("\t\t\t, ");
+				} else {
+					sb.append("\t\t\t");
+				}
+				String tableClassName = (String) m.get("selectTableClassName");
+				log.debug("tableClassName=" + tableClassName);
+				sb.append(this.getTableVariableName(tableClassName) + ".");
+				sb.append("getFieldList().get(\"" + selectFieldId + "\")\n");
+			}
+		}
+		return "\t\tthis.setFieldList(new FieldList(\n" + sb.toString() + "\t\t));";
+	}
+
+	/**
+	 * テーブルのJOIN設定ソースを生成します。
+	 * @param list JOINテーブルリスト。
+	 * @return テーブルのJOIN設定ソース。
+	 */
+	private String getJoinTableList(final List<Map<String, Object>> list) {
+		StringBuilder sb = new StringBuilder();
+		if (list != null) {
+			for (Map<String, Object> m: list) {
+				if (sb.length() > 0) {
+					sb.append(", ");
+				}
+				String tableClassName = (String) m.get("tableClassName");
+				sb.append(this.getTableVariableName(tableClassName));
+			}
+		}
+		if (sb.length() > 0) {
+			return "new TableList(" + sb.toString() + ")";
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * JOINの設定ソースを生成します。
+	 * @param data POSTされたデータ。
+	 * @return JOINの設定ソース。
+	 */
+	@SuppressWarnings("unchecked")
+	private String getJoinTables(final Map<String, Object> data) {
+		StringBuilder sb = new StringBuilder();
+		String join = this.getJoinTableList((List<Map<String, Object>>) data.get("joinTableList"));
+		if (!StringUtil.isBlank(join)) {
+			sb.append("\t\tthis.setJoinTableList(" + join + ");\n");
+		}
+		String leftJoin = this.getJoinTableList((List<Map<String, Object>>) data.get("leftJoinTableList"));
+		if (!StringUtil.isBlank(leftJoin)) {
+			sb.append("\t\tthis.setLeftJoinTableList(" + leftJoin + ");\n");
+		}
+		String rightJoin = this.getJoinTableList((List<Map<String, Object>>) data.get("rightJoinTableList"));
+		if (!StringUtil.isBlank(rightJoin)) {
+			sb.append("\t\tthis.setRightJoinTableList(" + rightJoin + ");\n");
+		}
+		return sb.toString();
+	}
+
+	
 	
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
@@ -319,6 +395,17 @@ public class QueryGeneratorEditForm extends EditForm {
 		javasrc = javasrc.replaceAll("\\$\\{queryClassName\\}", queryClassName);
 		javasrc = javasrc.replaceAll("\\$\\{importTables\\}", this.getImportTables(data));
 		javasrc = javasrc.replaceAll("\\$\\{newTables\\}", this.getNewTables(data));
+		javasrc = javasrc.replaceAll("\\$\\{selectFields\\}", this.getSelectFieldList(data));
+		String mainTableClassName = (String) data.get("mainTableClassName");
+		javasrc = javasrc.replaceAll("\\$\\{mainTable\\}", this.getTableVariableName(mainTableClassName));
+		String distinctFlag = (String) data.get("distinctFlag");
+		if ("1".equals(distinctFlag)) {
+			javasrc = javasrc.replaceAll("\\$\\{distinctFlag\\}", "true");
+		} else {
+			javasrc = javasrc.replaceAll("\\$\\{distinctFlag\\}", "false");
+		}
+		javasrc = javasrc.replaceAll("\\$\\{joinTables\\}", this.getJoinTables(data));
+		
 		log.debug("javasrc=\n" + javasrc);
 		throw new Exception("a");
 	}
