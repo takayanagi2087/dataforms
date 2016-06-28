@@ -41,7 +41,9 @@ SelectField.prototype.setTextValue = function(comp, value) {
 	if (this.optionList != null) {
 		for (var i = 0; i < this.optionList.length; i++) {
 			var opt = this.optionList[i];
-			if (opt.value.toString() == value.toString()) {
+			var ov = (opt.value == null ? "" : opt.value.toString());
+			var v = (value == null ? "" : value.toString());
+			if (ov == v) {
 				comp.text(opt.name);
 				break;
 			}
