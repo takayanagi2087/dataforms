@@ -21,7 +21,7 @@ QueryGeneratorEditForm.prototype.attach = function() {
 			return false;
 		}
 		var ck = $(this).prop("checked");
-		thisForm.find("[id$='selectFieldId']").each(function() {
+		thisForm.find("[id$='sel']").each(function() {
 			$(this).prop("checked", ck);
 		});
 		thisForm.find("[id$='selectTableClass']").each(function() {

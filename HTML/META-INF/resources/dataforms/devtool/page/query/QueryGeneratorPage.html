@@ -57,11 +57,13 @@
 								<tr>
 									<td>
 										<span id="queryResult[0].rowNo"></span>
-								<input type="hidden" id="queryResult[0].packageName" />
-								<input type="hidden" id="queryResult[0].queryClassName" />
+										<input type="hidden" id="queryResult[0].packageName" />
+										<input type="hidden" id="queryResult[0].queryClassName" />
 									</td>
 									<td>
-										<span id="queryResult[0].fullClassName"></span>
+										<a href="javascript:void(0);" id="queryResult[0].updateButton">
+											<span id="queryResult[0].fullClassName"></span>
+										</a>
 									</td>
 								</tr>
 							</tbody>
@@ -341,10 +343,10 @@
 									</td>
 									<td>
 										<input type="hidden" id="selectFieldList[0].selectTableClassName" >
-										<input type="checkbox" id="selectFieldList[0].selectFieldId" >
+										<input type="checkbox" id="selectFieldList[0].sel" value="1">
 									</td>
 									<td>
-										<span id="selectFieldList[0].fieldId"></span>
+										<input type="text" id="selectFieldList[0].fieldId"/>
 									</td>
 									<td>
 										<span id="selectFieldList[0].fieldClassName" ></span>
@@ -361,7 +363,6 @@
 				<input type="button" id="confirmButton" value="確認"/>
 				<input type="button" id="saveButton" value="登録"/>
 				<input type="button" id="resetButton" value="リセット"/>
-				<input type="button" id="deleteButton" value="削除"/>
 				<input type="button" id="backButton" value="戻る"/>
 			</form>
 

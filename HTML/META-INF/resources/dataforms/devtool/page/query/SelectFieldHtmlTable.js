@@ -38,7 +38,7 @@ SelectFieldHtmlTable.prototype.setTableData = function(list) {
 		thisTable.checkTableField($(this));
 		thisTable.disableDuplicate();
 	});
-	this.find("[id$='selectFieldId']").click(function() {
+	this.find("[id$='sel']").click(function() {
 		// 確認画面のロック対応
 		if (form.mode == "confirm") {
 			return false;
@@ -59,7 +59,7 @@ SelectFieldHtmlTable.prototype.checkTableField = function(jq) {
 			var tc = jq.val();
 			var d = this.tableData[i];
 			if (tc == d.selectTableClass) {
-				var ckid = "selectFieldList[" + i + "].selectFieldId";
+				var ckid = "selectFieldList[" + i + "].sel";
 				var fck = this.find("#" + this.selectorEscape(ckid));
 				if (!fck.prop("disabled")) {
 					fck.prop("checked", jq.prop("checked"));
@@ -76,16 +76,19 @@ SelectFieldHtmlTable.prototype.disableDuplicate = function() {
 	if (this.tableData != null) {
 		var map = {};
 		for (var i = 0; i < this.tableData.length; i++) {
-			var ckid = "selectFieldList[" + i + "].selectFieldId";
+			var ckid = "selectFieldList[" + i + "].sel";
 			var ck = this.find("#" + this.selectorEscape(ckid));
-			if (map[ck.val()] == true) {
+			var fid = "selectFieldList[" + i + "].fieldId";
+			var f = this.find("#" + this.selectorEscape(fid));
+			logger.log("fieldId=" + f.val());
+			if (map[f.val()] == true) {
 				ck.prop("checked", false);
 				ck.prop("disabled", true);
 			} else {
 				ck.prop("disabled", false);
 			}
 			if (ck.prop("checked") == true) {
-				map[ck.val()] = true;
+				map[f.val()] = true;
 			}
 		}
 	}

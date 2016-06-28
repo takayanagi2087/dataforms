@@ -11,7 +11,9 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
+import dataforms.dao.Query;
 import dataforms.dao.Table;
+import dataforms.dao.TableList;
 import dataforms.devtool.field.common.AliasNameField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
@@ -103,6 +105,72 @@ public class QueryGeneratorEditForm extends EditForm {
 	}
 	
 	/**
+	 * JOINテーブルリストのデータを取得します。
+	 * @param list JOINテーブルリスト。
+	 * @return JOINテーブルリストのデータ。
+	 */
+	private List<Map<String, Object>> getJoinTableData(final TableList list) {
+		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+		if (list != null) {
+			for (Table t: list) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				m.put("packageName", t.getClass().getPackage().getName());
+				m.put("tableClassName", t.getClass().getSimpleName());
+				m.put("aliasName", t.getAlias());
+				ret.add(m);
+			}
+		}
+		return ret;
+	}
+	
+	@Override
+	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
+		String packageName = (String) data.get("packageName");
+		String queryClassName = (String) data.get("queryClassName");
+		log.debug("packageName=" + packageName + ",queryClassName=" + queryClassName);
+		@SuppressWarnings("unchecked")
+		Class<? extends Query> clazz = (Class<? extends Query>) Class.forName(packageName + "." + queryClassName);
+		Query q = clazz.newInstance();
+		Map<String, Object> ret = new HashMap<String, Object>();
+		ret.put("javaSourcePath", DeveloperPage.getJavaSourcePath());
+		ret.put("packageName", packageName);
+		ret.put("queryClassName", queryClassName);
+		if (q.isDistinct()) {
+			ret.put("distinctFlag", "1");
+		} else {
+			ret.put("distinctFlag", "0");
+		}
+		ret.put("forceOverwrite", "0");
+		ret.put("mainTablePackageName", q.getMainTable().getClass().getPackage().getName());
+		ret.put("mainTableClassName", q.getMainTable().getClass().getSimpleName());
+		ret.put("aliasName", q.getMainTable().getAlias());
+		ret.put("joinTableList", this.getJoinTableData(q.getJoinTableList()));
+		ret.put("leftJoinTableList", this.getJoinTableData(q.getLeftJoinTableList()));
+		ret.put("rightJoinTableList", this.getJoinTableData(q.getRightJoinTableList()));
+		ret.put("rightJoinTableList", this.getJoinTableData(q.getRightJoinTableList()));
+		List<Map<String, Object>> flist = this.queryTableFieldList(ret);
+		FieldList qfl = q.getFieldList();
+		for (Map<String, Object> m: flist) {
+			String fid = (String) m.get("fieldId");
+			String tclass = (String) m.get("selectTableClass");
+			Field<?> qfield = qfl.get(fid);
+			if (qfield != null) {
+				log.debug(qfield.getId() + ":" + fid + "," + qfield.getTable().getClass().getName() + ":" + tclass);
+				if (qfield.getTable().getClass().getName().equals(tclass)) {
+					m.put("sel", "1");
+				} else {
+					m.put("sel", "0");
+				}
+			} else {
+				m.put("sel", "0");
+			}
+		}
+		ret.put("selectFieldList", flist);
+		return ret;
+	}
+
+	
+	/**
 	 * クラスの存在チェック。
 	 * @param name クラス名。
 	 * @return 存在する場合true。
@@ -180,7 +248,7 @@ public class QueryGeneratorEditForm extends EditForm {
 			ent.put("selectTableClass", table.getClass().getName());
 			ent.put("tableClassName", table.getClass().getName());
 			ent.put("selectTableClassName", table.getClass().getSimpleName());
-			ent.put("selectFieldId", f.getId());
+			ent.put("sel", "0");
 			ent.put("fieldId", f.getId());
 			ent.put("fieldClassName", f.getClass().getName());
 			ent.put("comment", f.getComment());
@@ -253,12 +321,6 @@ public class QueryGeneratorEditForm extends EditForm {
 	}
 	
 	@Override
-	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
-
-	@Override
 	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
 		return false;
 	}
@@ -269,7 +331,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @param list  POSTされたデータ。
 	 * @return インポート文。
 	 */
-	private String getImportTableList(final List<Map<String, Object>> list) {
+	private String generateImportTableList(final List<Map<String, Object>> list) {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m:list) {
 			String packageName = (String) m.get("packageName");
@@ -285,14 +347,14 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @return インポート文。
 	 */
 	@SuppressWarnings("unchecked")
-	private String getImportTables(final Map<String, Object> data) {
+	private String generateImportTables(final Map<String, Object> data) {
 		StringBuilder sb = new StringBuilder();
 		String packageName = (String) data.get("mainTablePackageName");
 		String mainTableClassName = (String) data.get("mainTableClassName");
 		sb.append("import " + packageName + "." + mainTableClassName + ";\n");
-		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("joinTableList")));
-		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
-		sb.append(this.getImportTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
+		sb.append(this.generateImportTableList((List<Map<String, Object>>) data.get("joinTableList")));
+		sb.append(this.generateImportTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
+		sb.append(this.generateImportTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
 		return sb.toString();
 	}
 
@@ -311,7 +373,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @param list  POSTされたデータ。
 	 * @return インポート文。
 	 */
-	private String getNewTableList(final List<Map<String, Object>> list) {
+	private String generateNewTableList(final List<Map<String, Object>> list) {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m:list) {
 			String tableClassName = (String) m.get("tableClassName");
@@ -331,7 +393,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @return インポート文。
 	 */
 	@SuppressWarnings("unchecked")
-	private String getNewTables(final Map<String, Object> data) {
+	private String generateNewTables(final Map<String, Object> data) {
 		StringBuilder sb = new StringBuilder();
 		String mainTableClassName = (String) data.get("mainTableClassName");
 		sb.append("\t\tTable " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
@@ -339,9 +401,9 @@ public class QueryGeneratorEditForm extends EditForm {
 		if (!StringUtil.isBlank(aliasName)) {
 			sb.append("\t\t" + this.getTableVariableName(mainTableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
 		}
-		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("joinTableList")));
- 		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
-		sb.append(this.getNewTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
+		sb.append(this.generateNewTableList((List<Map<String, Object>>) data.get("joinTableList")));
+ 		sb.append(this.generateNewTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
+		sb.append(this.generateNewTableList((List<Map<String, Object>>) data.get("rightJoinTableList")));
 		return sb.toString();
 	}
 
@@ -350,13 +412,13 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @param data POSTされたデータ。
 	 * @return 選択フィールド設定ソース。
 	 */
-	private String getSelectFieldList(final Map<String, Object> data) {
+	private String generateSelectFieldList(final Map<String, Object> data) {
 		StringBuilder sb = new StringBuilder();
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("selectFieldList");
 		for (Map<String, Object> m: list) {
-			String selectFieldId = (String) m.get("selectFieldId");
-			if (!StringUtil.isBlank(selectFieldId)) {
+			String sel = (String) m.get("sel");
+			if ("1".equals(sel)) {
 				if (sb.length() > 0) {
 					sb.append("\t\t\t, ");
 				} else {
@@ -364,8 +426,9 @@ public class QueryGeneratorEditForm extends EditForm {
 				}
 				String tableClassName = (String) m.get("selectTableClassName");
 				log.debug("tableClassName=" + tableClassName);
+				String fieldId = (String) m.get("fieldId");
 				sb.append(this.getTableVariableName(tableClassName) + ".");
-				sb.append("getFieldList().get(\"" + selectFieldId + "\")\n");
+				sb.append("getFieldList().get(\"" + fieldId + "\")\n");
 			}
 		}
 		return "\t\tthis.setFieldList(new FieldList(\n" + sb.toString() + "\t\t));";
@@ -376,7 +439,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @param list JOINテーブルリスト。
 	 * @return テーブルのJOIN設定ソース。
 	 */
-	private String getJoinTableList(final List<Map<String, Object>> list) {
+	private String generateJoinTableList(final List<Map<String, Object>> list) {
 		StringBuilder sb = new StringBuilder();
 		if (list != null) {
 			for (Map<String, Object> m: list) {
@@ -400,17 +463,17 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * @return JOINの設定ソース。
 	 */
 	@SuppressWarnings("unchecked")
-	private String getJoinTables(final Map<String, Object> data) {
+	private String generateJoinTables(final Map<String, Object> data) {
 		StringBuilder sb = new StringBuilder();
-		String join = this.getJoinTableList((List<Map<String, Object>>) data.get("joinTableList"));
+		String join = this.generateJoinTableList((List<Map<String, Object>>) data.get("joinTableList"));
 		if (!StringUtil.isBlank(join)) {
 			sb.append("\t\tthis.setJoinTableList(" + join + ");\n");
 		}
-		String leftJoin = this.getJoinTableList((List<Map<String, Object>>) data.get("leftJoinTableList"));
+		String leftJoin = this.generateJoinTableList((List<Map<String, Object>>) data.get("leftJoinTableList"));
 		if (!StringUtil.isBlank(leftJoin)) {
 			sb.append("\t\tthis.setLeftJoinTableList(" + leftJoin + ");\n");
 		}
-		String rightJoin = this.getJoinTableList((List<Map<String, Object>>) data.get("rightJoinTableList"));
+		String rightJoin = this.generateJoinTableList((List<Map<String, Object>>) data.get("rightJoinTableList"));
 		if (!StringUtil.isBlank(rightJoin)) {
 			sb.append("\t\tthis.setRightJoinTableList(" + rightJoin + ");\n");
 		}
@@ -426,9 +489,9 @@ public class QueryGeneratorEditForm extends EditForm {
 		String queryClassName = (String) data.get("queryClassName");
 		javasrc = javasrc.replaceAll("\\$\\{packageName\\}", packageName);
 		javasrc = javasrc.replaceAll("\\$\\{queryClassName\\}", queryClassName);
-		javasrc = javasrc.replaceAll("\\$\\{importTables\\}", this.getImportTables(data));
-		javasrc = javasrc.replaceAll("\\$\\{newTables\\}", this.getNewTables(data));
-		javasrc = javasrc.replaceAll("\\$\\{selectFields\\}", this.getSelectFieldList(data));
+		javasrc = javasrc.replaceAll("\\$\\{importTables\\}", this.generateImportTables(data));
+		javasrc = javasrc.replaceAll("\\$\\{newTables\\}", this.generateNewTables(data));
+		javasrc = javasrc.replaceAll("\\$\\{selectFields\\}", this.generateSelectFieldList(data));
 		String mainTableClassName = (String) data.get("mainTableClassName");
 		javasrc = javasrc.replaceAll("\\$\\{mainTable\\}", this.getTableVariableName(mainTableClassName));
 		String distinctFlag = (String) data.get("distinctFlag");
@@ -437,7 +500,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		} else {
 			javasrc = javasrc.replaceAll("\\$\\{distinctFlag\\}", "false");
 		}
-		javasrc = javasrc.replaceAll("\\$\\{joinTables\\}", this.getJoinTables(data));
+		javasrc = javasrc.replaceAll("\\$\\{joinTables\\}", this.generateJoinTables(data));
 		String javaSrc = (String) data.get("javaSourcePath");
 		String srcPath = javaSrc + "/" + packageName.replaceAll("\\.", "/");
 		String query = srcPath + "/" + queryClassName + ".java";
@@ -447,10 +510,12 @@ public class QueryGeneratorEditForm extends EditForm {
 
 	@Override
 	protected void updateData(final Map<String, Object> data) throws Exception {
+		// 何もしない
 	}
 
 	@Override
 	public void deleteData(final Map<String, Object> data) throws Exception {
+		//　何もしない。
 	}
 
 }
