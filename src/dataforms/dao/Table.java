@@ -477,21 +477,47 @@ public class Table  {
 	 * 以下のような結合条件を作成します。
 	 * alias.field = alias.link_field
 	 * </pre>
+	 * @param table リンク元テーブルのインスタンス。
 	 * @param field フィールド。
 	 * @param joinTable 結合テーブル。
-	 * @param alias テーブルの別名。
+	 * @param joinTableAlias テーブルの別名。
 	 * @param linkField 結合テーブルのフィールド。
 	 * @return 結合条件。
 	 */
-	protected final String getLinkFieldCondition(final String field, final Table joinTable, final String alias, final String linkField) {
+	protected final String getLinkFieldCondition(final Table table, final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.getAlias() + ".");
-		sb.append(this.getField(field).getDbColumnName());
+		sb.append(table.getAlias() + ".");
+		sb.append(table.getField(field).getDbColumnName());
 		sb.append("=");
-		sb.append(alias);
+		sb.append(joinTableAlias);
 		sb.append(".");
 		sb.append(joinTable.getField(linkField).getDbColumnName());
 		return sb.toString();
+	}
+
+	
+	/**
+	 * フィールド単位のリンク条件を作成します。
+	 * <pre>
+	 * 以下のような結合条件を作成します。
+	 * alias.field = alias.link_field
+	 * </pre>
+	 * @param field フィールド。
+	 * @param joinTable 結合テーブル。
+	 * @param joinTableAlias テーブルの別名。
+	 * @param linkField 結合テーブルのフィールド。
+	 * @return 結合条件。
+	 */
+	protected final String getLinkFieldCondition(final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
+		return this.getLinkFieldCondition(this, field, joinTable, joinTableAlias, linkField);
+/*		StringBuilder sb = new StringBuilder();
+		sb.append(this.getAlias() + ".");
+		sb.append(this.getField(field).getDbColumnName());
+		sb.append("=");
+		sb.append(joinTableAlias);
+		sb.append(".");
+		sb.append(joinTable.getField(linkField).getDbColumnName());
+		return sb.toString();*/
 	}
 
 	/**
