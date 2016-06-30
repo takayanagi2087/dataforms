@@ -37,9 +37,6 @@ QueryGeneratorEditForm.prototype.attach = function() {
  */
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
 	logger.log("onCalc");
-	if (f == null) {
-		return;
-	}
 	var thisForm = this;
 	EditForm.prototype.onCalc.call(this);
 	this.submit("getFieldList", function(r) {
@@ -48,8 +45,39 @@ QueryGeneratorEditForm.prototype.onCalc = function(f) {
 			logger.log("field list=" + JSON.stringify(r.result));
 			var ftbl = thisForm.getComponent("selectFieldList");
 			ftbl.setTableData(r.result);
-		} else if (r.status == ServerMethod.INVALID) {
-			currentPage.setErrorInfo(thisForm.getValidationResult(r), thisForm);
+			thisForm.submit("getJoinCondition", function(r) {
+				currentPage.resetErrorStatus();
+				if (r.status == ServerMethod.SUCCESS) {
+					logger.log("field list=" + JSON.stringify(r.result));
+					thisForm.setJoinCondition(r.result);
+				}		
+			});
 		}
 	});
 };
+
+/**
+ * 指定されたJOINテーブルの結合時要件を表示します。
+ * @param {Table} table HTMLテーブルのインスタンス。
+ * @param {Array} list 結合条件リスト。
+ */
+QueryGeneratorEditForm.prototype.setJoinConditionToTable = function(table, list) {
+	if (list != null) {
+		var cf = table.getColumnField("joinCondition");
+		for (var i = 0; i < list.length; i++) {
+			var f = table.getRowField(i, cf);
+			f.setValue(list[i].joinCondition);
+		}
+	}
+};
+
+/**
+ * 結合条件を表示します。
+ * @param {Object} data データ。
+ */
+QueryGeneratorEditForm.prototype.setJoinCondition = function(data) {
+	this.setJoinConditionToTable(this.getComponent("joinTableList"), data.joinTableList);
+	this.setJoinConditionToTable(this.getComponent("leftJoinTableList"), data.leftJoinTableList);
+	this.setJoinConditionToTable(this.getComponent("rightJoinTableList"), data.rightJoinTableList);
+};
+

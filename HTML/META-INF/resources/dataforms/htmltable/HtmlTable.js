@@ -345,6 +345,23 @@ HtmlTable.prototype.clear = function() {
 	tbl.find("tbody").empty();
 };
 
+/**
+ * テーブルのカラムフィールドを所得します。
+ * <pre>
+ * テーブルの各カラムに割り当てられたフィールドクラスのインスタンスを所得します。
+ * このフィールドをgetRowFieldに渡すことにより、行を限定したフィールドを取得することができます。
+ * </pre>
+ * @param {String} id フィールドID。
+ * @returns テーブルのカラムフィールド。 
+ */
+HtmlTable.prototype.getColumnField = function(id) {
+	for (var i = 0; i < this.fields.length; i++) {
+		if (this.fields[i].id == id) {
+			return this.fields[i];
+		}
+	}
+	return null;
+};
 
 /**
  * 指定行のフィールドを取得します。
@@ -638,3 +655,5 @@ HtmlTable.prototype.setRowSpan = function(id) {
 		this.getTd(startrow, id).prop("rowspan", rowspan);
 	}
 };
+
+

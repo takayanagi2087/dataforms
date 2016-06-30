@@ -43,27 +43,6 @@ public class QueryGeneratorEditForm extends EditForm {
 	 */
 	private static Logger log = Logger.getLogger(QueryGeneratorEditForm.class);
 	
-	/**
-	 * Joinテーブルクラス。
-	 *
-	 */
-	private static class JoinHtmlTable extends EditableHtmlTable {
-		/**
-		 * コンストラクタ。
-		 * @param id デーブルID。
-		 */
-		public JoinHtmlTable(final String id) {
-			super(id);
-			FieldList flist = new FieldList(
-				new FunctionSelectField()
-				, new PackageNameField()
-				, new TableClassNameField()
-				, new AliasNameField()
-			);
-			flist.get("tableClassName").setAutocomplete(true).setCalcEventField(true);
-			this.setFieldList(flist);
-		}
-	};
 
 	/**
 	 * コンストラクタ。
@@ -73,7 +52,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		((FunctionSelectField) this.addField(new FunctionSelectField())).setPackageOption("dao");
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
 		this.addField(new QueryClassNameField()).setAutocomplete(false).addValidator(new RequiredValidator());
-		this.addField(new AliasNameField());
+		this.addField(new AliasNameField()).setCalcEventField(true);
 
 		this.addField(new FlagField("distinctFlag"));
 		this.addField(new FlagField("forceOverwrite"));
@@ -204,6 +183,8 @@ public class QueryGeneratorEditForm extends EditForm {
 		return ret;
 	}
 	
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected List<ValidationError> validateForm(final Map<String, Object> data) throws Exception {
@@ -308,7 +289,11 @@ public class QueryGeneratorEditForm extends EditForm {
 	public JsonResponse getFieldList(final Map<String, Object> param) throws Exception {
 		this.methodStartLog(log, param);
 		JsonResponse ret = null;
-		List<ValidationError> vlist = this.validate(param);
+		param.put("forceOverwrite", "1");
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.putAll(param);
+		p.put("forceOverwrite", "1");
+		List<ValidationError> vlist = this.validate(p);
 		if (vlist.size() == 0) {
 			Map<String, Object> data = this.convertToServerData(param);
 			List<Map<String, Object>> list = this.queryTableFieldList(data);
@@ -319,6 +304,93 @@ public class QueryGeneratorEditForm extends EditForm {
 		this.methodFinishLog(log, ret);
 		return ret;
 	}
+	
+	/**
+	 * 各JOINテーブルの結合条件を取得します。
+	 * @param mainTable 主テーブルのインスタンス。
+	 * @param list JOINテーブルリスト。
+	 * @param defaultAlias デフォルト別名。
+	 * @return 結合条件。
+	 * @throws Exception 例外。
+	 */
+	@SuppressWarnings("unchecked")
+	private List<Map<String, Object>> queryJoinCondition(final Table mainTable, final List<Map<String, Object>> list, final String defaultAlias) throws Exception {
+		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < list.size(); i++) {
+			Map<String, Object> m =list.get(i);
+			String packageName = (String) m.get("packageName");
+			String className = (String) m.get("tableClassName");
+			String alias = (String) m.get("aliasName");
+			if (StringUtil.isBlank(alias)) {
+				alias = defaultAlias + i;
+			}
+			String tcn = packageName + "." + className;
+			Class<? extends Table> tc = (Class<? extends Table>) Class.forName(tcn);
+			Table jt = tc.newInstance();
+			String joinCondition = mainTable.getJoinCondition(jt, alias);
+			log.debug("joinConditon=" + joinCondition);
+			Map<String, Object> rec = new HashMap<String, Object>();
+			if (StringUtil.isBlank(joinCondition)) {
+				joinCondition = MessagesUtil.getMessage(this.getPage(), "message.joinconditionnotfound");
+			}
+			rec.put("joinCondition", joinCondition);
+			ret.add(rec);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 各テーブルのJOIN条件式を取得します。
+	 * @param data POSTされたデータ。
+	 * @return JOIN条件式が設定されたリスト。
+	 * @throws Exception 例外。
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> queryJoinCondition(final Map<String, Object> data) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		String packageName = (String) data.get("mainTablePackageName");
+		String mainTableClassName = (String) data.get("mainTableClassName");
+		String aliasName = (String) data.get("aliasName");
+		if (StringUtil.isBlank(aliasName)) {
+			aliasName = "m";
+		}
+		Class<? extends Table> clazz = (Class<? extends Table>) Class.forName(packageName + "." + mainTableClassName);
+		Table mainTable = clazz.newInstance();
+		mainTable.setAlias(aliasName);
+		List<Map<String, Object>> join = (List<Map<String, Object>>) data.get("joinTableList");
+		ret.put("joinTableList", this.queryJoinCondition(mainTable, join, "i"));
+		List<Map<String, Object>> leftJoin = (List<Map<String, Object>>) data.get("leftJoinTableList");
+		ret.put("leftJoinTableList", this.queryJoinCondition(mainTable, leftJoin, "l"));
+		List<Map<String, Object>> rightJoin = (List<Map<String, Object>>) data.get("rightJoinTableList");
+		ret.put("rightJoinTableList", this.queryJoinCondition(mainTable, rightJoin, "r"));
+		return ret;
+	}
+	
+	/**
+	 * 各テーブルのJOIN条件式を取得します。
+	 * @param param POSTされたデータ。
+	 * @return JOIN条件式が設定されたリスト。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public JsonResponse getJoinCondition(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		JsonResponse ret = null;
+		param.put("forceOverwrite", "1");
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.putAll(param);
+		p.put("forceOverwrite", "1");
+		List<ValidationError> vlist = this.validate(p);
+		if (vlist.size() == 0) {
+			Map<String, Object> data = this.convertToServerData(param);
+			Map<String, Object> cond = this.queryJoinCondition(data);
+			ret = new JsonResponse(JsonResponse.SUCCESS, cond);
+		}
+		this.methodFinishLog(log, ret);
+		return ret;
+		
+	}
+	
 	
 	@Override
 	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
@@ -506,6 +578,11 @@ public class QueryGeneratorEditForm extends EditForm {
 		String query = srcPath + "/" + queryClassName + ".java";
 		FileUtil.writeTextFileWithBackup(query, javasrc, DataFormsServlet.getEncoding());
 		log.debug("javasrc=\n" + javasrc);
+	}
+	
+	@Override
+	protected String getSavedMessage(final Map<String, Object> data) {
+		return MessagesUtil.getMessage(this.getPage(), "message.javasourcecreated");
 	}
 
 	@Override

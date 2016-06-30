@@ -121,7 +121,7 @@ public class SimpleClassNameField extends VarcharField {
 	 * @return クラス名に例外パターンを含む場合true。
 	 * @throws Exception 例外。
 	 */
-	private boolean isExcetionClass(final String classname) throws Exception {
+	protected boolean isExcetionClass(final String classname) throws Exception {
 		boolean ret = false;
 		for (String regex: this.exceptionPatternList) {
 			Pattern p = Pattern.compile(regex);

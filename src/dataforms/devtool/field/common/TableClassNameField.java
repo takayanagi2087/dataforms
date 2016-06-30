@@ -29,4 +29,5 @@ public class TableClassNameField extends SimpleClassNameField {
 		this.setComment(COMMENT);
 		this.setAutocomplete(false);
 	}
+
 }
