@@ -210,7 +210,7 @@ EditableHtmlTable.prototype.deleteRow = function(btn) {
 	thisTable.find("tbody>tr:eq(" + rowIndex + ")").remove();
 	this.resetIdIndex();
 	var form = this.getParentForm();
-	form.onCalc(null);
+	form.onCalc(this.get());
 };
 
 /**
