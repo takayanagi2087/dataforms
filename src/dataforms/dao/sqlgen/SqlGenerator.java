@@ -737,6 +737,57 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	 */
 	public abstract String generateSysTimestampSql();
 
+	
+	/**
+	 * 対象テーブルが主テーブルまでリンクがたどれるかを確認する。
+	 * @param t 全テーブルリスト。
+	 * @param list 結合するテーブル。
+	 * @return 主テーブルまでリンクが設定されている場合true。
+	 */
+	private boolean isLinkedToMainTable(final TableList list, final Table t) {
+		boolean ret = false;
+		if (!StringUtil.isBlank(list.get(0).getJoinCondition(t, t.getAlias()))) {
+			return true;
+		} else {
+			for (int i = 1; i < list.size(); i++) {
+				Table tbl = list.get(i);
+				if (tbl.getClass().getName().equals(t.getClass().getName()) && tbl.getAlias().equals(t.getAlias())) {
+					continue;
+				}
+				if (StringUtil.isBlank(list.get(i).getJoinCondition(t, t.getAlias()))) {
+					if (this.isLinkedToMainTable(list, list.get(i))) {
+						return true;
+					}
+				}
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 主テーブル以外の結合条件を検索します。
+	 * @param list 全テーブルリスト。
+	 * @param table 結合するテーブル。
+	 * @return 結合条件。
+	 */
+	public String getJoinConditionOtherThamMainTable(final TableList list, final Table table) {
+		String ret = null;
+		for (int i = 1; i < list.size(); i++) {
+			Table t = list.get(i);
+			if (table.getClass().getName().equals(t.getClass().getName()) && table.getAlias().equals(t.getAlias())) {
+				continue;
+			}
+			String cond = t.getJoinCondition(table, table.getAlias());
+			log.debug("class=" + t.getClass().getName() + "," + table.getClass().getName() + ",cond=" + cond);
+			if (!StringUtil.isBlank(cond)) {
+				if (this.isLinkedToMainTable(list, t)) {
+					ret = cond;
+					break;
+				}
+			}
+		}
+		return ret;
+	}
 
 	/**
 	 * JOINの構文を作成します。
@@ -768,7 +819,30 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 					}
 				}
 			} else {
-				throw new Error(mtable.getTableName() + "と" + table.getTableName() + "の結合条件が定義されていません。");
+				log.debug("getJoinConditionOtherThamMainTable");
+				TableList tlist = new TableList();
+				tlist.add(query.getMainTable());
+				if (query.getJoinTableList() != null) {
+					tlist.addAll(query.getJoinTableList());
+				}
+				if (query.getLeftJoinTableList() != null) {
+					tlist.addAll(query.getLeftJoinTableList());
+				}
+				if (query.getRightJoinTableList() != null) {
+					tlist.addAll(query.getRightJoinTableList());
+				}
+				c = this.getJoinConditionOtherThamMainTable(tlist, table);
+				if (c != null) {
+					sb.append(c);
+					if (query.isEffectivenessOfDeleteFlag()) {
+						if (table.hasDeleteFlag()) {
+							String delColumn = table.getDeleteFlagField().getDbColumnName();
+							sb.append(" and " + table.getAlias() + "." + delColumn + "='0' ");
+						}
+					}
+				} else {
+					throw new Error(mtable.getTableName() + "と" + table.getTableName() + "の結合条件が定義されていません。");
+				}
 			}
 			sb.append("\n");
 			idx++;
