@@ -32,28 +32,47 @@ QueryGeneratorEditForm.prototype.attach = function() {
 };
 
 /**
+ * フォームに対してデータを設定します。
+ * @param {Object} data 設定するデータ。
+ */
+QueryGeneratorEditForm.prototype.setFormData = function(data) {
+	var thisForm = this;
+	EditForm.prototype.setFormData.call(this, data);
+	if (data.joinTableList != null || data.leftJoinTableList != null || data.rightJoinTableList != null) {
+		thisForm.submit("getJoinCondition", function(r) {
+			currentPage.resetErrorStatus();
+			if (r.status == ServerMethod.SUCCESS) {
+				logger.log("field list=" + JSON.stringify(r.result));
+				thisForm.setJoinCondition(r.result);
+			}		
+		});
+	}
+};
+
+/**
  * テーブルクラス入力時のフィールドリスト取得。
  * @param {jQuery} f 更新されたフィールド。 
  */
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
-	logger.log("onCalc");
 	var thisForm = this;
-	EditForm.prototype.onCalc.call(this);
-	this.submit("getFieldList", function(r) {
-		currentPage.resetErrorStatus();
-		if (r.status == ServerMethod.SUCCESS) {
-			logger.log("field list=" + JSON.stringify(r.result));
-			var ftbl = thisForm.getComponent("selectFieldList");
-			ftbl.setTableData(r.result);
-			thisForm.submit("getJoinCondition", function(r) {
-				currentPage.resetErrorStatus();
-				if (r.status == ServerMethod.SUCCESS) {
-					logger.log("field list=" + JSON.stringify(r.result));
-					thisForm.setJoinCondition(r.result);
-				}		
-			});
-		}
-	});
+	if (f != null) {
+		EditForm.prototype.onCalc.call(this);
+		this.submit("getFieldList", function(r) {
+			currentPage.resetErrorStatus();
+			if (r.status == ServerMethod.SUCCESS) {
+				logger.log("field list=" + JSON.stringify(r.result));
+				var ftbl = thisForm.getComponent("selectFieldList");
+				ftbl.setTableData(r.result);
+				thisForm.submit("getJoinCondition", function(r) {
+					currentPage.resetErrorStatus();
+					if (r.status == ServerMethod.SUCCESS) {
+						logger.log("field list=" + JSON.stringify(r.result));
+						thisForm.setJoinCondition(r.result);
+					}		
+				});
+			}
+		});
+	}
 };
 
 /**

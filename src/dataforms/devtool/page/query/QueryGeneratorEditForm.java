@@ -11,9 +11,11 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
+import dataforms.dao.Dao;
 import dataforms.dao.Query;
 import dataforms.dao.Table;
 import dataforms.dao.TableList;
+import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.devtool.field.common.AliasNameField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
@@ -125,7 +127,6 @@ public class QueryGeneratorEditForm extends EditForm {
 		ret.put("aliasName", q.getMainTable().getAlias());
 		ret.put("joinTableList", this.getJoinTableData(q.getJoinTableList()));
 		ret.put("leftJoinTableList", this.getJoinTableData(q.getLeftJoinTableList()));
-		ret.put("rightJoinTableList", this.getJoinTableData(q.getRightJoinTableList()));
 		ret.put("rightJoinTableList", this.getJoinTableData(q.getRightJoinTableList()));
 		List<Map<String, Object>> flist = this.queryTableFieldList(ret);
 		FieldList qfl = q.getFieldList();
@@ -307,17 +308,44 @@ public class QueryGeneratorEditForm extends EditForm {
 	
 	/**
 	 * 各JOINテーブルの結合条件を取得します。
-	 * @param mainTable 主テーブルのインスタンス。
-	 * @param list JOINテーブルリスト。
-	 * @param defaultAlias デフォルト別名。
+	 * @param tlist 関連テーブルの全リスト。
+	 * @param jlist JOINテーブルリスト。
 	 * @return 結合条件。
 	 * @throws Exception 例外。
 	 */
-	@SuppressWarnings("unchecked")
-	private List<Map<String, Object>> queryJoinCondition(final Table mainTable, final List<Map<String, Object>> list, final String defaultAlias) throws Exception {
+	private List<Map<String, Object>> queryJoinCondition(final TableList tlist, final TableList jlist) throws Exception {
 		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
-		for (int i = 0; i < list.size(); i++) {
-			Map<String, Object> m =list.get(i);
+		Table mainTable = tlist.get(0);
+		for (int i = 0; i < jlist.size(); i++) {
+			Table t =jlist.get(i);
+			String joinCondition = mainTable.getJoinCondition(t, t.getAlias());
+			log.debug("joinConditon=" + joinCondition);
+			Map<String, Object> rec = new HashMap<String, Object>();
+			if (StringUtil.isBlank(joinCondition)) {
+				Dao dao = new Dao(this);
+				SqlGenerator gen = dao.getSqlGenerator();
+				joinCondition = gen.getJoinConditionOtherThamMainTable(tlist, t);
+				if (StringUtil.isBlank(joinCondition)) {
+					joinCondition = MessagesUtil.getMessage(this.getPage(), "message.joinconditionnotfound");
+				}
+			}
+			rec.put("joinCondition", joinCondition);
+			ret.add(rec);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 各種JOINテーブルのリストを取得します。
+	 * @param list POSTされたJOINテーブル情報。
+	 * @param defaultAlias 	デフォルト別名。
+	 * @return 各種JOINテーブルのリスト。
+	 * @throws Exception 例外。
+	 */
+	private TableList getJoinTableList(final List<Map<String, Object>> list, final String defaultAlias) throws Exception {
+		TableList ret = new TableList();
+		for (int i= 0; i < list.size(); i++) {
+			Map<String, Object> m = list.get(i);
 			String packageName = (String) m.get("packageName");
 			String className = (String) m.get("tableClassName");
 			String alias = (String) m.get("aliasName");
@@ -325,18 +353,46 @@ public class QueryGeneratorEditForm extends EditForm {
 				alias = defaultAlias + i;
 			}
 			String tcn = packageName + "." + className;
+			@SuppressWarnings("unchecked")
 			Class<? extends Table> tc = (Class<? extends Table>) Class.forName(tcn);
 			Table jt = tc.newInstance();
-			String joinCondition = mainTable.getJoinCondition(jt, alias);
-			log.debug("joinConditon=" + joinCondition);
-			Map<String, Object> rec = new HashMap<String, Object>();
-			if (StringUtil.isBlank(joinCondition)) {
-				joinCondition = MessagesUtil.getMessage(this.getPage(), "message.joinconditionnotfound");
-			}
-			rec.put("joinCondition", joinCondition);
-			ret.add(rec);
+			jt.setAlias(alias);
+			ret.add(jt);
 		}
 		return ret;
+	}
+	
+	/**
+	 * 関連する全てのテーブルリストを取得します。
+	 * <pre>
+	 * リストの先頭はmainTableとなります。
+	 * </pre>
+	 * @param data POSTされたデータ。
+	 * @return 関連する全デーブルリスト。
+	 * @throws Exception 例外。
+	 */
+	@SuppressWarnings("unchecked")
+	private TableList getTableList(final Map<String, Object> data) throws Exception {
+		TableList list = new TableList();
+		String packageName = (String) data.get("mainTablePackageName");
+		String mainTableClassName = (String) data.get("mainTableClassName");
+		String aliasName = (String) data.get("aliasName");
+		if (StringUtil.isBlank(aliasName)) {
+			aliasName = "m";
+		}
+		Class<? extends Table> clazz = (Class<? extends Table>) Class.forName(packageName + "." + mainTableClassName);
+		Table mainTable = clazz.newInstance();
+		mainTable.setAlias(aliasName);
+		list.add(mainTable);
+
+		List<Map<String, Object>> join = (List<Map<String, Object>>) data.get("joinTableList");
+		list.addAll(this.getJoinTableList(join, "i"));
+		List<Map<String, Object>> leftJoin = (List<Map<String, Object>>) data.get("leftJoinTableList");
+		list.addAll(this.getJoinTableList(leftJoin, "l"));
+		List<Map<String, Object>> rightJoin = (List<Map<String, Object>>) data.get("rightJoinTableList");
+		list.addAll(this.getJoinTableList(rightJoin, "r"));
+
+		return list;
 	}
 	
 	/**
@@ -348,21 +404,13 @@ public class QueryGeneratorEditForm extends EditForm {
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> queryJoinCondition(final Map<String, Object> data) throws Exception {
 		Map<String, Object> ret = new HashMap<String, Object>();
-		String packageName = (String) data.get("mainTablePackageName");
-		String mainTableClassName = (String) data.get("mainTableClassName");
-		String aliasName = (String) data.get("aliasName");
-		if (StringUtil.isBlank(aliasName)) {
-			aliasName = "m";
-		}
-		Class<? extends Table> clazz = (Class<? extends Table>) Class.forName(packageName + "." + mainTableClassName);
-		Table mainTable = clazz.newInstance();
-		mainTable.setAlias(aliasName);
+		TableList list = this.getTableList(data);
 		List<Map<String, Object>> join = (List<Map<String, Object>>) data.get("joinTableList");
-		ret.put("joinTableList", this.queryJoinCondition(mainTable, join, "i"));
+		ret.put("joinTableList", this.queryJoinCondition(list, this.getJoinTableList(join, "i")));
 		List<Map<String, Object>> leftJoin = (List<Map<String, Object>>) data.get("leftJoinTableList");
-		ret.put("leftJoinTableList", this.queryJoinCondition(mainTable, leftJoin, "l"));
+		ret.put("leftJoinTableList", this.queryJoinCondition(list, this.getJoinTableList(leftJoin, "l")));
 		List<Map<String, Object>> rightJoin = (List<Map<String, Object>>) data.get("rightJoinTableList");
-		ret.put("rightJoinTableList", this.queryJoinCondition(mainTable, rightJoin, "r"));
+		ret.put("rightJoinTableList", this.queryJoinCondition(list, this.getJoinTableList(rightJoin, "r")));
 		return ret;
 	}
 	
@@ -385,6 +433,8 @@ public class QueryGeneratorEditForm extends EditForm {
 			Map<String, Object> data = this.convertToServerData(param);
 			Map<String, Object> cond = this.queryJoinCondition(data);
 			ret = new JsonResponse(JsonResponse.SUCCESS, cond);
+		} else {
+			ret = new JsonResponse(JsonResponse.SUCCESS, new HashMap<String, Object>());
 		}
 		this.methodFinishLog(log, ret);
 		return ret;
