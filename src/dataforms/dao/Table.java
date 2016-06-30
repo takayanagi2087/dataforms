@@ -463,10 +463,10 @@ public class Table  {
 	 * 別インスタンスで作成し別のaliasを設定し、そのaliasで判定します。
 	 * </pre>
 	 * @param joinTable 結合対象テーブル。
-	 * @param alias 結合対象テーブルの別名。
+	 * @param joinTableAlias 結合対象テーブルの別名。
 	 * @return 結合条件。
 	 */
-	public String getJoinCondition(final Table joinTable, final String alias) {
+	public String getJoinCondition(final Table joinTable, final String joinTableAlias) {
 		return null;
 	}
 
