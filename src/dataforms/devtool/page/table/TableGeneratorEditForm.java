@@ -1,6 +1,7 @@
 package dataforms.devtool.page.table;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -13,9 +14,13 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import dataforms.annotation.WebMethod;
+import dataforms.controller.BinaryResponse;
 import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
+import dataforms.controller.Response;
+import dataforms.dao.Dao;
 import dataforms.dao.Table;
+import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
 import dataforms.devtool.field.common.OverwriteModeField;
@@ -568,4 +573,92 @@ public class TableGeneratorEditForm extends EditForm {
 	protected String getSavedMessage(final Map<String, Object> data) {
 		return MessagesUtil.getMessage(this.getPage(), "message.javasourcecreated");
 	}
+	
+	/**
+	 * テンプレートファイルを作成します。
+	 * @return 作成されたテンプレートファイル。
+	 * @throws Exception 例外。
+	 */
+	private File makeTemplate() throws Exception {
+		//this.getServlet().getTempDir()
+		File tmp = File.createTempFile("tableSpec", ".xlsx", new File(DataFormsServlet.getTempDir()));
+		byte[] excel = this.getBinaryWebResource("/dataforms/devtool/exceltemplate/tableSpec.xlsx");
+		FileOutputStream os = new FileOutputStream(tmp);
+		try {
+			FileUtil.writeOutputStream(excel, os);
+		} finally {
+			os.close();
+		}
+		return tmp;
+	}
+	
+	/**
+	 * 仕様書作成用の追加情報を設定する。
+	 * @param data データ。
+	 * @return テーブル仕様データ。
+	 * @throws Exception 例外。
+	 * 
+	 */
+	private Map<String, Object> getTableSpec(final Map<String, Object> data) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		try {
+			Dao dao = new Dao(this);
+			SqlGenerator gen = dao.getSqlGenerator();
+			String packageName = (String) data.get("packageName");
+			String tableClassName = (String) data.get("tableClassName");
+			@SuppressWarnings("unchecked")
+			Class<? extends Table> c = (Class<? extends Table>) Class.forName(packageName + "." + tableClassName);
+			Table t = c.newInstance();
+			log.debug("tableName=" + t.getTableName());
+			ret.put("tableName", t.getTableName());
+			ret.put("tableClassName", t.getClass().getName());
+			List<Map<String, Object>> fieldList = new ArrayList<Map<String, Object>>();
+			for (int i = 0; i < t.getFieldList().size(); i++) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				Field<?> f = t.getFieldList().get(i);
+				m.put("comment", f.getComment());
+				m.put("columnName", f.getDbColumnName());
+				if (t.getPkFieldList().get(f.getId()) != null) {
+					m.put("pkFlag", "*");
+				}
+				m.put("dataType", gen.getDatabaseType(f));
+				m.put("fieldId", f.getId());
+				m.put("fieldClassName", f.getClass().getName());
+				fieldList.add(m);
+			}
+			ret.put("fieldList", fieldList);
+		} catch (ClassNotFoundException e) {
+//			throw new ApplicationException(this.getPage(), "error.classnotfound");
+			return null;
+		}
+		return ret;
+	}
+	
+	/**
+	 * テーブル定義書を作成します。
+	 * @param param パラメータ。
+	 * @return テーブル定義書Excelイメージ。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public Response print(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		Response ret = null;
+		Map<String, Object> spec = this.getTableSpec(param);
+		if (spec != null) {
+			File template = this.makeTemplate();
+			try {
+				log.debug("template path=" + template.getAbsolutePath());
+				TableReport rep = new TableReport(template.getAbsolutePath());
+				ret = new BinaryResponse(rep.print(spec), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ((String) param.get("tableClassName")) +".xlsx");
+			} finally {
+				template.delete();
+			}
+		} else {
+			ret = new JsonResponse(JsonResponse.INVALID, MessagesUtil.getMessage(this.getPage(), "error.classnotfound"));
+		}
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
+
 }

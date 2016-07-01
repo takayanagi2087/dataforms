@@ -46,7 +46,9 @@ TableGeneratorEditForm.prototype.attach = function() {
 			tbl.getSameRowField($(this), "overwriteMode").val("force");
 		});
 	});
-
+	this.find("#printButton").click(function() {
+		thisForm.print();
+	});
 
 };
 
@@ -227,4 +229,13 @@ TableGeneratorEditForm.prototype.onCalcSuperClass = function(element) {
 	}
 };
 
-
+/**
+ * テーブル定義書を作成します。
+ */
+TableGeneratorEditForm.prototype.print = function() {
+	var thisForm = this;
+	thisForm.parent.resetErrorStatus();
+	thisForm.submitForDownload("print", function(r) {
+		alert(r.result);
+	});
+};
