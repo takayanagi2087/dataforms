@@ -39,10 +39,14 @@ SelectField.prototype.get = function() {
  */
 SelectField.prototype.setTextValue = function(comp, value) {
 	if (this.optionList != null) {
+		if (value == null) {
+			comp.text("");
+			return;
+		}
 		for (var i = 0; i < this.optionList.length; i++) {
 			var opt = this.optionList[i];
 			var ov = (opt.value == null ? "" : opt.value.toString());
-			var v = (value == null ? "" : value.toString());
+			var v = value.toString();
 			if (ov == v) {
 				comp.text(opt.name);
 				break;
