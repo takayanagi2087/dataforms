@@ -329,7 +329,7 @@ public abstract class Report {
 	 * @return レポートファイルのデータイメージ。
 	 * @throws Exception 例外。
 	 */
-	protected abstract byte[] getReport() throws Exception;
+	public abstract byte[] getReport() throws Exception;
 
 
 	/**
@@ -371,6 +371,7 @@ public abstract class Report {
 	 * @throws Exception 例外。
 	 */
 	public byte[] print(final Map<String, Object> data) throws Exception {
+		this.pageStartPositionList = new ArrayList<Integer>();
 		this.getWebResource(data);
 		log.debug("data=" + JSON.encode(data, true));
 		int pages = this.countPage(data);

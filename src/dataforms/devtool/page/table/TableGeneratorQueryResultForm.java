@@ -1,5 +1,6 @@
 package dataforms.devtool.page.table;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import dataforms.annotation.WebMethod;
+import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
+import dataforms.controller.Response;
+import dataforms.dao.Dao;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.field.common.ClassNameField;
 import dataforms.devtool.field.common.PackageNameField;
@@ -73,5 +78,36 @@ public class TableGeneratorQueryResultForm extends QueryResultForm {
     	this.methodFinishLog(log, result);
 		return result;
 	}
-
+	
+	/**
+	 * テーブル定義書を作成します。
+	 * @param param パラメータ。
+	 * @return テーブル定義書Excelイメージ。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public Response print(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		Map<String, Object> data = this.convertToServerData(param);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(Page.ID_QUERY_RESULT); 
+		Response ret = null;
+		File template = TableReport.makeTemplate(this);
+		try {
+			log.debug("template path=" + template.getAbsolutePath());
+			TableReport rep = new TableReport(template.getAbsolutePath(), list.size() - 1);
+			for (int i = 0; i < list.size(); i++) {
+				Map<String, Object> m = list.get(i);
+				Map<String, Object> spec = rep.getTableSpec(m, new Dao(this));
+				rep.setSheetName(i, ((String) m.get("tableClassName")));
+				rep.setSheetIndex(i);
+				rep.print(spec);
+			}
+			ret = new BinaryResponse(rep.getReport(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "tableSpec.xlsx");
+		} finally {
+			template.delete();
+		}
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
 }

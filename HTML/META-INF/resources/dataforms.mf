@@ -4,6 +4,6 @@ Created-By: Masahiko Takayanagi
 Built-By: Masahiko Takayanagi
 Implementation-Vendor: Masahiko Takayanagi
 Implementation-Title: Dataforms java web application framework
-Implementation-Version: 1.01-b162
-CreatedTime: 2016/06/30 17:19:06.940
+Implementation-Version: 1.01-b164
+CreatedTime: 2016/07/01 17:54:11.817
 

@@ -59,6 +59,11 @@ public class ExcelReport extends Report {
 	private Drawing drawing = null;
 
 	/**
+	 * 出力するシートのインデックス。
+	 */
+	private int sheetIndex = 0;
+	
+	/**
 	 * ワークブックを取得します。
 	 * @return ワークブック。
 	 */
@@ -88,6 +93,23 @@ public class ExcelReport extends Report {
 	 */
 	protected void setSheet(final Sheet sheet) {
 		this.sheet = sheet;
+	}
+	
+	/**
+	 * 出力するシートインデックスを取得します。
+	 * @return シートインデックス。
+	 */
+	public int getSheetIndex() {
+		return sheetIndex;
+	}
+
+	/**
+	 * 出力するシートインデックスを取得します。
+	 * @param sheetIndex シートインデックス。
+	 */
+	public void setSheetIndex(final int sheetIndex) {
+		this.sheetIndex = sheetIndex;
+		this.sheet = this.workbook.getSheetAt(sheetIndex);
 	}
 
 	/**
@@ -155,6 +177,7 @@ public class ExcelReport extends Report {
 	 */
 	public void setTemplatePath(final String templatePath) {
 		this.templatePath = templatePath;
+		this.sheet = null;
 	}
 
 	/**
@@ -163,11 +186,13 @@ public class ExcelReport extends Report {
 	 * @throws Exception 例外。
 	 */
 	protected Workbook getTamplate() throws Exception {
-		FileInputStream is = new FileInputStream(this.templatePath);
-		try {
-			this.workbook = new XSSFWorkbook(is);
-		} finally {
-			is.close();
+		if (this.workbook == null) {
+			FileInputStream is = new FileInputStream(this.templatePath);
+			try {
+				this.workbook = new XSSFWorkbook(is);
+			} finally {
+				is.close();
+			}
 		}
 		return this.workbook;
 	}
@@ -454,7 +479,7 @@ public class ExcelReport extends Report {
 	 */
 	private Map<String, CellPosition> getCellPositionMap(final Workbook wb) throws Exception {
 		Map<String, CellPosition> ret = new HashMap<String, CellPosition>();
-		Sheet sheet = wb.getSheetAt(0);
+		Sheet sheet = wb.getSheetAt(this.sheetIndex);
 		for (Row row: sheet) {
 			for (Cell cell: row) {
 				if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
@@ -703,7 +728,7 @@ public class ExcelReport extends Report {
 	@Override
 	protected void initPage(final int pages) throws Exception {
 		this.workbook = this.getTamplate();
-		this.sheet = this.workbook.getSheetAt(0);
+		this.sheet = this.workbook.getSheetAt(this.sheetIndex);
 		this.cellPositionMap = this.getCellPositionMap(this.workbook);
 		this.addPage(sheet, pages);
 		this.rowsPerExcelPage = this.getPageLastRow(this.cellPositionMap) + 1;
@@ -717,7 +742,7 @@ public class ExcelReport extends Report {
 	 * </pre>
 	 */
 	@Override
-	protected byte[] getReport() throws Exception {
+	public byte[] getReport() throws Exception {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
 			this.workbook.write(os);
@@ -725,5 +750,27 @@ public class ExcelReport extends Report {
 			os.close();
 		}
 		return os.toByteArray();
+	}
+	
+	/**
+	 * シートのコピーを作成します。
+	 * @param sheets コピーを作成するシートの数。
+	 * @throws Exception 例外。
+	 */
+	protected void addSheets(final int sheets) throws Exception {
+		this.workbook = this.getTamplate();
+		for (int i = 0; i < sheets; i++) {
+			log.debug("wb = " + i);
+			this.workbook.cloneSheet(0);
+		}
+	}
+	
+	/**
+	 * シート名を設定します。
+	 * @param sheetIndex シートインデックス。
+	 * @param name シート名。
+	 */
+	public void setSheetName(final int sheetIndex, final String name) {
+		this.workbook.setSheetName(sheetIndex, name);
 	}
 }

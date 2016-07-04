@@ -15,6 +15,10 @@ TableGeneratorQueryResultForm = createSubclass("TableGeneratorQueryResultForm", 
  */
 TableGeneratorQueryResultForm.prototype.attach = function() {
 	QueryResultForm.prototype.attach.call(this);
+	var thisForm = this;
+	this.find("#printButton").click(function() {
+		thisForm.print();
+	});
 }
 
 /**
@@ -36,4 +40,15 @@ TableGeneratorQueryResultForm.prototype.setFormData = function(result) {
 			}
 		}
 	}
+};
+
+/**
+ * テーブル定義書を印刷します。
+ */
+TableGeneratorQueryResultForm.prototype.print = function() {
+	var thisForm = this;
+	thisForm.parent.resetErrorStatus();
+	thisForm.submitForDownload("print", function(r) {
+		alert(r.result);
+	});
 };
