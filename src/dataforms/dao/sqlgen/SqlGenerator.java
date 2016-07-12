@@ -1594,7 +1594,13 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 					if (idx > 0) {
 						sb.append(",");
 					}
-					sb.append(m.get(lastPk.getId()).toString());
+					if (v instanceof Number) {
+						sb.append(m.get(lastPk.getId()).toString());
+					} else {
+						sb.append("'");
+						sb.append(m.get(lastPk.getId()).toString());
+						sb.append("'");
+					}
 					delflg = true;
 					idx++;
 				}
