@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><select id="functionSelect"></select></td>
+						</tr>
+						<tr>
+							<th>パッケージ名</th>
+							<td><input type="text" id="packageName" /></td>
+						</tr>
+						<tr>
+							<th>問合せクラス名</th>
+							<td><input type="text" id="queryClassName" /></td>
+						</tr>
+						<tr>
+							<th>SQL</th>
+							<td><textarea id="sql" rows="20" cols="80" style="width:100%; height:200px;"></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<table class="responsive">
+					<tbody>
+					</tbody>
+				</table>
+				<table id="queryResult">
+					<thead>
+						<tr>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+
+		</div>
+	</body>
+</html>

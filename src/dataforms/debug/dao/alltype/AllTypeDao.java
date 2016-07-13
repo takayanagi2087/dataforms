@@ -173,12 +173,12 @@ public class AllTypeDao extends Dao {
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("attachFileTable");
 		if (list != null) {
 			AllTypeAttachFileTable aftable = new AllTypeAttachFileTable();
-			//this.saveTable(aftable, list, data);
-			for (int i = 0; i < list.size(); i++) {
+			this.saveTable(aftable, list, data);
+/*			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> m = list.get(i);
 				m.put("fileKey", Integer.valueOf(i));
 			}
-			this.executeInsert(aftable, list);
+			this.executeInsert(aftable, list);*/
 		}
 	}
 

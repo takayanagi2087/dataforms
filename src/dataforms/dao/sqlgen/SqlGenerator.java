@@ -1490,6 +1490,16 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return sql;
 	}
 
+	/**
+	 * レコード数をカウントするsqlを作成します。
+	 * @param orgsql SQL。
+	 * @return レコード数をカウントするsql。
+	 */
+	public String generateHitCountSql(final String orgsql) {
+		String sql = "select count(*) as cnt from (" + orgsql + ") as m";
+		return sql;
+	}
+
 
 	/**
 	 * レコード数をカウントするsqlを作成します。
@@ -1559,27 +1569,13 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 
 
 	/**
-	 * リスト中に存在しないレコードを削除するSQLを作成します。
-	 * @param table テーブル。
-	 * @param updatedList 更新されたリスト。
-	 * @return SQL。
+	 * 更新リスト中に存在しないレコード取得するためのwhere句を作成します。
+	 * @param pklist PKフィールドリスト。
+	 * @param updatedList 更新リスト。 
+	 * @return where句。
 	 */
-	public String generateSelectNotInListSql(final Table table, final List<Map<String, Object>> updatedList) {
+	private String generateNotInListConditon(final FieldList pklist, final List<Map<String, Object>> updatedList) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("select * from ");
-		sb.append(table.getTableName());
-		sb.append(" where ");
-		FieldList pklist = table.getPkFieldList();
-		for (int i = 0; i < pklist.size() - 1; i++) {
-			if (i > 0) {
-				sb.append(" and ");
-			}
-			Field<?> f = pklist.get(i);
-			String cn = f.getDbColumnName();
-			sb.append(cn);
-			sb.append("=:");
-			sb.append(cn);
-		}
 		boolean delflg = false;
 		if (updatedList != null && updatedList.size() > 0) {
 			Field<?> lastPk = pklist.get(pklist.size() - 1);
@@ -1610,9 +1606,39 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		if (delflg) {
 			return sb.toString();
 		} else {
-			// 削除SQLが不要な場合nullを返す.
+			// 全て新規の場合sqlはnull
 			return null;
 		}
+
+	}
+	
+	/**
+	 * リスト中に存在しないレコードを選択するSQLを作成します。
+	 * @param table テーブル。
+	 * @param updatedList 更新されたリスト。
+	 * @return SQL。
+	 */
+	public String generateSelectNotInListSql(final Table table, final List<Map<String, Object>> updatedList) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("select * from ");
+		sb.append(table.getTableName());
+		sb.append(" where ");
+		FieldList pklist = table.getPkFieldList();
+		for (int i = 0; i < pklist.size() - 1; i++) {
+			if (i > 0) {
+				sb.append(" and ");
+			}
+			Field<?> f = pklist.get(i);
+			String cn = f.getDbColumnName();
+			sb.append(cn);
+			sb.append("=:");
+			sb.append(cn);
+		}
+		String notInCond = this.generateNotInListConditon(pklist, updatedList);
+		if (notInCond != null) {
+			sb.append(notInCond);
+		}
+		return sb.toString();
 	}
 
 }

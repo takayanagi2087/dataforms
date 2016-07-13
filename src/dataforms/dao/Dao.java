@@ -30,7 +30,19 @@ import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.dao.sqlgen.SqlParser;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.BlobStoreFileField;
 import dataforms.field.common.FileObjectField;
+import dataforms.field.sqltype.BigintField;
+import dataforms.field.sqltype.CharField;
+import dataforms.field.sqltype.ClobField;
+import dataforms.field.sqltype.DateField;
+import dataforms.field.sqltype.DoubleField;
+import dataforms.field.sqltype.IntegerField;
+import dataforms.field.sqltype.NumericField;
+import dataforms.field.sqltype.SmallintField;
+import dataforms.field.sqltype.TimeField;
+import dataforms.field.sqltype.TimestampField;
+import dataforms.field.sqltype.VarcharField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
@@ -154,7 +166,155 @@ public class Dao implements JDBCConnectableObject {
 		public abstract boolean process(final Map<String, Object> rec);
 	};
 
+	/**
+	 * カラム情報。
+	 *
+	 */
+	private static class ColumnInfo {
+		/**
+		 * フィールドID。
+		 */
+		private String id;
+		/**
+		 * データ型。
+		 */
+		private int type;
+		
+		/**
+		 * フィールド長。
+		 */
+		private int precision = 0;
 
+		/**
+		 * 小数点以下の桁数。
+		 */
+		private int scale = 0;
+		
+		/**
+		 * コンストラクタ。
+		 * @param id フィールドID。
+		 * @param type データタイプ。
+		 * @param precision データタイプ。
+		 * @param scale データタイプ。
+		 * 
+		 */
+		public ColumnInfo(final String id, final int type, final int precision, final int scale) {
+			this.id = StringUtil.snakeToCamel(id);
+			this.type = type;
+			this.precision = precision;
+			this.scale = scale;
+		}
+		
+		/**
+		 * フィールドIDを取得します。
+		 * @return フィールドID。
+		 */
+		public String getId() {
+			return id;
+		}
+		
+		/**
+		 * データタイプを取得します。
+		 * @return データタイプ。
+		 */
+		public int getType() {
+			return type;
+		}
+		
+		
+		/**
+		 * フィールド長を取得します。
+		 * @return フィールド長。
+		 */
+		public int getPrecision() {
+			return precision;
+		}
+
+		/**
+		 * 小数点以下の桁数を取得します。
+		 * @return 小数点以下の桁数。
+		 */
+		public int getScale() {
+			return scale;
+		}
+
+		/**
+		 * データ型に応じたフィールドクラスのインスタンスを取得します。
+		 * @return デフォルトフィールド。
+		 */
+		public Field<?> getDefaultFieldInstance() {
+			Field<?> ret = null;
+			if (this.getType() == Types.BIGINT) {
+				ret = new BigintField(this.getId());
+			} else if (this.getType() == Types.BLOB 
+					 || this.getType() == Types.BINARY
+					 || this.getType() == Types.LONGVARBINARY
+					 || this.getType() == Types.VARBINARY) {
+				ret = new BlobStoreFileField(this.getId());
+			} else if (this.getType() == Types.CHAR) {
+				ret = new CharField(this.getId(), this.getPrecision());
+			} else if (this.getType() == Types.CLOB) {
+				ret = new ClobField(this.getId());
+			} else if (this.getType() == Types.DATE) {
+				ret = new DateField(this.getId());
+			} else if (this.getType() == Types.DOUBLE) {
+				ret = new DoubleField(this.getId());
+			} else if (this.getType() == Types.INTEGER) {
+				ret = new IntegerField(this.getId());
+			} else if (this.getType() == Types.NUMERIC) {
+				ret = new NumericField(this.getId(), this.getPrecision(), this.getScale());
+			} else if (this.getType() == Types.SMALLINT) {
+				ret = new SmallintField(this.getId());
+			} else if (this.getType() == Types.TIME) {
+				ret = new TimeField(this.getId());
+			} else if (this.getType() == Types.TIMESTAMP) {
+				ret = new TimestampField(this.getId());
+			} else if (this.getType() == Types.VARCHAR) {
+				ret = new VarcharField(this.getId(), this.getPrecision());
+			}
+			return ret;
+		}
+	}
+
+	/**
+	 * 問合せ結果のカラムリスト。
+	 */
+	private List<ColumnInfo> resultSetColumnList = null;
+	
+	/**
+	 * 問合せ結果のメタデータを取得します。
+	 * @param meta メタデータ。
+	 * @throws Exception 例外。
+	 */
+	private void setResultSetMetaData(final ResultSetMetaData meta) throws Exception {
+		this.resultSetColumnList = new ArrayList<ColumnInfo>();
+		for (int i = 1; i <= meta.getColumnCount(); i++) {
+			String name = meta.getColumnName(i);
+			int type = meta.getColumnType(i);
+			ColumnInfo ci = new ColumnInfo(name, type, meta.getPrecision(i), meta.getScale(i));
+			this.resultSetColumnList.add(ci);
+		}
+	}
+
+	/**
+	 * 直前に実行した問い合わせのフィールドリストを取得します。
+	 * <pre>
+	 * ResultSetMetaDataの各カラムの情報から想定されるフィールドを作成し、そのリストを返します。
+	 * </pre>
+	 * 
+	 * @return フィールドリスト。
+	 */
+	public FieldList getResultSetFieldList() {
+		FieldList ret = new FieldList();
+		for (ColumnInfo ci: this.resultSetColumnList) {
+			Field<?> f = ci.getDefaultFieldInstance();
+			if (f != null) {
+				ret.add(ci.getDefaultFieldInstance());
+			}
+		}
+		return ret;
+	}
+	
 	/**
 	 * Queryを実行し、その結果の各レコードをRecordProcessorに渡します。
 	 * @param sql SQL。
@@ -170,6 +330,7 @@ public class Dao implements JDBCConnectableObject {
 			p.setParameter(st, data);
 			ResultSet rset = st.executeQuery();
 			ResultSetMetaData meta = rset.getMetaData();
+			this.setResultSetMetaData(meta);
 			try {
 				while (rset.next()) {
 					Map<String, Object> m = new HashMap<String, Object>();
@@ -959,7 +1120,7 @@ public class Dao implements JDBCConnectableObject {
 	 * @return 検索結果。
 	 * @throws Exception 例外。
 	 */
-	protected Map<String, Object> executePageQuery(final Query query) throws Exception {
+	public Map<String, Object> executePageQuery(final Query query) throws Exception {
 		return this.executePageQuery(query, 10);
 	}
 
@@ -970,8 +1131,7 @@ public class Dao implements JDBCConnectableObject {
 	 * @return 検索結果。
 	 * @throws Exception 例外。
 	 */
-	@Deprecated
-	protected Map<String, Object> executePageQuery(final Query query, final int defaultLines) throws Exception {
+	public Map<String, Object> executePageQuery(final Query query, final int defaultLines) throws Exception {
 		Map<String, Object> param = query.getQueryFormData();
 		Map<String, Object> ret = new HashMap<String, Object>();
 		int linesPerPage = defaultLines;
@@ -1010,6 +1170,64 @@ public class Dao implements JDBCConnectableObject {
 		// Long hitCount = NumberUtil.longValue(this.executeScalarQuery(csql, qflist.convertServerToDb(query.getQueryFormData())));
 		Map<String, Object> data = this.convertToDBValue(query.getQueryFormFieldList(), query.getQueryFormData());
 		Long hitCount = NumberUtil.longValue(this.executeScalarQuery(csql, data));
+		return hitCount;
+	}
+
+	/**
+	 * 問合せ結果の指定ページを取得します。
+	 * @param sql SQL。
+	 * @param param パラメータ。
+	 * @return 問合せ結果。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> executePageQuery(final String sql, final Map<String, Object> param) throws Exception {
+		return this.executePageQuery(sql, param, 10);
+	}
+	
+	/**
+	 * 問合せ結果の指定ページを取得します。
+	 * 
+	 * @param sql SQL。
+	 * @param param パラメータ。
+	 * @param defaultLines 1ページの行数のデフォルト値。
+	 * 
+	 * @return 問合せ結果。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> executePageQuery(final String sql, final Map<String, Object> param, final int defaultLines) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		int linesPerPage = defaultLines;
+		if (param.get("linesPerPage") != null) {
+			linesPerPage = ((Integer) param.get("linesPerPage")).intValue();
+		}
+		int pageNo = 0;
+		if (param.get("pageNo") != null) {
+			pageNo = ((Integer) param.get("pageNo")).intValue();
+		}
+		QueryPager qp = new QueryPager(sql, linesPerPage);
+		param.putAll(qp.getPageParameter(pageNo));
+		Long hitCount = this.countQueryResoult(sql, param);
+		ret.put("hitCount", hitCount);
+		ret.put("linesPerPage", linesPerPage);
+		ret.put("pageNo", pageNo);
+		//
+		String psql = this.getSqlGenerator().generateGetPageSql(qp);
+		List<Map<String, Object>> list = this.executeQuery(psql, param);
+		ret.put("queryResult", list);
+		return ret;
+	}
+	
+
+	/**
+	 * 問い合わせ結果の件数を求める。
+	 * @param sql SQL。
+	 * @param param パラメータ。
+	 * @return 結果件数。
+	 * @throws Exception 例外。
+	 */
+	private Long countQueryResoult(final String sql, final Map<String, Object> param) throws Exception {
+		String csql = this.getSqlGenerator().generateHitCountSql(sql);
+		Long hitCount = NumberUtil.longValue(this.executeScalarQuery(csql, param));
 		return hitCount;
 	}
 
@@ -1191,8 +1409,9 @@ public class Dao implements JDBCConnectableObject {
 	 * 明細テーブルの保存を行います。
 	 * <pre>
 	 * ヘッダテーブルに対応した明細テーブルの保存は、通常対応レコードの
-	 * 全削除、挿入で実装します。しかしBLOB項目等を含む場合の更新は毎回
-	 * ファイルをやり取りするわけではないので、複雑な更新処理が必要になります。
+	 * 全削除、挿入で実装するのが簡単です。
+	 * しかしBLOB項目等を含む場合の更新は毎回ファイルをやり取りするわけでは
+	 * ないので、複雑な更新処理が必要になります。
 	 * このメソッドは以下のロジックでBLOBを含む明細テーブルの更新に対応します。
 	 *
 	 * 1.listに含まなれない既存明細レコードを削除します。

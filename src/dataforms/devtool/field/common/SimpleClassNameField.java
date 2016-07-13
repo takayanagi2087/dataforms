@@ -150,6 +150,7 @@ public class SimpleClassNameField extends VarcharField {
 			if (this.isExcetionClass(c.getName())) {
 				continue;
 			}
+			
 			String name = c.getSimpleName();
 			if (name.toLowerCase().indexOf(simpleClassName.toLowerCase()) >= 0) {
 				if (!Modifier.isAbstract(c.getModifiers())) {
