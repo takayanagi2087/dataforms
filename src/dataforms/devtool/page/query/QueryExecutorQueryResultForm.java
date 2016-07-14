@@ -47,7 +47,9 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 		FieldList flist = dao.getResultSetFieldList();
 		this.htmlTable.getFieldList().clear();
 		this.htmlTable.getFieldList().addAll(flist);
-		
+/*		for (Field<?> f: this.htmlTable.getFieldList()) {
+			f.setSortable(true);
+		}*/
 		ret.put("htmlTable", htmlTable.getClassInfo());
 		log.debug("result=" + JSON.encode(ret, true));
 		return ret;

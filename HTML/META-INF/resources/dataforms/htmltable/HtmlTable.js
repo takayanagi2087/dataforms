@@ -152,13 +152,10 @@ HtmlTable.prototype.init = function() {
 	this.initField(this.fieldList);
 };
 
-
 /**
- * HTMLエレメントとの対応付けを行います。
+ * カラムソートイベントを設定します。
  */
-HtmlTable.prototype.attach = function() {
-	WebComponent.prototype.attach.call(this);
-	this.setSortMark();
+HtmlTable.prototype.setColumnSortEvent = function() {
 	var thisTable = this;
 	for (var i = 0; i < this.fields.length; i++) {
 		var field = this.fields[i];
@@ -172,6 +169,15 @@ HtmlTable.prototype.attach = function() {
 			}
 		}
 	}
+};
+
+/**
+ * HTMLエレメントとの対応付けを行います。
+ */
+HtmlTable.prototype.attach = function() {
+	WebComponent.prototype.attach.call(this);
+	this.setSortMark();
+	this.setColumnSortEvent();
 	var tbl = this.get();
 	this.trLine = tbl.find("tbody>tr:first").html();
 	this.clear();

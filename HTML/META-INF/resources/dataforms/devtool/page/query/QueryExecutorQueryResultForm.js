@@ -14,6 +14,7 @@ QueryExecutorQueryResultForm = createSubclass("QueryExecutorQueryResultForm", {}
  * HTMLエレメントとの対応付けを行います。
  */
 QueryExecutorQueryResultForm.prototype.attach = function() {
+	this.headerHtml = null;
 	QueryResultForm.prototype.attach.call(this);
 };
 
@@ -25,6 +26,11 @@ QueryExecutorQueryResultForm.prototype.setQueryResult = function(queryResult) {
 	table.fields = [];
 	table.initField(queryResult.htmlTable.fieldList);
 	table.trLine = queryResult.dataHtml;
-	this.find("#queryResult thead tr").html(queryResult.headerHtml);
+	if (this.headerHtml != queryResult.headerHtml) {
+		logger.log("updateHeader");
+		this.find("#queryResult thead tr").html(queryResult.headerHtml);
+		table.setColumnSortEvent();
+		this.headerHtml = queryResult.headerHtml;
+	}
 	QueryResultForm.prototype.setQueryResult.call(this, queryResult);
 };
