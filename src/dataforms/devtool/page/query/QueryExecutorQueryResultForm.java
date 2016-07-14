@@ -12,6 +12,7 @@ import dataforms.dao.Dao;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.PageScrollHtmlTable;
+import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
 
 
@@ -38,18 +39,50 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 		this.addHtmlTable(this.htmlTable);
 	}
 
+	/**
+	 * Order byに指定するカラムリストを取得します。
+	 * @param sortOrder ソート順指定。
+	 * @return order by指定のカラムリスト。
+	 */
+	private String getOrderByString(final String sortOrder) {
+		StringBuilder sb = new StringBuilder();
+		if (!StringUtil.isBlank(sortOrder)) {
+			String[] sp = sortOrder.split("\\,");
+			for (String f: sp) {
+				log.debug("f=" + f);
+				String[] fsp = f.split("\\:");
+				log.debug("fsp[0]=" + fsp[0]);
+				String id = fsp[0];
+				String order = fsp[1];
+				if (sb.length() > 0) {
+					sb.append(",");
+				}
+				sb.append(StringUtil.camelToSnake(id));
+				sb.append(" ");
+				sb.append(order);
+			}
+		}
+		return sb.toString();
+	}
 	
 	@Override
 	protected Map<String, Object> queryPage(final Map<String, Object> data, final FieldList queryFormFieldList) throws Exception {
 		String sql = (String) data.get("sql");
+		String sortOrder = (String) data.get("sortOrder");
+		String orderby = this.getOrderByString(sortOrder);
+		log.debug("orderby=" + orderby);
+		if (sortOrder.length() > 0) {
+			sql = "select * from (" + sql + ") m order by " + orderby;
+		}
 		Dao dao = new Dao(this);
 		Map<String, Object> ret = dao.executePageQuery(sql, data);
 		FieldList flist = dao.getResultSetFieldList();
 		this.htmlTable.getFieldList().clear();
 		this.htmlTable.getFieldList().addAll(flist);
-/*		for (Field<?> f: this.htmlTable.getFieldList()) {
+		for (Field<?> f: this.htmlTable.getFieldList()) {
 			f.setSortable(true);
-		}*/
+		}
+		this.htmlTable.getFieldList().getOrderByFieldList(sortOrder);
 		ret.put("htmlTable", htmlTable.getClassInfo());
 		log.debug("result=" + JSON.encode(ret, true));
 		return ret;
