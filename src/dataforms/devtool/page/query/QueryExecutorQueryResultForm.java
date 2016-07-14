@@ -80,7 +80,9 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 		this.htmlTable.getFieldList().clear();
 		this.htmlTable.getFieldList().addAll(flist);
 		for (Field<?> f: this.htmlTable.getFieldList()) {
-			f.setSortable(true);
+			if (!"rowNo".equals(f.getId())) {
+				f.setSortable(true);
+			}
 		}
 		this.htmlTable.getFieldList().getOrderByFieldList(sortOrder);
 		ret.put("htmlTable", htmlTable.getClassInfo());
