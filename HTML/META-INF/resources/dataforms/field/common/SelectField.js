@@ -63,8 +63,12 @@ SelectField.prototype.setTextValue = function(comp, value) {
 
 /**
  * 選択肢を対応する要素に設定します。
+ * @param {Array} opt 選択肢のリスト。
  */
-SelectField.prototype.setOptionList = function() {
+SelectField.prototype.setOptionList = function(opt) {
+	if (opt != null) {
+		this.optionList = opt;
+	}
 	if (this.optionList == null) {
 		return;
 	}

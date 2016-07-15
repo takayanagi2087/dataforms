@@ -23,7 +23,7 @@ UserAttributeValueField.prototype.setUserAttributeType = function(type) {
 	var m = this.getSyncServerMethod("getTypeOption");
 	var opt = m.execute("type=" + type);
 	if (opt.status == ServerMethod.SUCCESS) {
-		this.optionList = opt.result;
-		this.setOptionList();
+//		this.optionList = opt.result;
+		this.setOptionList(opt.result);
 	}
 };
