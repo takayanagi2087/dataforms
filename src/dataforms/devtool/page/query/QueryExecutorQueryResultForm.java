@@ -1,5 +1,6 @@
 package dataforms.devtool.page.query;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -123,13 +124,20 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 	@WebMethod
 	@Override
 	public JsonResponse changePage(final Map<String, Object> param) throws Exception {
-		JsonResponse ret = super.changePage(param);
-		@SuppressWarnings("unchecked")
-		Map<String, Object> r = (Map<String, Object>) ret.getResult();
-		r.put("headerHtml", this.getHeaderHtml());
-		r.put("dataHtml", this.getDataHtml());
-		r.put("htmlTable", this.htmlTable.getClassInfo());
-		return ret;
+		try {
+			JsonResponse ret = super.changePage(param);
+			@SuppressWarnings("unchecked")
+			Map<String, Object> r = (Map<String, Object>) ret.getResult();
+			r.put("headerHtml", this.getHeaderHtml());
+			r.put("dataHtml", this.getDataHtml());
+			r.put("htmlTable", this.htmlTable.getClassInfo());
+			return ret;
+		} catch (Exception e) {
+			Map<String, Object> einfo = new HashMap<String, Object>();
+			einfo.put("message", e.getMessage());
+			JsonResponse ret = new JsonResponse(JsonResponse.APPLICATION_EXCEPTION, einfo);
+			return ret;
+		}
 	}
 	
 	@Override
