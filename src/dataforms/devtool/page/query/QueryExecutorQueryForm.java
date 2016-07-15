@@ -32,9 +32,9 @@ public class QueryExecutorQueryForm extends QueryForm {
 	 */
 	public QueryExecutorQueryForm() {
 		this.addField(new FunctionSelectField());
-		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
+		this.addField(new PackageNameField());
 		this.addField(new QueryClassNameField("queryClassName")).setAutocomplete(true).setCalcEventField(true);
-		this.addField(new ClobField("sql"));
+		this.addField(new ClobField("sql")).addValidator(new RequiredValidator());
 	}
 	
 	/**
