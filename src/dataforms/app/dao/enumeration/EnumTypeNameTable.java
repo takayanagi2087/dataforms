@@ -18,6 +18,7 @@ public class EnumTypeNameTable extends Table {
 	 * コンストラクタ.
 	 */
 	public EnumTypeNameTable() {
+		this.setComment("列挙型名称テーブル");
 		this.addPkField(new EnumTypeCodeField());
 		this.addPkField(new LangCodeField());
 		this.addField(new EnumTypeNameField());

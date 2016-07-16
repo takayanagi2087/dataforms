@@ -13,6 +13,7 @@ public class UserAttributeTable extends Table {
 	 * コンストラクタ。
 	 */
 	public UserAttributeTable() {
+		this.setComment("ユーザ属性テーブル");
 		this.addPkField(new UserIdField());
 		this.addPkField(new UserAttributeTypeField());
 		this.addPkField(new UserAttributeValueField());

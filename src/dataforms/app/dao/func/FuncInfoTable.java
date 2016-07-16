@@ -15,6 +15,7 @@ public class FuncInfoTable extends Table {
 	 * コンストラクタ.
 	 */
 	public FuncInfoTable() {
+		this.setComment("機能情報テーブル");
 		this.addPkField(new FuncIdField());
 		this.addField(new SortOrderField());
 		this.addField(new FuncPathField());

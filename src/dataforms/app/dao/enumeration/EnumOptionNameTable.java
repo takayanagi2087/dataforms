@@ -19,6 +19,7 @@ public class EnumOptionNameTable extends Table {
 	 * コンストラクタ。
 	 */
 	public EnumOptionNameTable() {
+		this.setComment("列挙型オプション名称テーブル");
 		this.addPkField(new EnumTypeCodeField());
 		this.addPkField(new EnumOptionCodeField());
 		this.addPkField(new LangCodeField());

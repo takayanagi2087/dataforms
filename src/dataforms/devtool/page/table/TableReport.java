@@ -38,6 +38,7 @@ public class TableReport extends ExcelReport {
 	public TableReport(final String templatePath, final int sheets) throws Exception {
 		this.setTemplatePath(templatePath);
 		this.addField(new VarcharField("tableName", 1024));
+		this.addField(new VarcharField("tableComment", 1024));
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
 		this.addField(new TableClassNameField()).setComment("テーブルクラス名").setAutocomplete(false).addValidator(new RequiredValidator());
 		this.addField(new OverwriteModeField());
@@ -93,6 +94,7 @@ public class TableReport extends ExcelReport {
 			Class<? extends Table> c = (Class<? extends Table>) Class.forName(packageName + "." + tableClassName);
 			Table t = c.newInstance();
 			ret.put("tableName", t.getTableName());
+			ret.put("tableComment", t.getComment());
 			ret.put("tableClassName", t.getClass().getName());
 			List<Map<String, Object>> fieldList = new ArrayList<Map<String, Object>>();
 			for (int i = 0; i < t.getFieldList().size(); i++) {

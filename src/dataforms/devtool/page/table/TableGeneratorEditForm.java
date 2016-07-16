@@ -31,6 +31,7 @@ import dataforms.field.common.CreateUserIdField;
 import dataforms.field.common.FlagField;
 import dataforms.field.common.UpdateTimestampField;
 import dataforms.field.common.UpdateUserIdField;
+import dataforms.field.sqltype.VarcharField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.ClassNameUtil;
 import dataforms.util.FileUtil;
@@ -59,6 +60,7 @@ public class TableGeneratorEditForm extends EditForm {
 //		this.addField(new ExistingFolderField("javaSourcePath")).setReadonly(true).addValidator(new RequiredValidator());
 		this.addField((new FunctionSelectField()).setPackageOption("dao"));
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
+		this.addField(new VarcharField("tableComment", 256));
 		this.addField(new TableClassNameField()).setComment("テーブルクラス名").setAutocomplete(false).addValidator(new RequiredValidator());
 		this.addField(new OverwriteModeField());
 		this.addField(new FlagField("autoIncrementId")).setComment("主キー自動生成フラグ");
@@ -89,6 +91,7 @@ public class TableGeneratorEditForm extends EditForm {
 		} else {
 			ret.put("autoIncrementId", "0");
 		}
+		ret.put("tableComment", tbl.getComment());
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		int no = 1;
 		for (Field<?> f: tbl.getFieldList()) {
@@ -495,6 +498,8 @@ public class TableGeneratorEditForm extends EditForm {
 		if ("1".equals(autoIncrementId)) {
 			constructor.append("\t\tthis.setAutoIncrementId(true);\n");
 		}
+		String tableComment = (String) data.get("tableComment");
+		constructor.append("\t\tthis.setComment(\"" + tableComment + "\");\n");
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
 		Map<String, String> srcmap = new HashMap<String, String>();

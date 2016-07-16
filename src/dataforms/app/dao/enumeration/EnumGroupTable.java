@@ -19,6 +19,7 @@ public class EnumGroupTable extends Table {
 	 * コンストラクタ.
 	 */
 	public EnumGroupTable() {
+		this.setComment("列挙型グループテーブル");
 		this.addPkField(new EnumGroupCodeField());
 		this.addPkField(new EnumTypeCodeField());
 		this.addField(new SortOrderField());

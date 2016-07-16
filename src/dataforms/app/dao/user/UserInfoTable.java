@@ -20,6 +20,7 @@ public class UserInfoTable extends Table {
 	 * コンストラクタ.
 	 */
 	public UserInfoTable() {
+		this.setComment("ユーザ情報テーブル");
 		this.addPkField(new UserIdField());
 		this.addField(new LoginIdField());
 		this.addField(new PasswordField());
