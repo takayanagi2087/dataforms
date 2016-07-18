@@ -67,7 +67,7 @@ public class ExcelReport extends Report {
 	 * ワークブックを取得します。
 	 * @return ワークブック。
 	 */
-	protected Workbook getWorkbook() {
+	public Workbook getWorkbook() {
 		return workbook;
 	}
 
@@ -75,7 +75,7 @@ public class ExcelReport extends Report {
 	 * ワークブックを設定します。
 	 * @param workbook ワークブック。
 	 */
-	protected void setWorkbook(final Workbook workbook) {
+	public void setWorkbook(final Workbook workbook) {
 		this.workbook = workbook;
 	}
 
@@ -761,7 +761,7 @@ public class ExcelReport extends Report {
 		this.workbook = this.getTamplate();
 		for (int i = 0; i < sheets; i++) {
 			log.debug("wb = " + i);
-			this.workbook.cloneSheet(0);
+			this.workbook.cloneSheet(1);
 		}
 	}
 	

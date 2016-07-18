@@ -93,16 +93,24 @@ public class TableGeneratorQueryResultForm extends QueryResultForm {
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(Page.ID_QUERY_RESULT); 
 		Response ret = null;
 		File template = TableReport.makeTemplate(this);
+		List<Map<String, Object>> tlist = new ArrayList<Map<String, Object>>();
 		try {
 			log.debug("template path=" + template.getAbsolutePath());
 			TableReport rep = new TableReport(template.getAbsolutePath(), list.size() - 1);
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> m = list.get(i);
 				Map<String, Object> spec = rep.getTableSpec(m, new Dao(this));
-				rep.setSheetName(i, ((String) m.get("tableClassName")));
-				rep.setSheetIndex(i);
+				spec.put("no", i + 1);
+				tlist.add(spec);
+				rep.setSheetName(i + 1, ((String) m.get("tableClassName")));
+				rep.setSheetIndex(i + 1);
 				rep.print(spec);
 			}
+			TableListReport lrep = new TableListReport(rep.getWorkbook());
+			Map<String, Object> lmap = new HashMap<String, Object>();
+			lmap.put("tableList", tlist);
+			lrep.setSheetIndex(0);
+			lrep.print(lmap);
 			ret = new BinaryResponse(rep.getReport(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "tableSpec.xlsx");
 		} finally {
 			template.delete();

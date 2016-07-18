@@ -578,24 +578,6 @@ public class TableGeneratorEditForm extends EditForm {
 	}
 	
 	/**
-	 * テンプレートファイルを作成します。
-	 * @return 作成されたテンプレートファイル。
-	 * @throws Exception 例外。
-	 */
-/*	private File makeTemplate() throws Exception {
-		//this.getServlet().getTempDir()
-		File tmp = File.createTempFile("tableSpec", ".xlsx", new File(DataFormsServlet.getTempDir()));
-		byte[] excel = this.getBinaryWebResource("/dataforms/devtool/exceltemplate/tableSpec.xlsx");
-		FileOutputStream os = new FileOutputStream(tmp);
-		try {
-			FileUtil.writeOutputStream(excel, os);
-		} finally {
-			os.close();
-		}
-		return tmp;
-	}
-	*/
-	/**
 	 * テーブル定義書を作成します。
 	 * @param param パラメータ。
 	 * @return テーブル定義書Excelイメージ。
@@ -609,6 +591,7 @@ public class TableGeneratorEditForm extends EditForm {
 		try {
 			log.debug("template path=" + template.getAbsolutePath());
 			TableReport rep = new TableReport(template.getAbsolutePath(), 0);
+			rep.removeSheet(0);
 			rep.setSheetName(0, ((String) param.get("tableClassName")));
 			Map<String, Object> spec = rep.getTableSpec(param, new Dao(this));
 			if (spec != null) {

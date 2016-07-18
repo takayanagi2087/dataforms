@@ -117,4 +117,11 @@ public class TableReport extends ExcelReport {
 		return ret;
 	}
 
+	/**
+	 * シートの削除を行います。
+	 * @param idx シートのインデックス。
+	 */
+	public void removeSheet(final int idx) {
+		this.getWorkbook().removeSheetAt(idx);
+	}
 }
