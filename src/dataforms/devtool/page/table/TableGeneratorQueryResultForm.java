@@ -23,6 +23,7 @@ import dataforms.devtool.field.common.TableNameField;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.PresenceField;
 import dataforms.field.common.RowNoField;
+import dataforms.field.sqltype.VarcharField;
 import dataforms.htmltable.HtmlTable;
 import dataforms.util.ClassNameUtil;
 
@@ -40,17 +41,18 @@ public class TableGeneratorQueryResultForm extends QueryResultForm {
 	 */
 	public TableGeneratorQueryResultForm() {
 		HtmlTable htmltbl = new HtmlTable(Page.ID_QUERY_RESULT
-			, (new RowNoField()).setSpanField(true)
-			, (new PackageNameField()).setHidden(true)
-			, (new TableClassNameField()).setHidden(true)
-			, (new ClassNameField("fullClassName")).setSpanField(true)
-			, (new TableNameField())
-			, (new PresenceField("status")).setSpanField(true).setComment("テーブル有無")
-			, new PresenceField("statusVal")
-			, (new PresenceField("sequenceGeneration")).setSpanField(true).setComment("シーケンス有無")
-			, (new PresenceField("difference")).setSpanField(true).setComment("構造の差分")
-			, new PresenceField("differenceVal")
-			, (new RecordCountField()).setSpanField(true)
+			, (new RowNoField()).setSpanField(true).setSortable(true)
+			, (new PackageNameField()).setHidden(true).setSortable(true)
+			, (new TableClassNameField()).setHidden(true).setSortable(true)
+			, (new ClassNameField("fullClassName")).setSpanField(true).setSortable(true)
+			, (new TableNameField()).setSortable(true)
+			, (new VarcharField("tableComment", 1024)).setSortable(true)
+			, (new PresenceField("status")).setSpanField(true).setComment("テーブル有無").setSortable(true)
+			, new PresenceField("statusVal").setSortable(true)
+			, (new PresenceField("sequenceGeneration")).setSpanField(true).setComment("シーケンス有無").setSortable(true)
+			, (new PresenceField("difference")).setSpanField(true).setComment("構造の差分").setSortable(true)
+			, new PresenceField("differenceVal").setSortable(true)
+			, (new RecordCountField()).setSpanField(true).setSortable(true)
 		);
 		this.addHtmlTable(htmltbl);
 		this.addPkField(htmltbl.getFieldList().get("packageName"));

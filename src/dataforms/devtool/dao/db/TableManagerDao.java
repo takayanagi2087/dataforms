@@ -157,6 +157,7 @@ public class TableManagerDao extends Dao {
 			return null;
 		}
 		tableInfo.put("tableName", tbl.getTableName());
+		tableInfo.put("tableComment", tbl.getComment());
 		SqlGenerator gen = this.getSqlGenerator();
 		List<String> sqllist = gen.generateCreateTableSqlList(tbl);
 		StringBuilder sb = new StringBuilder();
