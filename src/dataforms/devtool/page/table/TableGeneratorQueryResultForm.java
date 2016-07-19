@@ -41,9 +41,9 @@ public class TableGeneratorQueryResultForm extends QueryResultForm {
 	 */
 	public TableGeneratorQueryResultForm() {
 		HtmlTable htmltbl = new HtmlTable(Page.ID_QUERY_RESULT
-			, (new RowNoField()).setSpanField(true).setSortable(true)
-			, (new PackageNameField()).setHidden(true).setSortable(true)
-			, (new TableClassNameField()).setHidden(true).setSortable(true)
+			, (new RowNoField()).setSpanField(true)
+			, (new PackageNameField()).setHidden(true)
+			, (new TableClassNameField()).setHidden(true)
 			, (new ClassNameField("fullClassName")).setSpanField(true).setSortable(true)
 			, (new TableNameField()).setSortable(true)
 			, (new VarcharField("tableComment", 1024)).setSortable(true)

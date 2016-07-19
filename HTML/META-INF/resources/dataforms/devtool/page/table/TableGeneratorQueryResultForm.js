@@ -19,6 +19,23 @@ TableGeneratorQueryResultForm.prototype.attach = function() {
 	this.find("#printButton").click(function() {
 		thisForm.print();
 	});
+	
+	
+	var tbl = this.getComponent("queryResult");
+	// ソート結果の行番号を修正。
+	tbl.getSortedList = function() {
+		var list = HtmlTable.prototype.getSortedList.call(this);
+		for (var i = 0; i < list.length; i++) {
+			list[i].rowNo = (i + 1);
+		}
+		return list;
+	};
+	// ソート時のイベントハンドラ設定。
+	tbl.sortTable = function(col) {
+		logger.log("sort");
+		thisForm.queryResult.queryResult = HtmlTable.prototype.sortTable.call(this, col);
+		this.parent.setQueryResultEventHandler();
+	};
 }
 
 /**

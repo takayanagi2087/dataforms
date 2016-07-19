@@ -270,25 +270,10 @@ QueryResultForm.prototype.setSelectedData = function(comp) {
 };
 
 /**
- * 問い合わせ結果を表示します。
- * <pre>
- * 各結果行に以下のボタンが存在した場合、それぞれのイベント処理を登録します。
- * [id$='\.viewButton'] ... 表示ボタン。
- * [id$='\.updateButton'] ... 更新ボタン。
- * [id$='\.referButton'] ... 参照登録ボタン。
- * [id$='\.deleteButton'] ... 削除ボタン。
- *
- * </pre>
- * @param {Object} queryResult 問い合わせ結果。
+ * 問合せ結果にデフォルトイベント処理を設定します。
  */
-QueryResultForm.prototype.setQueryResult = function(queryResult) {
-	this.queryResult = queryResult;
-	this.setPagerInfo(queryResult);
-	this.setFormData(queryResult);
-	// 各リンクのイベント処理を登録.
+QueryResultForm.prototype.setQueryResultEventHandler = function() {
 	var thisForm = this;
-	this.controlPager();
-	//
 	this.find("[id$='\.viewButton']").click(function() {
 		if (thisForm.setSelectedKey($(this))) {
 			thisForm.viewData();
@@ -313,12 +298,33 @@ QueryResultForm.prototype.setQueryResult = function(queryResult) {
 		}
 	});
 
-
 	var editForm = this.parent.getComponent("editForm");
 	if (editForm == null) {
-//		this.find("[id$='\.deleteButton']").prop("disabled", true);
 		this.find(".deleteColumn").hide();
 	}
+};
 
+
+/**
+ * 問い合わせ結果を表示します。
+ * <pre>
+ * 各結果行に以下のボタンが存在した場合、それぞれのイベント処理を登録します。
+ * [id$='\.viewButton'] ... 表示ボタン。
+ * [id$='\.updateButton'] ... 更新ボタン。
+ * [id$='\.referButton'] ... 参照登録ボタン。
+ * [id$='\.deleteButton'] ... 削除ボタン。
+ *
+ * </pre>
+ * @param {Object} queryResult 問い合わせ結果。
+ */
+QueryResultForm.prototype.setQueryResult = function(queryResult) {
+	this.queryResult = queryResult;
+	this.setPagerInfo(queryResult);
+	this.setFormData(queryResult);
+	// 各リンクのイベント処理を登録.
+	var thisForm = this;
+	this.controlPager();
+	// テーブルのイベント処理を追加する。
+	this.setQueryResultEventHandler();
 };
 
