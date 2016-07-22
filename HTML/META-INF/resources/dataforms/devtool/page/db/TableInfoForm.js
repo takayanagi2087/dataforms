@@ -70,48 +70,54 @@ TableInfoForm.prototype.updateTableInfo = function(result) {
  * DBテーブルの初期化を行います。
  */
 TableInfoForm.prototype.initTable = function() {
-	if (confirm(MessagesUtil.getMessage("message.initTableConfirm"))) {
-		var clsname = this.find("#className").html();
+	var thisForm = this;
+	var systemName = MessagesUtil.getMessage("message.systemname");
+	currentPage.confirm(systemName, MessagesUtil.getMessage("message.initTableConfirm"), function() {
+		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = this.getSyncServerMethod("initTable");
+		var method = thisForm.getSyncServerMethod("initTable");
 		var result = method.execute(p);
 		if (result.status == ServerMethod.SUCCESS) {
-			this.setFormData(result.result);
-			this.updateTableInfo(result.result);
+			thisForm.setFormData(result.result);
+			thisForm.updateTableInfo(result.result);
 		}
-	}
+	});
 };
 
 /**
  * DBテーブルの削除を行います。
  */
 TableInfoForm.prototype.dropTable = function() {
-	if (confirm(MessagesUtil.getMessage("message.dropTableConfirm"))) {
-		var clsname = this.find("#className").html();
+	var thisForm = this;
+	var systemName = MessagesUtil.getMessage("message.systemname");
+	currentPage.confirm(systemName, MessagesUtil.getMessage("message.dropTableConfirm"), function() {
+		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = this.getSyncServerMethod("dropTable");
+		var method = thisForm.getSyncServerMethod("dropTable");
 		var result = method.execute(p);
 		if (result.status == ServerMethod.SUCCESS) {
-			this.setFormData(result.result);
-			this.updateTableInfo(result.result);
+			thisForm.setFormData(result.result);
+			thisForm.updateTableInfo(result.result);
 		}
-	}
+	});
 };
 
 /**
  * DBテーブルの再構築を行います。
  */
 TableInfoForm.prototype.updateTable = function() {
-	if (confirm(MessagesUtil.getMessage("message.updateTableConfirm"))) {
-		var clsname = this.find("#className").html();
+	var thisForm = this;
+	var systemName = MessagesUtil.getMessage("message.systemname");
+	currentPage.confirm(systemName, MessagesUtil.getMessage("message.updateTableConfirm"), function() {
+		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = this.getSyncServerMethod("updateTable");
+		var method = thisForm.getSyncServerMethod("updateTable");
 		var result = method.execute(p);
 		if (result.status == ServerMethod.SUCCESS) {
-			this.setFormData(result.result);
-			this.updateTableInfo(result.result);
+			thisForm.setFormData(result.result);
+			thisForm.updateTableInfo(result.result);
 		}
-	}
+	});
 };
 
 /**
@@ -126,7 +132,8 @@ TableInfoForm.prototype.exportData = function() {
 		this.setFormData(result.result);
 		this.updateTableInfo(result.result);
 		var path = result.result.exportDataPath;
-		alert(MessagesUtil.getMessage("message.exportInitialDataResult", path));
+		var systemName = MessagesUtil.getMessage("message.systemname");
+		currentpage.alert(MessagesUtil.getMessage(systemname, "message.exportInitialDataResult", path));
 	}
 };
 

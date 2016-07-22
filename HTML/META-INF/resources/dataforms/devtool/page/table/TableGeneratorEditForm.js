@@ -235,7 +235,5 @@ TableGeneratorEditForm.prototype.onCalcSuperClass = function(element) {
 TableGeneratorEditForm.prototype.print = function() {
 	var thisForm = this;
 	thisForm.parent.resetErrorStatus();
-	thisForm.submitForDownload("print", function(r) {
-		alert(r.result);
-	});
+	thisForm.submitForDownload("print");
 };

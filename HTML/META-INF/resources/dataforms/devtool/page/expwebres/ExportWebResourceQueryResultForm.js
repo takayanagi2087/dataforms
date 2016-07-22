@@ -77,7 +77,8 @@ ExportWebResourceQueryResultForm.prototype.exportWebRes = function() {
 		logger.log("p=" + p);
 		this.submit("exportWebResource", function(r) {
 			if (r.status == ServerMethod.SUCCESS) {
-				alert(r.result);
+				var systemName = MessagesUtil.getMessage("message.systemname");
+				currentPage.alert(systemName, r.result);
 			}
 		});
 	}

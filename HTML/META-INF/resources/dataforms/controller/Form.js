@@ -225,7 +225,8 @@ Form.prototype.submitForDownload = function(method, func) {
 	var m = new AsyncServerMethod(this.getUniqId() + "." + method);
 	if (func == null) {
 		m.submitWithFile(form.get(), function(ret) {
-			alert(ret.result);
+			var systemName = MessagesUtil.getMessage("message.systemname");
+			currentPage.alert(systemName, ret.result);
 		});
 	} else {
 		m.submitWithFile(form.get(), func);

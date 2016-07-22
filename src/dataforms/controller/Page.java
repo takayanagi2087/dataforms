@@ -146,7 +146,8 @@ public class Page extends DataForms {
 	 * コンストラクタ。
 	 */
 	public Page() {
-
+		this.addDialog(new AlertDialog());
+		this.addDialog(new ConfirmDialog());
 	}
 
 

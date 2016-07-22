@@ -164,10 +164,11 @@ QueryResultForm.prototype.viewData = function() {
  * 選択データの削除を行います。
  */
 QueryResultForm.prototype.deleteData = function() {
+	var systemName = MessagesUtil.getMessage("message.systemname");
 	var msg = MessagesUtil.getMessage("message.deleteconfirm");
-	if (confirm(msg)) {
-		var queryResultForm = this;
-		this.submit("delete", function(result) {
+	var queryResultForm = this;
+	currentPage.confirm(systemName, msg, function() {
+		queryResultForm.submit("delete", function(result) {
 			queryResultForm.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				queryResultForm.changePage();
@@ -175,7 +176,7 @@ QueryResultForm.prototype.deleteData = function() {
 				queryResultForm.parent.setErrorInfo(queryResultForm.getValidationResult(result), queryResultForm);
 			}
 		});
-	}
+	});
 };
 
 

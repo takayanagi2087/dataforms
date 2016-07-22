@@ -18,6 +18,7 @@ TableManagementQueryResultForm = createSubclass("TableManagementQueryResultForm"
  */
 TableManagementQueryResultForm.prototype.attach = function() {
 	QueryResultForm.prototype.attach.call(this);
+	var systemName = MessagesUtil.getMessage("message.systemname");
 	var thisForm = this;
 	this.find("#selectAllButton").click(function() {
 		$("[name='checkedClass']").each(function() {
@@ -60,53 +61,49 @@ TableManagementQueryResultForm.prototype.attach = function() {
 		thisForm.controlButton();
 	});
 	this.find("#initTableButton").click(function() {
-		if (confirm(MessagesUtil.getMessage("message.initTableConfirm"))) {
+		currentPage.confirm(systemName, MessagesUtil.getMessage("message.initTableConfirm"), function() {
 			thisForm.submit("initTable", function(result) {
 				thisForm.updateTableInfoList(result);
 			});
-		}
+		})
 	});
 
 	this.find("#updateTableButton").click(function() {
-		if (confirm(MessagesUtil.getMessage("message.updateTableConfirm"))) {
+		currentPage.confirm(systemName, MessagesUtil.getMessage("message.updateTableConfirm"), function() {
 			thisForm.submit("updateTable", function(result) {
 				thisForm.updateTableInfoList(result);
 			});
-
-		}
+		});
 	});
 
 	this.find("#dropTableButton").click(function() {
-		if (confirm(MessagesUtil.getMessage("message.dropTableConfirm"))) {
+		currentPage.confirm(systemName, MessagesUtil.getMessage("message.dropTableConfirm"), function() {
 			thisForm.submit("dropTable", function(result) {
 				thisForm.updateTableInfoList(result);
 			});
-
-		}
+		});
 	});
 
 	this.find("#exportAsInitialDataButton").click(function() {
-		if (confirm(MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"))) {
+		currentPage.confirm(systemName, MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"), function() {
 			thisForm.submit("exportTableAsInitialData", function(result) {
 				if (result.status == ServerMethod.SUCCESS) {
 					var path = result.result;
-					alert(MessagesUtil.getMessage("message.exportInitialDataResult", path));
+					currentPage.alert(systemName, MessagesUtil.getMessage("message.exportInitialDataResult", path));
 				}
 			});
-
-		}
+		});
 	});
 	
 	this.find("#exportTableButton").click(function() {
-		if (confirm(MessagesUtil.getMessage("message.dexportTableConfirm"))) {
+		currentPage.confirm(systemName, MessagesUtil.getMessage("message.dexportTableConfirm"), function() {
 			thisForm.submit("exportTable", function(result) {
 				if (result.status == ServerMethod.SUCCESS) {
 					var path = result.result;
-					alert(MessagesUtil.getMessage("message.exportInitialDataResult", path));
+					currentPage.alert(systemName, MessagesUtil.getMessage("message.exportInitialDataResult", path));
 				}
 			});
-
-		}
+		});
 	});
 	this.find("#importTableButton").click(function() {
 		var dlg = thisForm.parent.getComponent("importDataDialog");
@@ -299,8 +296,6 @@ TableManagementQueryResultForm.prototype.import = function(path) {
 	thisForm.submit("importTable", function(result) {
 		if (result.status == ServerMethod.SUCCESS) {
 			thisForm.updateTableInfoList(result);
-//			var path = result.result;
-//			alert(MessagesUtil.getMessage("message.importInitialDataResult", path));
 		}
 	});
 

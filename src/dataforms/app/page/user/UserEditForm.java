@@ -166,6 +166,7 @@ public class UserEditForm extends EditForm {
 
 	@Override
 	public void deleteData(final Map<String, Object> data) throws Exception {
-
+		UserDao dao = new UserDao(this);
+		dao.deleteUser(data);
 	}
 }

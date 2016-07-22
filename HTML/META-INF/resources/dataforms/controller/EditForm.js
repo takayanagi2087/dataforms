@@ -270,12 +270,12 @@ EditForm.prototype.save = function() {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
-					alert(result.result);
+					var systemName = MessagesUtil.getMessage("message.systemname");
+					currentPage.alert(systemName, result.result);
 				}
 				form.clearData();
 				var queryForm = form.parent.getComponent("queryForm");
 				if (queryForm == null) {
-//					window.location.href = currentPage.contextPath + "/dataforms/app/page/top/TopPage." + currentPage.pageExt;
 					currentPage.toTopPage();
 				} else {
 					form.toEditMode();
@@ -299,14 +299,15 @@ EditForm.prototype.save = function() {
  * </pre>
  */
 EditForm.prototype.del = function() {
+	var systemName = MessagesUtil.getMessage("message.systemname");
 	var msg = MessagesUtil.getMessage("message.deleteconfirm");
-	if (confirm(msg)) {
-		var form = this;
+	var form = this;
+	currentPage.confirm(systemName, msg, function() {
 		form.submit("delete", function(result) {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
-					alert(result.result);
+					currentPage.alert(systemName, result.result);
 				}
 				form.toEditMode();
 				form.parent.toQueryMode();
@@ -316,7 +317,7 @@ EditForm.prototype.del = function() {
 				}
 			}
 		});
-	}
+	});
 };
 
 /**

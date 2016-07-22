@@ -212,3 +212,9 @@ ul.accordion ul li:last-child{
 	vertical-align: bottom;
 	padding-top: 15px;
 }
+
+#alertDialog .buttonDiv,
+#confirmDialog .buttonDiv {
+	width: 100%;
+	text-align: center;
+}

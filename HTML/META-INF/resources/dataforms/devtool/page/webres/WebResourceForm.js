@@ -31,7 +31,6 @@ WebResourceForm.prototype.attach = function() {
 };
 
 
-
 /**
  * フォームに対してデータを設定します。
  * @param {Object} data 表示データ。
@@ -73,7 +72,8 @@ WebResourceForm.prototype.generateHtml = function() {
 	this.submit("generateHtml", function(ret) {
 		thisForm.parent.resetErrorStatus();
 		if (ret.status == ServerMethod.SUCCESS) {
-			alert(ret.result);
+			var systemName = MessagesUtil.getMessage("message.systemname");
+			currentPage.alert(systemName, ret.result);
 		} else if (ret.status == ServerMethod.INVALID) {
 			thisForm.parent.setErrorInfo(thisForm.getValidationResult(ret), thisForm);
 		}
@@ -90,7 +90,8 @@ WebResourceForm.prototype.generateJavascript = function() {
 	this.submit("generateJavascript", function(ret) {
 		thisForm.parent.resetErrorStatus();
 		if (ret.status == ServerMethod.SUCCESS) {
-			alert(ret.result);
+			var systemName = MessagesUtil.getMessage("message.systemname");
+			currentPage.alert(systemName, ret.result);
 		} else if (ret.status == ServerMethod.INVALID) {
 			thisForm.parent.setErrorInfo(thisForm.getValidationResult(ret), thisForm);
 		}

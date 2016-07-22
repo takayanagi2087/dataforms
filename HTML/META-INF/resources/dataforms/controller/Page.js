@@ -314,3 +314,40 @@ Page.prototype.unlock = function() {
 	 $("#lockLayer").css({display: 'none'});
 	  $(window).off("resize.lockLayer");
 };
+
+/**
+ * alertの代替えメソッドです。
+ * 
+ * @param {String} title ダイアログタイトル。
+ * @param {String} msg ダイアログメッセージ。
+ * @param {Functuion} func OKボタンが押された際の処理。
+ */
+Page.prototype.alert = function(title, msg, func) {
+	var dlg = this.getComponent("alertDialog");
+	dlg.title = title;
+	dlg.message = msg;
+	dlg.okFunc = func;
+	dlg.showModal({
+		minHeight: 100
+	});
+};
+
+/**
+ * confirmの代替えメソッドです。
+ * @param {String} title タイトル。
+ * @param {String} msg メッセージ。
+ * @param {Function} okFunc OKボタンのダイアログ。
+ * @param {Function} cancelFunc キャンセルボタンのダイアログ。
+ */
+Page.prototype.confirm = function(title, msg, okFunc, cancelFunc) {
+	var dlg = this.getComponent("confirmDialog");
+	dlg.title = title;
+	dlg.message = msg;
+	dlg.okFunc = okFunc;
+	dlg.cancelFunc = cancelFunc;
+	dlg.showModal({
+		minHeight: 100
+	});
+};
+
+
