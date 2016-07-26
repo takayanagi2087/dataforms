@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
 import dataforms.controller.Form;
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
@@ -123,5 +126,18 @@ public class TableReport extends ExcelReport {
 	 */
 	public void removeSheet(final int idx) {
 		this.getWorkbook().removeSheetAt(idx);
+	}
+	
+	/**
+	 * ヘッダーを設定します。
+	 * @param header ヘッダー文字列。
+	 * @throws Exception 例外。
+	 */
+	public void setSystemHeader(final String header) throws Exception {
+		Workbook wb = this.getWorkbook();
+		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+			Sheet sheet = wb.getSheetAt(i);	
+			sheet.getHeader().setLeft(header);
+		}
 	}
 }

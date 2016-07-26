@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -22,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import dataforms.controller.Page;
 import dataforms.dao.file.ImageData;
 import dataforms.field.base.Field;
 import dataforms.util.MapUtil;
@@ -762,6 +764,14 @@ public class ExcelReport extends Report {
 		for (int i = 0; i < sheets; i++) {
 			log.debug("wb = " + i);
 			this.workbook.cloneSheet(1);
+		}
+		PrintSetup printSetting = this.workbook.getSheetAt(1).getPrintSetup();
+		for (int i = 2; i < this.workbook.getNumberOfSheets(); i++) {
+			this.workbook.getSheetAt(i).getPrintSetup().setLandscape(printSetting.getLandscape());
+			this.workbook.getSheetAt(i).getPrintSetup().setPaperSize(printSetting.getPaperSize());
+		}
+		for (int i = 0; i < this.workbook.getNumberOfSheets(); i++) {
+			this.workbook.getSheetAt(i).getFooter().setRight("dataforms.jar " + Page.getDataformsVersion());
 		}
 	}
 	

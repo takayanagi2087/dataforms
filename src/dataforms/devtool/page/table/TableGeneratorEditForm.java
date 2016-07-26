@@ -593,6 +593,7 @@ public class TableGeneratorEditForm extends EditForm {
 			TableReport rep = new TableReport(template.getAbsolutePath(), 0);
 			rep.removeSheet(0);
 			rep.setSheetName(0, ((String) param.get("tableClassName")));
+			rep.setSystemHeader(MessagesUtil.getMessage(this.getPage(), "message.systemname"));
 			Map<String, Object> spec = rep.getTableSpec(param, new Dao(this));
 			if (spec != null) {
 				ret = new BinaryResponse(rep.print(spec), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ((String) param.get("tableClassName")) +".xlsx");

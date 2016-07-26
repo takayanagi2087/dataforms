@@ -26,6 +26,7 @@ import dataforms.field.common.RowNoField;
 import dataforms.field.sqltype.VarcharField;
 import dataforms.htmltable.HtmlTable;
 import dataforms.util.ClassNameUtil;
+import dataforms.util.MessagesUtil;
 
 /**
  * 問い合わせ結果フォームクラス。
@@ -99,6 +100,7 @@ public class TableGeneratorQueryResultForm extends QueryResultForm {
 		try {
 			log.debug("template path=" + template.getAbsolutePath());
 			TableReport rep = new TableReport(template.getAbsolutePath(), list.size() - 1);
+			rep.setSystemHeader(MessagesUtil.getMessage(this.getPage(), "message.systemname"));
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> m = list.get(i);
 				Map<String, Object> spec = rep.getTableSpec(m, new Dao(this));

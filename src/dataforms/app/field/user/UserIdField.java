@@ -9,7 +9,7 @@ public class UserIdField extends RecordIdField {
 	/**
 	 * テーブルコメント。
 	 */
-	private static final String COMMENT = "ユーザを示すID。シーケンスで自動生成する。";
+	private static final String COMMENT = "ユーザを示すID。";
 
 	/**
 	 * コンストラクタ。
