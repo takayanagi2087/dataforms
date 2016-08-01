@@ -4,10 +4,22 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.log4j.Logger;
 
 /**
  * ファイルI/Oユーティリティクラス。
@@ -17,7 +29,7 @@ public final class FileUtil {
 	/**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(FileUtil.class.getName());
+    private static Logger log = Logger.getLogger(FileUtil.class.getName());
 
 
 	/**
@@ -213,5 +225,123 @@ public final class FileUtil {
 		}
 	}
 
+	
+	/**
+	 * 一時フォルダを作成します。
+	 * @param path 作成するパス。
+	 * @param prefix パスの先頭文字列。
+	 * @return 作成されたパス。
+	 * @throws Exception 例外。
+	 */
+	public static Path createTempDirectory(final String path, final String prefix) throws Exception {
+		FileSystem fs = FileSystems.getDefault();
+		Path temp = Files.createTempDirectory(fs.getPath(path), prefix);
+		return temp;
+	}
 
+	
+	
+	/**
+	 * ディレクトリ削除Visitorクラス。 
+	 *
+	 */
+	public static class DeleteVisitor extends SimpleFileVisitor<Path> {
+
+		@Override
+		public FileVisitResult visitFile(final Path path, final BasicFileAttributes attributes) throws IOException {
+			log.debug("delete file : " + path.getFileName());
+			Files.delete(path);
+			return checkNotExist(path);
+		}
+
+		@Override
+		public FileVisitResult postVisitDirectory(final Path path, final IOException exception) throws IOException {
+			if (exception == null) {
+				log.debug("delete directory : " + path.getFileName());
+				Files.delete(path);
+				return checkNotExist(path);
+			} else {
+				throw exception;
+			}
+
+		}
+
+		
+		/**
+		 * 削除結果の確認を行います。
+		 * @param path パス。
+		 * @return ファイルが削除された場合FileVisitResult.CONTINUEを返します。
+		 * @throws IOException 例外。
+		 */
+		private static FileVisitResult checkNotExist(final Path path) throws IOException {
+			if (!Files.exists(path)) {
+				return FileVisitResult.CONTINUE;
+			} else {
+				throw new IOException();
+			}
+		}
+	}	
+
+	/**
+	 * ディレクトリ階層の削除を行います。
+	 * @param path パス。
+	 * @throws Exception 例外。
+	 */
+	public static void deleteDirectory(final String path) throws Exception {
+		FileSystem fs = FileSystems.getDefault();
+		Path backup = fs.getPath(path);
+		Files.walkFileTree(backup, new DeleteVisitor());
+	}
+	
+	/**
+	 * Zipファイルにファイルを追加します。
+	 * @param basePath 規定パス。
+	 * @param file ファイル。
+	 * @param zos Zipファイル出力ストリーム。
+	 * @throws Exception 例外。
+	 */
+	private static void addFileToZip(final String basePath, final File file, final ZipOutputStream zos) throws Exception {
+		if (!file.isDirectory()) {
+			String p = file.getAbsolutePath().substring(basePath.length() + 1).replaceAll("\\\\", "/");
+			log.debug("path=" + p);
+			ZipEntry zent = new ZipEntry(p);
+			zos.putNextEntry(zent);
+			FileInputStream is = new FileInputStream(file);
+			try {
+				copyStream(is, zos);
+			} finally {
+				is.close();
+			}
+		} else {
+			File[] flist = file.listFiles();
+			for (File f: flist) {
+				addFileToZip(basePath, f, zos);
+			}
+		}
+	}	
+	
+	/**
+	 * 指定ディレクトリを圧縮しZipファイルを作成します。
+	 * @param zipfile Zipファイル。
+	 * @param path 圧縮するパス。
+	 * @throws Exception 例外。
+	 */
+	public static void createZipFile(final String zipfile, final String path) throws Exception {
+		String basePath = path;
+		FileOutputStream os = new FileOutputStream(zipfile);
+		try {
+			ZipOutputStream zos = new ZipOutputStream(os);
+			try {
+				File file = new File(path);
+				if (!file.isDirectory()) {
+					basePath = file.getParentFile().getAbsolutePath();
+				}
+				addFileToZip(basePath, file, zos);
+			} finally {
+				zos.close();
+			}
+		} finally {
+			os.close();
+		}
+	}
 }

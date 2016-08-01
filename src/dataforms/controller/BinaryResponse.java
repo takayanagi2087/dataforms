@@ -2,6 +2,7 @@ package dataforms.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -105,6 +106,22 @@ public class BinaryResponse extends FileResponse {
 		this.inputStream = fobj.openInputStream();
 	}
 
+
+	/**
+	 * コンストラクタ。
+	 * @param path 送信するファイル。
+	 * @param contentType コンテントタイプ。
+	 * @param fileName ファイル名。
+	 * @throws Exception 例外。
+	 */
+	public BinaryResponse(final String path, final String contentType, final String fileName) throws Exception {
+		this.setContentType(contentType);
+		this.setFileName(fileName);
+		this.inputStream = new FileInputStream(path);
+	}
+
+	
+	
 	/**
 	 * 一時ファイルを取得します。
 	 * @return 一時ファイル。

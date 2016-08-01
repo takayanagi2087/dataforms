@@ -49,7 +49,8 @@ Form.prototype.initHtmlTable = function(htmlTableList) {
 Form.prototype.setRequiredMark = function() {
 	for (var i = 0; i <this.fields.length; i++) {
 		var f = this.fields[i];
-		var o = this.find('#' + this.selectorEscape(f.id));
+//		var o = this.find('#' + this.selectorEscape(f.id));
+		var o = f.get();
 		if (o.length > 0) {
 			if (f.isRequired()) {
 				var e = f.getLabelElement();

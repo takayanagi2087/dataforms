@@ -66,6 +66,20 @@ Field.prototype.getLabelElement = function() {
 				label = l;
 			}
 		}
+		if (label == null || label.length == 0) {
+			var l = this.parent.find('#' + this.selectorEscape(this.id + "[0]")).parent(':last').prev('label:last');
+			if (l.length > 0) {
+				label = l;
+			} else {
+				l = this.parent.find('#' + this.selectorEscape(this.id + "[0]")).parent(':last').parent(':last').prev().find('label:first');
+				if (l.length > 0) {
+					label = l;
+				} else {
+					l = this.parent.find('#' + this.selectorEscape(this.id + "[0]")).parent(':last').parent(':last').prev();
+					label = l;
+				}
+			}
+		}
 	}
 	return label;
 };

@@ -62,13 +62,23 @@ public class MultiSelectField<TYPE> extends SelectField<List<TYPE>> implements S
 	/**
 	 * コンストラクタ。
 	 * @param id フィールドID。
+	 */
+	public MultiSelectField(final String id) {
+		super(id);
+	}
+
+
+	/**
+	 * コンストラクタ。
+	 * @param id フィールドID。
 	 * @param len 長さ。
 	 */
 	public MultiSelectField(final String id, final int len) {
 		super(id, len);
 	}
 
-
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setClientValue(final Object v) {

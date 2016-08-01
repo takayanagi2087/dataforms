@@ -88,6 +88,18 @@ public class TableManagerDao extends Dao {
 		// String funcpath = (String) data.get("functionSelect");
 		String packageName = (String) data.get("packageName");
 		String classname = (String) data.get("className");
+		return queryTableClass(packageName, classname);
+	}
+
+
+	/**
+	 * テーブルクラスを検索します。
+	 * @param packageName パッケージ名。
+	 * @param classname テーブルクラス名の部分文字列。
+	 * @return テーブルクラス一覧。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> queryTableClass(final String packageName, final String classname) throws Exception {
 		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 		ClassFinder finder = new ClassFinder();
 		List<Class<?>> tableList = finder.findClasses(packageName, Table.class);
