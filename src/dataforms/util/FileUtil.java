@@ -16,7 +16,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
@@ -343,5 +346,105 @@ public final class FileUtil {
 		} finally {
 			os.close();
 		}
+	}
+	
+	/**
+	 * Zipファイルを展開します。
+	 * @param zipfile Zipファイル名。
+	 * @param path 出力先パス。
+	 * @throws Exception 例外。
+	 */
+	public static void unpackZipFile(final String zipfile, final String path) throws Exception {
+		FileInputStream is = new FileInputStream(zipfile);
+		try {
+			FileUtil.unpackZipFile(is, path);
+		} finally {
+			is.close();
+		}
+	}
+	/**
+	 * Zipファイルを展開します。
+	 * @param is Zipファイルの入力ストリーム。
+	 * @param path 出力先のパス。
+	 * @throws Exception 例外。
+	 */
+	public static void unpackZipFile(final InputStream is, final String path) throws Exception {
+		File outDir = new File(path);
+		ZipInputStream zis = new ZipInputStream(is);
+		try {
+			ZipEntry entry = null;
+			while ((entry = zis.getNextEntry()) != null) {
+				if (entry.isDirectory()) {
+					String relativePath = entry.getName();
+					outDir = new File(outDir, relativePath);
+					outDir.mkdirs();
+				} else {
+					String relativePath = entry.getName();
+					File outFile = new File(outDir, relativePath);
+					// 出力先のディレクトリを作成する
+					File parentFile = outFile.getParentFile();
+					parentFile.mkdirs();
+					// ファイルを出力する
+					OutputStream fileOut = new FileOutputStream(outFile);
+					try {
+						byte[] buf = new byte[16 * 1024];
+						int size = 0;
+						while ((size = zis.read(buf)) > 0) {
+							fileOut.write(buf, 0, size);
+						}
+					} finally {
+						fileOut.close();
+					}
+				}
+			}
+		} finally {
+			zis.close();
+		}
+	}
+	
+	/**
+	 * ファイルリスト作成Visitorクラスです。
+	 *
+	 */
+	private static class ListupVisitor extends SimpleFileVisitor<Path> {
+		/**
+		 * ファイル名リスト。
+		 */
+		private List<String> list = null;
+		
+		/**
+		 * コンストラクタ。
+		 */
+		public ListupVisitor() {
+			this.list = new ArrayList<String>();
+		}
+
+		/**
+		 * ファイルリストを取得します。
+		 * @return ファイルリスト。
+		 */
+		public List<String> getList() {
+			return list;
+		}
+
+		@Override
+		public FileVisitResult visitFile(final Path path, final BasicFileAttributes attributes) throws IOException {
+			list.add(path.toString());
+			return FileVisitResult.CONTINUE;
+		}
+	}
+	
+	/**
+	 * 指定フォルダ内のファイル一覧を取得します。
+	 * @param path フォルダのバス。
+	 * @return ファイルリスト。
+	 * @throws Exception 例外。
+	 */
+	public static List<String> getFileList(final String path) throws Exception {
+		ListupVisitor v = new ListupVisitor();
+		FileSystem fs = FileSystems.getDefault();
+		Path p = fs.getPath(path);
+		Files.walkFileTree(p, v);
+		return v.getList();
 	}
 }

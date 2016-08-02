@@ -1,6 +1,6 @@
 package dataforms.app.page.backuprestore;
 
-import dataforms.app.page.base.BasePage;
+import dataforms.app.page.base.AdminPage;
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
 
@@ -8,13 +8,13 @@ import dataforms.dao.Table;
 /**
  * ページクラス。
  */
-public class BackupRestorePage extends BasePage {
+public class BackupRestorePage extends AdminPage {
 	/**
 	 * コンストラクタ。
 	 */
 	public BackupRestorePage() {
 		this.addForm(new BackupForm());
-
+		this.addForm(new RestoreForm());
 	}
 
 	/**

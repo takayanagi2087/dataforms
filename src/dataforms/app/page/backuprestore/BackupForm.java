@@ -42,6 +42,23 @@ public class BackupForm extends Form {
 	}
 
 	@Override
+	public void init() throws Exception {
+		super.init();
+		FunctionMultiSelectField fsel = (FunctionMultiSelectField) this.getFieldList().get("functionMultiSelect");
+		List<Map<String, Object>> list = fsel.getOptionList();
+		List<String> sel = new ArrayList<String>();
+		for (Map<String, Object> m: list) {
+			String v = (String) m.get("value");
+			if ("/dataforms/app".equals(v) || "/dataforms/devtool".equals(v)) {
+				continue;
+			} else {
+				sel.add(v);
+			}
+		}
+		this.setFormData("functionMultiSelect", sel);
+	}
+	
+	@Override
 	protected List<ValidationError> validateForm(final Map<String, Object> data) throws Exception {
 		List<ValidationError> ret = super.validateForm(data);
 		@SuppressWarnings("unchecked")

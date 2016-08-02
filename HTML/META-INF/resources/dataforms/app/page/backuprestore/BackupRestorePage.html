@@ -3,20 +3,35 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
+		
+		<style type="text/css">
+		</style>
 	</head>
 	<body>
 		<div id="mainDiv">
 			<form id="backupForm">
-				<div class="formHeader">バックアップ対象を選択してください</div>
+				<div class="formHeader">Please select a backup target</div>
 				<table class="responsive">
 					<tbody>
 						<tr>
-							<th>機能</th>
+							<th>Function</th>
 							<td><span><input type="checkbox" id="functionMultiSelect[0]" name="functionMultiSelect"/></span></td>
 						</tr>
 					</tbody>
 				</table>
-				<input type="button" id="backupButton" value="バックアップ"/>
+				<input type="button" id="backupButton" value="Backup"/>
+			</form>
+			<form id="restoreForm">
+				<div class="formHeader">Please specify the file to be restored</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>Backup file</th>
+							<td><input type="file" id="backupFile" accept=".zip"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="restoreButton" value="Restore"/>
 			</form>
 		</div>
 	</body>

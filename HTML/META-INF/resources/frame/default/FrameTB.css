@@ -89,14 +89,14 @@ body #mainDiv {
 	padding: 4px;
 }
 
-/* テーブル行の高さ指定 */
-#mainDiv table th,
-#mainDiv table td {
-}
 
 /* レスポンシブテーブルの制御設定 */
 table.responsive {
 	width: 100%;
+}
+
+table.responsive th {
+	width: 30%;
 }
 
 

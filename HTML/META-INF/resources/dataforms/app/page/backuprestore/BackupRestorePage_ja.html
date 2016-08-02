@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="backupForm">
+				<div class="formHeader">バックアップ対象を選択してください</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>機能</th>
+							<td><span><input type="checkbox" id="functionMultiSelect[0]" name="functionMultiSelect"/></span></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="backupButton" value="バックアップ"/>
+			</form>
+			<form id="restoreForm">
+				<div class="formHeader">リストアするファイルを指定してください</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>バックアップファイル</th>
+							<td><input type="file" id="backupFile" accept=".zip"/></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="restoreButton" value="リストア"/>
+			</form>
+		</div>
+	</body>
+</html>

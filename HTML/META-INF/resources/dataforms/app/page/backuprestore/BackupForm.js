@@ -26,7 +26,9 @@ BackupForm.prototype.attach = function() {
  */
 BackupForm.prototype.backup = function() {
 	var thisForm = this;
+	thisForm.parent.resetErrorStatus();
 	this.submitForDownload("backup", function(r) {
+		thisForm.parent.resetErrorStatus();
 		if (r.status == ServerMethod.INVALID) {
 			currentPage.setErrorInfo(thisForm.getValidationResult(r), thisForm);
 		} else {
