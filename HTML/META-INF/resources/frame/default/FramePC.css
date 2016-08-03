@@ -98,9 +98,33 @@ table.responsive {
 	width: 100%;
 }
 
-table.responsive th {
+/* <th></th><td></td>のみのテーブル */
+table.thtd th {
 	width: 30%;
 }
+
+table.thtd td {
+	width: 70%;
+}
+
+/* <th></th><td></td>の2回繰り返しテーブル */
+table.thtdthtd th {
+	width: 20%;
+}
+
+table.thtdthtd td {
+	width: 30%;
+}
+
+/* <th></th><td></td>の3回繰り返しテーブル */
+table.thtdthtdthtd th {
+	width: 10%;
+}
+
+table.thtdthtdthtd td {
+	width: 15%;
+}
+
 
 /* 入力フィールドの高さ */
 input[type="text"], input[type="email"], input[type="search"],input[type="password"] {
