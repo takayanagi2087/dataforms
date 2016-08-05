@@ -36,7 +36,7 @@ Java Webアプリケーションフレームワークと、その開発ツール
 ドキュメントで作成するSamplePageはログインしないと表示されないページですが、デモページではその制限を外しています。  
 
 ## Requirement
-主に、Eclipse4.5 + Java8 + Tomcat8 + Apache Derby,PostgreSQLでテストしています。  
+主に、Eclipse4.5/4.6 + Java8 + Tomcat8/9 + Apache Derby,PostgreSQLでテストしています。  
 Servlet 3.0に対応したアプリケーションサーバで動作するはずです。  
 最近評価していませんが、以下のアプリケーションサーバで一度動作させています。  
 
