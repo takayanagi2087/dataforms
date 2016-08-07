@@ -108,6 +108,8 @@ public class DeveloperEditForm extends EditForm {
 		return ret;
 	}
 	
+	
+	// TODO:user_infoの初期化データがあるとduplicateが発生する問題を修正する。
 	/**
 	 * データベースの初期化を行います。
 	 * <pre>
@@ -115,6 +117,8 @@ public class DeveloperEditForm extends EditForm {
 	 * 初期データを登録します。
 	 * </pre>
 	 * @throws Exception 例外。
+	 * 
+	 * 
 	 */
 	private void initDb() throws Exception {
 		TableManagerDao tmdao = new TableManagerDao(this);
