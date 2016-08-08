@@ -3,7 +3,6 @@
 <Context addWebinfClassesResources="true">
 	<Resource auth="Container"
 		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
-		maxActive="8" maxIdle="4"
 		name="jdbc/dfdb" type="javax.sql.DataSource"
 		url="jdbc:derby:/javadb/dfdb1;create=true"
 		username="" password="" />
