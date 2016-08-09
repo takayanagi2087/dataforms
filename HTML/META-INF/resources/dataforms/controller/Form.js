@@ -10,6 +10,10 @@
  * HTMLのformタグに対応するクラスです。
  * </pre>
  * @extends WebComponent
+ * @prop {Object} formData setFormDataメソッドで設定されたフォームデータ。
+ * @prop {Boolian} clientValidation クライアントでバリデーションを行うかどうかを示すフラグ。
+ * @prop {Array} fields サーバから送信された情報を元に作成されたフィールドjsクラスのインスタンスを記録した配列。
+ * @prop {Array} htmlTables サーバから送信された情報を元に作成されたHTMLテーブルjsクラスのインスタンスを記録した配列。
  */
 Form = createSubclass("Form", {clientValidation : true, fields: [], htmlTables : []}, "WebComponent");
 
