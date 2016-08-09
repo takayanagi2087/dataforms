@@ -14,6 +14,12 @@
  */
 Page = createSubclass("Page", {id: "mainDiv"}, "DataForms");
 
+
+/**
+ * 現在のページインスタンスです。
+ */
+currentPage = null;
+
 /**
  * consoleのコピーです。
  * <pre>
