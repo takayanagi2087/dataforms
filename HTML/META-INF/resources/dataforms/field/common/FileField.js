@@ -19,14 +19,14 @@ FileField = createSubclass("FileField", {}, "Field");
  * </pre>
  */
 FileField.prototype.attach = function() {
-	Field.prototype.attach.call(this);
-	var thisComp = this;
 	var comp = this.get();
 	this.addSpan(comp);
+	this.addElements(comp);
+	Field.prototype.attach.call(this);
+	var thisComp = this;
 	var linkid = this.id + "_link"; // ダウンロードリンク.
 	var fnid = this.id + "_fn"; // ファイル名のリンク.
 	var ckid = this.id + "_ck"; // ファイル削除のチェックボックス.
-	this.addElements(comp);
 	var fnlink = this.parent.find("#" + this.selectorEscape(linkid))
 	var fnhidden = this.parent.find("[name='" + this.selectorEscape(fnid) + "']");
 	this.parent.find("#" + this.selectorEscape(ckid)).click(function() {
