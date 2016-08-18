@@ -248,6 +248,7 @@ Field.prototype.getValue = function() {
  * @returns {ValidationError} 検証結果。問題が発生しなければnullを返します。
  */
 Field.prototype.validate = function() {
+	// TODO: radio等の場合に対応したほうが良いか検討する。
 	var val = this.parent.find('#' + this.selectorEscape(this.id)).val();
 	this.value = val;
 	if (this.validators != null) {
