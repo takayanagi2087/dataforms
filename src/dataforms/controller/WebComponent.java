@@ -5,8 +5,10 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -482,6 +484,10 @@ public class WebComponent implements JDBCConnectableObject {
 	 */
 	private static Map<String, String> webResourceCache = Collections.synchronizedMap(new HashMap<String, String>());
 
+	/**
+	 * Webリソースのタイムスタンプキャッシュ。
+	 */
+	private static Map<String, String> webResourceTimestampCache = Collections.synchronizedMap(new HashMap<String, String>());
 
 	/**
 	 * html,js,css等のWEBリソースを取得します。
@@ -540,11 +546,24 @@ public class WebComponent implements JDBCConnectableObject {
 				InputStream is = conn.getInputStream();
 				byte[] buf = FileUtil.readInputStream(is);
 				ret = new String(buf, DataFormsServlet.getEncoding());
+				long d = conn.getLastModified();
+				SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
+				//log.debug("timestamp:" + path + "=" + fmt.format(new Date(d)));
+				webResourceTimestampCache.put(path, fmt.format(new Date(d)));
 			}
 		} finally {
 			conn.disconnect();
 		}
 		return ret;
+	}
+	
+	/**
+	 * 指定されたパスのWebリソースの更新日付を取得します。
+	 * @param path パス。
+	 * @return 更新日付(yyyyMMddHHmmss形式)。
+	 */
+	protected String getLastUpdate(final String path) {
+		return webResourceTimestampCache.get(path);
 	}
 
 	/**

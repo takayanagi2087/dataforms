@@ -361,20 +361,23 @@ public class Page extends DataForms {
 		for (String css : this.preloadCssList) {
 			String csspath = this.getAppropriatePath(css, this.getRequest());
 			if (csspath != null) {
-				sb.append("\t\t<link type=\"text/css\" href=\"" + context + csspath + "\" rel=\"stylesheet\" />\n");
+				String t = this.getLastUpdate(csspath);
+				sb.append("\t\t<link type=\"text/css\" href=\"" + context + csspath + "?t=" + t + "\" rel=\"stylesheet\" />\n");
 			}
 		}
 		for (String[] css : Page.preloadMediaCssList) {
 			String csspath = this.getAppropriatePath(this.getPageFramePath() + "/" + css[0], this.getRequest());
 			if (csspath != null) {
-				sb.append("\t\t<link type=\"text/css\" href=\"" + context + csspath + "\" rel=\"stylesheet\" media=\"" + css[1] + "\"/>\n");
+				String t = this.getLastUpdate(csspath);
+				sb.append("\t\t<link type=\"text/css\" href=\"" + context + csspath + "?t=" + t + "\" rel=\"stylesheet\" media=\"" + css[1] + "\"/>\n");
 			}
 		}
 		List<String> basicScripts = this.getBaseicJsCache();
 		for (String js : basicScripts) {
 			String jspath = this.getAppropriatePath(js, this.getRequest());
 			if (jspath != null) {
-				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "\"></script>\n");
+				String t = this.getLastUpdate(jspath);
+				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\"></script>\n");
 			}
 		}
 		List<String> appScripts = this.getAppScript();
@@ -382,7 +385,8 @@ public class Page extends DataForms {
 		for (String js: appScripts) {
 			String jspath = this.getAppropriatePath(js, this.getRequest());
 			if (jspath != null) {
-				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "\"></script>\n");
+				String t = this.getLastUpdate(jspath);
+				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\"></script>\n");
 			}
 		}
 		return sb.toString();
