@@ -312,6 +312,7 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 	form.attr("target", "uploadIFrame"); // POSTの結果の受け取り先を見えないiframeに設定する.
 	this.setHiddenField(form, "dfMethod", method);
 	form.submit();
+	form.find("#dfMethod").remove();
 };
 
 
