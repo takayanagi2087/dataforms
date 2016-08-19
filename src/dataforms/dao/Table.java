@@ -624,5 +624,17 @@ public class Table  {
 		return list;
 	}
 
+	/**
+	 * インポート時のデータ変換処理。
+	 * <pre>
+	 * インポート時にデータの変換が必要な場合オーバーライドします。
+	 * json形式でエスケープされたデータを変換した場合などに使用します。
+	 * </pre>
+	 * @param data インポートデータ。
+	 * @return 変換されたインポートデータ。
+	 */
+	public Map<String, Object> convertImportData(final Map<String, Object> data) {
+		return data;
+	}
 }
 

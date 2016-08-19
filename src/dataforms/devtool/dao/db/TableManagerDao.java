@@ -15,6 +15,7 @@ import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
+import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
@@ -451,7 +452,24 @@ public class TableManagerDao extends Dao {
 		this.importData(classname, initialDataPath);
 	}
 
-
+	/**
+	 * レコードの存在チェック。
+	 * @param table テーブル。
+	 * @param data データ。
+	 * @return 存在する場合true。
+	 * @throws Exception 例外。
+	 */
+	private boolean existRecord(final Table table, final Map<String, Object> data) throws Exception {
+		Query q = new Query();
+		q.setFieldList(table.getPkFieldList());
+		q.setMainTable(table);
+		q.setQueryFormFieldList(table.getPkFieldList());
+		q.setQueryFormData(data);
+		q.setEffectivenessOfDeleteFlag(false);
+		List<Map<String, Object>> list = this.executeQuery(q);
+		return (list.size() > 0);
+	}
+	
 	/**
 	 * 指定フォルダのデータをインポートします。
 	 * @param classname クラス名。
@@ -465,12 +483,12 @@ public class TableManagerDao extends Dao {
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> m = list.get(i);
 				this.convertImportData(m, path, tbl);
-				log.debug("m=" + JSON.encode(m, true));
+//				log.debug("m=" + JSON.encode(m, true));
 //				Map<String, Object> data = tbl.getFieldList().convertClientToServer(m);
-				Map<String, Object> data = m;
-				log.debug("m=" + JSON.encode(data, true));
+				Map<String, Object> data = tbl.convertImportData(m);
+//				log.debug("m=" + JSON.encode(data, true));
 				this.setUserIdValue(data);
-				if (this.existRecord(tbl, tbl.getPkFieldList(), data)) {
+				if (this.existRecord(tbl, data)) {
 					this.executeUpdate(tbl, data);
 				} else {
 					this.executeInsert(tbl, data);
