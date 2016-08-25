@@ -1443,7 +1443,11 @@ public class Dao implements JDBCConnectableObject {
 				m.put(lastpk.getId(), Short.valueOf(key));
 				this.executeInsert(table, m);
 			} else {
-				this.executeUpdate(table, m);
+				if (this.findRecord(table, m) == null) {
+					this.executeInsert(table, m);
+				} else {
+					this.executeUpdate(table, m);
+				}
 			}
 		}
 	}
