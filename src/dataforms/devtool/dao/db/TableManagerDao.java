@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import dataforms.app.dao.func.FuncInfoTable;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
@@ -40,7 +38,7 @@ public class TableManagerDao extends Dao {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
+    //private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
 
 	/**
 	 * コンストラクタ。
