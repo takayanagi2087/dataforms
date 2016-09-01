@@ -265,6 +265,11 @@ public class DataFormsServlet extends HttpServlet {
 		if (DataFormsServlet.tempDir == null) {
 			DataFormsServlet.tempDir = "/tmp";
 		}
+		// 一時フォルダがない場合作成する。
+		File tmp = new File(DataFormsServlet.tempDir);
+		if (!tmp.exists()) {
+			tmp.mkdirs();
+		}
 		log.info("init:tempDir=" + DataFormsServlet.tempDir);
 		//
 		DataFormsServlet.exportImportDir = this.getServletContext().getInitParameter("export-import-dir");
