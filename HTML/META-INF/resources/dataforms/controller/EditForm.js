@@ -257,6 +257,27 @@ EditForm.prototype.confirm = function() {
 };
 
 /**
+ * 保存や削除後の画面状態遷移を行います。
+ */
+EditForm.prototype.changeStateForAfterUpdate = function() {
+	var form = this;
+	var queryForm = form.parent.getComponent("queryForm");
+	if (queryForm == null) {
+		form.clearData();
+		currentPage.toTopPage();
+	} else {
+		form.clearData();
+		form.toEditMode();
+		form.parent.toQueryMode();
+		var queryResultForm = form.parent.getComponent("queryResultForm");
+		if (queryResultForm != null) {
+			queryResultForm.changePage();
+		}
+	}
+};
+
+
+/**
  * 保存ボタンのイベント処理を行います。
  * <pre>
  * 対応するEditFormのsaveメソッドを呼び出し、保存処理を行います。
@@ -271,19 +292,11 @@ EditForm.prototype.save = function() {
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
 					var systemName = MessagesUtil.getMessage("message.systemname");
-					currentPage.alert(systemName, result.result);
-				}
-				form.clearData();
-				var queryForm = form.parent.getComponent("queryForm");
-				if (queryForm == null) {
-					currentPage.toTopPage();
+					currentPage.alert(systemName, result.result, function() {
+						form.changeStateForAfterUpdate();
+					});
 				} else {
-					form.toEditMode();
-					form.parent.toQueryMode();
-					var queryResultForm = form.parent.getComponent("queryResultForm");
-					if (queryResultForm != null) {
-						queryResultForm.changePage();
-					}
+					form.changeStateForAfterUpdate();
 				}
 			} else {
 				form.parent.setErrorInfo(form.getValidationResult(result), form);
@@ -307,13 +320,12 @@ EditForm.prototype.del = function() {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
-					currentPage.alert(systemName, result.result);
-				}
-				form.toEditMode();
-				form.parent.toQueryMode();
-				var queryResultForm = form.parent.getComponent("queryResultForm");
-				if (queryResultForm != null) {
-					queryResultForm.changePage();
+					var systemName = MessagesUtil.getMessage("message.systemname");
+					currentPage.alert(systemName, result.result, function() {
+						form.changeStateForAfterUpdate();
+					});
+				} else {
+					form.changeStateForAfterUpdate();
 				}
 			}
 		});
