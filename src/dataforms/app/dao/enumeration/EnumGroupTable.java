@@ -2,8 +2,8 @@ package dataforms.app.dao.enumeration;
 
 import dataforms.app.field.enumeration.EnumGroupCodeField;
 import dataforms.app.field.enumeration.EnumTypeCodeField;
-import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
+import dataforms.dao.TableRelation;
 import dataforms.field.common.DeleteFlagField;
 import dataforms.field.common.SortOrderField;
 
@@ -27,21 +27,9 @@ public class EnumGroupTable extends Table {
 		this.addUpdateInfoFields();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <pre>
-	 * 結合対象テーブルは以下の通りです。
-	 * 	EnumTypeNameTable
-	 * </pre>
-	 * @see dataforms.dao.Table#getJoinCondition(dataforms.dao.Table, java.lang.String)
-	 */
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
-		if (joinTable instanceof EnumTypeNameTable || joinTable instanceof SubQuery) {
-			return (
-				this.getLinkFieldCondition("enumTypeCode", joinTable, alias, "enumTypeCode")
-			);
-		}
-		return null;
+		TableRelation r = new EnumGroupTableRelation(this);
+		return r.getJoinCondition(joinTable, alias);
 	}
 }

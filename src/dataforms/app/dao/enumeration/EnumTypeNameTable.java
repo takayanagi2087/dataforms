@@ -26,22 +26,9 @@ public class EnumTypeNameTable extends Table {
 		this.addUpdateInfoFields();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <pre>
-	 * 結合対象テーブルは以下の通りです。
-	 * 　EnumOptionTable
-	 * </pre>
-	 * @see dataforms.dao.Table#getJoinCondition(dataforms.dao.Table, java.lang.String)
-	 */
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
-		if (joinTable instanceof EnumOptionTable) {
-			return (
-				this.getLinkFieldCondition("enumTypeCode", joinTable, alias, "enumTypeCode")
-				+ " and " + this.getLinkFieldCondition("langCode", joinTable, alias, "langCode")
-			);
-		}
-		return null;
+		EnumTypeNameTableRelation r = new EnumTypeNameTableRelation(this);
+		return r.getJoinCondition(joinTable, alias);
 	}
 }

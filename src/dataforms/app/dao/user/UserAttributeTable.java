@@ -21,13 +21,6 @@ public class UserAttributeTable extends Table {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 * <pre>
-	 * 結合対象テーブルは以下の通りです。
-	 * EnumOptionNameTable	(aliasが"nm"のもの)
-	 * </pre>
-	 */
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		if ("nm".equals(alias)) {

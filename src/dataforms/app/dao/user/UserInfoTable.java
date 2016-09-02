@@ -32,25 +32,9 @@ public class UserInfoTable extends Table {
 		this.setSequenceStartValue(Long.valueOf(1000));
 	}
 
-
-
-	/**
-	 * {@inheritDoc}
-	 * <pre>
-	 * 結合対象テーブルは以下の通りです。
-	 * 	UserAttributeTable
-	 *  UserAttributeQueryのサブクエリ　alias="ua"のサブクエリ
-	 *  alias="ul"のサブクエリ
-	 * </pre>
-	 */
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
-		if (joinTable instanceof UserAttributeTable
-			|| "ua".equals(alias) || "ul".equals(alias)) {
-			return (
-					this.getLinkFieldCondition("userId", joinTable, alias, "userId")
-				);
-		}
-		return null;
+		UserInfoTableRelation r = new UserInfoTableRelation(this);
+		return r.getJoinCondition(joinTable, alias);
 	}
 }

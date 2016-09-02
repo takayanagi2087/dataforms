@@ -463,10 +463,10 @@ public class Table  {
 	 * 別インスタンスで作成し別のaliasを設定し、そのaliasで判定します。
 	 * </pre>
 	 * @param joinTable 結合対象テーブル。
-	 * @param joinTableAlias 結合対象テーブルの別名。
+	 * @param alias 結合対象テーブルの別名。
 	 * @return 結合条件。
 	 */
-	public String getJoinCondition(final Table joinTable, final String joinTableAlias) {
+	public String getJoinCondition(final Table joinTable, final String alias) {
 		return null;
 	}
 
@@ -484,7 +484,7 @@ public class Table  {
 	 * @param linkField 結合テーブルのフィールド。
 	 * @return 結合条件。
 	 */
-	protected final String getLinkFieldCondition(final Table table, final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
+	public final String getLinkFieldCondition(final Table table, final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(table.getAlias() + ".");
 		sb.append(table.getField(field).getDbColumnName());
@@ -508,16 +508,8 @@ public class Table  {
 	 * @param linkField 結合テーブルのフィールド。
 	 * @return 結合条件。
 	 */
-	protected final String getLinkFieldCondition(final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
+	public final String getLinkFieldCondition(final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
 		return this.getLinkFieldCondition(this, field, joinTable, joinTableAlias, linkField);
-/*		StringBuilder sb = new StringBuilder();
-		sb.append(this.getAlias() + ".");
-		sb.append(this.getField(field).getDbColumnName());
-		sb.append("=");
-		sb.append(joinTableAlias);
-		sb.append(".");
-		sb.append(joinTable.getField(linkField).getDbColumnName());
-		return sb.toString();*/
 	}
 
 	/**
