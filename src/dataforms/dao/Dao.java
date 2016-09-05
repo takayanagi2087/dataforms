@@ -1100,9 +1100,11 @@ public class Dao implements JDBCConnectableObject {
 		String sql = gen.generateIsUpdatableSql(table);
 		Map<String, Object> uinfo = this.executeRecordQuery(sql, param);
 		if (uinfo != null) {
-			java.sql.Timestamp ut0 = (java.sql.Timestamp) param.get("updateTimestamp");
+			Entity p = new Entity(param);
+			java.sql.Timestamp ut0 = p.getUpdateTimestamp(); //(java.sql.Timestamp) param.get("updateTimestamp");
 			if (/*uid0 != null &&*/ ut0 != null) {
-				java.sql.Timestamp ut1 = (java.sql.Timestamp) uinfo.get("updateTimestamp");
+				Entity u = new Entity(uinfo);
+				java.sql.Timestamp ut1 = u.getUpdateTimestamp(); //(java.sql.Timestamp) uinfo.get("updateTimestamp");
 //				return /*uid0.equals(uid1) &&*/ ut0.equals(ut1);
 				return ut0.getTime() == ut1.getTime();
 			} else {
@@ -1110,7 +1112,8 @@ public class Dao implements JDBCConnectableObject {
 				return true;
 			}
 		} else {
-			return true;
+			// 更新すべきレコードがない状態なので、エラーにすべき。
+			return false;
 		}
 	}
 
