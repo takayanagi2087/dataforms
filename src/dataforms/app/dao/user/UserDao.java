@@ -3,6 +3,8 @@ package dataforms.app.dao.user;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.controller.ApplicationException;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
@@ -21,7 +23,7 @@ public class UserDao extends Dao {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(UserDao.class.getName());
+    private static Logger log = Logger.getLogger(UserDao.class.getName());
 
 
 	/**
@@ -79,9 +81,12 @@ public class UserDao extends Dao {
 	private void setTablePrimaryKey(final Map<String, Object> data) {
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("attTable");
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
 		if (list != null) {
 			for (Map<String, Object> m: list) {
-				m.put("userId", data.get("userId"));
+				UserAttributeTable.Entity a = new UserAttributeTable.Entity(m);
+//				m.put("userId", data.get("userId"));
+				a.setUserId(e.getUserId());
 			}
 		}
 	}
@@ -93,7 +98,10 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void insertUser(final Map<String, Object> data) throws Exception {
-		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+//		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setPassword(CryptUtil.encrypt(e.getPassword()));
+
 		UserInfoTable table = new UserInfoTable();
 //		Long pk = this.getNewRecordId(table);
 //		data.put("userId", pk);
@@ -116,7 +124,7 @@ public class UserDao extends Dao {
 	 */
 	public boolean existLoginId(final Map<String, Object> data, final boolean forUpdate) throws Exception {
 		UserInfoTable table = new UserInfoTable();
-		return this.existRecord(table, new FieldList(table.getField("loginId")), data, forUpdate);
+		return this.existRecord(table, new FieldList(table.getLoginIdField()), data, forUpdate);
 	}
 
 	/**
@@ -131,7 +139,7 @@ public class UserDao extends Dao {
 			UserInfoTable tbl = new UserInfoTable();
 			this.setFieldList(tbl.getFieldList());
 			this.setMainTable(tbl);
-			this.setQueryFormFieldList(new FieldList(tbl.getField("userId")));
+			this.setQueryFormFieldList(new FieldList(tbl.getUserIdField()));
 			this.setQueryFormData(data);
 		}
 	}
@@ -148,7 +156,7 @@ public class UserDao extends Dao {
 			UserInfoTable tbl = new UserInfoTable();
 			this.setFieldList(tbl.getFieldList());
 			this.setMainTable(tbl);
-			this.setQueryFormFieldList(new FieldList(tbl.getField("loginId"), tbl.getField("password")));
+			this.setQueryFormFieldList(new FieldList(tbl.getLoginIdField(), tbl.getPasswordField()));
 			this.setQueryFormData(data);
 		}
 	}
@@ -167,7 +175,7 @@ public class UserDao extends Dao {
 			UserAttributeTable tbl = new UserAttributeTable();
 			this.setFieldList(tbl.getFieldList());
 			this.setMainTable(tbl);
-			this.setQueryFormFieldList(new FieldList(tbl.getField("userId")));
+			this.setQueryFormFieldList(new FieldList(tbl.getUserIdField()));
 			this.setQueryFormData(data);
 		}
 	}
@@ -180,10 +188,12 @@ public class UserDao extends Dao {
 	 */
 	public Map<String, Object> getSelectedData(final Map<String, Object> data) throws Exception {
 		Map<String, Object> ret = this.executeRecordQuery(new GetUserIdQuery(data));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(ret);
 		List<Map<String, Object>> attTable = this.executeQuery(new GetUserAttributeQuery(data));
 		ret.put("attTable", attTable);
-		ret.put("password", CryptUtil.decrypt((String) ret.get("password")));
-		ret.put("passwordCheck", ret.get("password"));
+//		ret.put("password", CryptUtil.decrypt((String) ret.get("password")));
+		e.setPassword(CryptUtil.decrypt(e.getPassword()));
+		ret.put("passwordCheck", e.getPassword());
 		return ret;
 	}
 
@@ -202,7 +212,8 @@ public class UserDao extends Dao {
 			if (list != null) {
 				UserAttributeTable ftbl = new UserAttributeTable();
 				for (Map<String, Object> m: list) {
-					if (m.get("userId") != null) {
+					UserAttributeTable.Entity r = new UserAttributeTable.Entity(m);
+					if (r.getUserId() != null) {
 						if (!this.isUpdatable(ftbl, m)) {
 							ret = false;
 							break;
@@ -211,6 +222,7 @@ public class UserDao extends Dao {
 				}
 			}
 		}
+		log.debug("isUpdatableUser=" + ret);
 		return ret;
 	}
 
@@ -224,7 +236,9 @@ public class UserDao extends Dao {
 		if (!this.isUpdatableUser(data)) {
 			throw new ApplicationException(this.getPage(), "error.notupdatable");
 		}
-		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+//		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setPassword(CryptUtil.encrypt(e.getPassword()));
 		SqlGenerator gen = this.getSqlGenerator();
 		UserInfoTable tbl = new UserInfoTable();
 		String sql = gen.generateUpdateSql(tbl);
@@ -234,10 +248,12 @@ public class UserDao extends Dao {
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("attTable");
 		if (list != null) {
 			UserAttributeTable atbl = new UserAttributeTable();
-			String delsql = gen.generateDeleteSql(atbl, new FieldList(atbl.getField("userId")));
+			String delsql = gen.generateDeleteSql(atbl, new FieldList(atbl.getUserIdField()));
 			this.executeUpdate(delsql, data);
 			for (Map<String, Object> rec: list) {
-				rec.put("userId", data.get("userId"));
+				UserAttributeTable.Entity r = new UserAttributeTable.Entity(rec);
+//				rec.put("userId", data.get("userId"));
+				r.setUserId(e.getUserId());
 			}
 			this.executeInsert(atbl, list);
 		}
@@ -249,15 +265,21 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void updatePassword(final Map<String, Object> data) throws Exception {
-		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+//		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setPassword(CryptUtil.encrypt(e.getPassword()));
 		UserInfoTable tbl = new UserInfoTable();
 		this.executeUpdate(tbl,
-				new FieldList(
-					tbl.getField("password")
-					, tbl.getField("updateUserId")
-					, tbl.getField("updateTimestamp")
-				),
-				new FieldList(tbl.getField("userId")), data, true);
+			new FieldList(
+				/*
+				tbl.getField(UserInfoTable.Entity.ID_PASSWORD)
+				, tbl.getField(UserInfoTable.Entity.ID_UPDATE_USER_ID)
+				, tbl.getField(UserInfoTable.Entity.ID_UPDATE_TIMESTAMP)*/
+				tbl.getPasswordField()
+				, tbl.getUpdateUserIdField()
+				, tbl.getUpdateTimestampField()
+			),
+			new FieldList(tbl.getField(UserInfoTable.Entity.ID_USER_ID)), data, true);
 	}
 
 
@@ -267,17 +289,24 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void updateSelfUser(final Map<String, Object> data) throws Exception {
-		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+//		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+		e.setPassword(CryptUtil.encrypt(e.getPassword()));
 		UserInfoTable tbl = new UserInfoTable();
 		this.executeUpdate(tbl,
-				new FieldList(
-					tbl.getField("loginId")
-					, tbl.getField("userName")
-					, tbl.getField("mailAddress")
-					, tbl.getField("updateUserId")
-					, tbl.getField("updateTimestamp")
-				),
-				new FieldList(tbl.getField("userId")), data, true);
+			new FieldList(
+/*				tbl.getField(UserInfoTable.Entity.ID_LOGIN_ID)
+				, tbl.getField(UserInfoTable.Entity.ID_USER_NAME)
+				, tbl.getField(UserInfoTable.Entity.ID_MAIL_ADDRESS)
+				, tbl.getField(UserInfoTable.Entity.ID_UPDATE_USER_ID)
+				, tbl.getField(UserInfoTable.Entity.ID_UPDATE_TIMESTAMP)*/
+				tbl.getLoginIdField()
+				, tbl.getUserNameField()
+				, tbl.getMailAddressField()
+				, tbl.getUpdateUserIdField()
+				, tbl.getUpdateTimestampField()
+			),
+			new FieldList(tbl.getField(UserInfoTable.Entity.ID_USER_ID)), data, true);
 	}
 
 	/**
@@ -288,10 +317,10 @@ public class UserDao extends Dao {
 	public void deleteUser(final Map<String, Object> data) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
 		UserInfoTable tbl = new UserInfoTable();
-		String sql = gen.generateDeleteSql(tbl, new FieldList(tbl.getField("userId")));
+		String sql = gen.generateDeleteSql(tbl, new FieldList(tbl.getField(UserInfoTable.Entity.ID_USER_ID)));
 		this.executeUpdate(sql, data);
 		UserAttributeTable atbl = new UserAttributeTable();
-		String asql = gen.generateDeleteSql(atbl, new FieldList(atbl.getField("userId")));
+		String asql = gen.generateDeleteSql(atbl, new FieldList(atbl.getField(UserInfoTable.Entity.ID_USER_ID)));
 		this.executeUpdate(asql, data);
 	}
 
@@ -302,11 +331,13 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public Map<String, Object> login(final Map<String, Object> data) throws Exception {
-		data.put("password", CryptUtil.encrypt((String) data.get("password")));
+//		data.put(UserInfoTable.Entity.ID_PASSWORD, CryptUtil.encrypt((String) data.get(UserInfoTable.Entity.ID_PASSWORD)));
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setPassword(CryptUtil.encrypt(e.getPassword()));
 		GetLoginIdQuery query = new GetLoginIdQuery(data);
 		Map<String, Object> rec = this.executeRecordQuery(query);
 		if (rec != null) {
-			data.put("userId", rec.get("userId"));
+			data.put(UserInfoTable.Entity.ID_USER_ID, rec.get(UserInfoTable.Entity.ID_USER_ID));
 			List<Map<String, Object>> attTable = this.executeQuery(new GetUserAttributeQuery(data));
 			rec.put("attTable", attTable);
 		} else {
