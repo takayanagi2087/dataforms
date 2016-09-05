@@ -18,7 +18,7 @@ public class EnumOptionCodeField extends VarcharField {
 	/**
 	 * コメント。
 	 */
-	private static final String COMMENT = "列挙型の選択肢を示すコード.";
+	private static final String COMMENT = "列挙型の選択肢を示すコード。";
 
 	/**
 	 * コンストラクタ。

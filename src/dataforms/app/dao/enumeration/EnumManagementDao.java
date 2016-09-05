@@ -36,15 +36,15 @@ public class EnumManagementDao extends Dao {
 		 */
 		public EnumOptionTableQuery() {
 			this.setDistinct(true);
-			Table table = new EnumOptionTable();
-			Table nameTable = new EnumTypeNameTable();
+			EnumOptionTable table = new EnumOptionTable();
+			EnumTypeNameTable nameTable = new EnumTypeNameTable();
 			this.setFieldList(new FieldList(
-				table.getField("enumTypeCode")
-				, nameTable.getField("enumTypeName")
+				table.getEnumTypeCodeField()
+				, nameTable.getEnumTypeNameField()
 			));
 			this.setMainTable(table);
 			this.setLeftJoinTableList(new TableList(nameTable));
-			this.setOrderByFieldList(new FieldList(table.getField("enumTypeCode")));
+			this.setOrderByFieldList(new FieldList(table.getEnumTypeCodeField()));
 		}
 	}
 
@@ -100,12 +100,12 @@ public class EnumManagementDao extends Dao {
 		 * @param data フォームデータ。
 		 */
 		public EnumTypeNameQuery(final Map<String, Object> data) {
-			Table table = new EnumTypeNameTable();
+			EnumTypeNameTable table = new EnumTypeNameTable();
 			this.setFieldList(table.getFieldList());
 			this.setMainTable(table);
-			this.setQueryFormFieldList(new FieldList(table.getField("enumTypeCode")));
+			this.setQueryFormFieldList(new FieldList(table.getEnumTypeCodeField()));
 			this.setQueryFormData(data);
-			this.setOrderByFieldList(new FieldList(table.getField("langCode")));
+			this.setOrderByFieldList(new FieldList(table.getLangCodeField()));
 		}
 	}
 
@@ -119,18 +119,18 @@ public class EnumManagementDao extends Dao {
 		 * @param data フォームデータ。
 		 */
 		public EnumOptionNameQuery(final Map<String, Object> data) {
-			Table table = new EnumOptionTable();
-			Table ntable = new EnumOptionNameTable();
+			EnumOptionTable table = new EnumOptionTable();
+			EnumOptionNameTable ntable = new EnumOptionNameTable();
 			FieldList flist = new FieldList();
 			flist.addAll(table.getFieldList());
-			flist.add(ntable.getField("langCode"));
-			flist.add(ntable.getField("enumOptionName"));
+			flist.add(ntable.getLangCodeField());
+			flist.add(ntable.getEnumOptionNameField());
 			this.setFieldList(flist);
 			this.setMainTable(table);
 			this.setJoinTableList(new TableList(ntable));
-			this.setQueryFormFieldList(new FieldList(table.getField("enumTypeCode")));
+			this.setQueryFormFieldList(new FieldList(table.getEnumTypeCodeField()));
 			this.setQueryFormData(data);
-			this.setOrderByFieldList(new FieldList(table.getField("sortOrder"), ntable.getField("langCode")));
+			this.setOrderByFieldList(new FieldList(table.getSortOrderField(), ntable.getLangCodeField()));
 		}
 	}
 
@@ -143,7 +143,10 @@ public class EnumManagementDao extends Dao {
 	 */
 	public Map<String, Object> query(final Map<String, Object> data) throws Exception {
 		Map<String, Object> ret = new HashMap<String, Object>();
-		ret.put("enumTypeCode", data.get("enumTypeCode"));
+		//ret.put("enumTypeCode", data.get("enumTypeCode"));
+		EnumOptionTable.Entity de = new EnumOptionTable.Entity(data);
+		EnumOptionTable.Entity e = new EnumOptionTable.Entity(ret);
+		e.setEnumTypeCode(de.getEnumTypeCode());
 		List<Map<String, Object>> typeNameList = this.executeQuery(new EnumTypeNameQuery(data));
 		ret.put("typeNameList", typeNameList);
 		List<Map<String, Object>> optionNameList = this.executeQuery(new EnumOptionNameQuery(data));
@@ -188,9 +191,12 @@ public class EnumManagementDao extends Dao {
 		this.executeInsert(new EnumOptionNameTable(), optionNameList);
 		short sortOrder = 0;
 		for (Map<String, Object> m: optionNameList) {
-			String lang = (String) m.get("langCode");
+			EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(m);
+			String lang = e.getLangCode(); //(String) m.get("langCode");
 			if ("default".equals(lang)) {
-				m.put("sortOrder", Short.valueOf(sortOrder++));
+				EnumOptionTable.Entity oe = new EnumOptionTable.Entity(m);
+				//m.put("sortOrder", Short.valueOf(sortOrder++));
+				oe.setSortOrder(Short.valueOf(sortOrder++));
 				this.executeInsert(new EnumOptionTable(), m);
 			}
 		}
@@ -203,7 +209,7 @@ public class EnumManagementDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	private void deleteEnumTable(final Table table, final Map<String, Object> data) throws Exception {
-		this.executeDelete(table, new FieldList(table.getField("enumTypeCode")), data, true);
+		this.executeDelete(table, new FieldList(table.getField(EnumOptionTable.Entity.ID_ENUM_TYPE_CODE)), data, true);
 	}
 
 	/**

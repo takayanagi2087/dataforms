@@ -47,7 +47,7 @@ public class EnumDao extends Dao {
 		public EnumTypeQuery() {
 			EnumOptionTable mtbl = new EnumOptionTable();
 			this.setDistinct(true);
-			this.setFieldList(new FieldList(mtbl.getField("enumTypeCode")));
+			this.setFieldList(new FieldList(mtbl.getEnumTypeCodeField()));
 			this.setMainTable(mtbl);
 		}
 	}
@@ -66,14 +66,14 @@ public class EnumDao extends Dao {
 			EnumTypeNameTable mntbl = new EnumTypeNameTable();
 			// 取得フィールドの設定.
 			this.setFieldList(new FieldList(
-				new AliasField("value", mtbl.getField("enumTypeCode"))
-				, new AliasField("name", mntbl.getField("enumTypeName"))
+				new AliasField("value", mtbl.getEnumTypeCodeField())
+				, new AliasField("name", mntbl.getEnumTypeNameField())
 			));
 			this.setMainTable(mtbl);
 			this.setJoinTableList(new TableList(new SubQuery(new EnumTypeQuery()), mntbl));
-			this.setQueryFormFieldList(new FieldList(mtbl.getField("enumGroupCode"), mntbl.getField("langCode")));
+			this.setQueryFormFieldList(new FieldList(mtbl.getEnumGroupCodeField(), mntbl.getLangCodeField()));
 			this.setQueryFormData(data);
-			this.setOrderByFieldList(new FieldList(mtbl.getField("sortOrder")));
+			this.setOrderByFieldList(new FieldList(mtbl.getSortOrderField()));
 		}
 	}
 
@@ -86,12 +86,19 @@ public class EnumDao extends Dao {
 	 */
 	public List<Map<String, Object>> getTypeList(final String enumGroupCode, final String langCode) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
+		EnumGroupTable.Entity e = new EnumGroupTable.Entity(data);
+		EnumTypeNameTable.Entity ne = new EnumTypeNameTable.Entity(data);
+		/*
 		data.put("enumGroupCode", enumGroupCode);
 		data.put("langCode", langCode);
+		*/
+		e.setEnumGroupCode(enumGroupCode);
+		ne.setLangCode(langCode);
 		EnumGroupQuery mq = new EnumGroupQuery(data);
 		List<Map<String, Object>> list = this.executeQuery(mq);
 		if (list.size() == 0) {
-			data.put("langCode", "default");
+			//data.put("langCode", "default");
+			ne.setLangCode("default");
 			list = this.executeQuery(mq);
 		}
 		return list;
@@ -112,14 +119,14 @@ public class EnumDao extends Dao {
 			EnumOptionNameTable mntbl = new EnumOptionNameTable();
 			// 取得フィールドの設定.
 			this.setFieldList(new FieldList(
-				new AliasField("value", mtbl.getField("enumOptionCode"))
-				, new AliasField("name", mntbl.getField("enumOptionName"))
+				new AliasField("value", mtbl.getEnumOptionCodeField())
+				, new AliasField("name", mntbl.getEnumOptionNameField())
 			));
 			this.setMainTable(mtbl);
 			this.setJoinTableList(new TableList(mntbl));
-			this.setQueryFormFieldList(new FieldList(mtbl.getField("enumTypeCode"), mtbl.getField("enumOptionCode"), mntbl.getField("langCode")));
+			this.setQueryFormFieldList(new FieldList(mtbl.getEnumTypeCodeField(), mtbl.getEnumOptionCodeField(), mntbl.getLangCodeField()));
 			this.setQueryFormData(data);
-			this.setOrderByFieldList(new FieldList(mtbl.getField("sortOrder")));
+			this.setOrderByFieldList(new FieldList(mtbl.getSortOrderField()));
 		}
 	}
 
@@ -132,12 +139,17 @@ public class EnumDao extends Dao {
 	 */
 	public List<Map<String, Object>> getOptionList(final String enumTypeCode, final String langCode) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("enumTypeCode", enumTypeCode);
+		EnumOptionTable.Entity e = new EnumOptionTable.Entity(data);
+		EnumOptionNameTable.Entity ne = new EnumOptionNameTable.Entity(data);
+/*		data.put("enumTypeCode", enumTypeCode);
 		data.put("langCode", langCode);
+*/		e.setEnumTypeCode(enumTypeCode);
+		ne.setLangCode(langCode);
 		OptionQuery mq = new OptionQuery(data);
 		List<Map<String, Object>> list = this.executeQuery(mq);
 		if (list.size() == 0) {
-			data.put("langCode", "default");
+			//data.put("langCode", "default");
+			ne.setLangCode("default");
 			list = this.executeQuery(mq);
 		}
 		return list;
@@ -152,11 +164,17 @@ public class EnumDao extends Dao {
 	 * @return オプション名称。
 	 * @throws Exception 例外。
 	 */
+	/*
 	public String getOptionName(final String enumTypeCode, final String enumOptionCode, final String langCode) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("enumTypeCode", enumTypeCode);
-		data.put("enumOptionCode", enumOptionCode);
-		data.put("langCode", langCode);
+//		data.put("enumTypeCode", enumTypeCode);
+//		data.put("enumOptionCode", enumOptionCode);
+//		data.put("langCode", langCode);
+		EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(data);
+		e.setEnumTypeCode(enumTypeCode);
+		e.setEnumOptionCode(enumOptionCode);
+		e.setLangCode(langCode);
+		
 		OptionQuery query = new OptionQuery(data);
 //		EnumOptionTable mtbl = new EnumOptionTable();
 //		EnumOptionNameTable mntbl = new EnumOptionNameTable();
@@ -164,6 +182,6 @@ public class EnumDao extends Dao {
 		Map<String, Object> rec = this.executeRecordQuery(query);
 		String optname = (String) rec.get("name");
 		return optname;
-	}
+	}*/
 
 }
