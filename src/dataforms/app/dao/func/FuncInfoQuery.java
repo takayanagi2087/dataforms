@@ -15,6 +15,6 @@ public class FuncInfoQuery extends Query {
 		FuncInfoTable tbl = new FuncInfoTable();
 		this.setFieldList(tbl.getFieldList());
 		this.setMainTable(tbl);
-		this.setOrderByFieldList(new FieldList(tbl.getField("sortOrder")));
+		this.setOrderByFieldList(new FieldList(tbl.getSortOrderField()));
 	}
 }

@@ -62,7 +62,8 @@ public class FuncEditForm extends EditForm {
 		FuncInfoDao dao = new FuncInfoDao(this);
 		List<Map<String, Object>> list = dao.queryFuncList(true);
 		for (Map<String, Object> m: list) {
-			String funcPath = (String) m.get("funcPath");
+			FuncInfoTable.Entity e = new FuncInfoTable.Entity(m);
+			String funcPath = e.getFuncPath(); // (String) m.get("funcPath");
 			String propFile = funcPath + "/Function";
 			String key = funcPath.substring(1).replaceAll("/", ".");
 			log.debug("key=" + key);
@@ -117,7 +118,8 @@ public class FuncEditForm extends EditForm {
 		dao.saveFuncList(list);
 		String webResourcePath = (String) data.get("webSourcePath");
 		for (Map<String, Object> m: list) {
-			String path = (String) m.get("funcPath");
+			FuncInfoTable.Entity e = new FuncInfoTable.Entity(m);
+			String path = e.getFuncPath(); //(String) m.get("funcPath");
 			String name = (String) m.get("funcName");
 			if (path.indexOf("/dataforms") != 0) {
 				String funcprop = page.getAppropriatePath(path + "/Function.properties", page.getRequest());
