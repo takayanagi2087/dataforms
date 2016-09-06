@@ -1112,8 +1112,8 @@ public class Dao implements JDBCConnectableObject {
 				return true;
 			}
 		} else {
-			// 更新すべきレコードがない状態なので、エラーにすべき。
-			return false;
+			// TODO:この判定で良いか検討をする必要がある。
+			return true;
 		}
 	}
 
