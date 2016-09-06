@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import dataforms.app.dao.user.UserDao;
+import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.ApplicationException;
@@ -30,8 +31,8 @@ public class ChangePasswordForm extends EditForm {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		String loginId = (String) this.getPage().getUserInfo().get("loginId");
-		this.setFormData("loginId", loginId);
+		String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
+		this.setFormData(UserInfoTable.Entity.ID_LOGIN_ID, loginId);
 	}
 
 	@Override
@@ -40,10 +41,13 @@ public class ChangePasswordForm extends EditForm {
 		if (list.size() == 0) {
 			try {
 				UserDao dao = new UserDao(this);
-				String loginId = (String) this.getPage().getUserInfo().get("loginId");
+				String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
 				Map<String, Object> p = new HashMap<String, Object>();
-				p.put("loginId", loginId);
-				p.put("password", param.get("oldPassword"));
+//				p.put("loginId", loginId);
+//				p.put("password", param.get("oldPassword"));
+				UserInfoTable.Entity e = new UserInfoTable.Entity(p);
+				e.setLoginId(loginId);
+				e.setPassword((String) param.get("oldPassword"));
 				dao.login(p);
 			} catch (ApplicationException e) {
 				String msg = MessagesUtil.getMessage(this.getPage(), "error.oldpasswordnotmatch");
@@ -77,7 +81,9 @@ public class ChangePasswordForm extends EditForm {
 	protected void updateData(final Map<String, Object> data) throws Exception {
 		UserDao dao = new UserDao(this);
 		this.setUserInfo(data);
-		data.put("userId", this.getPage().getUserId());
+//		data.put("userId", this.getPage().getUserId());
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setUserId(this.getPage().getUserId());
 		dao.updatePassword(data);
 	}
 

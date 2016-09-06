@@ -7,7 +7,6 @@ import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.enumeration.EnumOptionNameField;
 import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
-import dataforms.dao.Table;
 import dataforms.field.base.Field.SortOrder;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.RowNoField;
@@ -27,15 +26,15 @@ public class UserQueryResultForm extends QueryResultForm {
 	 * コンストラクタ。
 	 */
 	public UserQueryResultForm() {
-		Table tbl = new UserInfoTable();
+		UserInfoTable tbl = new UserInfoTable();
 		//Table atbl = new UserAttributeTable();
 
-		this.addPkField(tbl.getField("userId"));
+		this.addPkField(tbl.getUserIdField());
 		HtmlTable htmltbl = new PageScrollHtmlTable(Page.ID_QUERY_RESULT
 			, new RowNoField()
-			, tbl.getField("userId")
-			, tbl.getField("loginId").setSortable(true, SortOrder.DESC)
-			, tbl.getField("userName").setSortable(true)
+			, tbl.getUserIdField()
+			, tbl.getLoginIdField().setSortable(true, SortOrder.DESC)
+			, tbl.getUserNameField().setSortable(true)
 			, new EnumOptionNameField("userLevelName").setSortable(true)
 		);
 		this.addHtmlTable(htmltbl);

@@ -101,7 +101,7 @@ public class UserEditForm extends EditForm {
 			Map<String, Object> data = this.convertToServerData(param);
 			if (dao.existLoginId(data, this.isUpdate(data))) {
 				String msg = this.getPage().getMessage("error.duplicate");
-				ValidationError err = new ValidationError("userId", msg);
+				ValidationError err = new ValidationError(UserInfoTable.Entity.ID_LOGIN_ID, msg);
 				list.add(err);
 			}
 			@SuppressWarnings("unchecked")
@@ -110,15 +110,17 @@ public class UserEditForm extends EditForm {
 				int levelCount = 0;
 				for (int i = 0; i < attList.size(); i++) {
 					Map<String, Object> m0 = attList.get(i);
-					String type0 = (String) m0.get("userAttributeType");
+					UserAttributeTable.Entity e0 = new UserAttributeTable.Entity(m0);
+					String type0 = e0.getUserAttributeType();  // (String) m0.get("userAttributeType");
 					if ("userLevel".equals(type0)) {
 						levelCount++;
 					}
-					String value0 = (String) m0.get("userAttributeValue");
+					String value0 = e0.getUserAttributeValue();  //(String) m0.get("userAttributeValue");
 					for (int j = i + 1; j < attList.size(); j++) {
 						Map<String, Object> m1 = attList.get(j);
-						String type1 = (String) m1.get("userAttributeType");
-						String value1 = (String) m1.get("userAttributeValue");
+						UserAttributeTable.Entity e1 = new UserAttributeTable.Entity(m1);
+						String type1 =   e1.getUserAttributeType(); // (String) m1.get("userAttributeType");
+						String value1 = e1.getUserAttributeValue();  // (String) m1.get("userAttributeValue");
 						if (type1.equals(type0) && value1.equals(value0)) {
 							String msg = this.getPage().getMessage("error.duplicateuserattr");
 							ValidationError err = new ValidationError("attTable", msg);
