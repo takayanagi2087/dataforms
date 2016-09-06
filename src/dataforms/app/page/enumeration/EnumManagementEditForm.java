@@ -33,19 +33,19 @@ public class EnumManagementEditForm extends EditForm {
 	 * コンストラクタ。
 	 */
 	public EnumManagementEditForm() {
-		Table table = new EnumOptionTable();
+		EnumOptionTable table = new EnumOptionTable();
 //		this.addTableFields(table);
-		this.addField(table.getField("enumTypeCode"));
+		this.addField(table.getEnumTypeCodeField());
 		Table typeNameTable = new EnumTypeNameTable();
 		EditableHtmlTable typeNameList = new EditableHtmlTable("typeNameList", typeNameTable.getFieldList());
-		typeNameList.getFieldList().get("enumTypeCode").removeRequiredValidator();
-		typeNameList.getFieldList().get("langCode").addValidator(new RequiredValidator());
+		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
+		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
 		this.addHtmlTable(typeNameList);
 		Table optionNameTable = new EnumOptionNameTable();
 		EditableHtmlTable optionNameList = new EditableHtmlTable("optionNameList", optionNameTable.getFieldList());
-		optionNameList.getFieldList().get("enumTypeCode").removeRequiredValidator();
-		optionNameList.getFieldList().get("langCode").addValidator(new RequiredValidator());
-		optionNameList.getFieldList().get("enumOptionName").addValidator(new RequiredValidator());
+		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
+		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
+		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_OPTION_NAME).addValidator(new RequiredValidator());
 		this.addHtmlTable(optionNameList);
 	}
 
@@ -99,7 +99,8 @@ public class EnumManagementEditForm extends EditForm {
 		boolean dflg = false;
 		for (int i = 0; i < typeNameList.size(); i++) {
 			Map<String, Object> m = typeNameList.get(i);
-			String lang = (String) m.get("langCode");
+			EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity(m);
+			String lang = e.getLangCode(); //(String) m.get("langCode");
 			if (set.contains(lang)) {
 				ValidationError err = new ValidationError("typeNameList[" + i + "].langCode", this.getPage().getMessage("error.duplicate"));
 				ret.add(err);
@@ -130,8 +131,9 @@ public class EnumManagementEditForm extends EditForm {
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < optionNameList.size(); i++) {
 			Map<String, Object> m = optionNameList.get(i);
-			String enumOptionCode = (String) m.get("enumOptionCode");
-			String langCode = (String) m.get("langCode");
+			EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(m);
+			String enumOptionCode = e.getEnumOptionCode();  //(String) m.get("enumOptionCode");
+			String langCode = e.getLangCode();  //(String) m.get("langCode");
 			String key = enumOptionCode + "_" + langCode;
 			if (set.contains(key)) {
 				ValidationError err = new ValidationError("optionNameList[" + i + "].langCode", this.getPage().getMessage("error.duplicate"));
@@ -181,11 +183,15 @@ public class EnumManagementEditForm extends EditForm {
 		String enumTypeCode = (String) data.get("enumTypeCode");
 		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get("typeNameList");
 		for (Map<String, Object> m: typeNameList) {
-			m.put("enumTypeCode", enumTypeCode);
+			EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity(m);
+//			m.put("enumTypeCode", enumTypeCode);
+			e.setEnumTypeCode(enumTypeCode);
 		}
 		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get("optionNameList");
 		for (Map<String, Object> m: optionNameList) {
-			m.put("enumTypeCode", enumTypeCode);
+			EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(m);
+			//m.put("enumTypeCode", enumTypeCode);
+			e.setEnumTypeCode(enumTypeCode);
 		}
 		this.setUserInfo(data); // 更新を行うユーザID等を設定する.
 		EnumManagementDao dao = new EnumManagementDao(this);
