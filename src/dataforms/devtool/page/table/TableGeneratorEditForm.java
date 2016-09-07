@@ -20,6 +20,8 @@ import dataforms.controller.JsonResponse;
 import dataforms.controller.Response;
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
+import dataforms.dao.file.FileObject;
+import dataforms.dao.file.ImageData;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
 import dataforms.devtool.field.common.OverwriteModeField;
@@ -27,9 +29,13 @@ import dataforms.devtool.field.common.PackageNameField;
 import dataforms.devtool.field.common.TableClassNameField;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.field.base.Field;
+import dataforms.field.common.CharSingleSelectField;
 import dataforms.field.common.CreateTimestampField;
 import dataforms.field.common.CreateUserIdField;
+import dataforms.field.common.FileObjectField;
 import dataforms.field.common.FlagField;
+import dataforms.field.common.ImageField;
+import dataforms.field.common.MultiSelectField;
 import dataforms.field.common.UpdateTimestampField;
 import dataforms.field.common.UpdateUserIdField;
 import dataforms.field.sqltype.BigintField;
@@ -546,7 +552,8 @@ public class TableGeneratorEditForm extends EditForm {
 		Class<?> ret = Object.class;
 		if (CharField.class.isAssignableFrom(field)
 			|| VarcharField.class.isAssignableFrom(field)
-			|| ClobField.class.isAssignableFrom(field)) {
+			|| ClobField.class.isAssignableFrom(field)
+			|| CharSingleSelectField.class.isAssignableFrom(field)) {
 			ret = String.class;
 		} else if (DateField.class.isAssignableFrom(field)) {
 			ret = java.sql.Date.class;
@@ -562,7 +569,14 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = Long.class;
 		} else if (NumericField.class.isAssignableFrom(field)) {
 			ret = BigDecimal.class;
+		} else if (FileObjectField.class.isAssignableFrom(field)) {
+			ret = FileObject.class;
+		} else if (ImageField.class.isAssignableFrom(field)) {
+			ret = ImageData.class;
+		} else if (MultiSelectField.class.isAssignableFrom(field)) {
+			ret = List.class;
 		}
+			
 		return ret;
 	}
 
