@@ -1,5 +1,6 @@
 package ${packageName};
 
+import java.util.Map;
 import dataforms.dao.Table;
 ${importList}
 
@@ -15,4 +16,26 @@ public class ${TableClassShortName} extends Table {
 ${constructor}
 		this.addUpdateInfoFields();
 	}
+	
+	@Override
+	public String getJoinCondition(final Table joinTable, final String alias) {
+		${TableClassShortName}Relation r = new ${TableClassShortName}Relation(this);
+		return r.getJoinCondition(joinTable, alias);
+	}
+	
+	/**
+	 * Entity操作クラスです。
+	 */
+	public static class Entity extends dataforms.dao.Entity {
+${idConstants}
+		/**
+		 * コンストラクタ。
+		 * @param map 操作対象マップ。
+		 */
+		public Entity(final Map<String, Object> map) {
+			super(map);
+		}
+${valueGetterSetter}
+	}
+${fieldGetter}
 }
