@@ -627,13 +627,14 @@ public class TableGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m: list) {
 			String fieldId = getFieldId(m);
+			String uFieldId = fieldId.substring(0, 1).toUpperCase() + fieldId.substring(1);
 			String fieldClassSimpleName = (String) m.get("fieldClassName");
 			String comment = (String) m.get("comment");
 			sb.append("\t/**\n");
 			sb.append("\t * " + comment + "フィールドを取得します。\n");
 			sb.append("\t * @return " + comment + "フィールド。\n");
 			sb.append("\t */\n");
-			sb.append("\tpublic " + fieldClassSimpleName + " get" + fieldClassSimpleName + "() {\n");
+			sb.append("\tpublic " + fieldClassSimpleName + " get" + uFieldId + "Field() {\n");
 			sb.append("\t\treturn (" + fieldClassSimpleName + ") this.getField(Entity.ID_" + StringUtil.camelToSnake(fieldId).toUpperCase() + ");\n");
 			sb.append("\t}\n\n");
 		}
