@@ -499,7 +499,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m:list) {
 			String tableClassName = (String) m.get("tableClassName");
-			sb.append("\t\tTable " + this.getTableVariableName(tableClassName) + " = new " + tableClassName + "();\n");
+			sb.append("\t\t" + tableClassName + " " + this.getTableVariableName(tableClassName) + " = new " + tableClassName + "();\n");
 			String aliasName = (String) m.get("aliasName");
 			if (!StringUtil.isBlank(aliasName)) {
 				sb.append("\t\t" + this.getTableVariableName(tableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
@@ -518,7 +518,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	private String generateNewTables(final Map<String, Object> data) {
 		StringBuilder sb = new StringBuilder();
 		String mainTableClassName = (String) data.get("mainTableClassName");
-		sb.append("\t\tTable " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
+		sb.append("\t\t" + mainTableClassName + " " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
 		String aliasName = (String) data.get("aliasName");
 		if (!StringUtil.isBlank(aliasName)) {
 			sb.append("\t\t" + this.getTableVariableName(mainTableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
@@ -549,8 +549,9 @@ public class QueryGeneratorEditForm extends EditForm {
 				String tableClassName = (String) m.get("selectTableClassName");
 				log.debug("tableClassName=" + tableClassName);
 				String fieldId = (String) m.get("fieldId");
+				String uFieldId = fieldId.substring(0, 1).toUpperCase() + fieldId.substring(1);
 				sb.append(this.getTableVariableName(tableClassName) + ".");
-				sb.append("getFieldList().get(\"" + fieldId + "\")\n");
+				sb.append("get" + uFieldId + "Field()\n");
 			}
 		}
 		return "\t\tthis.setFieldList(new FieldList(\n" + sb.toString() + "\t\t));";
