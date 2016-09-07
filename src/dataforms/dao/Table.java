@@ -537,6 +537,22 @@ public class Table  {
 	}
 
 	/**
+	 * 作成日時フィールドを取得します。
+	 * @return 作成日時フィールド。
+	 */
+	public CreateTimestampField getCreateTimestampField() {
+		CreateTimestampField ret = null;
+		for (Field<?> field: this.fieldList) {
+			if (field instanceof CreateTimestampField) {
+				ret = (CreateTimestampField) field;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	
+	/**
 	 * 更新日時フィールドを取得します。
 	 * @return 更新日時フィールド。
 	 */
@@ -551,6 +567,22 @@ public class Table  {
 		return ret;
 	}
 
+	/**
+	 * 作成ユーザIDフィールドを取得します。
+	 * @return 作成ユーザIDフィールド。
+	 */
+	public CreateUserIdField getCreateUserIdField() {
+		CreateUserIdField ret = null;
+		for (Field<?> field: this.fieldList) {
+			if (field instanceof CreateUserIdField) {
+				ret = (CreateUserIdField) field;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	
 	/**
 	 * 更新ユーザIDフィールドを取得します。
 	 * @return 更新ユーザIDフィールド。
