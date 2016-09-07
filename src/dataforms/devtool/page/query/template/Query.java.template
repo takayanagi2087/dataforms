@@ -1,6 +1,5 @@
 package ${packageName};
 
-import dataforms.dao.Table;
 import dataforms.dao.TableList;
 import dataforms.field.base.FieldList;
 import dataforms.dao.Query;
