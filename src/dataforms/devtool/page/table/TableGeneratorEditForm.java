@@ -535,7 +535,7 @@ public class TableGeneratorEditForm extends EditForm {
 			String comment = (String) m.get("comment");
 			sb.append("\t\t/** " + comment + "のフィールドID。 */\n");
 			sb.append("\t\tpublic static final String ID_");
-			sb.append(StringUtil.camelToSnake(fieldId).toUpperCase());
+			sb.append(StringUtil.camelToUpperCaseSnake(fieldId));
 			sb.append(" = \"");
 			sb.append(fieldId);
 			sb.append("\";\n");
@@ -595,15 +595,14 @@ public class TableGeneratorEditForm extends EditForm {
 			Class<?> valueType = this.getFieldValueType(cls);
 			log.debug(superSimpleClassName + ":" + valueType);
 			String fieldId = getFieldId(m);
-			String uFieldId = fieldId.substring(0, 1).toUpperCase() + fieldId.substring(1);
-//			String fieldClassSimpleName = (String) m.get("fieldClassName");
+			String uFieldId = StringUtil.firstLetterToUpperCase(fieldId);
 			String comment = (String) m.get("comment");
 			sb.append("\t\t/**\n");
 			sb.append("\t\t * " + comment + "を取得します。\n");
 			sb.append("\t\t * @return " + comment + "。\n");
 			sb.append("\t\t */\n");
 			sb.append("\t\tpublic " + valueType.getName() + " get" + uFieldId+ "() {\n");
-			sb.append("\t\t\treturn (" + valueType.getName() + ") this.getMap().get(Entity.ID_" + StringUtil.camelToSnake(fieldId).toUpperCase() + ");\n");
+			sb.append("\t\t\treturn (" + valueType.getName() + ") this.getMap().get(Entity.ID_" + StringUtil.camelToUpperCaseSnake(fieldId) + ");\n");
 			sb.append("\t\t}\n\n");
 
 			sb.append("\t\t/**\n");
@@ -611,7 +610,7 @@ public class TableGeneratorEditForm extends EditForm {
 			sb.append("\t\t * @param " + fieldId + " " + comment + "。\n");
 			sb.append("\t\t */\n");
 			sb.append("\t\tpublic void set" + uFieldId+ "(final " + valueType.getName() + " " + fieldId + ") {\n");
-			sb.append("\t\t\tthis.getMap().put(Entity.ID_" + StringUtil.camelToSnake(fieldId).toUpperCase() + ", " + fieldId + ");\n");
+			sb.append("\t\t\tthis.getMap().put(Entity.ID_" + StringUtil.camelToUpperCaseSnake(fieldId) + ", " + fieldId + ");\n");
 			sb.append("\t\t}\n\n");
 }
 		return sb.toString();
@@ -627,7 +626,7 @@ public class TableGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m: list) {
 			String fieldId = getFieldId(m);
-			String uFieldId = fieldId.substring(0, 1).toUpperCase() + fieldId.substring(1);
+			String uFieldId = StringUtil.firstLetterToUpperCase(fieldId);
 			String fieldClassSimpleName = (String) m.get("fieldClassName");
 			String comment = (String) m.get("comment");
 			sb.append("\t/**\n");
@@ -635,7 +634,7 @@ public class TableGeneratorEditForm extends EditForm {
 			sb.append("\t * @return " + comment + "フィールド。\n");
 			sb.append("\t */\n");
 			sb.append("\tpublic " + fieldClassSimpleName + " get" + uFieldId + "Field() {\n");
-			sb.append("\t\treturn (" + fieldClassSimpleName + ") this.getField(Entity.ID_" + StringUtil.camelToSnake(fieldId).toUpperCase() + ");\n");
+			sb.append("\t\treturn (" + fieldClassSimpleName + ") this.getField(Entity.ID_" + StringUtil.camelToUpperCaseSnake(fieldId) + ");\n");
 			sb.append("\t}\n\n");
 		}
 		return sb.toString();

@@ -41,9 +41,9 @@ public final class StringUtil {
 	}
 
 	/**
-	 * キャメル形式をスネーク形式に変換します。
+	 * キャメル形式をスネーク形式(小文字)に変換します。
 	 * @param camelStr キャメル形式文字列。
-	 * @return スネーク形式文字列。
+	 * @return スネーク形式文字列(小文字)。
 	 */
 	public static String camelToSnake(final String camelStr) {
 		String ret = camelStr
@@ -51,6 +51,19 @@ public final class StringUtil {
 				.replaceAll("([a-z])([A-Z])", "$1_$2");
 		return ret.toLowerCase();
 	}
+	
+	
+	/**
+	 * キャメル形式をスネーク形式(大文字)に変換します。
+	 * @param camelStr キャメル形式文字列。
+	 * @return スネーク形式文字列(大文字)。
+	 */
+	public static String camelToUpperCaseSnake(final String camelStr) {
+		String ret = camelToSnake(camelStr);
+		return ret.toUpperCase();
+	}
+	
+	
 
 	/**
 	 * スネーク形式の文字列をキャメル形式の文字列に変換します。
@@ -68,5 +81,15 @@ public final class StringUtil {
 		m.appendTail(sb);
 		return sb.toString();
 	}
+
+	/**
+	 * 先頭文字を大文字に変換します。
+	 * @param str 変換元の文字。
+	 * @return 変換結果。
+	 */
+	public static String firstLetterToUpperCase(final String str) {
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
+	
 
 }

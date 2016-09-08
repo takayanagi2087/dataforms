@@ -549,7 +549,7 @@ public class QueryGeneratorEditForm extends EditForm {
 				String tableClassName = (String) m.get("selectTableClassName");
 				log.debug("tableClassName=" + tableClassName);
 				String fieldId = (String) m.get("fieldId");
-				String uFieldId = fieldId.substring(0, 1).toUpperCase() + fieldId.substring(1);
+				String uFieldId = StringUtil.firstLetterToUpperCase(fieldId);
 				sb.append(this.getTableVariableName(tableClassName) + ".");
 				sb.append("get" + uFieldId + "Field()\n");
 			}
