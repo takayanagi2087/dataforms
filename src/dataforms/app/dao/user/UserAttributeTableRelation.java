@@ -1,5 +1,6 @@
 package dataforms.app.dao.user;
 
+import dataforms.app.dao.enumeration.EnumOptionTable;
 import dataforms.dao.Table;
 import dataforms.dao.TableRelation;
 
@@ -27,8 +28,8 @@ public class UserAttributeTableRelation extends TableRelation {
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		if ("nm".equals(alias)) {
-			return 	(this.getTable().getLinkFieldCondition("userAttributeType", joinTable, alias, "enumTypeCode") + " and " +
-					this.getTable().getLinkFieldCondition("userAttributeValue", joinTable, alias, "enumOptionCode"));
+			return 	(this.getTable().getLinkFieldCondition(UserAttributeTable.Entity.ID_USER_ATTRIBUTE_TYPE, joinTable, alias, EnumOptionTable.Entity.ID_ENUM_TYPE_CODE) + " and " +
+					this.getTable().getLinkFieldCondition(UserAttributeTable.Entity.ID_USER_ATTRIBUTE_VALUE, joinTable, alias, EnumOptionTable.Entity.ID_ENUM_OPTION_CODE));
 		}
 		return null;
 	}

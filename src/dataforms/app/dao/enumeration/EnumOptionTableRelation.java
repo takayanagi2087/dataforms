@@ -28,11 +28,11 @@ public class EnumOptionTableRelation extends TableRelation {
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		if (joinTable instanceof EnumOptionNameTable) {
 			return (
-				this.getTable().getLinkFieldCondition("enumTypeCode", joinTable, alias, "enumTypeCode") + " and " +
-						this.getTable().getLinkFieldCondition("enumOptionCode", joinTable, alias, "enumOptionCode")
+				this.getTable().getLinkFieldCondition(EnumOptionTable.Entity.ID_ENUM_TYPE_CODE, joinTable, alias, EnumOptionNameTable.Entity.ID_ENUM_TYPE_CODE) + " and " +
+						this.getTable().getLinkFieldCondition(EnumOptionTable.Entity.ID_ENUM_OPTION_CODE, joinTable, alias, EnumOptionNameTable.Entity.ID_ENUM_OPTION_CODE)
 			);
 		} else if (joinTable instanceof EnumTypeNameTable) {
-			return (this.getTable().getLinkFieldCondition("enumTypeCode", joinTable, alias, "enumTypeCode"));
+			return (this.getTable().getLinkFieldCondition(EnumOptionTable.Entity.ID_ENUM_TYPE_CODE, joinTable, alias, EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE));
 		}
 		return null;
 	}

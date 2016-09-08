@@ -30,7 +30,7 @@ public class UserInfoTableRelation extends TableRelation {
 		if (joinTable instanceof UserAttributeTable
 				|| "ua".equals(alias) || "ul".equals(alias)) {
 			return (
-					this.getTable().getLinkFieldCondition("userId", joinTable, alias, "userId")
+					this.getTable().getLinkFieldCondition(UserInfoTable.Entity.ID_USER_ID/*"userId"*/, joinTable, alias, UserAttributeTable.Entity.ID_USER_ID/*"userId"*/)
 			);
 		}
 		return null;

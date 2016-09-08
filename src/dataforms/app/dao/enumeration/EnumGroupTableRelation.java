@@ -29,7 +29,8 @@ public class EnumGroupTableRelation extends TableRelation {
 	public String getJoinCondition(final Table joinTable, final String joinTableAlias) {
 		if (joinTable instanceof EnumTypeNameTable || joinTable instanceof SubQuery) {
 			return (
-				this.getTable().getLinkFieldCondition("enumTypeCode", joinTable, joinTableAlias, "enumTypeCode")
+				this.getTable().getLinkFieldCondition(EnumGroupTable.Entity.ID_ENUM_TYPE_CODE, 
+						joinTable, joinTableAlias, EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE)
 			);
 		}
 		return null;

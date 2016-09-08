@@ -28,12 +28,12 @@ public class EnumTypeNameTableRelation extends TableRelation {
 
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
-		if (joinTable instanceof EnumOptionTable) {
+/*		if (joinTable instanceof EnumOptionTable) {
 			return (
 				this.getTable().getLinkFieldCondition("enumTypeCode", joinTable, alias, "enumTypeCode")
 				+ " and " + this.getTable().getLinkFieldCondition("langCode", joinTable, alias, "langCode")
 			);
-		}
+		}*/
 		return null;
 	}
 
