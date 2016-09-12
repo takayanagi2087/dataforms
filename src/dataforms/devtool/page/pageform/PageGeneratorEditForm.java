@@ -254,6 +254,7 @@ public class PageGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		@SuppressWarnings("unchecked")
 		Class<? extends Table> tcls = (Class<? extends Table>) Class.forName(table);
+		String scn = tcls.getSimpleName();
 		Table tbl = tcls.newInstance();
 		for (Field<?> f: tbl.getFieldList()) {
 			if (tbl.getPkFieldList().get(f.getId()) != null) {
@@ -274,13 +275,13 @@ public class PageGeneratorEditForm extends EditForm {
 					String id = f.getId();
 					String cname = f.getClass().getSimpleName();
 					String cmt = f.getComment();
-					sb.append("\t\tthis.addField(new " + cname + "(\"" + id + "From\")).setMatchType(MatchType.RANGE_FROM).setComment(\"" + cmt + "(from)\");\n");
-					sb.append("\t\tthis.addField(new " + cname + "(\"" + id + "To\")).setMatchType(MatchType.RANGE_TO).setComment(\"" + cmt + "(to)\");\n");
+					sb.append("\t\tthis.addField(new " + cname + "(" + scn + ".Entity.ID_" + StringUtil.camelToUpperCaseSnake(id) + " + \"From\")).setMatchType(MatchType.RANGE_FROM).setComment(\"" + cmt + "(from)\");\n");
+					sb.append("\t\tthis.addField(new " + cname + "(" + scn + ".Entity.ID_" + StringUtil.camelToUpperCaseSnake(id) + " + \"To\")).setMatchType(MatchType.RANGE_TO).setComment(\"" + cmt + "(to)\");\n");
 					implist.append("import " + f.getClass().getName() + ";\n");
 				} else {
 					String id = f.getId();
 					String mt = dt.name();
-					sb.append("\t\tthis.addField(table.getField(\"" + id + "\")).setMatchType(MatchType." + mt + ");\n");
+					sb.append("\t\tthis.addField(table.get" + StringUtil.firstLetterToUpperCase(id) + "Field()).setMatchType(MatchType." + mt + ");\n");
 				}
 			}
 		}
@@ -308,13 +309,14 @@ public class PageGeneratorEditForm extends EditForm {
 		StringBuilder sb = new StringBuilder();
 		@SuppressWarnings("unchecked")
 		Class<? extends Table> tcls = (Class<? extends Table>) Class.forName(table);
+		String scn = tcls.getSimpleName();
 		Table tbl = tcls.newInstance();
 		for (Field<?> f: tbl.getFieldList()) {
 			if (f.isHidden() || f instanceof DeleteFlagField) {
 				continue;
 			}
 			// 		htmltable.getFieldList().get("sampleText").setSortable(true);
-			sb.append("\t\thtmltable.getFieldList().get(\"" + f.getId() + "\").setSortable(true);\n");
+			sb.append("\t\thtmltable.getFieldList().get(" + scn + ".Entity.ID_" + StringUtil.camelToUpperCaseSnake(f.getId()) + ").setSortable(true);\n");
 		}
 		return sb.toString();
 	}

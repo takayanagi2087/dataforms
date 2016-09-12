@@ -3,7 +3,6 @@ package ${packageName};
 import java.util.Map;
 import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
-import dataforms.dao.Table;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.PageScrollHtmlTable;
 import ${tableClassFullName};
@@ -18,7 +17,7 @@ public class ${queryResultFormClassName} extends QueryResultForm {
 	 * コンストラクタ。
 	 */
 	public ${queryResultFormClassName}() {
-		Table table = new ${tableClassName}();
+		${tableClassName} table = new ${tableClassName}();
 		this.addPkFieldList(table.getPkFieldList());
 		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, ${daoClassName}.getQueryResultFieldList());
 ${queryResultFieldSetting}

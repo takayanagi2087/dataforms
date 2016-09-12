@@ -19,7 +19,7 @@ public class ${editFormClassName} extends EditForm {
 	 * コンストラクタ。
 	 */
 	public ${editFormClassName}() {
-		Table table = new ${tableClassName}();
+		${tableClassName} table = new ${tableClassName}();
 		this.addTableFields(table);
 	}
 
@@ -58,7 +58,7 @@ public class ${editFormClassName} extends EditForm {
 	 * @return 編集対象データ。
 	 */
 	@Override
-	protected Map<String, Object> queryReferData(Map<String, Object> data) throws Exception {
+	protected Map<String, Object> queryReferData(final Map<String, Object> data) throws Exception {
 		Table table = new ${tableClassName}();
 		Map<String, Object> ret = this.queryData(data);
 		for (Field<?> f: table.getPkFieldList()) {
