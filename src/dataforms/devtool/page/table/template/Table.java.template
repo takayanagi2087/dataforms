@@ -5,7 +5,7 @@ import dataforms.dao.Table;
 ${importList}
 
 /**
- * ${TableClassShortName}クラス。
+ * ${tableComment}クラス。
  *
  */
 public class ${TableClassShortName} extends Table {

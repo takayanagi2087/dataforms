@@ -653,14 +653,15 @@ public class TableGeneratorEditForm extends EditForm {
 		String packageName = (String) data.get("packageName");
 		String tableClassName = (String) data.get("tableClassName");
 		String autoIncrementId = (String) data.get("autoIncrementId");
+		String tableComment = (String) data.get("tableComment");
 		tsrc = tsrc.replaceAll("\\$\\{packageName\\}", packageName);
+		tsrc = tsrc.replaceAll("\\$\\{tableComment\\}", tableComment);
 		tsrc = tsrc.replaceAll("\\$\\{TableClassShortName\\}", tableClassName);
 		StringBuilder implist = new StringBuilder();
 		StringBuilder constructor = new StringBuilder();
 		if ("1".equals(autoIncrementId)) {
 			constructor.append("\t\tthis.setAutoIncrementId(true);\n");
 		}
-		String tableComment = (String) data.get("tableComment");
 		constructor.append("\t\tthis.setComment(\"" + tableComment + "\");\n");
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
