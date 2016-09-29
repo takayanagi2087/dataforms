@@ -21,9 +21,11 @@ SelectField = createSubclass("SelectField", {}, "Field");
 SelectField.prototype.get = function() {
 	var el = Field.prototype.get.call(this);
 	if (el.size() == 0) {
-		el = this.parent.find("[id^='" + this.selectorEscape(this.id) + "']");
+//		logger.error("aaa=" + this.getUniqSelector());
+		el = this.parent.find("[id^='" + this.selectorEscape(this.id + "[") + "']");
 	}
 	if (el.size() == 0) {
+//		logger.error("bbb="+ this.id + "," + this.getUniqSelector());
 		el = this.parent.find("[name='" + this.selectorEscape(this.id) + "']");
 	}
 	return el;

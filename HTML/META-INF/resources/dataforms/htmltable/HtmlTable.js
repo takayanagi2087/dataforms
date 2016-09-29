@@ -175,7 +175,7 @@ HtmlTable.prototype.setColumnSortEvent = function() {
  * HTMLエレメントとの対応付けを行います。
  */
 HtmlTable.prototype.attach = function() {
-	WebComponent.prototype.attach.call(this);
+	// WebComponent.prototype.attach.call(this);
 	this.setSortMark();
 	this.setColumnSortEvent();
 	var tbl = this.get();
