@@ -184,4 +184,7 @@ public class EnumDao extends Dao {
 		return optname;
 	}*/
 
+	
+	// TODO:オプション名を取得するメソッドを作成すべき。
+	
 }
