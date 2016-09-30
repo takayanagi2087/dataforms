@@ -39,6 +39,8 @@ public class AllTypeEditForm extends EditForm {
 	 */
 	public AllTypeEditForm() {
 		this.addTableFields(new AllTypeTable());
+		this.getFieldList().get("radioField").addValidator(new RequiredValidator());
+		this.getFieldList().get("checkboxField").addValidator(new RequiredValidator());
 
 		this.getFieldList().get("uploadBlobData").addValidator(new FileSizeValidator(10 * 1024 * 1024));
 		AllTypeAttachFileTable aft = new AllTypeAttachFileTable();

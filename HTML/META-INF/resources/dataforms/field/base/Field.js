@@ -248,8 +248,7 @@ Field.prototype.getValue = function() {
  * @returns {ValidationError} 検証結果。問題が発生しなければnullを返します。
  */
 Field.prototype.validate = function() {
-	// TODO: radio等の場合に対応したほうが良いか検討する。
-	var val = this.parent.find('#' + this.selectorEscape(this.id)).val();
+	var val = this.getValue();
 	this.value = val;
 	if (this.validators != null) {
 		for (var i = 0; i < this.validators.length; i++) {
@@ -409,7 +408,7 @@ Field.prototype.isRequired = function(el) {
 	}
 	var tag = el.prop("tagName");
 	var type = el.prop("type");
-	if (("INPUT" == tag && (type.toLowerCase() == "text" || type.toLowerCase() == "email" || type.toLowerCase() == "password" || type.toLowerCase() == "file")) || "TEXTAREA" == tag || "SELECT" == tag) {
+	if ("INPUT" == tag || "TEXTAREA" == tag || "SELECT" == tag) {
 		for (var i = 0; i < this.validatorList.length; i++) {
 			if (this.validatorList[i].jsClass == "RequiredValidator") {
 				return true;
