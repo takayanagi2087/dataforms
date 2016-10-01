@@ -194,9 +194,8 @@ EditForm.prototype.referData = function() {
  * 対応するEditFormのgetDataを呼び出し、参照対象データを取得します。
  * 各フィールドに取得データを設定し、参照モードにします。
  * </pre>
- * TODO:引数をどうするか検討する。
  */
-EditForm.prototype.viewData = function(data) {
+EditForm.prototype.viewData = function() {
 	var title = MessagesUtil.getMessage("message.editformtitle.view");
 	this.find("#editFormTitle").text(title);
 	var form = this;
