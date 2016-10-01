@@ -267,28 +267,6 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		return this;
 	}
 
-	/**
-	 * ajax呼び出しの際のパラメータモード。
-	 * <pre>
-	 * フィールドに定義されたサーバメソッドを呼び出す際に、フィールドが保持する値のみを送信する場合
-	 * FIELD_ONLYを設定します。
-	 * FORM全体の値を送信する場合FORMを指定します。
-	 * </pre>
-	 * @deprecated typoなので。。。
-	 */
-	@Deprecated
-	public enum AjaxParamater {
-		/** サーバに対し該当フィールドのみ送信します。*/
-		FIELD_ONLY,
-		/** サーバに対しフォームの全データを送信します。*/
-		FORM
-	}
-
-	/**
-	 * ajax呼び出しの際のパラメータモード。
-	 */
-	//private AjaxParamater ajaxParamater = AjaxParamater.FIELD_ONLY;
-
 
 	/**
 	 * ajax呼び出しの際のパラメータモード。
@@ -335,36 +313,6 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	public Field<?> setCalcEventField(final boolean calcEventField) {
 		this.calcEventField = calcEventField;
-		return this;
-	}
-
-	/**
-	 * ajaxパラメータモードを取得します。
-	 * @return ajaxパラメータモード。
-	 * @deprecated typoなので。。。
-	 */
-	@Deprecated
-	public AjaxParamater getAjaxParamater() {
-		if (this.ajaxParameter == AjaxParameter.FIELD_ONLY) {
-			return AjaxParamater.FIELD_ONLY;
-		} else {
-			return AjaxParamater.FORM;
-		}
-	}
-
-	/**
-	 * ajaxパラメータモードを設定します。
-	 * @param ajaxParamater ajaxパラメータモード。
-	 * @return 設定したフィールド。
-	 * @deprecated typoなので。。。
-	 */
-	@Deprecated
-	public Field<?> setAjaxParamater(final AjaxParamater ajaxParamater) {
-		if (AjaxParamater.FORM == ajaxParamater) {
-			this.ajaxParameter = AjaxParameter.FORM; 
-		} else {
-			this.ajaxParameter = AjaxParameter.FIELD_ONLY;
-		}
 		return this;
 	}
 
@@ -682,7 +630,6 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		} else {
 			map.put("calcEventField", false);
 		}
-		map.put("ajaxParamater", this.getAjaxParamater().name()); // TODO:後で消す。
 		map.put("ajaxParameter", this.getAjaxParameter().name());
 		map.put("readonly", this.isReadonly());
 		map.put("sortable", this.isSortable());
