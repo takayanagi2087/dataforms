@@ -400,7 +400,6 @@ Field.prototype.lock = function(lk) {
  * 必須バリデータが設定されている場合trueを返します。
  * </pre>
  * @param {jQuery} [el] フィールドに対応するjQueryオブジェクト。HTMLテーブル中のフィールドの場合指定します。
- * TODO:input typeのhtml5対応を検討。
  */
 Field.prototype.isRequired = function(el) {
 	if (el == null) {
