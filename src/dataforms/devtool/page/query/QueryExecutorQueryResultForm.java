@@ -142,6 +142,5 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 	
 	@Override
 	protected void deleteData(final Map<String, Object> data) throws Exception {
-		// TODO:レコードの削除を実装してください。
 	}
 }
