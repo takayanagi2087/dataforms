@@ -16,5 +16,6 @@ public class AllTypePage extends AdminPage {
 		this.addForm(new AllTypeQueryResultForm());
 		this.addForm(new AllTypeEditForm());
 		//this.addDialog(new UserQueryDialog());
+		
 	}
 }

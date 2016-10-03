@@ -164,27 +164,21 @@ public class EnumDao extends Dao {
 	 * @return オプション名称。
 	 * @throws Exception 例外。
 	 */
-	/*
 	public String getOptionName(final String enumTypeCode, final String enumOptionCode, final String langCode) throws Exception {
 		Map<String, Object> data = new HashMap<String, Object>();
-//		data.put("enumTypeCode", enumTypeCode);
-//		data.put("enumOptionCode", enumOptionCode);
-//		data.put("langCode", langCode);
 		EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(data);
 		e.setEnumTypeCode(enumTypeCode);
 		e.setEnumOptionCode(enumOptionCode);
 		e.setLangCode(langCode);
 		
 		OptionQuery query = new OptionQuery(data);
-//		EnumOptionTable mtbl = new EnumOptionTable();
-//		EnumOptionNameTable mntbl = new EnumOptionNameTable();
-		//query.setQueryFormFieldList(new FieldList(mtbl.getField("enumTypeCode"), mtbl.getField("enumOptionCode"), mntbl.getField("langCode")));
 		Map<String, Object> rec = this.executeRecordQuery(query);
-		String optname = (String) rec.get("name");
-		return optname;
-	}*/
-
-	
-	// TODO:オプション名を取得するメソッドを作成すべき。
+		if (rec != null) {
+			String optname = (String) rec.get("name");
+			return optname;
+		} else {
+			return null;
+		}
+	}
 	
 }

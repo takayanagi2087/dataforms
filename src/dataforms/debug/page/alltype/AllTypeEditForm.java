@@ -50,12 +50,17 @@ public class AllTypeEditForm extends EditForm {
 		this.addHtmlTable(tbl);
 
 		this.getFieldList().get("charField").addValidator(new RequiredValidator());
+		
+		
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
 		this.setFormData("attachFileTable", new ArrayList<HashMap<String, Object>>());
+		
+//		EnumDao dao = new EnumDao(this);
+//		log.debug("optionName=" + dao.getOptionName("userLevel", "admin", Locale.JAPAN.getLanguage()));
 	}
 
 
