@@ -108,6 +108,15 @@ public class Dao implements JDBCConnectableObject {
 	}
 
 	/**
+	 * JDBC接続可能オブジェクトを取得します。
+	 * @return JDBC接続可能オブジェクト。
+	 */
+	protected JDBCConnectableObject getJDBCConnectableObject() {
+		return this.jdbcConnectableObject.get();
+	}
+
+	
+	/**
 	 * BLOBダウンロードフラグを取得します。
 	 * @return BLOBダウンロードフラグ。
 	 */
