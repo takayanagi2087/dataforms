@@ -22,6 +22,8 @@ import dataforms.dao.Dao;
 import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.ImageData;
+import dataforms.dao.sqldatatype.SqlChar;
+import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
 import dataforms.devtool.field.common.OverwriteModeField;
@@ -550,7 +552,10 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	private Class<?> getFieldValueType(final Class<?> field) {
 		Class<?> ret = Object.class;
-		if (CharField.class.isAssignableFrom(field)
+		
+		if (SqlVarchar.class.isAssignableFrom(field) 
+			|| SqlChar.class.isAssignableFrom(field)
+			|| CharField.class.isAssignableFrom(field)
 			|| VarcharField.class.isAssignableFrom(field)
 			|| ClobField.class.isAssignableFrom(field)
 			|| CharSingleSelectField.class.isAssignableFrom(field)) {
