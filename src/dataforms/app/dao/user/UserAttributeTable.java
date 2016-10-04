@@ -93,7 +93,7 @@ public class UserAttributeTable extends Table {
 		 * @param userAttributeValue ユーザ属性値。
 		 */
 		public void setUserAttributeValue(final String userAttributeValue) {
-			this.getMap().put(ID_USER_ATTRIBUTE_TYPE, userAttributeValue);
+			this.getMap().put(ID_USER_ATTRIBUTE_VALUE, userAttributeValue);
 		}
 	}
 	

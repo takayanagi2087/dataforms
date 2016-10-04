@@ -112,6 +112,23 @@ public class UserInfoTable extends Table {
 		}
 
 		/**
+		 * ユーザ名を取得します。
+		 * @return ユーザ名。
+		 */
+		public String getUserName() {
+			return (String) this.getMap().get(ID_USER_NAME);
+		}
+		
+		
+		/**
+		 * ユーザ名を取得します。
+		 * @param userName ユーザ名。
+		 */
+		public void setUserName(final String userName) {
+			this.getMap().put(ID_USER_NAME, userName);
+		}
+		
+		/**
 		 * メールアドレスを取得します。
 		 * @return メールアドレス。 
 		 */
