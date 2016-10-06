@@ -9,7 +9,6 @@ import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.UserNameField;
 import dataforms.controller.Form;
 import dataforms.controller.JsonResponse;
-import dataforms.controller.Page;
 
 /**
  * ログイン情報フォームクラス。
@@ -55,7 +54,7 @@ public class LoginInfoForm extends Form {
 	public String getWebResourcePath(final Class<?> cls) {
 //		return Page.getFramePath() + "/" + cls.getSimpleName();
 		if (cls.getName().equals(this.getClass().getName())) {
-			return Page.getFramePath().substring(1) + "/" + cls.getSimpleName();
+			return this.getPage().getPageFramePath().substring(1) + "/" + cls.getSimpleName();
 		} else {
 			return super.getWebResourcePath(cls);
 		}

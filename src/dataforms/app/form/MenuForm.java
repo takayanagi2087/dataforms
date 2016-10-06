@@ -85,7 +85,7 @@ public class MenuForm extends Form {
 	@Override
 	public String getWebResourcePath(final Class<?> cls) {
 		if (cls.getName().equals(this.getClass().getName())) {
-			return Page.getFramePath().substring(1) + "/" + cls.getSimpleName();
+			return this.getPage().getPageFramePath().substring(1) + "/" + cls.getSimpleName();
 		} else {
 			return super.getWebResourcePath(cls);
 		}
