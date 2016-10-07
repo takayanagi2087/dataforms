@@ -77,7 +77,6 @@ input,select,textarea {
 	width: 220px;
 	max-width: 220px;
 	clear: both;
-	float: left;
 	padding: 6px;
 }
 
@@ -88,7 +87,6 @@ input,select,textarea {
 /* メインDIV */
 body #mainDiv {
 	width: 100%;
-	float: left;
 	padding: 4px;
 }
 
