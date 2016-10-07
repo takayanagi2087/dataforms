@@ -3,6 +3,7 @@ package dataforms.field.sqltype;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,11 @@ public class DateField extends DateTimeField<Date> implements SqlDate {
      */
     private static Logger log = Logger.getLogger(DateField.class.getName());
 
-
+    /**
+     * Datepickerを有効フラグします。
+     */
+    private boolean datepickerEnabled = true;
+    
 	/**
 	 * コンストラクタ。
 	 * @param id ID。
@@ -75,5 +80,28 @@ public class DateField extends DateTimeField<Date> implements SqlDate {
 		}
 	}
 
+	/**
+	 * Datepickerの有効/無効を取得します。
+	 * @return 有効な場合true。
+	 */
+	public boolean isDatepickerEnabled() {
+		return datepickerEnabled;
+	}
+
+
+	/**
+	 * Datepickerの有効/無効を設定します。
+	 * @param datepickerEnabled 有効な場合true。
+	 */
+	public void setDatepickerEnabled(boolean datepickerEnabled) {
+		this.datepickerEnabled = datepickerEnabled;
+	}
+
+	@Override
+	public Map<String, Object> getClassInfo() throws Exception {
+		Map<String, Object> ret = super.getClassInfo();
+		ret.put("datepickerEnabled", this.datepickerEnabled);
+		return ret;
+	}
 
 }

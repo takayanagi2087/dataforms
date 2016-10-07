@@ -46,7 +46,9 @@ DateField.prototype.attach = function() {
 	var editFormat = MessagesUtil.getMessage("editformat.datefield");
 	var comp = this.get();
 	if (!comp.prop("readonly")) {
-		this.setDatepicker();
+		if (this.datepickerEnabled) {
+			this.setDatepicker();
+		}
 		this.setFormat(displayFormat, editFormat);
 	}
 	this.backupStyle();
