@@ -618,6 +618,27 @@ public class WebComponent implements JDBCConnectableObject {
      * @param htmltext HTMLのテキスト。
      * @return Bodyの中のテキスト。
      */
+    protected String getHtmlHead(final String htmltext) {
+    	Pattern p = Pattern.compile("<head[\\s\\S]*>[\\s\\S]*</head>",
+    			Pattern.MULTILINE
+    	);
+    	Matcher m = p.matcher(htmltext);
+    	if (m.find()) {
+    		return m.group().replaceAll("(<[Hh][Ee][Aa][Dd][\\s\\S]*?>)|(</[Hh][Ee][Aa][Dd]>)", "");
+    	} else {
+    		return htmltext;
+    	}
+    }
+
+	
+	/**
+     * HTMLテキスト中のBodyの内容を取得します。
+     * <pre>
+     * BODY TAGが無い場合html全体を返します。
+     * </pre>
+     * @param htmltext HTMLのテキスト。
+     * @return Bodyの中のテキスト。
+     */
     protected String getHtmlBody(final String htmltext) {
     	Pattern p = Pattern.compile("<body[\\s\\S]*>[\\s\\S]*</body>",
     			Pattern.MULTILINE

@@ -140,7 +140,23 @@ Page.prototype.layout = function() {
 	if (ret.status == ServerMethod.SUCCESS) {
 		var frame = $("<div id=\"rootDiv\">" + ret.result + "</div>");
 		this.wrapFrame(frame, frame.find("#mainDiv"), $("#mainDiv"));
+		logger.log("frame=" + frame.html());
 	}
+	var getHead = this.getSyncServerMethod("getHead");
+	var hret = getHead.execute("parts=" + this.framePath + "/Frame.html");
+	if (hret.status == ServerMethod.SUCCESS) {
+		var head = $("<div>" + hret.result + "</div>");
+		// ライブラリと競合するタグを削除
+		head.find("meta[charset='UTF-8']").remove();
+		head.find("meta[charset='utf-8']").remove();
+		head.find("link[rel='stylesheet'][href='Frame.css']").remove();
+		head.find("link[rel='stylesheet'][href='FramePC.css']").remove();
+		head.find("link[rel='stylesheet'][href='FrameTB.css']").remove();
+		head.find("link[rel='stylesheet'][href='FrameSP.css']").remove();
+		head.find("title").remove();
+		$("head").append(head.html());
+	}
+
 	var systemName = MessagesUtil.getMessage("message.systemname");
 	if (systemName != null) {
 		$('#systemName').html(systemName);

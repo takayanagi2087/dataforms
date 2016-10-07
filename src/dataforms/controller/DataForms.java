@@ -67,6 +67,30 @@ public class DataForms extends WebComponent {
 
 
     /**
+     * HTML部品のHEADを取得します。
+     * <pre>
+     * partsパラメータに指定されたパスのHTMLのHEADの内容を返します。
+     * </pre>
+     * @param params パラメータ。
+     * @return 部品のHTML文字列。
+     * @throws Exception 例外。
+     */
+    @WebMethod(useDB = false)
+	public JsonResponse getHead(final Map<String, Object> params) throws Exception {
+		this.methodStartLog(log, params);
+		String parts = (String) params.get("parts");
+		String blockParts = parts;
+    	String htmlpath = this.getAppropriatePath(blockParts, this.getPage().getRequest());
+    	String htmltext = this.getWebResource(htmlpath); //FileUtil.readTextFile(htmlpath, DataFormsServlet.getEncoding());
+    	if (htmltext != null) {
+        	htmltext = this.getHtmlHead(htmltext);
+    	}
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, htmltext);
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
+
+    /**
      * HTML部品を取得します。
      * <pre>
      * partsパラメータに指定されたパスのHTMLのBODYの内容を返します。
