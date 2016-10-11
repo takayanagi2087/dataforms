@@ -154,6 +154,12 @@ Page.prototype.layout = function() {
 		head.find("link[rel='stylesheet'][href='FrameTB.css']").remove();
 		head.find("link[rel='stylesheet'][href='FrameSP.css']").remove();
 		head.find("title").remove();
+		// /frame/のパス調整。
+		head.find("link[rel='stylesheet'][href*='/frame/']").each(function() {
+			var href = $(this).attr("href");
+			$(this).attr("href", href.replace(/^.*\/frame\//, currentPage.contextPath + "/frame/"));
+		});
+
 		$("head").append(head.html());
 	}
 
