@@ -18,6 +18,7 @@ BackupForm.prototype.attach = function() {
 	var thisForm = this;
 	this.find("#backupButton").click(function() {
 		thisForm.backup();
+		return false;
 	});
 };
 

@@ -46,6 +46,7 @@ Dialog.prototype.attach = function() {
 	var thisDialog = this;
 	this.find("#closeButton").click(function() {
 		thisDialog.close();
+		return false;
 	});
 }
 

@@ -18,6 +18,7 @@ RestoreForm.prototype.attach = function() {
 	var thisForm = this;
 	this.find("#restoreButton").click(function() {
 		thisForm.restore();
+		return false;
 	});
 };
 

@@ -21,12 +21,14 @@ ConfirmDialog.prototype.attach = function() {
 		if (thisDialog.okFunc != null) {
 			thisDialog.okFunc.call(this);
 		}
+		return false;
 	});
 	this.find("#confirmCancelButton").click(function() {
 		thisDialog.close();
 		if (thisDialog.cancelFunc != null) {
 			thisDialog.cancelFunc.call(this);
 		}
+		return false;
 	});
 };
 

@@ -21,6 +21,7 @@ AlertDialog.prototype.attach = function() {
 		if (thisDialog.okFunc != null) {
 			thisDialog.okFunc.call(this);
 		}
+		return false;
 	});
 };
 
