@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.annotation.WebMethod;
 import dataforms.app.dao.menu.MenuDao;
 import dataforms.controller.Form;
@@ -24,7 +26,7 @@ public class MenuForm extends Form {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(MenuForm.class.getName());
+    private static Logger log = Logger.getLogger(MenuForm.class.getName());
 
     /**
      * メニュー。
@@ -123,6 +125,9 @@ public class MenuForm extends Form {
 	    	page.setRequest(this.getPage().getRequest());
 	    	if (page.isMenuItem()) {
 		    	if (page.isAuthenticated(new HashMap<String, Object>())) {
+		    		String menuName = (String) m.get("menuName");
+		    		log.debug("menuName=" + menuName);
+		    		m.put("menuName", page.convertMenuName(menuName));
 		    		mlist.add(m);
 		    	}
 	    	}
