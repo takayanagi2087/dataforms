@@ -38,43 +38,77 @@ QueryResultForm.prototype.attach = function() {
 	});
 
 	this.find("#topPageButton").click(function() {
-		thisForm.find("#pageNo").val(0);
-		thisForm.changePage();
+		thisForm.topPage();
 		return false;
 	});
 
 	this.find("#bottomPageButton").click(function() {
-		var v = thisForm.find("#pageNo>option:last").val();
-		thisForm.find("#pageNo").val(v);
-		thisForm.changePage();
+		thisForm.bottomPage();
 		return false;
 	});
 
 	this.find("#prevPageButton").click(function() {
-		var v = parseInt(thisForm.find("#pageNo").val(), 10);
-		var idx = v - 1;
-		if (idx < 0){
-			idx = 0;
-		}
-		thisForm.find("#pageNo").val(idx);
-		thisForm.changePage();
+		thisForm.prevPage();
 		return false;
 	});
 
 
 	this.find("#nextPageButton").click(function() {
-		var max = parseInt(thisForm.find("#pageNo>option:last").val(), 10);
-		var v = parseInt(thisForm.find("#pageNo").val(), 10);
-		var idx = v + 1;
-		if (idx > max){
-			idx = max;
-		}
-		thisForm.find("#pageNo").val(idx);
-		thisForm.changePage();
+		thisForm.nextPage();
 		return false;
 	});
 	this.controlPager();
 };
+
+/**
+ * 先頭ページに遷移します。
+ */
+QueryResultForm.prototype.topPage = function() {
+	this.find("#pageNo").val(0);
+	this.changePage();
+};
+
+
+/**
+ * 末尾ページに遷移します。
+ */
+QueryResultForm.prototype.bottomPage = function() {
+	var thisForm = this;
+	var v = thisForm.find("#pageNo>option:last").val();
+	thisForm.find("#pageNo").val(v);
+	thisForm.changePage();
+};
+
+
+/**
+ * 前ページに遷移します。
+ */
+QueryResultForm.prototype.prevPage = function() {
+	var thisForm = this;
+	var v = parseInt(thisForm.find("#pageNo").val(), 10);
+	var idx = v - 1;
+	if (idx < 0){
+		idx = 0;
+	}
+	thisForm.find("#pageNo").val(idx);
+	thisForm.changePage();
+};
+
+/**
+ * 次ページに遷移します。
+ */
+QueryResultForm.prototype.nextPage = function() {
+	var thisForm = this;
+	var max = parseInt(thisForm.find("#pageNo>option:last").val(), 10);
+	var v = parseInt(thisForm.find("#pageNo").val(), 10);
+	var idx = v + 1;
+	if (idx > max){
+		idx = max;
+	}
+	thisForm.find("#pageNo").val(idx);
+	thisForm.changePage();
+};
+
 
 /**
  * PKフィールドのdisabled属性を設定します。
