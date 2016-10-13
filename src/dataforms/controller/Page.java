@@ -886,14 +886,14 @@ public class Page extends DataForms {
 	}
 
 	/**
-	 * メニューの表示名の返還を行います。
+	 * メニューの表示名を飾る場合オーバーライドします。
 	 * <pre>
 	 * メニュー名称にアイコン等を追加する場合にオーバーライドします。
 	 * </pre>
 	 * @param menuName メニュー名称。
 	 * @return 変換後のメニュー名称。
 	 */
-	public String convertMenuName(final String menuName) {
+	public String decorateMenuName(final String menuName) {
 		return menuName;
 	}
 	

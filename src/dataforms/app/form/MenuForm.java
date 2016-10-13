@@ -127,7 +127,7 @@ public class MenuForm extends Form {
 		    	if (page.isAuthenticated(new HashMap<String, Object>())) {
 		    		String menuName = (String) m.get("menuName");
 		    		log.debug("menuName=" + menuName);
-		    		m.put("menuName", page.convertMenuName(menuName));
+		    		m.put("menuName", page.decorateMenuName(menuName));
 		    		mlist.add(m);
 		    	}
 	    	}
