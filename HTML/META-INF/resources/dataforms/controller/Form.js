@@ -147,6 +147,7 @@ Form.prototype.attach = function() {
 	this.find("#newButton").prop("disabled" , false);
 	this.find("#newButton").click(function() {
 		thisForm.newData();
+		return false;
 	});
 	this.setRequiredMark();
 	this.setFormData(this.formData);
