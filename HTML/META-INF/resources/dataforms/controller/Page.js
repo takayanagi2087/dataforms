@@ -280,6 +280,15 @@ Page.prototype.attach = function() {
 		} else {
 			menu.toggle("blind");
 		}
+		return false;
+	});
+	$("body").click(function() {
+		if ($("#showMenuButton").is(":visible")) {
+			var menu = $("#menuDiv");
+			if (menu.is(":visible")) {
+				menu.toggle("blind");
+			}
+		}
 	});
 	var thisPage = this;
 	$(window).resize(function() {

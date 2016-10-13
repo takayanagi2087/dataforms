@@ -34,6 +34,7 @@ input,select,textarea {
 
 /* メニューボタン指定 */
 #showMenuButton {
+	display: none;
 }
 
 /* メニューボタン */
