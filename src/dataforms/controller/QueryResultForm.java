@@ -97,8 +97,11 @@ public abstract class QueryResultForm extends Form {
 		Map<String, Object> data = new HashMap<String, Object>();
 		QueryForm qf = (QueryForm) this.getParent().getComponent("queryForm");
 		data.putAll(this.convertToServerData(param)); // QueryResultFormのページ指定等のパラメータを変換
-		data.putAll(qf.convertToServerData(param)); // QueryFormの条件パラメータの変換.
-		FieldList flist = qf.getFieldList();
+		FieldList flist = new FieldList();
+		if (qf != null) {
+			data.putAll(qf.convertToServerData(param)); // QueryFormの条件パラメータの変換.
+			flist = qf.getFieldList();
+		}
 		Map<String, Object> r = this.queryPage(data, flist);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> queryResult = (List<Map<String, Object>>) r.get("queryResult");
