@@ -1,6 +1,7 @@
 package dataforms.dao;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +31,14 @@ public class Entity {
 	 */
 	private Map<String, Object> map = null;
 	
+
+	/**
+	 * コンストラクタ。
+	 */
+	public Entity() {
+		this.map = new HashMap<String, Object>();
+	}
+
 	/**
 	 * コンストラクタ。
 	 * @param map 操作対象マップ。
