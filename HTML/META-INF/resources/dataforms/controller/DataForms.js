@@ -121,8 +121,12 @@ DataForms.prototype.setErrorInfo = function(errors, form) {
  */
 DataForms.prototype.toQueryMode = function() {
 	var qf = this.find("#queryForm");
-	if (qf.size() > 0) {
-		qf.show();
+	var qrf = this.find("#queryResultForm");
+	if (qf.size() > 0 || qrf.size() > 0) {
+		var queryForm = this.getComponent("queryForm");
+		if (queryForm != null) {
+			qf.show();
+		}
 		var queryResultForm = this.getComponent("queryResultForm");
 		if (queryResultForm != null) {
 			var rf = this.find("#queryResultForm");
