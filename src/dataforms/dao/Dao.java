@@ -171,8 +171,9 @@ public class Dao implements JDBCConnectableObject {
 		 * 1レコード処理します。
 		 * @param rec レコード。
 		 * @return 処理継続フラグ。
+		 * @throws Exception 例外。
 		 */
-		public abstract boolean process(final Map<String, Object> rec);
+		public abstract boolean process(final Map<String, Object> rec) throws Exception;
 	};
 
 	/**
