@@ -26,7 +26,6 @@ import dataforms.field.sqltype.SmallintField;
 import dataforms.field.sqltype.TimeField;
 import dataforms.field.sqltype.TimestampField;
 import dataforms.field.sqltype.VarcharField;
-import dataforms.validator.DoublebyteValidator;
 import dataforms.validator.MaxLengthValidator;
 import dataforms.validator.RequiredValidator;
 
@@ -69,8 +68,7 @@ public class AllTypeTable extends Table {
 		this.setComment("全項目タイプテスト用テーブル");
 		this.addPkField(new RecordIdField("recordIdField")).setNotNull(true).setComment("レコードID");
 		this.addField(new CharField("charField", 10)).setComment("固定長文字列フィールド").addValidator(new MaxLengthValidator(10));
-		this.addField(new VarcharField("varcharField", 64)).setNotNull(false).setComment("可変長文字列フィールド")
-			.addValidator(new DoublebyteValidator());
+		this.addField(new VarcharField("varcharField", 64)).setNotNull(false).setComment("可変長文字列フィールド");
 
 		this.addField(new SmallintField("smallintField")).setComment("単精度整数フィールド");
 		this.addField(new IntegerField("integerField")).setComment("整数フィールド");

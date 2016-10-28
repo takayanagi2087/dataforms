@@ -10,6 +10,9 @@
 		<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 	</head>
 	<body>
+		<div id="test1"></div>
+		<div id="test2"></div>
+		<input type="text" id="test3" />
 		<div id="mainDiv">
 			<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
 			<form id="queryForm">
@@ -225,10 +228,10 @@
 						<tbody>
 							<tr>
 								<td class="buttonColumn">
-									<input type="button" id="attachFileTable[0].addButton" value="+"/>
+									<button id="attachFileTable[0].addButton">+</button>
 								</td>
 								<td class="buttonColumn">
-									<input type="button" id="attachFileTable[0].deleteButton" value="-"/>
+									<button id="attachFileTable[0].deleteButton">-</button>
 								</td>
 								<td style="text-align: right; width:24px;">
 									<span id="attachFileTable[0].no"></span>
@@ -277,7 +280,7 @@
 						<tfoot>
 							<tr>
 								<th class="buttonColumn">
-									<input type="button" id="attachFileTable.addButton" value="+"/>
+									<button id="attachFileTable.addButton" >+</button>
 								</th>
 								<th colspan="11">&nbsp;</th>
 							</tr>
