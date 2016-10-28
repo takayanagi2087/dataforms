@@ -23,6 +23,9 @@ ImageField.prototype.attach = function() {
 	var link = this.parent.find("#" + this.selectorEscape(linkid));
 	var thumbid = this.id + "_thm"; // サムネイルID.
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
+	thumb.attr("width", this.thumbnailWidth);
+	thumb.attr("height", this.thumbnailHeight);
+	
 	thumb.click(function(e) {
 //		var url = thumb.attr("src");
 //		url = url.replace(/\.downloadThumbnail/, ".downloadFullImage");
@@ -32,7 +35,29 @@ ImageField.prototype.attach = function() {
 		val.downloadParam = link.attr("data-dlparam");
 		thisField.showImage(val);
 	});
+	this.get().change(function() {
+		thisField.previewImage(this, thumb)
+	});
+};
 
+
+/**
+ * 画像ファイル指定時のprevie表示。
+ */
+ImageField.prototype.previewImage = function(inputFile, thumb) {
+	var fileList = inputFile.files;
+	if (fileList.length > 0) {
+		var fileReader = new FileReader() ;
+		// 読み込み後の処理を決めておく
+		fileReader.onload = function() {
+			// データURIを取得
+			var dataUri = this.result ;
+			// HTMLに書き出し (src属性にデータURIを指定)
+			//document.getElementById( "output" ).innerHTML += '<img src="' + dataUri + '">' ;
+			thumb.attr("src", dataUri);
+		}
+		fileReader.readAsDataURL(fileList[0]);
+	}
 };
 
 /**
