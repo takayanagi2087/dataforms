@@ -64,6 +64,7 @@ EditableHtmlTable.prototype.makeSortable = function() {
 				thisTable.find("[id$='\\.deleteButton']").prop("disabled", false);
 				thisTable.disableSortable();
 			}
+			return false;
 		});
 	}
 };
@@ -77,6 +78,7 @@ EditableHtmlTable.prototype.attach = function() {
 	if (!this.readonly) {
 		this.find("tfoot").find("[id$='\\.addButton']").click(function() {
 			thisTable.addRow(null);
+			return false;
 		});
 		if (thisTable.sortable) {
 			thisTable.makeSortable();
@@ -103,13 +105,16 @@ EditableHtmlTable.prototype.sortTable = function(col) {
  */
 EditableHtmlTable.prototype.lockEditButton = function(lk) {
 	var ckid = this.id + ".sortable";
-	var btn = this.find("input[type='button']");
+	var addbtn = this.find("[id$='\\.addButton']");
+	var delbtn = this.find("[id$='\\.deleteButton']");
 	if (lk) {
-		btn.hide();
+		addbtn.hide();
+		delbtn.hide();
 		this.find("#" + this.selectorEscape(ckid)).hide();
 		this.find("#" + this.selectorEscape(ckid)).next("label").hide();
 	} else {
-		btn.show();
+		addbtn.show();
+		delbtn.show();
 		this.find("#" + this.selectorEscape(ckid)).show();
 		this.find("#" + this.selectorEscape(ckid)).next("label").show();
 	}
@@ -171,9 +176,11 @@ EditableHtmlTable.prototype.onAddTr = function(rowid) {
 	var thisTable = this;
 	thisTable.find("#" + this.selectorEscape(rowid + ".addButton")).click(function() {
 		thisTable.addRow(this);
+		return false;
 	});
 	thisTable.find("#" + this.selectorEscape(rowid + ".deleteButton")).click(function() {
 		thisTable.deleteRow(this);
+		return false;
 	});
 };
 
@@ -264,6 +271,7 @@ EditableHtmlTable.prototype.setTableData = function(list) {
 		var lidx = this.addTr();
 		this.find("#" + this.selectorEscape(this.id + "[" + lidx + "].addButton")).click(function() {
 			thisTable.addRow(this);
+			return false;
 		});
 		this.resetRowNo();
 		if (list != null) {
