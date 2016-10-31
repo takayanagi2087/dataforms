@@ -112,11 +112,13 @@ EditableHtmlTable.prototype.lockEditButton = function(lk) {
 		delbtn.hide();
 		this.find("#" + this.selectorEscape(ckid)).hide();
 		this.find("#" + this.selectorEscape(ckid)).next("label").hide();
+		this.disableSortable();
 	} else {
 		addbtn.show();
 		delbtn.show();
 		this.find("#" + this.selectorEscape(ckid)).show();
 		this.find("#" + this.selectorEscape(ckid)).next("label").show();
+		this.enableSortable();
 	}
 };
 
