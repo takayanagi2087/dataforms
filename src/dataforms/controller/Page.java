@@ -498,15 +498,31 @@ public class Page extends DataForms {
 	}
 
 
+	/**
+	 * QueryStringを処理メソッド。
+	 * <pre>
+	 * 各コンポーネントのinit()メソッド等は初期Html取得時のリクエストとは
+	 * 別のリクエストで呼び出されるため、初期Html取得時のQueryStringを参照できません。
+	 * これらのinit()メソッド等でQueryStringを参照したい場合、このメソッドを実装し、
+	 * QueryStringの情報をセッションに記録してください。
+	 * </pre>
+	 * @param p QueryStringを展開したMap。
+	 * @throws Exception 例外。
+	 */
+	protected void processQueryString(final Map<String, Object> p) throws Exception {
+		
+	}
+	
 
     /**
-     * HTMLページ応答を取得します。
+     * ページのHTMLを取得します。
      * @param params パラメータ。
      * @return HTMLページ応答。
      * @throws Exception 例外。
      */
     @WebMethod(useDB = true)
 	public Response getHtml(final Map<String, Object> params) throws Exception {
+    	this.processQueryString(params);
 		HttpServletRequest req = this.getRequest();
 		String uri = req.getRequestURI();
 		String context = req.getContextPath();
