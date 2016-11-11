@@ -93,7 +93,7 @@ public class DateField extends DateTimeField<Date> implements SqlDate {
 	 * Datepickerの有効/無効を設定します。
 	 * @param datepickerEnabled 有効な場合true。
 	 */
-	public void setDatepickerEnabled(boolean datepickerEnabled) {
+	public void setDatepickerEnabled(final boolean datepickerEnabled) {
 		this.datepickerEnabled = datepickerEnabled;
 	}
 
