@@ -1,5 +1,6 @@
 package dataforms.app.field.enumeration;
 
+import dataforms.controller.EditForm;
 import dataforms.field.sqltype.VarcharField;
 import dataforms.validator.MaxLengthValidator;
 import dataforms.validator.RequiredValidator;
@@ -26,8 +27,6 @@ public class EnumOptionCodeField extends VarcharField {
 	public EnumOptionCodeField() {
 		super(null, LENGTH);
 		this.setComment(COMMENT);
-		this.addValidator(new RequiredValidator());
-		this.addValidator(new MaxLengthValidator(LENGTH));
 	}
 
 	/**
@@ -37,7 +36,15 @@ public class EnumOptionCodeField extends VarcharField {
 	public EnumOptionCodeField(final String id) {
 		super(id, LENGTH);
 		this.setComment(COMMENT);
-		this.addValidator(new RequiredValidator());
-		this.addValidator(new MaxLengthValidator(LENGTH));
 	}
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		if (this.getParentForm() instanceof EditForm) {
+			this.addValidator(new RequiredValidator());
+			this.addValidator(new MaxLengthValidator(LENGTH));
+		}
+	}
+
 }
