@@ -192,20 +192,18 @@ public class BlobFileStore extends FileStore {
 
 	/**
 	 * ファイルストアからファイルの情報と内容を取得します。
-	 * <pre>
-	 * BLOBからファイル名、ファイル長を取得した後、ファイル本体を一時ファイルに展開します。
-	 * </pre>
 	 * @param colValue DBのカラム値。
 	 * @return FileObjectのインスタンス。
 	 * @throws Exception 例外。
+	 * @deprecated readForDownloadを使用してください。
 	 */
+	@Deprecated
 	public FileObject readFileInfoAndBody(final Object colValue) throws Exception {
 		FileObject fobj = null;
 		InputStream is = (InputStream) colValue;
 		if (is != null) {
 			try {
 				BlobFileHeader header = this.readBlobFileHeader(is);
-				// TODO:ファイルサイズが小さい場合メモリー中に保存することを考える。
 				fobj = header.newFileObject();
 				File tempFile = this.makeTempFile();
 				fobj.setTempFile(tempFile);
@@ -217,6 +215,76 @@ public class BlobFileStore extends FileStore {
 				}
 			} finally {
 				is.close();
+			}
+		}
+		return fobj;
+	}
+
+	/**
+	 * ファイルストアからファイルの情報と内容を取得します(ダウンロード用)。
+	 * <pre>
+	 * BLOBからファイル名、ファイル長を取得した後、ファイル本体を一時ファイルに展開します。
+	 * </pre>
+	 * @param colValue DBのカラム値。
+	 * @return FileObjectのインスタンス。
+	 * @throws Exception 例外。
+	 */
+	public FileObject readForDownload(final Object colValue) throws Exception {
+		FileObject fobj = null;
+		InputStream is = (InputStream) colValue;
+		if (is != null) {
+			try {
+				BlobFileHeader header = this.readBlobFileHeader(is);
+				fobj = header.newFileObject();
+				File tempFile = this.makeTempFile();
+				fobj.setTempFile(tempFile);
+				FileOutputStream os = new FileOutputStream(tempFile);
+				try {
+					FileUtil.copyStream(is, os);
+				} finally {
+					os.close();
+				}
+			} finally {
+				is.close();
+			}
+		}
+		return fobj;
+	}
+	
+	/**
+	 * ファイルストアからファイルの情報と内容を取得します(DB書き込み用)。
+	 * <pre>
+	 * BLOBの内容をヘッダ情報も含めて一時ファイルに出力します。
+	 * </pre>
+	 * @param colValue DBのカラム値。
+	 * @return FileObjectのインスタンス。
+	 * @throws Exception 例外。
+	 */
+	public FileObject readForDbWriting(final Object colValue) throws Exception {
+		FileObject fobj = null;
+		File tempFile = null;
+		InputStream is = (InputStream) colValue;
+		if (is != null) {
+			// BLOBの内容を全て一時ファイルに出力する。
+			try {
+				tempFile = this.makeTempFile();
+				FileOutputStream os = new FileOutputStream(tempFile);
+				try {
+					FileUtil.copyStream(is, os);
+				} finally {
+					os.close();
+				}
+			} finally {
+				is.close();
+			}
+			// 一時ファイルからヘッダ情報を取得する。
+			FileInputStream fis = new FileInputStream(tempFile);
+			try {
+				BlobFileHeader header = this.readBlobFileHeader(fis);
+				fobj = header.newFileObject();
+				fobj.setTempFile(tempFile);
+			} finally {
+				fis.close();
 			}
 		}
 		return fobj;

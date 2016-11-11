@@ -69,11 +69,48 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	private SqlGenerator sqlGenerator = null;
 
+	
 	/**
-	 * BLOBダウンロードフラグ。
+	 * BLOBの読み込みモード。
+	 * 
+	 *
 	 */
-	private boolean blobDownload = false;
-
+	public enum BlobReadMode {
+		/** 
+		 * Webページに表示するための読み込みモードです(デフォルト)
+		 * <pre>
+		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録します。
+		 * ファイルの内容は読み込みません。
+		 * </pre>
+		 */
+		FOR_DISPLAY_FILE_INFO,
+		/** 
+		 * WebページからBLOB中のファイルをダウンロードする際の読み込みモードです。
+		 * <pre>
+		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録し、
+		 * ヘッダ部を除いたファイルの本体を一時ファイルに出力します。
+		 * </pre>
+		 */
+		FOR_DOWNLOAD,
+		/** 
+		 * BLOBを含むテーブルのレコードを他のレコードにコピーする際の読み込みモードです。
+		 * <pre>
+		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録し、
+		 * ヘッダ部を含んだBLOBの内容全体を一時ファイルに出力します。。
+		 * </pre>
+		 */
+		FOR_DB_WRITING
+	};
+	
+	/**
+	 * BLOB読み込みモード。
+	 */
+	private BlobReadMode blobReadMode = BlobReadMode.FOR_DISPLAY_FILE_INFO;
+	
+	
+	
+	
+	
 	/**
 	 * JDBC接続可能オブジェクトを設定設定します。
 	 * @param cobj JDBC接続可能オブジェクト。
@@ -117,11 +154,31 @@ public class Dao implements JDBCConnectableObject {
 
 	
 	/**
-	 * BLOBダウンロードフラグを取得します。
-	 * @return BLOBダウンロードフラグ。
+	 * Blobフィールドの読み込みモードを取得します。
+	 * @return Blobフィールドの読み込みモード。
 	 */
+	public BlobReadMode getBlobReadMode() {
+		return blobReadMode;
+	}
+
+	/**
+	 * Blobフィールドの読み込みモードを設定します。
+	 * @param blobReadMode Blobフィールドの読み込みモード。
+	 */
+	public void setBlobReadMode(final BlobReadMode blobReadMode) {
+		this.blobReadMode = blobReadMode;
+	}
+
+
+	/**
+	 * BLOBダウンロードフラグを取得します。
+	 * 
+	 * @return BLOBダウンロードフラグ。
+	 * @deprecated getBlobReadMode()を使用してください。 
+	 */
+	@Deprecated
 	public boolean isBlobDownload() {
-		return blobDownload;
+		return this.blobReadMode == BlobReadMode.FOR_DOWNLOAD;
 	}
 
 	/**
@@ -132,9 +189,16 @@ public class Dao implements JDBCConnectableObject {
 	 * 展開し、ダウンロード可能な状態にします。
 	 * </pre>
 	 * @param blobDownload BLOBダウンロードフラグ.
+	 * @deprecated setBlobDownload(final boolean blobDownload)を使用してください。 
 	 */
+	@Deprecated
 	public void setBlobDownload(final boolean blobDownload) {
-		this.blobDownload = blobDownload;
+//		this.blobDownload = blobDownload;
+		if (blobDownload) {
+			this.blobReadMode = BlobReadMode.FOR_DOWNLOAD;
+		} else {
+			this.blobReadMode = BlobReadMode.FOR_DISPLAY_FILE_INFO;
+		}
 	}
 
 
@@ -348,14 +412,11 @@ public class Dao implements JDBCConnectableObject {
 						String name = meta.getColumnName(i);
 						if (meta.getColumnType(i) == Types.BLOB) {
 							Blob blob = rset.getBlob(i);
-							BlobFileStore fs = new BlobFileStore(this.jdbcConnectableObject.get());
 							FileObject obj = null;
 							if (blob != null) {
-								if (this.isBlobDownload()) {
-									obj = fs.readFileInfoAndBody(blob.getBinaryStream());
-								} else {
-									obj = fs.readFileInfo(blob.getBinaryStream());
-								}
+								InputStream is = blob.getBinaryStream();
+								BlobFileStore fs = new BlobFileStore(this.jdbcConnectableObject.get());
+								obj = readBlob(is, fs);
 							}
 							m.put(StringUtil.snakeToCamel(name), obj);
 						} else if (meta.getColumnType(i) == Types.BINARY
@@ -365,11 +426,7 @@ public class Dao implements JDBCConnectableObject {
 							BlobFileStore fs = new BlobFileStore(this.jdbcConnectableObject.get());
 							FileObject obj = null;
 							if (is != null) {
-								if (this.isBlobDownload()) {
-									obj = fs.readFileInfoAndBody(is);
-								} else {
-									obj = fs.readFileInfo(is);
-								}
+								obj = readBlob(is, fs);
 							}
 							m.put(StringUtil.snakeToCamel(name), obj);
 						} else if (meta.getColumnType(i) == Types.CLOB) {
@@ -398,6 +455,26 @@ public class Dao implements JDBCConnectableObject {
 		} finally {
 			st.close();
 		}
+	}
+
+
+	/**
+	 * BLOBフィールドの読み込みを行います。
+	 * @param is BLOBの入力ストリーム。
+	 * @param fs ファイルストア。
+	 * @return 読み込み結果。
+	 * @throws Exception 例外。
+	 */
+	public FileObject readBlob(final InputStream is, final BlobFileStore fs) throws Exception {
+		FileObject obj;
+		if (this.getBlobReadMode() == BlobReadMode.FOR_DOWNLOAD) {
+			obj = fs.readForDownload(is);
+		} else if (this.getBlobReadMode() == BlobReadMode.FOR_DB_WRITING) {
+			obj = fs.readForDbWriting(is);
+		} else {
+			obj = fs.readFileInfo(is);
+		}
+		return obj;
 	}
 
 
@@ -1410,10 +1487,12 @@ public class Dao implements JDBCConnectableObject {
 	 * @throws Exception 例外。
 	 */
 	public FileObject queryBlobFileObject(final Table table, final String fieldId, final Map<String, Object> data) throws Exception {
-		this.setBlobDownload(true);
+//		this.setBlobDownload(true);
+		this.setBlobReadMode(BlobReadMode.FOR_DOWNLOAD);
 		FileObjectQuery query = new FileObjectQuery(table, fieldId, data);
 		FileObject ret = (FileObject) this.executeScalarQuery(query);
-		this.setBlobDownload(false);
+		this.setBlobReadMode(BlobReadMode.FOR_DISPLAY_FILE_INFO);
+//		this.setBlobDownload(false);
 		return ret;
 	}
 
