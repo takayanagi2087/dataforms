@@ -148,8 +148,7 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 					// ブラウザに渡す必要最小限の情報をマップに記録します。
 					ret.put("fileName", v.getFileName());
 					ret.put("size", v.getLength());
-					// TODO downloadParameterのままの方が良い。
-					ret.put("downloadParam", v.getDownloadParameter());
+					ret.put("downloadParameter", v.getDownloadParameter());
 				}
 			}
 		}

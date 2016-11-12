@@ -31,7 +31,6 @@ import dataforms.validator.FieldValidator;
 
 /**
  * ページ制御クラス。
- * TODO:ページ呼び出し時のパラメータ処理用のメソッドを実装する。
  */
 public class Page extends DataForms {
 

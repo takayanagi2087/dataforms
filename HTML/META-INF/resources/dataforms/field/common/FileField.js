@@ -82,14 +82,14 @@ FileField.prototype.setValue = function(value) {
 	var ckid = this.id + "_ck";
 	if (value != null) {
 		var form = this.getParentForm();
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParam;
+		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		fnlink.attr("href", url);
 		var fnhidden = this.parent.find("[name='" + this.selectorEscape(fnid) + "']");
 		fnlink.html(value.fileName);
 		fnlink.attr("data-value", value.fileName);
 		fnlink.attr("data-size", value.size);
-		fnlink.attr("data-dlparam", value.downloadParam);
+		fnlink.attr("data-dlparam", value.downloadParameter);
 		fnhidden.val(value.fileName);
 		this.parent.find("#" + this.selectorEscape(ckid)).attr("checked", false);
 	} else {

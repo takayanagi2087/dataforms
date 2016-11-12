@@ -32,7 +32,7 @@ ImageField.prototype.attach = function() {
 		var val = {};
 		val.fileName = link.attr("data-value");
 		val.size = link.attr("data-size");
-		val.downloadParam = link.attr("data-dlparam");
+		val.downloadParameter = link.attr("data-dlparam");
 		thisField.showImage(val);
 	});
 	this.get().change(function() {
@@ -68,7 +68,7 @@ ImageField.prototype.showImage = function(img) {
 	logger.log("img=" + JSON.stringify(img));
 	var dlg = currentPage.getComponent("imageDialog");
 	if (dlg == null) {
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + img.downloadParam;
+		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + img.downloadParameter;
 		window.location.href = url;
 	} else {
 		var imgfrm = dlg.getComponent("imageForm");
@@ -113,7 +113,7 @@ ImageField.prototype.setValue = function(value) {
 	var thumbid = this.id + "_thm"; // サムネイルID.
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
 	if (value != null) {
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParam;
+		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
 		thumb.attr("src", url);
 	} else {
 		thumb.attr("src", null);
