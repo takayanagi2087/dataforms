@@ -261,7 +261,8 @@ EditForm.prototype.confirm = function() {
 EditForm.prototype.changeStateForAfterUpdate = function() {
 	var form = this;
 	var queryForm = form.parent.getComponent("queryForm");
-	if (queryForm == null) {
+	var resultForm = form.parent.getComponent("queryResultForm");
+	if (queryForm == null && resultForm == null) {
 		form.clearData();
 		currentPage.toTopPage();
 	} else {
