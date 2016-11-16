@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
@@ -13,6 +14,8 @@ import org.apache.log4j.Logger;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Table;
+import dataforms.field.base.Field;
+import dataforms.field.common.FileField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.FileUtil;
 import dataforms.util.ObjectUtil;
@@ -312,5 +315,43 @@ public class BlobFileStore extends FileStore {
 	@Override
 	public File getTempFile(final FileObject fobj) {
 		return fobj.getTempFile();
+	}
+	
+	@Override
+	public String getDownloadParameter(final FileField<?> field, final Map<String, Object> d) {
+		Map<String, Object> m = new HashMap<String, Object>();
+		Table table = field.getTable();
+		if (table != null) {
+			m.put("store", this.getClass().getName());
+			m.put("table", table.getClass().getName());
+			m.put("fieldId", field.getId());
+			for (Field<?> f : table.getPkFieldList()) {
+				m.put(f.getId(), d.get(f.getId()).toString());
+			}
+		} else {
+			log.warn("Table not found. field ID=" + field.getId());
+		}
+		String ret = "key=" + this.encryptDownloadParameter(m);
+		log.debug("downloadParameter=" + ret);
+		return ret;
+/*		StringBuilder sb = new StringBuilder();
+		Table table = field.getTable();
+		if (table != null) {
+			sb.append("store=");
+			sb.append(this.getClass().getName());
+			sb.append("&table=");
+			sb.append(table.getClass().getName());
+			sb.append("&fieldId=");
+			sb.append(field.getId());
+			for (Field<?> f : table.getPkFieldList()) {
+				sb.append("&");
+				sb.append(f.getId());
+				sb.append("=");
+				sb.append(d.get(f.getId()).toString());
+			}
+		} else {
+			log.warn("Table not found. field ID=" + field.getId());
+		}
+		return sb.toString();*/
 	}
 }

@@ -119,6 +119,15 @@
 		<param-name>crypt-password</param-name>
 		<param-value>xxx_password_xxx</param-value>
 	</context-param-->
+	<!--
+		QueryStringを暗号化する場合使用するパスワードです。
+		BLOBデータ等のダウンロードパラメータの暗号化に使用しています。
+		運用時に変更しても問題ありません。
+	-->
+	<!-- context-param>
+		<param-name>query-string-crypt-password</param-name>
+		<param-value>yyy_password_yyy</param-value>
+	</context-param-->
 	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
 	<!-- context-param>
 		<param-name>client-messages</param-name>

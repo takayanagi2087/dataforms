@@ -77,11 +77,16 @@ public class ImageField extends FileField<ImageData> {
 
 	/**
 	 * 画像データを読み込みます。
-	 * @param param 読み込みのパラメータ。
+	 * @param p 読み込みのパラメータ。
 	 * @return 読み込み結果。
 	 * @throws Exception 例外。
 	 */
-	protected ImageData readImageData(final Map<String, Object> param) throws Exception {
+	protected ImageData readImageData(final Map<String, Object> p) throws Exception {
+		Map<String, Object> param = p;
+		String key = (String) p.get("key");
+		if (key != null) {
+			 param = FileStore.decryptDownloadParameter(key);
+		}
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		ImageData ret = (ImageData) this.newFileObject();

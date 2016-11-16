@@ -146,6 +146,11 @@ public class DataFormsServlet extends HttpServlet {
 
 
     /**
+     * QueryStringを暗号化する際に使用するパスワード。
+     */
+    private static String queryStringCryptPassword = "yyy_password_yyy";
+    
+    /**
      * 設定の状態.
      */
     private static String configStatus = null;
@@ -323,6 +328,11 @@ public class DataFormsServlet extends HttpServlet {
 		//
 		CryptUtil.setCryptPassword(this.getServletContext().getInitParameter("crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("crypt-password"));
+		//log.debug("init:cryptPassword=" + CryptUtil.getCryptPassword());
+		//
+		DataFormsServlet.setQueryStringCryptPassword(this.getServletContext().getInitParameter("query-string-crypt-password") == null ? "d@d@f0ms"
+				: this.getServletContext().getInitParameter("query-string-crypt-password"));
+		//log.debug("init:queryStringCryptPassword=" + DataFormsServlet.getQueryStringCryptPassword());
 		//
 		Page.setFramePath(this.getServletContext().getInitParameter("frame-path") == null ? "/frame/default"
 				: this.getServletContext().getInitParameter("frame-path"));
@@ -530,6 +540,22 @@ public class DataFormsServlet extends HttpServlet {
 	 */
 	public static void setDisableDeveloperTools(final boolean disableDeveloperTools) {
 		DataFormsServlet.disableDeveloperTools = disableDeveloperTools;
+	}
+	
+	/**
+	 * QueryStringを暗号化する際のパスワードを取得します。
+	 * @return QueryStringを暗号化する際のパスワード。
+	 */
+	public static String getQueryStringCryptPassword() {
+		return queryStringCryptPassword;
+	}
+
+	/**
+	 * QueryStringを暗号化する際のパスワードを設定します。
+	 * @param queryStringCryptPassword QueryStringを暗号化する際のパスワード。
+	 */
+	public static void setQueryStringCryptPassword(final String queryStringCryptPassword) {
+		DataFormsServlet.queryStringCryptPassword = queryStringCryptPassword;
 	}
 
 	/**

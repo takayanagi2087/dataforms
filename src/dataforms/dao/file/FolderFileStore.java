@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
@@ -67,6 +69,11 @@ public class FolderFileStore extends FileStore {
 	 * ファイルのパス。
 	 */
 	private String filePath = null;
+	
+	/**
+	 * ファイルのタイムスタンプ。
+	 */
+	private String timestamp = null;
 
 
 	/**
@@ -230,11 +237,11 @@ public class FolderFileStore extends FileStore {
 			this.fieldId = sp[2];
 			this.userId = Long.parseLong(sp[3]);
 			this.fileName = sp[4].substring(TIMESPAMP_PATTERN.length() + 1);
-			String ts = sp[4].substring(0, TIMESPAMP_PATTERN.length());
+			this.timestamp = sp[4].substring(0, TIMESPAMP_PATTERN.length());
 			File f = new File(this.uploadDataForlder + path);
 			fobj.setFileName(this.fileName);
 			fobj.setLength(f.length());
-			String dlparam = "store=" + this.getClass().getName() + "&u=" + this.userId + "&t=" + this.tableName + "&f=" + this.fieldId + "&n=" + this.fileName + "&ts=" + ts;
+			String dlparam = this.getDownloadParameter(null, null); //"store=" + this.getClass().getName() + "&u=" + this.userId + "&t=" + this.tableName + "&f=" + this.fieldId + "&n=" + this.fileName + "&ts=" + ts;
 			fobj.setDownloadParameter(dlparam);
 			fobj.setTempFile(f);
 		} else {
@@ -248,7 +255,7 @@ public class FolderFileStore extends FileStore {
 	@Override
 	public FileObject readFileObject(final Map<String, Object> param) throws Exception {
 		String folder = DataFormsServlet.getUploadDataFolder();
-		String u = (String) param.get("u");
+		Long u = ((BigDecimal) param.get("u")).longValue();
 		String t = (String) param.get("t");
 		String f = (String) param.get("f");
 		String n = (String) param.get("n");
@@ -271,6 +278,27 @@ public class FolderFileStore extends FileStore {
 	@Override
 	public File getTempFile(final FileObject fobj) {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <pre>
+	 * DBに記録されたパスからダウンロードパラメータを取得します。
+	 * FolderFileStoreの場合、引数のfield,dは使用しないで作成可能です。
+	 * </pre>
+	 */
+	@Override
+	public String getDownloadParameter(final FileField<?> field, final Map<String, Object> d) {
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put("store", this.getClass().getName());
+		m.put("u", this.userId);
+		m.put("t", this.tableName);
+		m.put("f", this.fieldId);
+		m.put("n", this.fileName);
+		m.put("ts", this.timestamp);
+		return "key=" + this.encryptDownloadParameter(m);
+/*	String dlparam = "store=" + this.getClass().getName() + "&u=" + this.userId + "&t=" + this.tableName + "&f=" + this.fieldId + "&n=" + this.fileName + "&ts=" + this.timestamp;
+		return dlparam;*/
 	}
 
 }

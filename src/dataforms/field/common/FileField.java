@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.controller.ApplicationError;
 import dataforms.controller.BinaryResponse;
-import dataforms.dao.Table;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
@@ -159,28 +158,12 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	 * BLOB用ダウンロードパラメータを取得します。
 	 * @param m データマップ。
 	 * @return ダウンロードパラメータ。
+	 * 
+	 * 
 	 */
 	public String getBlobDownloadParameter(final Map<String, Object> m) {
-		StringBuilder sb = new StringBuilder();
-		Table table = this.getTable();
-		if (table != null) {
-			FileStore store = this.newFileStore();
-			sb.append("store=");
-			sb.append(store.getClass().getName());
-			sb.append("&table=");
-			sb.append(table.getClass().getName());
-			sb.append("&fieldId=");
-			sb.append(this.getId());
-			for (Field<?> f : table.getPkFieldList()) {
-				sb.append("&");
-				sb.append(f.getId());
-				sb.append("=");
-				sb.append(m.get(f.getId()).toString());
-			}
-		} else {
-			log.warn("Table not found. field ID=" + this.getId());
-		}
-		return sb.toString();
+		FileStore store = this.newFileStore();
+		return store.getDownloadParameter(this, m);
 	}
 
 	/**
@@ -199,12 +182,20 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 
 	/**
 	 * ファイルをダウンロードします。
-	 * @param param パラメータ。
+	 * @param p パラメータ。
 	 * @return 画像応答。
 	 * @throws Exception 例外。
+	 * 
+	 * 
 	 */
 	@WebMethod(useDB = true)
-	public BinaryResponse download(final Map<String, Object> param) throws Exception {
+	public BinaryResponse download(final Map<String, Object> p) throws Exception {
+		Map<String, Object> param = p;
+		String key = (String) p.get("key");
+		log.debug("key=" + key);
+		if (key != null) {
+			param = FileStore.decryptDownloadParameter(key);
+		}
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		BinaryResponse resp = new BinaryResponse(fobj);

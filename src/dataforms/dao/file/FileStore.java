@@ -4,8 +4,13 @@ import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.log4j.Logger;
 
+import dataforms.field.common.FileField;
+import dataforms.servlet.DataFormsServlet;
+import dataforms.util.CryptUtil;
 import dataforms.util.FileUtil;
+import net.arnx.jsonic.JSON;
 
 /**
  * ファイル保存領域クラス。
@@ -16,6 +21,12 @@ import dataforms.util.FileUtil;
  *
  */
 public abstract class FileStore {
+	
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(FileStore.class);
+	
 	/**
 	 * コンストラクタ。
 	 */
@@ -96,5 +107,47 @@ public abstract class FileStore {
 	 * @return 削除すべき一時ファイル。
 	 */
 	public abstract File getTempFile(final FileObject fobj);
+	
+	/**
+	 * ダウンロードパラメータを取得します。
+	 * @param field フィールド。
+	 * @param d フィールドが存在するレコードのマップ。
+	 * @return ダウンロードパラメータ。
+	 */
+	public abstract String getDownloadParameter(final FileField<?> field, final Map<String, Object> d);
+	
+	/**
+	 * 暗号化されたダウンロードパラメータを取得します。
+	 * @param p ダウンロードパラメータマップ。
+	 * @return 暗号化されたダウンロードパラメータ。
+	 */
+	public String encryptDownloadParameter(final Map<String, Object> p) {
+		String json = JSON.encode(p, false);
+		String ret = "";
+		try {
+			ret = java.net.URLEncoder.encode(CryptUtil.encrypt(json, DataFormsServlet.getQueryStringCryptPassword()), DataFormsServlet.getEncoding());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	
+	/**
+	 * 暗号化されたダウンロードパラメータを複合します。
+	 * @param p 暗号化されたダウンロードパラメータ。
+	 * @return ダウンロードパラメータマップ。
+	 */
+	public static Map<String, Object> decryptDownloadParameter(final String p) {
+		Map<String, Object> ret = null;
+		try {
+			String json = CryptUtil.decrypt(p, DataFormsServlet.getQueryStringCryptPassword());
+			log.debug("json=" + json);
+			ret =  JSON.decode(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+
 }
 

@@ -18,6 +18,11 @@ import javax.crypto.spec.DESKeySpec;
  *
  */
 public final class CryptUtil {
+	
+	/**
+	 * Logger.
+	 */
+	//private static Logger log = Logger.getLogger(CryptUtil.class);
 
 	/**
 	 * コンストラクタ。
