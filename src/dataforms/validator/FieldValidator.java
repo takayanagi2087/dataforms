@@ -52,6 +52,14 @@ public abstract class FieldValidator extends WebComponent {
 
 
 	/**
+	 * メッセージキーを設定します。
+	 * @param messageKey メッセージキーを設定。
+	 */
+	public void setMessageKey(final String messageKey) {
+		this.messageKey = messageKey;
+	}
+
+	/**
 	 * コンストラクタ。
 	 * @param msgkey エラー時に表示するメッセージキー。
 	 */
