@@ -1,9 +1,6 @@
 package dataforms.app.field.enumeration;
 
-import dataforms.controller.EditForm;
 import dataforms.field.sqltype.VarcharField;
-import dataforms.validator.MaxLengthValidator;
-import dataforms.validator.RequiredValidator;
 
 /**
  * 列挙型コードクラス。
@@ -41,9 +38,5 @@ public class EnumTypeCodeField extends VarcharField {
 	@Override
 	protected void onBind() {
 		super.onBind();
-		if (this.getParentForm() instanceof EditForm) {
-			this.addValidator(new RequiredValidator());
-			this.addValidator(new MaxLengthValidator(LENGTH));
-		}
 	}
 }

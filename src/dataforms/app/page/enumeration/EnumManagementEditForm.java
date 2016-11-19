@@ -35,7 +35,7 @@ public class EnumManagementEditForm extends EditForm {
 	public EnumManagementEditForm() {
 		EnumOptionTable table = new EnumOptionTable();
 //		this.addTableFields(table);
-		this.addField(table.getEnumTypeCodeField());
+		this.addField(table.getEnumTypeCodeField()).addValidator(new RequiredValidator());
 		Table typeNameTable = new EnumTypeNameTable();
 		EditableHtmlTable typeNameList = new EditableHtmlTable("typeNameList", typeNameTable.getFieldList());
 		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
@@ -44,6 +44,7 @@ public class EnumManagementEditForm extends EditForm {
 		Table optionNameTable = new EnumOptionNameTable();
 		EditableHtmlTable optionNameList = new EditableHtmlTable("optionNameList", optionNameTable.getFieldList());
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
+		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_OPTION_CODE).addValidator(new RequiredValidator());
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_OPTION_NAME).addValidator(new RequiredValidator());
 		this.addHtmlTable(optionNameList);
