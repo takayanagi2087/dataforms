@@ -8,6 +8,7 @@ import dataforms.controller.EditForm;
 import dataforms.controller.QueryForm;
 import dataforms.dao.Table;
 import dataforms.field.base.Field;
+import dataforms.field.common.FileField;
 import ${tableClassFullName};
 import ${daoClassFullName};
 
@@ -63,6 +64,11 @@ public class ${editFormClassName} extends EditForm {
 		Map<String, Object> ret = this.queryData(data);
 		for (Field<?> f: table.getPkFieldList()) {
 			ret.remove(f.getId());
+		}
+		for (Field<?> f: table.getFieldList()) {
+			if (f instanceof FileField) {
+				ret.remove(f.getId());
+			}
 		}
 		return ret;
 	}

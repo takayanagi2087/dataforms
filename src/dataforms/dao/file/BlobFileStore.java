@@ -334,24 +334,5 @@ public class BlobFileStore extends FileStore {
 		String ret = "key=" + this.encryptDownloadParameter(m);
 		log.debug("downloadParameter=" + ret);
 		return ret;
-/*		StringBuilder sb = new StringBuilder();
-		Table table = field.getTable();
-		if (table != null) {
-			sb.append("store=");
-			sb.append(this.getClass().getName());
-			sb.append("&table=");
-			sb.append(table.getClass().getName());
-			sb.append("&fieldId=");
-			sb.append(field.getId());
-			for (Field<?> f : table.getPkFieldList()) {
-				sb.append("&");
-				sb.append(f.getId());
-				sb.append("=");
-				sb.append(d.get(f.getId()).toString());
-			}
-		} else {
-			log.warn("Table not found. field ID=" + field.getId());
-		}
-		return sb.toString();*/
 	}
 }
