@@ -68,8 +68,12 @@ ImageField.prototype.showImage = function(img) {
 	logger.log("img=" + JSON.stringify(img));
 	var dlg = currentPage.getComponent("imageDialog");
 	if (dlg == null) {
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + img.downloadParameter;
-		window.location.href = url;
+		if (img != null) {
+			if (img.downloadParameter.length > 0) {
+				var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + img.downloadParameter;
+				window.open(url, "_image");
+			}
+		}
 	} else {
 		var imgfrm = dlg.getComponent("imageForm");
 		var imgfld = imgfrm.getComponent("image");
