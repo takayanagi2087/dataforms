@@ -193,7 +193,7 @@
 	</context-param>
 	<!--
 		ブラウザの戻るボタンの動作を設定します。
-		disabledを指定した場合pushState popStateを使用して、戻るボタンを無効化するjavascriptを出力します。
+		disabledを指定した場合pushState popStateを使用すると、戻るボタンを無効化するjavascriptを出力します。
 	 -->
 	<context-param>
 		<param-name>browser-back-button</param-name>

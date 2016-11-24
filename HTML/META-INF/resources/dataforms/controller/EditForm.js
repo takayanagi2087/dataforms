@@ -49,7 +49,11 @@ EditForm.prototype.attach = function() {
 		return false;
 	});
 	form.find('#backButton').click(function() {
-		form.back();
+		if (form.parent.isBrowserBackEnabled()) {
+			history.back();
+		} else {
+			form.back();
+		}
 		return false;
 	});
 	form.toEditMode();
@@ -114,6 +118,7 @@ EditForm.prototype.newData = function() {
 			form.saveMode = "new";
 			form.setFormData(result.result);
 			form.toEditMode();
+			form.parent.pushEditModeStatus();
 		} else {
 			form.parent.setErrorInfo(form.getValidationResult(result), form);
 		}
@@ -139,6 +144,7 @@ EditForm.prototype.updateData = function(qs) {
 				form.saveMode = "update";
 				form.setFormData(result.result);
 				form.toEditMode();
+				form.parent.pushEditModeStatus();
 			} else {
 				form.parent.setErrorInfo(form.getValidationResult(result), form);
 			}
@@ -155,6 +161,7 @@ EditForm.prototype.updateData = function(qs) {
 				form.saveMode = "update";
 				form.setFormData(result.result);
 				form.toEditMode();
+				form.parent.pushEditModeStatus();
 			} else {
 				form.parent.setErrorInfo(form.getValidationResult(result), form);
 			}
@@ -182,6 +189,7 @@ EditForm.prototype.referData = function() {
 			form.saveMode = "new";
 			form.setFormData(result.result);
 			form.toEditMode();
+			form.parent.pushEditModeStatus();
 		} else {
 			form.parent.setErrorInfo(form.getValidationResult(result), form);
 		}
@@ -209,6 +217,7 @@ EditForm.prototype.viewData = function() {
 			form.find("#confirmButton").hide();
 			form.find("#saveButton").hide();
 			form.find("#resetButton").hide();
+			form.parent.pushConfirmModeStatus();
 		} else {
 			form.parent.setErrorInfo(form.getValidationResult(result), form);
 		}
@@ -248,6 +257,7 @@ EditForm.prototype.confirm = function() {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				form.toConfirmMode();
+				form.parent.pushConfirmModeStatus();
 			} else {
 				form.parent.setErrorInfo(form.getValidationResult(result), form);
 			}

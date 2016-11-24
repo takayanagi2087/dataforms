@@ -198,16 +198,80 @@ Page.prototype.toTopPage = function() {
 };
 
 /**
+ * ブラウザの戻るボタンでフォームの制御を行うかどうかを返します。
+ * @returns {Boolean} Pageクラスではweb.xmlの設定値を返します。
+ */
+DataForms.prototype.isBrowserBackEnabled = function() {
+	if (this.browserBackButton == "disabled") {
+		return false;
+	} else {
+		return true;
+	}
+};
+
+/**
+ * history.pushStateを呼び出すためのメソッドです。
+ * <pre>
+ * Pageクラスではweb.xmlのbrowser-back-buttonがenabledの場合、
+ * history.pushStateを呼び出します。
+ * </pre>
+ * @param {Object} state 状態。
+ * @param {String} title タイトル。
+ * @param {String} url タイトル。
+ * 
+ */
+Page.prototype.pushState = function(state, title, url) {
+	if (this.browserBackButton == "enabled") {
+		logger.log("poshstate=" + state);
+		history.pushState(state, title, url);
+	}
+};
+
+/**
+ * history.replaceStateを呼び出すためのメソッドです。
+ * <pre>
+ * Pageクラスではweb.xmlのbrowser-back-buttonがenabledの場合、
+ * history.replaceStateを呼び出します。
+ * </pre>
+ * @param {Object} state 状態。
+ * @param {String} title タイトル。
+ * @param {String} url タイトル。
+ * 
+ */
+Page.prototype.replaceState = function(state, title, url) {
+	if (this.browserBackButton == "enabled") {
+		logger.log("replacestate=" + state);
+		history.replaceState(state, title, url);
+	}
+};
+
+
+
+/**
  * ブラウザの戻るボタン押下時の処理を行います。
  * <pre>
  * web.xmlのbrowser-back-buttonがenabledの場合は呼ばれません。
  * </pre>
  * @param event イベント情報。
  */
-Page.prototype.onBrowserBackButton = function(event) {
+Page.prototype.onDisabledBackButton = function(event) {
 	history.pushState("disableBack", "disableBack", location.href);
 	return;
 };
+
+Page.prototype.onBackButton = function(event) {
+	logger.log("popstate=" + event.originalEvent.state);
+	if (event.originalEvent.state) {
+		var editForm = this.getComponent("editForm");
+		if (editForm != null) {
+			if (editForm.get().is(":visible")) {
+				editForm.back();
+			}
+		}
+	}
+	return;
+};
+
 
 /**
  * ブラウザの戻るボタンの設定を行います。
@@ -219,11 +283,17 @@ Page.prototype.configureBrowserBackButton = function() {
 		history.pushState("disableBack", "disableBack", location.href);
 		$(window).on("popstate", function(event){
 			if (!event.originalEvent.state){
-				thisPage.onBrowserBackButton(event);
+				thisPage.onDisabledBackButton(event);
 			}
+		});
+	} else {
+		$(window).on("popstate", function(event){
+			thisPage.onBackButton(event);
 		});
 	}
 };
+
+
 
 /**
  * ページの初期化処理を行います。
@@ -386,5 +456,4 @@ Page.prototype.confirm = function(title, msg, okFunc, cancelFunc) {
 		minHeight: 100
 	});
 };
-
 

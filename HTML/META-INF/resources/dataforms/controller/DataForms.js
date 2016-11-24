@@ -59,8 +59,10 @@ DataForms.prototype.attach = function() {
 	}
 	var ef = this.find("#editForm");
 	if (editMode) {
+		this.replaceState("editMode", "editMode", location.href);
 		ef.show();
 	} else {
+		this.replaceState("queryMode", "queryMode", location.href);
 		ef.hide();
 	}
 	WebComponent.prototype.attach.call(this);
@@ -132,9 +134,9 @@ DataForms.prototype.toQueryMode = function() {
 			var rf = this.find("#queryResultForm");
 			if (queryResultForm.queryResult != null) {
 				rf.show();
-			} else {
+			} /*else {
 				rf.hide();
-			}
+			}*/
 		}
 		var editForm = this.getComponent("editForm");
 		if (editForm != null) {
@@ -165,3 +167,50 @@ DataForms.prototype.toEditMode = function() {
 };
 
 
+/**
+ * history.pushStateを呼び出すためのメソッドです。
+ * <pre>
+ * このメソッドはDataFormsクラスでは何もしませんが、Pageクラスではhistory.pushStateを呼び出します。
+ * </pre>
+ * @param {Object} state 状態。
+ * @param {String} title タイトル。
+ * @param {String} url タイトル。
+ * 
+ */
+DataForms.prototype.pushState = function(state, title, url) {
+};
+
+/**
+ * history.replaceStateを呼び出すためのメソッドです。
+ * <pre>
+ * このメソッドはDataFormsクラスでは何もしませんが、Pageクラスではhistory.replaceStateを呼び出します。
+ * </pre>
+ * @param {Object} state 状態。
+ * @param {String} title タイトル。
+ * @param {String} url タイトル。
+ * 
+ */
+DataForms.prototype.replaceState = function(state, title, url) {
+};
+
+/**
+ * 編集モードへの画面遷移履歴を登録します。
+ */
+DataForms.prototype.pushEditModeStatus = function() {
+	this.pushState("editMode", "editMode", location.href);
+};
+
+/**
+ * 確認モードへの画面遷移履歴を登録します。
+ */
+DataForms.prototype.pushConfirmModeStatus = function() {
+	this.pushState("confirmMode", "confirmMode", location.href);
+};
+
+/**
+ * ブラウザの戻るボタンでフォームの制御を行うかどうかを返します。
+ * @returns {Boolean} DataFormsクラスでは常にfalseを返します。
+ */
+DataForms.prototype.isBrowserBackEnabled = function() {
+	return false;
+};
