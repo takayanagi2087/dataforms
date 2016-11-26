@@ -7,8 +7,10 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -671,6 +673,7 @@ public class TableGeneratorEditForm extends EditForm {
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> fieldList = (List<Map<String, Object>>) data.get("fieldList");
 		Map<String, String> srcmap = new HashMap<String, String>();
+		Set<String> fieldSet = new HashSet<String>();
 		for (Map<String, Object> m: fieldList) {
 			String isDataformsField = (String) m.get("isDataformsField");
 			if (!"1".equals(isDataformsField)) {
@@ -687,11 +690,14 @@ public class TableGeneratorEditForm extends EditForm {
 			String pkFlag = (String) m.get("pkFlag");
 			String fieldId = (String) m.get("fieldId");
 			String fieldLength = (String) m.get("fieldLength");
-			implist.append("import ");
-			implist.append(fpackage);
-			implist.append(".");
-			implist.append(fclass);
-			implist.append(";\n");
+			if (!fieldSet.contains(fpackage + "." + fclass)) {
+				implist.append("import ");
+				implist.append(fpackage);
+				implist.append(".");
+				implist.append(fclass);
+				implist.append(";\n");
+				fieldSet.add(fpackage + "." + fclass);
+			} 
 			if ("1".equals(pkFlag)) {
 				constructor.append("\t\tthis.addPkField(new ");
 			} else {
