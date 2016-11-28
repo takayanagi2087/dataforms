@@ -24,6 +24,7 @@ import dataforms.dao.Dao;
 import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.ImageData;
+import dataforms.dao.file.VideoData;
 import dataforms.dao.sqldatatype.SqlChar;
 import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.devtool.field.common.FunctionSelectField;
@@ -42,6 +43,7 @@ import dataforms.field.common.ImageField;
 import dataforms.field.common.MultiSelectField;
 import dataforms.field.common.UpdateTimestampField;
 import dataforms.field.common.UpdateUserIdField;
+import dataforms.field.common.VideoField;
 import dataforms.field.sqltype.BigintField;
 import dataforms.field.sqltype.CharField;
 import dataforms.field.sqltype.ClobField;
@@ -558,6 +560,8 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = FileObject.class;
 		} else if (ImageField.class.isAssignableFrom(field)) {
 			ret = ImageData.class;
+		} else if (VideoField.class.isAssignableFrom(field)) {
+			ret = VideoData.class;
 		} else 	if (SqlVarchar.class.isAssignableFrom(field) 
 			|| SqlChar.class.isAssignableFrom(field)
 			|| CharField.class.isAssignableFrom(field)
@@ -579,11 +583,7 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = Long.class;
 		} else if (NumericField.class.isAssignableFrom(field)) {
 			ret = BigDecimal.class;
-		} /*else if (FileObjectField.class.isAssignableFrom(field)) {
-			ret = FileObject.class;
-		} else if (ImageField.class.isAssignableFrom(field)) {
-			ret = ImageData.class;
-		}*/ else if (MultiSelectField.class.isAssignableFrom(field)) {
+		} else if (MultiSelectField.class.isAssignableFrom(field)) {
 			ret = List.class;
 		}
 		return ret;

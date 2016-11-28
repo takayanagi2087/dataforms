@@ -1,15 +1,16 @@
 package dataforms.debug.dao.filetest;
 
 import java.util.Map;
+
 import dataforms.dao.Table;
-import dataforms.field.common.RecordIdField;
 import dataforms.debug.field.filetest.FileCommentField;
 import dataforms.field.common.BlobStoreFileField;
-import dataforms.field.common.FolderStoreFileField;
 import dataforms.field.common.BlobStoreImageField;
-import dataforms.field.common.FolderStoreImageField;
 import dataforms.field.common.BlobStoreVideoField;
+import dataforms.field.common.FolderStoreFileField;
+import dataforms.field.common.FolderStoreImageField;
 import dataforms.field.common.FolderStoreVideoField;
+import dataforms.field.common.RecordIdField;
 
 
 /**
@@ -57,10 +58,6 @@ public class FileFieldTestTable extends Table {
 		public static final String ID_BLOB_IMAGE = "blobImage";
 		/** のフィールドID。 */
 		public static final String ID_FOLDER_IMAGE = "folderImage";
-		/** のフィールドID。 */
-		public static final String ID_BLOB_VIDEO = "blobVideo";
-		/** のフィールドID。 */
-		public static final String ID_FOLDER_VIDEO = "folderVideo";
 
 		/**
 		 * コンストラクタ。
@@ -171,38 +168,6 @@ public class FileFieldTestTable extends Table {
 			this.getMap().put(Entity.ID_FOLDER_IMAGE, folderImage);
 		}
 
-		/**
-		 * を取得します。
-		 * @return 。
-		 */
-		public dataforms.dao.file.VideoData getBlobVideo() {
-			return (dataforms.dao.file.VideoData) this.getMap().get(Entity.ID_BLOB_VIDEO);
-		}
-
-		/**
-		 * を設定します。
-		 * @param blobVideo 。
-		 */
-		public void setBlobVideo(final dataforms.dao.file.VideoData blobVideo) {
-			this.getMap().put(Entity.ID_BLOB_VIDEO, blobVideo);
-		}
-
-		/**
-		 * を取得します。
-		 * @return 。
-		 */
-		public dataforms.dao.file.VideoData getFolderVideo() {
-			return (dataforms.dao.file.VideoData) this.getMap().get(Entity.ID_FOLDER_VIDEO);
-		}
-
-		/**
-		 * を設定します。
-		 * @param folderVideo 。
-		 */
-		public void setFolderVideo(final dataforms.dao.file.VideoData folderVideo) {
-			this.getMap().put(Entity.ID_FOLDER_VIDEO, folderVideo);
-		}
-
 
 	}
 	/**
@@ -251,22 +216,6 @@ public class FileFieldTestTable extends Table {
 	 */
 	public FolderStoreImageField getFolderImageField() {
 		return (FolderStoreImageField) this.getField(Entity.ID_FOLDER_IMAGE);
-	}
-
-	/**
-	 * フィールドを取得します。
-	 * @return フィールド。
-	 */
-	public BlobStoreVideoField getBlobVideoField() {
-		return (BlobStoreVideoField) this.getField(Entity.ID_BLOB_VIDEO);
-	}
-
-	/**
-	 * フィールドを取得します。
-	 * @return フィールド。
-	 */
-	public FolderStoreVideoField getFolderVideoField() {
-		return (FolderStoreVideoField) this.getField(Entity.ID_FOLDER_VIDEO);
 	}
 
 

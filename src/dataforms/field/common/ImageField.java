@@ -27,6 +27,14 @@ public class ImageField extends FileField<ImageData> {
 	/**
 	 * コンストラクタ。
 	 *
+	 */
+	public ImageField() {
+		super(null);
+	}
+
+	/**
+	 * コンストラクタ。
+	 *
 	 * @param id フィールドID。
 	 */
 	public ImageField(final String id) {

@@ -3,7 +3,7 @@ package dataforms.field.common;
 import dataforms.dao.sqldatatype.SqlVarchar;
 
 /**
- * フォルダ保存画像ファイルフィールドクラス。
+ * フォルダ保存ファイルフィールドクラス。
  */
 public class FolderStoreFileField extends FileObjectField implements SqlVarchar {
 	/**

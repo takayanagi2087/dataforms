@@ -5,9 +5,9 @@ import dataforms.dao.file.ImageData;
 import dataforms.dao.sqldatatype.SqlVarchar;
 
 /**
- * フォルダ保存画像ファイルフィールドクラス。
+ * フォルダ保存動画ファイルフィールドクラス。
  */
-public class FolderStoreImageField extends ImageField implements SqlVarchar {
+public class FolderStoreVideoField extends VideoField implements SqlVarchar {
 	/**
 	 * フィールド長。
 	 */
@@ -16,7 +16,7 @@ public class FolderStoreImageField extends ImageField implements SqlVarchar {
 	/**
 	 * コンストラクタ。
 	 */
-	public FolderStoreImageField() {
+	public FolderStoreVideoField() {
 		super(null);
 		this.setLength(LENGTH);
 	}
@@ -24,7 +24,7 @@ public class FolderStoreImageField extends ImageField implements SqlVarchar {
 	 * コンストラクタ。
 	 * @param id フィールドID。
 	 */
-	public FolderStoreImageField(final String id) {
+	public FolderStoreVideoField(final String id) {
 		super(id);
 		this.setLength(LENGTH);
 	}
