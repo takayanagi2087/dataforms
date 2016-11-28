@@ -554,8 +554,11 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	private Class<?> getFieldValueType(final Class<?> field) {
 		Class<?> ret = Object.class;
-		
-		if (SqlVarchar.class.isAssignableFrom(field) 
+		if (FileObjectField.class.isAssignableFrom(field)) {
+			ret = FileObject.class;
+		} else if (ImageField.class.isAssignableFrom(field)) {
+			ret = ImageData.class;
+		} else 	if (SqlVarchar.class.isAssignableFrom(field) 
 			|| SqlChar.class.isAssignableFrom(field)
 			|| CharField.class.isAssignableFrom(field)
 			|| VarcharField.class.isAssignableFrom(field)
@@ -576,14 +579,13 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = Long.class;
 		} else if (NumericField.class.isAssignableFrom(field)) {
 			ret = BigDecimal.class;
-		} else if (FileObjectField.class.isAssignableFrom(field)) {
+		} /*else if (FileObjectField.class.isAssignableFrom(field)) {
 			ret = FileObject.class;
 		} else if (ImageField.class.isAssignableFrom(field)) {
 			ret = ImageData.class;
-		} else if (MultiSelectField.class.isAssignableFrom(field)) {
+		}*/ else if (MultiSelectField.class.isAssignableFrom(field)) {
 			ret = List.class;
 		}
-			
 		return ret;
 	}
 
