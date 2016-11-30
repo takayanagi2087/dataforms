@@ -41,7 +41,7 @@ public class SmallintField extends NumberField<Short> implements SqlSmallint {
 	@Override
 	public void setClientValue(final Object v) {
 		if (!StringUtil.isBlank(v)) {
-			this.setValue(Short.parseShort((String) v));
+			this.setValue(Short.parseShort(((String) v).replaceAll(",", "")));
 		} else {
 			this.setValue(null);
 		}

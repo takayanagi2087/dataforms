@@ -40,7 +40,7 @@ public class IntegerField extends NumberField<Integer> implements SqlInteger {
 	@Override
 	public void setClientValue(final Object v) {
 		if (!StringUtil.isBlank(v)) {
-			this.setValue(Integer.parseInt((String) v));
+			this.setValue(Integer.parseInt(((String) v).replaceAll(",", "")));
 		} else {
 			this.setValue(null);
 		}

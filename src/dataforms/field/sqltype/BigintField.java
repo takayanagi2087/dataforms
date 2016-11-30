@@ -36,7 +36,7 @@ public class BigintField extends NumberField<Long> implements SqlBigint {
 	@Override
 	public void setClientValue(final Object v) {
 		if (!StringUtil.isBlank(v)) {
-			this.setValue(Long.parseLong((String) v));
+			this.setValue(Long.parseLong(((String) v).replaceAll(",", "")));
 		} else {
 			this.setValue(null);
 		}

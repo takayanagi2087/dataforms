@@ -37,7 +37,7 @@ public class DoubleField extends NumberField<Double> implements SqlDouble {
 	@Override
 	public void setClientValue(final Object v) {
 		if (!StringUtil.isBlank(v)) {
-			this.setValue(Double.parseDouble((String) v));
+			this.setValue(Double.parseDouble(((String) v).replaceAll(",", "")));
 		} else {
 			this.setValue(null);
 		}
