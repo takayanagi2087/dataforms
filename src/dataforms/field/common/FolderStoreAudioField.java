@@ -5,7 +5,7 @@ import dataforms.dao.sqldatatype.SqlVarchar;
 /**
  * フォルダ保存動画ファイルフィールドクラス。
  */
-public class FolderStoreVideoField extends VideoField implements SqlVarchar {
+public class FolderStoreAudioField extends AudioField implements SqlVarchar {
 	/**
 	 * フィールド長。
 	 */
@@ -14,7 +14,7 @@ public class FolderStoreVideoField extends VideoField implements SqlVarchar {
 	/**
 	 * コンストラクタ。
 	 */
-	public FolderStoreVideoField() {
+	public FolderStoreAudioField() {
 		super(null);
 		this.setLength(LENGTH);
 	}
@@ -22,8 +22,9 @@ public class FolderStoreVideoField extends VideoField implements SqlVarchar {
 	 * コンストラクタ。
 	 * @param id フィールドID。
 	 */
-	public FolderStoreVideoField(final String id) {
+	public FolderStoreAudioField(final String id) {
 		super(id);
 		this.setLength(LENGTH);
 	}
+	
 }

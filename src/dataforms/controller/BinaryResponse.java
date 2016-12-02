@@ -1,5 +1,7 @@
 package dataforms.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,17 +9,24 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 import dataforms.dao.file.FileObject;
 import dataforms.servlet.DataFormsServlet;
+import dataforms.util.HttpRangeInfo;
 
 /**
  * バイナリデータの応答情報クラス。
  *
  */
 public class BinaryResponse extends FileResponse {
+	
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(BinaryResponse.class);
 
 	/**
 	 * 入力ストリーム。
@@ -28,6 +37,29 @@ public class BinaryResponse extends FileResponse {
 	 * 削除すべき一時ファイル。
 	 */
 	private File tempFile = null;
+
+	/**
+	 * Rangeリクエストヘッダ。
+	 * 
+	 */
+	private String rangeHeader = null;
+	
+	
+	/**
+	 * Rangeリクエストヘッダを取得します。
+	 * @return Rangeリクエストヘッダ。
+	 */
+	public String getRangeHeader() {
+		return rangeHeader;
+	}
+
+	/**
+	 * Rangeリクエストヘッダを設定します。
+	 * @param rangeHeader Rangeリクエストヘッダ。
+	 */
+	public void setRangeHeader(final String rangeHeader) {
+		this.rangeHeader = rangeHeader;
+	}
 
 
 	/**
@@ -145,27 +177,39 @@ public class BinaryResponse extends FileResponse {
 	@Override
 	public void send(final HttpServletResponse resp) throws Exception {
 		resp.setContentType(this.getContentType());
+		log.debug("content-type:" + resp.getContentType());
 		if (this.getFileName() != null) {
 			resp.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(this.getFileName(), DataFormsServlet.getEncoding()));
 		}
-		ServletOutputStream os = resp.getOutputStream();
+		HttpRangeInfo p = new HttpRangeInfo(this.rangeHeader);
+		p.parse(this.inputStream);
+		log.debug("status=" + p.getStatus());
+		log.debug("contentLength=" + p.getContentLength());
+		log.debug("contentRange=" + p.getContentRange());
+		resp.setHeader("Content-Length", "" +  p.getContentLength());
+		resp.setStatus(p.getStatus());
+		if (p.getContentRange() != null) {
+			resp.setHeader("Accept-Ranges", "bytes");
+			resp.setHeader("Content-Range", p.getContentRange());
+		}
+		BufferedOutputStream bos = new BufferedOutputStream(resp.getOutputStream());
 		try {
-			InputStream is = this.inputStream;
+			BufferedInputStream bis = new BufferedInputStream(this.inputStream);
 			try {
-				byte[] buf = new byte[16 * 1024];
-				while (true) {
-					int len = is.read(buf);
-					if (len <= 0) {
+				bis.skip(p.getStart());
+				for (long idx = p.getStart(); idx <= p.getFinish(); idx++) {
+					int c = bis.read();
+					if (c < 0) {
 						break;
 					}
-					os.write(buf, 0, len);
+					bos.write(c);
 				}
 			} finally {
-				is.close();
+				bis.close();
 			}
+				
 		} finally {
-			os.flush();
-			os.close();
+			bos.close();
 		}
 		if (this.getTempFile() != null) {
 			this.getTempFile().delete();

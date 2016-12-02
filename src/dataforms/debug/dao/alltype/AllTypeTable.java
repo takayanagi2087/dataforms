@@ -70,10 +70,10 @@ public class AllTypeTable extends Table {
 		this.addField(new CharField("charField", 10)).setComment("固定長文字列フィールド").addValidator(new MaxLengthValidator(10));
 		this.addField(new VarcharField("varcharField", 64)).setNotNull(false).setComment("可変長文字列フィールド");
 
-		this.addField(new SmallintField("smallintField")).setComment("単精度整数フィールド");
-		this.addField(new IntegerField("integerField")).setComment("整数フィールド");
-		this.addField(new BigintField("bigintField")).setComment("倍精度整数フィールド");
-		this.addField(new DoubleField("doubleField")).setComment("実数フィールド");
+		this.addField((new SmallintField("smallintField")).setCommaFormat(true)).setComment("単精度整数フィールド");
+		this.addField((new IntegerField("integerField")).setCommaFormat(true)).setComment("整数フィールド");
+		this.addField((new BigintField("bigintField")).setCommaFormat(true)).setComment("倍精度整数フィールド");
+		this.addField((new DoubleField("doubleField")).setCommaFormat(true)).setComment("実数フィールド");
 		NumericField nf = new NumericField("numericField", 10, 2);
 		nf.setCommaFormat(true);
 		this.addField(nf).setNotNull(false).setComment("数値フィールド").setDefaultValue(BigDecimal.valueOf(0));

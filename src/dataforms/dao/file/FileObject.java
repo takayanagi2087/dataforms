@@ -105,6 +105,11 @@ public class FileObject implements Serializable {
 	 */
 	public static final String CONTENT_TYPE_PDF = "application/pdf";
 
+	/**
+	 * mp4のコンテントタイプ。
+	 */
+	public static final String CONTENT_TYPE_MP4 = "video/mp4";
+	
 	
 	/**
 	 * 拡張子とContent-typeの対応表。
@@ -116,6 +121,7 @@ public class FileObject implements Serializable {
 		, {"(?i).*\\.svg$", CONTENT_TYPE_SVG}
 		, {"(?i).*\\.xlsx$", CONTENT_TYPE_XLSX}
 		, {"(?i).*\\.pdf$", CONTENT_TYPE_PDF}
+		, {"(?i).*\\.mp4$", CONTENT_TYPE_MP4}
 	};
 
 
