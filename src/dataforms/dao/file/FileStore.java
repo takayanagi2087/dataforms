@@ -149,5 +149,12 @@ public abstract class FileStore {
 		return ret;
 	}
 
+	/**
+	 * シークサポートの有無を返します。
+	 * @return 常にtrueを返します。
+	 */
+	public boolean isSeekingSupported() {
+		return true;
+	}
 }
 

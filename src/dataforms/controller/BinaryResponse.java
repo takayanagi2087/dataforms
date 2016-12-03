@@ -192,27 +192,30 @@ public class BinaryResponse extends FileResponse {
 			resp.setHeader("Accept-Ranges", "bytes");
 			resp.setHeader("Content-Range", p.getContentRange());
 		}
-		BufferedOutputStream bos = new BufferedOutputStream(resp.getOutputStream());
 		try {
-			BufferedInputStream bis = new BufferedInputStream(this.inputStream);
+			BufferedOutputStream bos = new BufferedOutputStream(resp.getOutputStream());
 			try {
-				bis.skip(p.getStart());
-				for (long idx = p.getStart(); idx <= p.getFinish(); idx++) {
-					int c = bis.read();
-					if (c < 0) {
-						break;
+				BufferedInputStream bis = new BufferedInputStream(this.inputStream);
+				try {
+					bis.skip(p.getStart());
+					for (long idx = p.getStart(); idx <= p.getFinish(); idx++) {
+						int c = bis.read();
+						if (c < 0) {
+							break;
+						}
+						bos.write(c);
 					}
-					bos.write(c);
+				} finally {
+					bis.close();
 				}
 			} finally {
-				bis.close();
+				bos.close();
+				if (this.getTempFile() != null) {
+					this.getTempFile().delete();
+				}
 			}
-				
-		} finally {
-			bos.close();
-		}
-		if (this.getTempFile() != null) {
-			this.getTempFile().delete();
+		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 	}
 	

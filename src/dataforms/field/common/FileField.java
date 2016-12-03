@@ -200,8 +200,10 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		BinaryResponse resp = new BinaryResponse(fobj);
-		// RangeヘッダはBinaryResponseで処理する。
-		resp.setRangeHeader(range);
+		if (store.isSeekingSupported()) {
+			// RangeヘッダはBinaryResponseで処理する。
+			resp.setRangeHeader(range);
+		}
 		resp.setTempFile(store.getTempFile(fobj));
 		return resp;
 	}

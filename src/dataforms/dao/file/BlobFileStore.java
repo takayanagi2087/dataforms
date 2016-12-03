@@ -335,4 +335,13 @@ public class BlobFileStore extends FileStore {
 		log.debug("downloadParameter=" + ret);
 		return ret;
 	}
+	
+	/**
+	 * シークサポートの有無を返します。
+	 * @return 常にfalseを返します。
+	 */
+	public boolean isSeekingSupported() {
+		return false;
+	}
+
 }
