@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
@@ -39,28 +40,48 @@ public class BinaryResponse extends FileResponse {
 	private File tempFile = null;
 
 	/**
-	 * Rangeリクエストヘッダ。
-	 * 
+	 * 送信データのソースがシークをサポートしているかどうか。
 	 */
-	private String rangeHeader = null;
+	private boolean seekingSupported = false;
 	
 	
 	/**
-	 * Rangeリクエストヘッダを取得します。
-	 * @return Rangeリクエストヘッダ。
+	 * 送信データのソースがシークをサポートしているかどうかを取得します。
+	 * @return 送信データのソースがシークをサポートしているかどうか。
 	 */
-	public String getRangeHeader() {
-		return rangeHeader;
+	public boolean isSeekingSupported() {
+		return seekingSupported;
 	}
 
 	/**
-	 * Rangeリクエストヘッダを設定します。
-	 * @param rangeHeader Rangeリクエストヘッダ。
+	 * 送信データのソースがシークをサポートしているかどうかを設定します。
+	 * @param seekingSupported 送信データのソースがシークをサポートしているかどうか。 
 	 */
-	public void setRangeHeader(final String rangeHeader) {
-		this.rangeHeader = rangeHeader;
+	public void setSeekingSupported(final boolean seekingSupported) {
+		this.seekingSupported = seekingSupported;
 	}
 
+	/**
+	 * HTTP要求情報。
+	 */
+	private HttpServletRequest request = null;		
+	
+	
+	/**
+	 * HTTP要求情報を取得します。
+	 * @return HTTPの要求情報。 
+	 */
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	/**
+	 * HTTP応答情報を設定します。
+	 * @param request HTTP応答情報。
+	 */
+	public void setRequest(final HttpServletRequest request) {
+		this.request = request;
+	}
 
 	/**
 	 * コンストラクタ。
@@ -181,7 +202,14 @@ public class BinaryResponse extends FileResponse {
 		if (this.getFileName() != null) {
 			resp.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(this.getFileName(), DataFormsServlet.getEncoding()));
 		}
-		HttpRangeInfo p = new HttpRangeInfo(this.rangeHeader);
+		String rangeHeader = null;
+		if (this.isSeekingSupported()) {
+			if (this.getRequest() != null) {
+				rangeHeader = this.getRequest().getHeader("Range");
+				log.debug("rangeHeader=" + rangeHeader);
+			}
+		}
+		HttpRangeInfo p = new HttpRangeInfo(rangeHeader);
 		p.parse(this.inputStream);
 		log.debug("status=" + p.getStatus());
 		log.debug("contentLength=" + p.getContentLength());

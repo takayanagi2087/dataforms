@@ -196,14 +196,11 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		if (key != null) {
 			param = FileStore.decryptDownloadParameter(key);
 		}
-		String range = this.getPage().getRequest().getHeader("Range");
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		BinaryResponse resp = new BinaryResponse(fobj);
-		if (store.isSeekingSupported()) {
-			// RangeヘッダはBinaryResponseで処理する。
-			resp.setRangeHeader(range);
-		}
+		resp.setSeekingSupported(store.isSeekingSupported());
+		resp.setRequest(this.getPage().getRequest());
 		resp.setTempFile(store.getTempFile(fobj));
 		return resp;
 	}
