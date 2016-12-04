@@ -1,13 +1,13 @@
 /**
- * @fileOverview {@link VideoField}クラスを記述したファイルです。
+ * @fileOverview {@link AudioField}クラスを記述したファイルです。
  */
 
 /**
- * @class VideoField
- * 動画ファイルアップロードフィールドクラス。
+ * @class AudioField
+ * 音声ファイルアップロードフィールドクラス。
  * @extends FileField
  */
-VideoField = createSubclass("VideoField", {}, "FileField");
+AudioField = createSubclass("AudioField", {}, "FileField");
 
 
 /**
@@ -16,15 +16,13 @@ VideoField = createSubclass("VideoField", {}, "FileField");
  * 削除チェックボックス、ダウンロードリンクなどの設定を行います。
  * </pre>
  */
-VideoField.prototype.attach = function() {
+AudioField.prototype.attach = function() {
 	FileField.prototype.attach.call(this);
 	var thisField = this;
 	var linkid = this.id + "_link";
 	var link = this.parent.find("#" + this.selectorEscape(linkid));
-	var playerid = this.id + "_player"; // プレーヤーID.
+	var playerid = this.id + "_player"; // サムネイルID.
 	var player = this.parent.find("#" + this.selectorEscape(playerid));
-	player.attr("width", this.playerWidth);
-	player.attr("height", this.playerlHeight);
 	this.get().change(function(){
 		for(var j=0; j<this.files.length; j++){
 			var url = URL.createObjectURL(this.files[j])
@@ -39,9 +37,9 @@ VideoField.prototype.attach = function() {
  * ファイルフィールドに付随する各種コンポーネントを配置します。
  * @param comp ファイルフィールド。
  */
-VideoField.prototype.addElements = function(comp) {
+AudioField.prototype.addElements = function(comp) {
 	var getParts = new SyncServerMethod("getParts");
-	var htmlstr = getParts.execute("parts=" + escape(currentPage.framePath + "/VideoField.html"));
+	var htmlstr = getParts.execute("parts=" + escape(currentPage.framePath + "/AudioField.html"));
 	if (htmlstr.status == ServerMethod.SUCCESS) {
 		var html = htmlstr.result.replace(/\$\{fieldId\}/g, this.id);
 		logger.log("htmlstr=" + html);
@@ -62,7 +60,7 @@ VideoField.prototype.addElements = function(comp) {
  *
  * @param {String} value 値。
  */
-VideoField.prototype.setValue = function(value) {
+AudioField.prototype.setValue = function(value) {
 	FileField.prototype.setValue.call(this, value);
 	var videoid = this.id + "_player"; // プレーヤーID.
 	var video = this.parent.find("#" + this.selectorEscape(videoid));

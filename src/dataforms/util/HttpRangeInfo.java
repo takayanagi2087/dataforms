@@ -20,7 +20,7 @@ public class HttpRangeInfo {
 	/**
 	 * 範囲の終了が指定されなかった場合、転送するサイズ。
 	 */
-	private long blockSize = 1024 * 1024;
+	private long blockSize = 16 * 1024 * 1024;
 	
 	/**
 	 * HttpのRangeヘッダ。

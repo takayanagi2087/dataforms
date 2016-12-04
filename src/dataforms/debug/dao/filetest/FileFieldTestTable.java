@@ -1,15 +1,18 @@
 package dataforms.debug.dao.filetest;
 
 import java.util.Map;
+
 import dataforms.dao.Table;
-import dataforms.field.common.RecordIdField;
 import dataforms.debug.field.filetest.FileCommentField;
+import dataforms.field.common.BlobStoreAudioField;
 import dataforms.field.common.BlobStoreFileField;
-import dataforms.field.common.FolderStoreFileField;
 import dataforms.field.common.BlobStoreImageField;
-import dataforms.field.common.FolderStoreImageField;
 import dataforms.field.common.BlobStoreVideoField;
+import dataforms.field.common.FolderStoreAudioField;
+import dataforms.field.common.FolderStoreFileField;
+import dataforms.field.common.FolderStoreImageField;
 import dataforms.field.common.FolderStoreVideoField;
+import dataforms.field.common.RecordIdField;
 
 
 /**
@@ -31,6 +34,8 @@ public class FileFieldTestTable extends Table {
 		this.addField(new FolderStoreImageField("folderImage")); //
 		this.addField(new BlobStoreVideoField("blobVideo")); //
 		this.addField(new FolderStoreVideoField("folderVideo")); //
+		this.addField(new BlobStoreAudioField("blobAudio")); //
+		this.addField(new FolderStoreAudioField("folderAudio")); //
 
 		this.addUpdateInfoFields();
 	}
