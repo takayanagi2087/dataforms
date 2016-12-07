@@ -40,28 +40,6 @@ public class BinaryResponse extends FileResponse {
 	private File tempFile = null;
 
 	/**
-	 * 送信データのソースがシークをサポートしているかどうか。
-	 */
-	private boolean seekingSupported = false;
-	
-	
-	/**
-	 * 送信データのソースがシークをサポートしているかどうかを取得します。
-	 * @return 送信データのソースがシークをサポートしているかどうか。
-	 */
-	public boolean isSeekingSupported() {
-		return seekingSupported;
-	}
-
-	/**
-	 * 送信データのソースがシークをサポートしているかどうかを設定します。
-	 * @param seekingSupported 送信データのソースがシークをサポートしているかどうか。 
-	 */
-	public void setSeekingSupported(final boolean seekingSupported) {
-		this.seekingSupported = seekingSupported;
-	}
-
-	/**
 	 * HTTP要求情報。
 	 */
 	private HttpServletRequest request = null;		
@@ -202,24 +180,19 @@ public class BinaryResponse extends FileResponse {
 		if (this.getFileName() != null) {
 			resp.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(this.getFileName(), DataFormsServlet.getEncoding()));
 		}
-		String rangeHeader = null;
-		if (this.isSeekingSupported()) {
-			if (this.getRequest() != null) {
-				rangeHeader = this.getRequest().getHeader("Range");
-				log.debug("rangeHeader=" + rangeHeader);
-			}
-		}
-		HttpRangeInfo p = new HttpRangeInfo(rangeHeader);
+		HttpRangeInfo p = new HttpRangeInfo(this.getRequest());
 		p.parse(this.inputStream);
 		log.debug("status=" + p.getStatus());
 		log.debug("contentLength=" + p.getContentLength());
 		log.debug("contentRange=" + p.getContentRange());
+		log.debug("Accept-Ranges=" + "bytes");
+		resp.setHeader("Accept-Ranges", "bytes");
 		resp.setHeader("Content-Length", "" +  p.getContentLength());
 		resp.setStatus(p.getStatus());
 		if (p.getContentRange() != null) {
-			resp.setHeader("Accept-Ranges", "bytes");
 			resp.setHeader("Content-Range", p.getContentRange());
 		}
+		long sendSize = 0;
 		try {
 			BufferedOutputStream bos = new BufferedOutputStream(resp.getOutputStream());
 			try {
@@ -232,6 +205,7 @@ public class BinaryResponse extends FileResponse {
 							break;
 						}
 						bos.write(c);
+						sendSize++;
 					}
 				} finally {
 					bis.close();
@@ -244,6 +218,8 @@ public class BinaryResponse extends FileResponse {
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
+		} finally {
+			log.debug("sendSize=" + sendSize);
 		}
 	}
 	

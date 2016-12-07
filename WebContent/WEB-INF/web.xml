@@ -245,7 +245,21 @@
 		</param-value>
 	</context-param>
 	-->
-	
+	<!-- 
+		html5のvideo,audioタグ空の部分リクエストは大抵 "Range:bytes=0-"のように転送開始位置のみが指定されてきます。
+		通常のブラウザは適切なサイズに区切って転送しないと、シーク機能が利用できません。
+		しかしFirefoxの場合、先頭のブロックのみを再生したところで止まってしまいます。
+		どうやら次のブロックの転送リクエストが来ないため、指定された位置から最後まで転送するようにします。
+	 -->
+	<context-param>
+		<param-name>streaming-block-size</param-name>
+		<param-value>
+			[
+				{"uaPattern": ".*Firefox.*", "blockSize": -1},
+				{"uaPattern": ".+", "blockSize": 16777216}
+			]
+		</param-value>
+	</context-param>
 	
 	<!-- セッションタイムアウト -->
 	<session-config>

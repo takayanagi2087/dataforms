@@ -1,8 +1,11 @@
 package dataforms.field.common;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
@@ -19,6 +22,7 @@ import dataforms.dao.file.WebResourceFileStore;
 import dataforms.dao.sqldatatype.SqlBlob;
 import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.field.base.Field;
+import dataforms.servlet.DataFormsServlet;
 import dataforms.util.StringUtil;
 
 
@@ -31,7 +35,11 @@ import dataforms.util.StringUtil;
  * @param <TYPE> データ型。
  */
 public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
-
+	
+	/**
+	 * ダウンロードファイル一時ファイルを記録するセッションキー。
+	 */
+	public static final String DOWNLOADING_FILE = "downloadingFile_";
 	/**
 	 * Logger.
 	 */
@@ -163,7 +171,21 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	 */
 	public String getBlobDownloadParameter(final Map<String, Object> m) {
 		FileStore store = this.newFileStore();
-		return store.getDownloadParameter(this, m);
+		String ret = store.getDownloadParameter(this, m);
+		// Videoやaudio再生中の一時ファイルがある場合削除する。
+		String sessionKey;
+		try {
+			sessionKey = java.net.URLDecoder.decode(ret.replaceAll("^key=", DOWNLOADING_FILE), DataFormsServlet.getEncoding());
+			String tf = (String) this.getPage().getRequest().getSession().getAttribute(sessionKey);
+			if (tf != null) {
+				File file = new File(tf);
+				file.delete();
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		return ret;
 	}
 
 	/**
@@ -190,18 +212,39 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	 */
 	@WebMethod(useDB = true)
 	public BinaryResponse download(final Map<String, Object> p) throws Exception {
+		HttpServletRequest req = this.getPage().getRequest();
 		Map<String, Object> param = p;
 		String key = (String) p.get("key");
 		log.debug("key=" + key);
 		if (key != null) {
 			param = FileStore.decryptDownloadParameter(key);
+			// Rangeヘッダが指定されていた場合、送信中ファイルがあればそれをセットする。
+			if (!StringUtil.isBlank(req.getHeader("Range"))) {
+				String sessionKey = DOWNLOADING_FILE + key;
+				log.debug("*sessionKey=" + sessionKey);
+				String downloadingFile = (String) req.getSession().getAttribute(sessionKey);
+				if (downloadingFile != null) {
+					File tf = new File(downloadingFile);
+					if (tf.exists()) {
+						param.put("downloadingFile", downloadingFile);
+					}
+				}
+			}
 		}
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		BinaryResponse resp = new BinaryResponse(fobj);
-		resp.setSeekingSupported(store.isSeekingSupported());
-		resp.setRequest(this.getPage().getRequest());
+		resp.setRequest(req);
 		resp.setTempFile(store.getTempFile(fobj));
+		if (key != null) {
+			if (!store.isSeekingSupported()) {
+				// BLOBでRangeヘッダが指定されていた場合、一時ファイルのパスをセッションに記録する。
+				if (!StringUtil.isBlank(req.getHeader("Range"))) {
+					req.getSession().setAttribute(DOWNLOADING_FILE + key, fobj.getTempFile().getAbsolutePath());
+					resp.setTempFile(null); // 転送終了時にファイルを削除しないようにする。
+				}
+			}
+		}
 		return resp;
 	}
 

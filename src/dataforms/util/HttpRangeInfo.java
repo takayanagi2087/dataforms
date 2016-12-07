@@ -2,7 +2,11 @@ package dataforms.util;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -18,14 +22,24 @@ public class HttpRangeInfo {
 	private static Logger log = Logger.getLogger(HttpRangeInfo.class);
 	
 	/**
+	 * ブロックサイズリスト。
+	 */
+	private static List<Map<String, Object>> blockSizeList = null;
+	
+	/**
 	 * 範囲の終了が指定されなかった場合、転送するサイズ。
 	 */
-	private long blockSize = 16 * 1024 * 1024;
+	private static final long DEFAULT_BLOCK_SIZE = 16 * 1024 * 1024;
 	
 	/**
 	 * HttpのRangeヘッダ。
 	 */
 	private String rangeHeader = null;
+	
+	/**
+	 * HttpのUser-Agentヘッダ。
+	 */
+	private String userAgent = null;
 	
 	/**
 	 * ダウンロード開始位置。
@@ -52,35 +66,34 @@ public class HttpRangeInfo {
 	 */
 	private String contentRange = null;
 	
+	/**
+	 * ブロックサイズリストを取得します。
+	 * @return ブロックサイズリスト。
+	 */
+	public static List<Map<String, Object>> getBlockSizeList() {
+		return blockSizeList;
+	}
+
+	/**
+	 * ブロックサイズリストを設定します。
+	 * @param blockSizeList ブロックサイズリスト。
+	 */
+	public static void setBlockSizeList(final List<Map<String, Object>> blockSizeList) {
+		HttpRangeInfo.blockSizeList = blockSizeList;
+	}
+
 
 	/**
 	 * コンストラクタ。
-	 * @param range HttpのRangeヘッダ。
+	 * @param req HTTP要求情報。
 	 */
-	public HttpRangeInfo(final String range) {
-		if (StringUtil.isBlank(range)) {
-			this.rangeHeader = null;
-		} else {
-			this.rangeHeader = range;
+	public HttpRangeInfo(final HttpServletRequest req) {
+		if (req != null) {
+			this.rangeHeader = req.getHeader("Range");
+			this.userAgent = req.getHeader("User-Agent");
 		}
-	}
-
-
-	/**
-	 * 範囲の終了が指定されなかった場合、転送するサイズを取得します。
-	 * @return 範囲の終了が指定されなかった場合、転送するサイズを取得。
-	 */
-	public long getBlockSize() {
-		return blockSize;
-	}
-
-
-	/**
-	 * 範囲の終了が指定されなかった場合、転送するサイズを設定します。
-	 * @param blockSize 範囲の終了が指定されなかった場合、転送するサイズ。
-	 */
-	public void setBlockSize(final long blockSize) {
-		this.blockSize = blockSize;
+		log.debug("this.rangeHeader=" + this.rangeHeader);
+		log.debug("this.userAgent=" + this.userAgent);
 	}
 
 
@@ -155,6 +168,18 @@ public class HttpRangeInfo {
 	}
 
 	/**
+	 * ストリーミング転送のブロックサイズを取得します。
+	 * @return ストリーミング転送のブロックサイズ。 
+	 */
+	private long getBlockSize() {
+		long ret = HttpRangeInfo.DEFAULT_BLOCK_SIZE;
+		if (Pattern.matches(".*Firefox.*", this.userAgent)) {
+			ret = -1;
+		}
+		return ret;
+	}
+	
+	/**
 	 * 指定されたRangeヘッダを解析し、ファイルの部分転送範囲の決定と、各種応答情報を作成します。
 	 * @param size ファイルサイズ。
 	 */
@@ -171,23 +196,20 @@ public class HttpRangeInfo {
 					this.finish = Long.parseLong(sp[2]);
 				} else if (sp.length == 2) {
 					this.start = Long.parseLong(sp[1]);
-//					this.finish = size - 1;
-					this.finish = this.start + this.blockSize;
-					if (this.finish > size - 1) {
+					long blockSize = this.getBlockSize();
+					if (blockSize < 0) {
 						this.finish = size - 1;
+					} else {
+						this.finish = this.start + blockSize - 1;
+						if (this.finish > size - 1) {
+							this.finish = size - 1;
+						}
 					}
 				}
 				log.debug("start=" + this.start);
 				log.debug("finish=" + this.finish);
 				this.status = HttpURLConnection.HTTP_PARTIAL;
 				this.contentRange = "bytes " + this.start + "-" + this.finish + "/" + size;
-				if (this.start == 0 && this.finish == size - 1) {
-					this.status = HttpURLConnection.HTTP_OK;
-					this.contentRange = null;
-				} else {
-					this.status = HttpURLConnection.HTTP_PARTIAL;
-					this.contentRange = "bytes " + this.start + "-" + this.finish + "/" + size;
-				}
 			}
 		}
 		this.contentLength = this.finish - this.start + 1;

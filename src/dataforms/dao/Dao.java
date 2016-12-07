@@ -1487,14 +1487,28 @@ public class Dao implements JDBCConnectableObject {
 	 * @throws Exception 例外。
 	 */
 	public FileObject queryBlobFileObject(final Table table, final String fieldId, final Map<String, Object> data) throws Exception {
-//		this.setBlobDownload(true);
 		this.setBlobReadMode(BlobReadMode.FOR_DOWNLOAD);
 		FileObjectQuery query = new FileObjectQuery(table, fieldId, data);
 		FileObject ret = (FileObject) this.executeScalarQuery(query);
 		this.setBlobReadMode(BlobReadMode.FOR_DISPLAY_FILE_INFO);
-//		this.setBlobDownload(false);
 		return ret;
 	}
+
+	
+	/**
+	 * BLOBデータの情報のみを取得します。
+	 * @param table テーブル。
+	 * @param fieldId BLOBフィールドID。
+	 * @param data パラメータ。
+	 * @return BLOBデータ。
+	 * @throws Exception 例外。
+	 */
+	public FileObject queryBlobFileInfo(final Table table, final String fieldId, final Map<String, Object> data) throws Exception {
+		FileObjectQuery query = new FileObjectQuery(table, fieldId, data);
+		FileObject ret = (FileObject) this.executeScalarQuery(query);
+		return ret;
+	}
+
 
 
 	/**

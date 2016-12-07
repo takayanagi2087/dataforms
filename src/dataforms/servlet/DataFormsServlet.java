@@ -34,6 +34,7 @@ import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
 import dataforms.controller.Response;
 import dataforms.controller.WebComponent;
+import dataforms.dao.file.BlobFileStore;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.util.CryptUtil;
 import dataforms.util.MessagesUtil;
@@ -896,6 +897,7 @@ public class DataFormsServlet extends HttpServlet {
 	
 	@Override
 	public void destroy() {
+		log.debug("DataFormsServlet destroy");
 		if (DataFormsServlet.servletInstanceBean != null) {
 			try {
 				DataFormsServlet.servletInstanceBean.destroy();
@@ -904,5 +906,6 @@ public class DataFormsServlet extends HttpServlet {
 			}
 		}
 		super.destroy();
+		BlobFileStore.cleanup();
 	}
 }

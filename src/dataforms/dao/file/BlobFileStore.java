@@ -1,12 +1,14 @@
 package dataforms.dao.file;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.log4j.Logger;
@@ -19,6 +21,7 @@ import dataforms.field.common.FileField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.FileUtil;
 import dataforms.util.ObjectUtil;
+import dataforms.util.StringUtil;
 
 /**
  * BLOBファイルストアクラス。
@@ -64,6 +67,27 @@ public class BlobFileStore extends FileStore {
 		}
 		File ret = File.createTempFile("upload", ".tmp", tempdir);
 		return ret;
+	}
+	
+	/**
+	 * 一時ファイルの残骸を削除する。
+	 */
+	public static void cleanup() {
+		log.debug("cleanup");
+		File tempdir = new File(DataFormsServlet.getTempDir() + "/blobStore");
+		if (!tempdir.exists()) {
+			tempdir.mkdirs();
+		}
+		File[] list = tempdir.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(final File pathname) {
+				return Pattern.matches("^upload.+\\.tmp", pathname.getName());
+			}
+		});
+		for (File f: list) {
+			log.debug("delete temp file=" + f.getAbsolutePath());
+			f.delete();
+		}
 	}
 
 	/**
@@ -296,13 +320,28 @@ public class BlobFileStore extends FileStore {
 
 	@Override
 	public FileObject readFileObject(final Map<String, Object> param) throws Exception {
+		String downloadingFile = (String) param.get("downloadingFile");
+		log.debug("downloadingFile=" + downloadingFile);
 		Dao dao = new Dao(this.jdbcConnectableObject);
 		String tblclass = (String) param.get("table");
 		@SuppressWarnings("unchecked")
 		Class<? extends Table> cls = (Class<? extends Table>) Class.forName(tblclass);
 		Table table = cls.newInstance();
 		Map<String, Object> data = table.getPkFieldList().convertClientToServer(param);
-		FileObject fobj = dao.queryBlobFileObject(table, (String) param.get("fieldId"), data);
+		FileObject fobj = null;
+		if (!StringUtil.isBlank(downloadingFile)) {
+			String dlfile = (String) param.get("downloadingFile");
+			if (StringUtil.isBlank(dlfile)) {
+				log.debug("read from BlobField");
+				fobj = dao.queryBlobFileObject(table, (String) param.get("fieldId"), data);
+			} else {
+				log.debug("read from TempFile");
+				fobj = dao.queryBlobFileInfo(table, (String) param.get("fieldId"), data);
+				fobj.setTempFile(new File(dlfile));
+			}
+		} else {
+			fobj = dao.queryBlobFileObject(table, (String) param.get("fieldId"), data);
+		}
 		return fobj;
 	}
 
