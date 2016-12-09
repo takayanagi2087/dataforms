@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.controller.ApplicationError;
 import dataforms.controller.BinaryResponse;
+import dataforms.controller.JsonResponse;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
@@ -32,7 +33,7 @@ import dataforms.util.StringUtil;
  * 対応するHTMLのタグは&lt;input type=&quot;file&quot; ...&gt;になります。
  * </pre>
  *
- * @param <TYPE> データ型。
+ * @param <TYPE> サーバで処理するJavaのデータ型。
  */
 public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	
@@ -203,15 +204,39 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	}
 
 	/**
+	 * 一時ファイルを削除します。
+	 * @param p パラメータ。
+	 * @return 処理結果。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod(useDB = false)
+	public JsonResponse deleteTempFile(final Map<String, Object> p) throws Exception {
+		this.methodStartLog(log, p);
+		String key = (String) p.get("key");
+		log.debug("key=" + key);
+		if (key != null) {
+			String sessionKey = DOWNLOADING_FILE + key;
+			String downloadingFile = (String) this.getPage().getRequest().getSession().getAttribute(sessionKey);
+			log.debug("downloadingFile=" + downloadingFile);
+			if (downloadingFile != null) {
+				File tf = new File(downloadingFile);
+				tf.delete();
+			}
+		}
+		JsonResponse resp = new JsonResponse(JsonResponse.SUCCESS, "");
+		this.methodFinishLog(log, resp);
+		return resp;
+	}
+	
+	/**
 	 * ファイルをダウンロードします。
 	 * @param p パラメータ。
 	 * @return 画像応答。
 	 * @throws Exception 例外。
-	 * 
-	 * 
 	 */
 	@WebMethod(useDB = true)
 	public BinaryResponse download(final Map<String, Object> p) throws Exception {
+		this.methodStartLog(log, p);
 		HttpServletRequest req = this.getPage().getRequest();
 		Map<String, Object> param = p;
 		String key = (String) p.get("key");
@@ -245,6 +270,7 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 				}
 			}
 		}
+		this.methodFinishLog(log, resp);
 		return resp;
 	}
 

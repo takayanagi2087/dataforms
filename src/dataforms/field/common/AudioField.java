@@ -7,7 +7,7 @@ import dataforms.dao.file.FileObject;
  * 音声フィールドクラス。
  *
  */
-public class AudioField extends FileField<AudioData> {
+public class AudioField extends StreamingField<AudioData> {
 
 	/**
 	 * コンストラクタ。

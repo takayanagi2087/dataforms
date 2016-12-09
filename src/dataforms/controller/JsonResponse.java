@@ -20,12 +20,12 @@ public class JsonResponse extends Response {
     private static Logger log = Logger.getLogger(JsonResponse.class.getName());
 
 	/**
-	 * 処理が正常終了したことを返す。
+	 * 処理が正常終了したことを示します。
 	 */
 	public static final int SUCCESS = 0;
 
 	/**
-	 * バリデーション等のエラーが発生したことを返す。
+	 * バリデーション等のエラーが発生したことを示します。
 	 */
 	public static final int INVALID = 1;
 

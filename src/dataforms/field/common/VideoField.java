@@ -9,7 +9,7 @@ import dataforms.dao.file.VideoData;
  * 動画フィールドクラス。
  *
  */
-public class VideoField extends FileField<VideoData> {
+public class VideoField extends StreamingField<VideoData> {
 
 	/**
 	 * ビデオプレーヤー幅。
