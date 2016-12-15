@@ -28,8 +28,8 @@ StreamingField.prototype.attach = function() {
 			player.attr("src", url);
 		}
 	});
-	player.on("emptied", function() {
-		logger.log("emptied");
+	player.on("abort", function() {
+		logger.log("abort");
 		thisField.deleteTempFile();
 	});
 	player.on("ended", function() {
