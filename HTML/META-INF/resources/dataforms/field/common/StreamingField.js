@@ -30,11 +30,15 @@ StreamingField.prototype.attach = function() {
 	});
 	player.on("abort", function() {
 		logger.log("abort");
-		thisField.deleteTempFile();
+		setTimeout(function() {
+			thisField.deleteTempFile();
+		}, 3000);
 	});
 	player.on("ended", function() {
 		logger.log("ended");
-		thisField.deleteTempFile();
+		setTimeout(function() {
+			thisField.deleteTempFile();
+		}, 3000);
 	});
 };
 
