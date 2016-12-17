@@ -1,7 +1,9 @@
 package dataforms.util;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -24,7 +26,7 @@ public class HttpRangeInfo {
 	/**
 	 * ブロックサイズリスト。
 	 */
-	private static List<Map<String, Object>> blockSizeList = null;
+	private static List<LinkedHashMap<String, Object>> blockSizeList = null;
 	
 	/**
 	 * 範囲の終了が指定されなかった場合、転送するサイズ。
@@ -70,7 +72,7 @@ public class HttpRangeInfo {
 	 * ブロックサイズリストを取得します。
 	 * @return ブロックサイズリスト。
 	 */
-	public static List<Map<String, Object>> getBlockSizeList() {
+	public static List<LinkedHashMap<String, Object>> getBlockSizeList() {
 		return blockSizeList;
 	}
 
@@ -78,7 +80,7 @@ public class HttpRangeInfo {
 	 * ブロックサイズリストを設定します。
 	 * @param blockSizeList ブロックサイズリスト。
 	 */
-	public static void setBlockSizeList(final List<Map<String, Object>> blockSizeList) {
+	public static void setBlockSizeList(final List<LinkedHashMap<String, Object>> blockSizeList) {
 		HttpRangeInfo.blockSizeList = blockSizeList;
 	}
 
@@ -172,11 +174,25 @@ public class HttpRangeInfo {
 	 * @return ストリーミング転送のブロックサイズ。 
 	 */
 	private long getBlockSize() {
-		long ret = HttpRangeInfo.DEFAULT_BLOCK_SIZE;
-		if (Pattern.matches(".*Firefox.*", this.userAgent)) {
-			ret = -1;
+		if (HttpRangeInfo.blockSizeList == null) {
+			long ret = HttpRangeInfo.DEFAULT_BLOCK_SIZE;
+			if (Pattern.matches(".*Firefox.*", this.userAgent)) {
+				ret = -1;
+			}
+			return ret;
+		} else {
+			long ret = HttpRangeInfo.DEFAULT_BLOCK_SIZE;
+			for (Map<String, Object> m: HttpRangeInfo.blockSizeList) {
+				String uaPattern = (String) m.get("uaPattern");
+				BigDecimal size = (BigDecimal) m.get("blockSize");
+				if (Pattern.matches(uaPattern, this.userAgent)) {
+					ret = size.longValue();
+					break;
+				}
+			}
+			return ret;
+
 		}
-		return ret;
 	}
 	
 	/**

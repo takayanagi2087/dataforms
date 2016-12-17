@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +38,10 @@ import dataforms.controller.WebComponent;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.util.CryptUtil;
+import dataforms.util.HttpRangeInfo;
 import dataforms.util.MessagesUtil;
 import dataforms.util.StringUtil;
+import net.arnx.jsonic.JSON;
 
 /**
  * DataForms用サーブレットクラスです。
@@ -283,7 +286,6 @@ public class DataFormsServlet extends HttpServlet {
 			DataFormsServlet.exportImportDir = "/tmp/data";
 		}
 		log.info("init:exportImportDir=" + DataFormsServlet.exportImportDir);
-
 		//
 		DataFormsServlet.cssAndScript = this.getServletContext().getInitParameter("css-and-scripts");
 		if (DataFormsServlet.cssAndScript == null) {
@@ -360,11 +362,15 @@ public class DataFormsServlet extends HttpServlet {
 		if (!StringUtil.isBlank(backButton)) {
 			Page.setBrowserBackButton(backButton);
 		}
-		//
 		DeveloperPage.setJavaSourcePath(this.getServletContext().getInitParameter("java-source-path"));
 		DeveloperPage.setWebSourcePath(this.getServletContext().getInitParameter("web-source-path"));
-
-		
+		String streamingBlockSize = this.getServletContext().getInitParameter("streaming-block-size");
+		log.debug("streamingBlockSize=" + streamingBlockSize);
+		if (!StringUtil.isBlank(streamingBlockSize)) {
+			@SuppressWarnings("unchecked")
+			List<LinkedHashMap<String, Object>> bslist = (List<LinkedHashMap<String, Object>>) JSON.decode(streamingBlockSize, ArrayList.class);
+			HttpRangeInfo.setBlockSizeList(bslist);
+		}
 		String beanClass = this.getServletContext().getInitParameter("servlet-instance-bean");
 		log.info("beanClass = " + beanClass);
 		if (beanClass != null) {
@@ -377,8 +383,6 @@ public class DataFormsServlet extends HttpServlet {
 				log.error(e.getMessage(), e);
 			}
 		}
-
-		
 		super.init();
 		WebComponent.setServlet(this);
 		// DB存在チェック.
