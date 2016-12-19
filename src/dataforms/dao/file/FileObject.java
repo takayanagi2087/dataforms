@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -125,6 +127,29 @@ public class FileObject implements Serializable {
 	};
 
 
+	
+	/**
+	 * content-typeリスト。
+	 */
+	private static List<LinkedHashMap<String, String>> contentTypeList = null;
+
+	
+	/**
+	 * content-typeリストを取得します。
+	 * @return content-typeリスト。
+	 */
+	public static List<LinkedHashMap<String, String>> getContentTypeList() {
+		return contentTypeList;
+	}
+
+	/**
+	 * content-typeリストを設定します。
+	 * @param contentTypeList content-typeリスト。
+	 */
+	public static void setContentTypeList(final List<LinkedHashMap<String, String>> contentTypeList) {
+		FileObject.contentTypeList = contentTypeList;
+	}
+
 	/**
 	 * コンストラクタ。
 	 */
@@ -185,10 +210,22 @@ public class FileObject implements Serializable {
 	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 		if (fileName != null) {
-			for (String[] t: CONTENT_TYPE_TABLE) {
-				if (Pattern.matches(t[0], fileName)) {
-					this.setContentType(t[1]);
-					break;
+			if (FileObject.contentTypeList == null) {
+				for (String[] t: CONTENT_TYPE_TABLE) {
+					if (Pattern.matches(t[0], fileName)) {
+						this.setContentType(t[1]);
+						break;
+					}
+				}
+			} else {
+				for (LinkedHashMap<String, String> m: FileObject.contentTypeList) {
+					String fnPattern = m.get("fnPattern");
+					if (Pattern.matches(fnPattern, fileName)) {
+						this.setContentType(m.get("contentType"));
+						log.debug("fileName=" + fileName + ",fnPattern=" + fnPattern + ",contentType=" + this.getContentType());
+						break;
+					}
+					
 				}
 			}
 		}

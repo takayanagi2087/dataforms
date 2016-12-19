@@ -260,6 +260,44 @@
 			]
 		</param-value>
 	</context-param>
+	<!--
+		FileFieldの中に保存されたファイルをダウンロードする際に出力するcontent-typeを設定します。 
+	 -->
+	<context-param>
+		<param-name>content-type-list</param-name>
+		<param-value>
+			[
+				{"fnPattern": "(?i).*\\.txt$", "contentType": "text/plain"},
+				{"fnPattern": "(?i).*\\.html$", "contentType": "text/html"},
+				{"fnPattern": "(?i).*\\.htm$", "contentType": "text/html"},
+				{"fnPattern": "(?i).*\\.xhtml$", "contentType": "text/xhtml+xml"},
+				{"fnPattern": "(?i).*\\.rss$", "contentType": "application/rss+xml"},
+
+				{"fnPattern": "(?i).*\\.zip$", "contentType": "application/zip"},
+				{"fnPattern": "(?i).*\\.pdf$", "contentType": "application/pdf"},
+				{"fnPattern": "(?i).*\\.xlsx$", "contentType": "application/vnd.ms-excel"},
+
+				{"fnPattern": "(?i).*\\.png$", "contentType": "image/png"},
+				{"fnPattern": "(?i).*\\.jpg$", "contentType": "image/jpeg"},
+				{"fnPattern": "(?i).*\\.jpeg$", "contentType": "image/jpeg"},
+				{"fnPattern": "(?i).*\\.gif$", "contentType": "image/gif"},
+				{"fnPattern": "(?i).*\\.svg$", "contentType": "image/svg+xml"},
+
+				{"fnPattern": "(?i).*\\.swf$", "contentType": "application/x-shockwave-flash"},
+				{"fnPattern": "(?i).*\\.mpg$", "contentType": "video/mpeg"},
+				{"fnPattern": "(?i).*\\.mpeg$", "contentType": "video/mpeg"},
+				{"fnPattern": "(?i).*\\.mp4$", "contentType": "video/mp4"},
+				{"fnPattern": "(?i).*\\.mov$", "contentType": "video/quicktime"},
+				{"fnPattern": "(?i).*\\.qt$", "contentType": "video/quicktime"},
+				{"fnPattern": "(?i).*\\.mov$", "contentType": "video/x-msvideo"},
+
+				{"fnPattern": "(?i).*\\.mp3$", "contentType": "audio/mpeg"},
+				{"fnPattern": "(?i).*\\.wav$", "contentType": "audio/wav"},
+
+				{"fnPattern": ".+", "contentType": "application/octet-stream"}
+			]
+		</param-value>
+	</context-param>
 	
 	<!-- セッションタイムアウト -->
 	<session-config>

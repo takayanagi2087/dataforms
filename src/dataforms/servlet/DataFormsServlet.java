@@ -36,6 +36,7 @@ import dataforms.controller.Page;
 import dataforms.controller.Response;
 import dataforms.controller.WebComponent;
 import dataforms.dao.file.BlobFileStore;
+import dataforms.dao.file.FileObject;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
@@ -364,6 +365,7 @@ public class DataFormsServlet extends HttpServlet {
 		}
 		DeveloperPage.setJavaSourcePath(this.getServletContext().getInitParameter("java-source-path"));
 		DeveloperPage.setWebSourcePath(this.getServletContext().getInitParameter("web-source-path"));
+
 		String streamingBlockSize = this.getServletContext().getInitParameter("streaming-block-size");
 		log.debug("streamingBlockSize=" + streamingBlockSize);
 		if (!StringUtil.isBlank(streamingBlockSize)) {
@@ -371,6 +373,29 @@ public class DataFormsServlet extends HttpServlet {
 			List<LinkedHashMap<String, Object>> bslist = (List<LinkedHashMap<String, Object>>) JSON.decode(streamingBlockSize, ArrayList.class);
 			HttpRangeInfo.setBlockSizeList(bslist);
 		}
+		
+		String contentTypeList = this.getServletContext().getInitParameter("content-type-list");
+		log.debug("contentTypeList=" + contentTypeList);
+		if (!StringUtil.isBlank(contentTypeList)) {
+			@SuppressWarnings("unchecked")
+			List<LinkedHashMap<String, String>> ctlist = (List<LinkedHashMap<String, String>>) JSON.decode(contentTypeList, ArrayList.class);
+//			HttpRangeInfo.setBlockSizeList(bslist);
+			FileObject.setContentTypeList(ctlist);
+		}
+		
+		
+		this.setupServletInstanceBean();
+		super.init();
+		WebComponent.setServlet(this);
+		// DB存在チェック.
+		this.checkDbConnection();
+
+	}
+
+	/**
+	 * ServletInstanceBeanの設定を行います。
+	 */
+	private void setupServletInstanceBean() {
 		String beanClass = this.getServletContext().getInitParameter("servlet-instance-bean");
 		log.info("beanClass = " + beanClass);
 		if (beanClass != null) {
@@ -383,13 +408,11 @@ public class DataFormsServlet extends HttpServlet {
 				log.error(e.getMessage(), e);
 			}
 		}
-		super.init();
-		WebComponent.setServlet(this);
-		// DB存在チェック.
-		this.checkDbConnection();
-
 	}
 
+	
+	
+	
 	/**
 	 * DBの接続チェックを行ないます。
 	 */
