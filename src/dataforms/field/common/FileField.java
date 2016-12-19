@@ -183,8 +183,7 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 				file.delete();
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return ret;
 	}
