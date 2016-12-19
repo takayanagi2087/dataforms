@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
  *
  */
 public final class StringUtil {
+	
 
 	/**
 	 * コンストラクタ。
@@ -48,7 +49,7 @@ public final class StringUtil {
 	public static String camelToSnake(final String camelStr) {
 		String ret = camelStr
 				.replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
-				.replaceAll("([a-z])([A-Z])", "$1_$2");
+				.replaceAll("([0-9a-z])([A-Z])", "$1_$2");
 		return ret.toLowerCase();
 	}
 	
@@ -91,5 +92,16 @@ public final class StringUtil {
 		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 	
+	/**
+	 * テスト。
+	 * @param args
+	 */
+/*	public static void main(String[] args) {
+		String snake = StringUtil.camelToSnake("test01Field");
+		System.out.println("snake=" + snake);
+		String camel = StringUtil.snakeToCamel(snake);
+		System.out.println("camel=" + camel);
+		
+	}*/
 
 }
