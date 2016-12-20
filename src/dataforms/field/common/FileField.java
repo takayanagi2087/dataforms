@@ -1,7 +1,6 @@
 package dataforms.field.common;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import dataforms.dao.file.WebResourceFileStore;
 import dataforms.dao.sqldatatype.SqlBlob;
 import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.field.base.Field;
-import dataforms.servlet.DataFormsServlet;
 import dataforms.util.StringUtil;
 
 
@@ -173,18 +171,6 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	public String getBlobDownloadParameter(final Map<String, Object> m) {
 		FileStore store = this.newFileStore();
 		String ret = store.getDownloadParameter(this, m);
-		// Videoやaudio再生中の一時ファイルがある場合削除する。
-		String sessionKey;
-		try {
-			sessionKey = java.net.URLDecoder.decode(ret.replaceAll("^key=", DOWNLOADING_FILE), DataFormsServlet.getEncoding());
-			String tf = (String) this.getPage().getRequest().getSession().getAttribute(sessionKey);
-			if (tf != null) {
-				File file = new File(tf);
-				file.delete();
-			}
-		} catch (UnsupportedEncodingException e) {
-			log.error(e.getMessage(), e);
-		}
 		return ret;
 	}
 
@@ -254,7 +240,9 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 					}
 				}
 			}
+			log.debug("param=" + param);
 		}
+		
 		FileStore store = this.newFileStore(param);
 		FileObject fobj = store.readFileObject(param);
 		BinaryResponse resp = new BinaryResponse(fobj);

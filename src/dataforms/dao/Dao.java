@@ -1471,7 +1471,10 @@ public class Dao implements JDBCConnectableObject {
 		 * @param data パラメータ。
 		 */
 		public FileObjectQuery(final Table table, final String fieldId, final Map<String, Object> data) {
-			this.setFieldList(new FieldList(table.getField(fieldId)));
+			FieldList flist = new FieldList();
+			flist.addAll(table.getPkFieldList());
+			flist.add(table.getField(fieldId));
+			this.setFieldList(flist);
 			this.setMainTable(table);
 			this.setQueryFormFieldList(table.getPkFieldList());
 			this.setQueryFormData(data);
@@ -1489,9 +1492,9 @@ public class Dao implements JDBCConnectableObject {
 	public FileObject queryBlobFileObject(final Table table, final String fieldId, final Map<String, Object> data) throws Exception {
 		this.setBlobReadMode(BlobReadMode.FOR_DOWNLOAD);
 		FileObjectQuery query = new FileObjectQuery(table, fieldId, data);
-		FileObject ret = (FileObject) this.executeScalarQuery(query);
+		Map<String, Object> ret = (Map<String, Object>) this.executeRecordQuery(query);
 		this.setBlobReadMode(BlobReadMode.FOR_DISPLAY_FILE_INFO);
-		return ret;
+		return (FileObject) ret.get(fieldId);
 	}
 
 	
@@ -1505,8 +1508,8 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	public FileObject queryBlobFileInfo(final Table table, final String fieldId, final Map<String, Object> data) throws Exception {
 		FileObjectQuery query = new FileObjectQuery(table, fieldId, data);
-		FileObject ret = (FileObject) this.executeScalarQuery(query);
-		return ret;
+		Map<String, Object> ret = (Map<String, Object>) this.executeRecordQuery(query);
+		return (FileObject) ret.get(fieldId);
 	}
 
 

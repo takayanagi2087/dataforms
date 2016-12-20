@@ -330,6 +330,7 @@ public class BlobFileStore extends FileStore {
 		Map<String, Object> data = table.getPkFieldList().convertClientToServer(param);
 		FileObject fobj = null;
 		if (!StringUtil.isBlank(downloadingFile)) {
+			// TODO:冗長な処理なので後で修正する。
 			String dlfile = (String) param.get("downloadingFile");
 			if (StringUtil.isBlank(dlfile)) {
 				log.debug("read from BlobField");

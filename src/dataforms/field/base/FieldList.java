@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import dataforms.dao.file.FileObject;
+import dataforms.dao.sqldatatype.SqlBlob;
 import dataforms.field.base.Field.SortOrder;
 import dataforms.util.StringUtil;
 
@@ -195,6 +197,16 @@ public class FieldList extends ArrayList<Field<?>> {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		for (Field<?> f : this) {
 			f.setDBValue(data.get(f.getId()));
+			if (f instanceof SqlBlob) {
+				// ダウンロードパラメータを設定する。
+				FileObject v = (FileObject) f.getValue();;
+				if (v != null) {
+					SqlBlob blobf = (SqlBlob) f;
+					if (v.getFileName() != null) {
+						v.setDownloadParameter(blobf.getBlobDownloadParameter(data));
+					}
+				}
+			}
 			ret.put(f.getId(), f.getValue());
 		}
 		return ret;
