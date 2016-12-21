@@ -330,16 +330,8 @@ public class BlobFileStore extends FileStore {
 		Map<String, Object> data = table.getPkFieldList().convertClientToServer(param);
 		FileObject fobj = null;
 		if (!StringUtil.isBlank(downloadingFile)) {
-			// TODO:冗長な処理なので後で修正する。
-			String dlfile = (String) param.get("downloadingFile");
-			if (StringUtil.isBlank(dlfile)) {
-				log.debug("read from BlobField");
-				fobj = dao.queryBlobFileObject(table, (String) param.get("fieldId"), data);
-			} else {
-				log.debug("read from TempFile");
-				fobj = dao.queryBlobFileInfo(table, (String) param.get("fieldId"), data);
-				fobj.setTempFile(new File(dlfile));
-			}
+			fobj = dao.queryBlobFileInfo(table, (String) param.get("fieldId"), data);
+			fobj.setTempFile(new File(downloadingFile));
 		} else {
 			fobj = dao.queryBlobFileObject(table, (String) param.get("fieldId"), data);
 		}
