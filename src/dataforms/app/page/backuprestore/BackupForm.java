@@ -23,7 +23,7 @@ import dataforms.util.MessagesUtil;
 import dataforms.validator.ValidationError;
 
 /**
- * 問い合わせフォームクラス。
+ * バックアップフォームクラス。
  */
 public class BackupForm extends Form {
 	
