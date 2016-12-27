@@ -57,7 +57,7 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	 * ファイルストアを作成します。
 	 * @return ファイルストア。
 	 */
-	protected FileStore newFileStore() {
+	public FileStore newFileStore() {
 		if (this instanceof SqlBlob) {
 			return new BlobFileStore(this);
 		} else if (this instanceof SqlVarchar) {

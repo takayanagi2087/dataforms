@@ -119,6 +119,17 @@ public class WebResourceFileStore extends FileStore {
 	 * </pre>
 	 */
 	@Override
+	public Map<String, Object> getDownloadInfoMap(final FileField<?> field, final Map<String, Object> d) {
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * <pre>
+	 * 何も処理せずnullを返します。
+	 * </pre>
+	 */
+	@Override
 	public String getDownloadParameter(final FileField<?> field, final Map<String, Object> d) {
 		return null;
 	}

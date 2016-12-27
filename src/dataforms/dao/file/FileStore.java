@@ -108,6 +108,16 @@ public abstract class FileStore {
 	 */
 	public abstract File getTempFile(final FileObject fobj);
 	
+	
+	/**
+	 * ファイルのダウンロードに必要な情報のマップを作成します。
+	 * @param field フィールドクラス。
+	 * @param d 同一レコードのデータマップ。
+	 * @return ファイルのダウンロードに必要な情報のマップ。
+	 */
+	public abstract Map<String, Object> getDownloadInfoMap(final FileField<?> field, final Map<String, Object> d);
+
+	
 	/**
 	 * ダウンロードパラメータを取得します。
 	 * @param field フィールド。

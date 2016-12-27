@@ -351,6 +351,15 @@ public class BlobFileStore extends FileStore {
 	
 	@Override
 	public String getDownloadParameter(final FileField<?> field, final Map<String, Object> d) {
+		Map<String, Object> m = getDownloadInfoMap(field, d);
+		String ret = "key=" + this.encryptDownloadParameter(m);
+		log.debug("downloadParameter=" + ret);
+		return ret;
+	}
+
+
+	@Override
+	public Map<String, Object> getDownloadInfoMap(final FileField<?> field, final Map<String, Object> d) {
 		Map<String, Object> m = new HashMap<String, Object>();
 		Table table = field.getTable();
 		if (table != null) {
@@ -363,9 +372,7 @@ public class BlobFileStore extends FileStore {
 		} else {
 			log.warn("Table not found. field ID=" + field.getId());
 		}
-		String ret = "key=" + this.encryptDownloadParameter(m);
-		log.debug("downloadParameter=" + ret);
-		return ret;
+		return m;
 	}
 	
 	/**

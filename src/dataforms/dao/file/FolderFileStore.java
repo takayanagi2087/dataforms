@@ -255,7 +255,12 @@ public class FolderFileStore extends FileStore {
 	@Override
 	public FileObject readFileObject(final Map<String, Object> param) throws Exception {
 		String folder = DataFormsServlet.getUploadDataFolder();
-		Long u = ((BigDecimal) param.get("u")).longValue();
+		Long u = null;
+		if (param.get("u") instanceof BigDecimal) {
+			u = ((BigDecimal) param.get("u")).longValue();
+		} else {
+			u = (Long) param.get("u");
+		}
 		String t = (String) param.get("t");
 		String f = (String) param.get("f");
 		String n = (String) param.get("n");
@@ -289,6 +294,14 @@ public class FolderFileStore extends FileStore {
 	 */
 	@Override
 	public String getDownloadParameter(final FileField<?> field, final Map<String, Object> d) {
+		Map<String, Object> m = getDownloadInfoMap(field, d);
+		return "key=" + this.encryptDownloadParameter(m);
+/*	String dlparam = "store=" + this.getClass().getName() + "&u=" + this.userId + "&t=" + this.tableName + "&f=" + this.fieldId + "&n=" + this.fileName + "&ts=" + this.timestamp;
+		return dlparam;*/
+	}
+
+	@Override
+	public Map<String, Object> getDownloadInfoMap(final FileField<?> field, final Map<String, Object> d) {
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("store", this.getClass().getName());
 		m.put("u", this.userId);
@@ -296,9 +309,7 @@ public class FolderFileStore extends FileStore {
 		m.put("f", this.fieldId);
 		m.put("n", this.fileName);
 		m.put("ts", this.timestamp);
-		return "key=" + this.encryptDownloadParameter(m);
-/*	String dlparam = "store=" + this.getClass().getName() + "&u=" + this.userId + "&t=" + this.tableName + "&f=" + this.fieldId + "&n=" + this.fileName + "&ts=" + this.timestamp;
-		return dlparam;*/
+		return m;
 	}
 
 }

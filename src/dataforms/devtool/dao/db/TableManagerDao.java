@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.app.dao.func.FuncInfoTable;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
@@ -16,15 +18,14 @@ import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
+import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
+import dataforms.dao.file.FileStore;
+import dataforms.dao.file.FolderFileStore;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
-import dataforms.field.common.BlobStoreFileField;
-import dataforms.field.common.BlobStoreImageField;
 import dataforms.field.common.FileField;
-import dataforms.field.common.FolderStoreFileField;
-import dataforms.field.common.FolderStoreImageField;
 import dataforms.util.ClassFinder;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
@@ -38,7 +39,7 @@ public class TableManagerDao extends Dao {
     /**
      * Logger.
      */
-    //private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
+    private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
 
 	/**
 	 * コンストラクタ。
@@ -263,9 +264,9 @@ public class TableManagerDao extends Dao {
 		for (String pair: sp) {
 			String [] p = pair.split("=");
 			if (p.length == 2) {
-	            String key = URLDecoder.decode(p[0], "utf-8");
-	            String value = URLDecoder.decode(p[1], "utf-8");
-	            ret.put(key, value);
+				String key = URLDecoder.decode(p[0], "utf-8");
+				String value = URLDecoder.decode(p[1], "utf-8");
+				ret.put(key, value);
 			}
 		}
 		return ret;
@@ -287,27 +288,21 @@ public class TableManagerDao extends Dao {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
+		// TODO:Video, Audoiのフィールドクラスに対応する必要がある。
 		FileObject fo = null;
-		if (f instanceof FolderStoreFileField) {
-			FolderStoreFileField ff = (FolderStoreFileField) f;
+		if (f instanceof FileField) {
+			FileField<?> ff = (FileField<?>) f;
 			ff.setDBValue(value);
 			fo = ff.getValue();
-		} else if (f instanceof FolderStoreImageField) {
-			FolderStoreImageField ff = (FolderStoreImageField) f;
-			ff.setDBValue(value);
-			fo = ff.getValue();
-		} else 	if (f instanceof BlobStoreFileField) {
-			BlobStoreFileField ff = (BlobStoreFileField) f;
-			ff.setDBValue(value);
-			fo = ff.getValue();
-			fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
-		} else 	if (f instanceof BlobStoreImageField) {
-			BlobStoreImageField ff = (BlobStoreImageField) f;
-			ff.setDBValue(value);
-			fo = ff.getValue();
-			fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
+			FileStore store = ff.newFileStore();
+			if (store instanceof FolderFileStore) {
+				;
+			} else if (store instanceof BlobFileStore) {
+				fo.setDownloadParameter(ff.getBlobDownloadParameter(data));
+			}
 		}
 		Map<String, Object> dlp = this.getDownloadParamMap(fo.getDownloadParameter());
+		log.debug("dlp=" + JSON.encode(dlp, true));
 		ret.put("filename", fo.getFileName());
 		String key = "";
 		for (Field<?> pkf: table.getPkFieldList()) {
