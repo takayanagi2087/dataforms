@@ -160,7 +160,6 @@ public boolean isAuthenticated(final Map&lt;String, Object&gt; params) throws Ex
 package sample.page;
 
 import dataforms.controller.QueryForm;
-import dataforms.dao.Table;
 import sample.dao.SampleTable;
 import dataforms.field.base.Field.MatchType;
 import sample.field.SampleNumField;
@@ -176,12 +175,12 @@ public class SampleQueryForm extends QueryForm {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleQueryForm() {
-		Table table = new SampleTable();
-		this.addField(table.getField(&quot;sampleText&quot;)).setMatchType(MatchType.FULL);
-		this.addField(new SampleNumField(&quot;sampleNumFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
-		this.addField(new SampleNumField(&quot;sampleNumTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
-		this.addField(new SampleDateField(&quot;sampleDateFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
-		this.addField(new SampleDateField(&quot;sampleDateTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
+		SampleTable table = new SampleTable();
+		this.addField(table.getSampleTextField()).setMatchType(MatchType.FULL);
+		this.addField(new SampleNumField(SampleTable.Entity.ID_SAMPLE_NUM + &quot;From&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
+		this.addField(new SampleNumField(SampleTable.Entity.ID_SAMPLE_NUM + &quot;To&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
+		this.addField(new SampleDateField(SampleTable.Entity.ID_SAMPLE_DATE + &quot;From&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
+		this.addField(new SampleDateField(SampleTable.Entity.ID_SAMPLE_DATE + &quot;To&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
 
 	}
 }
@@ -206,7 +205,6 @@ public class SampleQueryForm extends QueryForm {
 package sample.page;
 
 import dataforms.controller.QueryForm;
-import dataforms.dao.Table;
 import dataforms.field.base.Field.MatchType;
 import sample.dao.SampleTable;
 import sample.field.SampleDateField;
@@ -222,12 +220,12 @@ public class SampleQueryForm extends QueryForm {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleQueryForm() {
-		Table table = new SampleTable();
-		this.addField(table.getField(&quot;sampleText&quot;)).setMatchType(MatchType.<b>PART</b>);
-		this.addField(new SampleNumField(&quot;sampleNumFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
-		this.addField(new SampleNumField(&quot;sampleNumTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
-		this.addField(new SampleDateField(&quot;sampleDateFrom&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
-		this.addField(new SampleDateField(&quot;sampleDateTo&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
+		SampleTable table = new SampleTable();
+		this.addField(table.getSampleTextField()).setMatchType(MatchType.<b>PART</b>);
+		this.addField(new SampleNumField(SampleTable.Entity.ID_SAMPLE_NUM + &quot;From&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#25968;&#20516;(from)&quot;);
+		this.addField(new SampleNumField(SampleTable.Entity.ID_SAMPLE_NUM + &quot;To&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#25968;&#20516;(to)&quot;);
+		this.addField(new SampleDateField(SampleTable.Entity.ID_SAMPLE_DATE + &quot;From&quot;)).setMatchType(MatchType.RANGE_FROM).setComment(&quot;&#26085;&#20184;(from)&quot;);
+		this.addField(new SampleDateField(SampleTable.Entity.ID_SAMPLE_DATE + &quot;To&quot;)).setMatchType(MatchType.RANGE_TO).setComment(&quot;&#26085;&#20184;(to)&quot;);
 
 	}
 }
@@ -249,12 +247,12 @@ public class SampleQueryResultForm extends QueryResultForm {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleQueryResultForm() {
-		Table table = new SampleTable();
+		SampleTable table = new SampleTable();
 		this.addPkFieldList(table.getPkFieldList());
 		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
-		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_TEXT).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_NUM).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_DATE).setSortable(true);
 
 		this.addHtmlTable(htmltable);
 	}
@@ -287,15 +285,16 @@ public class SampleQueryResultForm extends QueryResultForm {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleQueryResultForm() {
-		Table table = new SampleTable();
+		SampleTable table = new SampleTable();
 		this.addPkFieldList(table.getPkFieldList());
 		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
-		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true, <b>SortOrder.DESC</b>);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_TEXT).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_NUM).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_DATE).setSortable(true, <b>SortOrder.DESC</b>);
 
 		this.addHtmlTable(htmltable);
 	}
+
 				・
 				・
 				・
@@ -329,9 +328,9 @@ public class SampleEditForm extends EditForm {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleEditForm() {
-		Table table = new SampleTable();
+		SampleTable table = new SampleTable();
 		this.addTableFields(table);
-		<b>this.getFieldList().get(&quot;sampleText&quot;).addValidator(new RequiredValidator());</b>
+		<b>table.getSampleTextField().addValidator(new RequiredValidator());</b>
 	}
 	・
 	・
@@ -445,10 +444,11 @@ public class SampleEditForm extends EditForm {
 	protected List&lt;ValidationError&gt; validateForm(Map&lt;String, Object&gt; data) throws Exception {
 		log.debug(&quot;data=&quot; + data);
 		List&lt;ValidationError&gt; list = new ArrayList&lt;ValidationError&gt;();
-		BigDecimal sampleNum = (BigDecimal) data.get(&quot;sampleNum&quot;);
-		Date sampleDate = (Date) data.get(&quot;sampleDate&quot;);
+		SampleTable.Entity e = new SampleTable.Entity(data);
+		BigDecimal sampleNum = e.getSampleNum();
+		Date sampleDate = e.getSampleDate();
 		if (sampleNum != null &amp;&amp; sampleDate == null) {
-			list.add(new ValidationError(&quot;sampleDate&quot;, MessagesUtil.getMessage(this.getPage(), &quot;error.requireddate&quot;)));
+			list.add(new ValidationError(SampleTable.Entity.ID_SAMPLE_DATE, MessagesUtil.getMessage(this.getPage(), &quot;error.requireddate&quot;)));
 		}
 		return list;
 	}
@@ -626,8 +626,8 @@ public class SampleTextField extends VarcharField {
 		return this.convertToAutocompleteList(
 				this.getHtmlTableRowId(id), // EditableHtmlTable&#20013;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12395;&#23550;&#24540;&#12377;&#12427;&#12383;&#12417;&#12289;HtmlTable&#12398;&#34892;&#12398;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
 				list,	// &#26908;&#32034;&#32080;&#26524;&#12522;&#12473;&#12488;&#12290;
-				&quot;sampleText&quot;,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
-				&quot;sampleText&quot;	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				SampleTable.Entity.ID_SAMPLE_TEXT,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				SampleTable.Entity.ID_SAMPLE_TEXT	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
 		);
 	}
 	</b>
