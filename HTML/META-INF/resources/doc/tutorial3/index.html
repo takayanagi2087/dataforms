@@ -719,13 +719,14 @@ public class SampleTextField extends VarcharField {
 		return this.convertToAutocompleteList(
 				this.getHtmlTableRowId(id), // EditableHtmlTable&#20013;&#12398;&#12501;&#12451;&#12540;&#12523;&#12489;&#12395;&#23550;&#24540;&#12377;&#12427;&#12383;&#12417;&#12289;HtmlTable&#12398;&#34892;&#12398;ID&#12434;&#21462;&#24471;&#12377;&#12427;&#12290;
 				list,	// &#26908;&#32034;&#32080;&#26524;&#12522;&#12473;&#12488;&#12290;
-				&quot;sampleText&quot;,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
-				&quot;sampleText&quot;	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				SampleTable.Entity.ID_SAMPLE_TEXT,	// &#20516;&#12501;&#12451;&#12540;&#12523;&#12489;id
+				SampleTable.Entity.ID_SAMPLE_TEXT	// &#12521;&#12505;&#12523;&#12501;&#12451;&#12540;&#12523;&#12489;id
 		);
 	}
+
 	<b>
 	@Override
-	protected Map&lt;String, Object&gt; queryRelationData(Map&lt;String, Object&gt; data) throws Exception {
+	protected Map&lt;String, Object&gt; queryRelationData(final Map&lt;String, Object&gt; data) throws Exception {
 		String id = (String) data.get(&quot;currentFieldId&quot;);
 		String text = (String) data.get(id);
 		SampleDao dao = new SampleDao(this); // Dao&#20351;&#29992;&#12375;&#12289;&#23436;&#20840;&#19968;&#33268;&#12391;&#26908;&#32034;&#12377;&#12427;&#12290;
@@ -735,11 +736,11 @@ public class SampleTextField extends VarcharField {
 		flist.add((new SampleTextField()).setMatchType(MatchType.FULL));
 		List&lt;Map&lt;String, Object&gt;&gt; list = dao.query(p, flist);
 		if (list.size() &gt;= 1) {
-			Map&lt;String, Object&gt; r = list.get(0);
-			Map&lt;String, Object&gt; ret = new HashMap&lt;String, Object&gt;();
-			ret.put(&quot;sampleNum&quot;, r.get(&quot;sampleNum&quot;));
-			ret.put(&quot;sampleDate&quot;, r.get(&quot;sampleDate&quot;));
-			return ret;
+			SampleTable.Entity e = new SampleTable.Entity(list.get(0));
+			SampleTable.Entity ret = new SampleTable.Entity();
+			ret.setSampleNum(e.getSampleNum());
+			ret.setSampleDate(e.getSampleDate());
+			return ret.getMap();
 		} else {
 			return new HashMap&lt;String, Object&gt;();
 		}
@@ -772,7 +773,7 @@ public class SampleEditForm extends EditForm {
 	public SampleEditForm() {
 		Table table = new SampleTable();
 		this.addTableFields(table);
-		this.getFieldList().get(&quot;sampleText&quot;).addValidator(new RequiredValidator())<b>.setRelationDataAcquisition(true)</b>;
+		table.getSampleTextField().addValidator(new RequiredValidator()).<b>setRelationDataAcquisition(true)</b>;
 	}
 
 			</pre>
@@ -1050,7 +1051,7 @@ SampleEditForm.prototype.print = function() {
 		</figure>
 		<h3>プルダウンの選択肢の設定</h3>
 		<p>
-			&lt;select&gt;タグの選択肢をデータベースから取得し設定する手法は、一般的なものです。
+			&lt;select&gt;タグの選択肢をデータベースから取得し設定する手法は一般的なものです。
 			しかし、これをやろうとすると結構面倒なコーディングが必要になります。
 			dataforms.jarではSelectFieldクラスが用意されており、これから派生したクラスを使用することにより、
 			簡単にテータベースから選択肢を取得することがてきます。
@@ -1071,7 +1072,7 @@ SampleEditForm.prototype.print = function() {
 			<img src="enum1.png" style="width:50%; height:50%;"/>
 		</figure>
 		<p>
-			今回は、サンプルとして以下のような列挙型を登録します。
+			今回はサンプルとして以下のような列挙型を登録します。
 		</p>
 		<figure>
 			<figcaption>sample選択肢の登録内容</figcaption>
@@ -1085,7 +1086,7 @@ SampleEditForm.prototype.print = function() {
 		<h3>テーブル構造の更新</h3>
 		<p>
 			列挙型として登録したsampleSelectをSampleTableに追加します。
-			テーブルJavaクラス作成でSampleTableを編集します。
+			「テーブルJavaクラス作成」でSampleTableを編集します。
 			最後の行にEnumOptionSingleSelectFieldから派生したSampleSelectFieldというクラスを割り当てます。
 			このまま保存しようとすると、テーブルクラスと既存のフィールドクラスが存在するので、上書きできないというエラーになります。
 			そこでテーブルクラスは上書きし、既存のフィールドクラスは上書きしないように設定して保存します。
