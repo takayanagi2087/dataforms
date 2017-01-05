@@ -288,7 +288,6 @@ public class TableManagerDao extends Dao {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		// TODO:Video, Audoiのフィールドクラスに対応する必要がある。
 		FileObject fo = null;
 		if (f instanceof FileField) {
 			FileField<?> ff = (FileField<?>) f;
