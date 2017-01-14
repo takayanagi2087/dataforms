@@ -106,7 +106,6 @@ FileField.prototype.setValue = function(value) {
 			delcheck.next("label:first").show();
 		}
 		delcheck.attr("checked", false);
-		logger.error("ck on ckid=" + ckid);
 	} else {
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		fnlink.attr("href", "");
@@ -119,7 +118,6 @@ FileField.prototype.setValue = function(value) {
 		delcheck.hide();
 		delcheck.next("label:first").hide();
 		delcheck.attr("checked", false);
-		logger.error("ck off ckid=" + ckid);
 	}
 	if ("INPUT" == tag) {
 		comp.val("");
@@ -136,7 +134,6 @@ FileField.prototype.getValue = function() {
 		var fnid = this.id + "_link";
 		ret = this.parent.find("#" + this.selectorEscape(fnid)).text();
 	}
-	logger.log("FileField.getValue=" + ret);
 	return ret;
 };
 

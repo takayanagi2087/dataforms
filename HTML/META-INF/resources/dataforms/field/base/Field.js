@@ -309,10 +309,12 @@ Field.prototype.lockTextbox = function(lk) {
 		comp.prop("readonly", true);
 		comp.css("border-style", "none");
 		comp.css("outline", "none");
+		comp.addClass("lockedTextbox");
 	} else {
 		comp.prop("readonly", comp.prop("readonly-bak"));
 		comp.css("border-style", "");
 		comp.css("outline", "");
+		comp.removeClass("lockedTextbox");
 	}
 };
 
