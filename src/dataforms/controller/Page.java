@@ -29,6 +29,8 @@ import dataforms.util.SequentialProperties;
 import dataforms.util.StringUtil;
 import dataforms.validator.FieldValidator;
 
+
+// TODO:lockLayerのスタイルをcssに...
 /**
  * ページ制御クラス。
  */
