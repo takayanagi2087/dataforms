@@ -22,8 +22,10 @@ import dataforms.validator.ValidationError;
 /**
  * フィールドの基本クラス。
  *
+ * 
  * @param <TYPE> サーバで処理するJavaのデータ型。
  */
+// TODO:フィールドロック時のスタイルを作成し、ロック時にはそれを適用するようにしたほうが良い。
 public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	/**
 	 * Logger.

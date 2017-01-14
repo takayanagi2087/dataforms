@@ -46,6 +46,12 @@ FileField.prototype.attach = function() {
 		fnlink.html(fnlink.attr("data-value"));
 		fnhidden.val(fnlink.attr("data-value"));
 	});
+	if (this.readonly) {
+		this.lock(true);
+	} else {
+		this.lock(false);
+	}
+
 };
 
 /**
@@ -80,6 +86,7 @@ FileField.prototype.setValue = function(value) {
 	var linkid = this.id + "_link";
 	var fnid = this.id + "_fn";
 	var ckid = this.id + "_ck";
+	var delcheck = this.parent.find("#" + this.selectorEscape(ckid));
 	if (value != null) {
 		var form = this.getParentForm();
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
@@ -91,7 +98,15 @@ FileField.prototype.setValue = function(value) {
 		fnlink.attr("data-size", value.size);
 		fnlink.attr("data-dlparam", value.downloadParameter);
 		fnhidden.val(value.fileName);
-		this.parent.find("#" + this.selectorEscape(ckid)).attr("checked", false);
+		if (this.readonly) {
+			delcheck.hide();
+			delcheck.next("label:first").hide();
+		} else {
+			delcheck.show();
+			delcheck.next("label:first").show();
+		}
+		delcheck.attr("checked", false);
+		logger.error("ck on ckid=" + ckid);
 	} else {
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		fnlink.attr("href", "");
@@ -101,7 +116,10 @@ FileField.prototype.setValue = function(value) {
 		fnlink.attr("data-size", "");
 		fnlink.attr("data-dlparam", "");
 		fnhidden.val("");
-		this.parent.find("#" + this.selectorEscape(ckid)).attr("checked", false);
+		delcheck.hide();
+		delcheck.next("label:first").hide();
+		delcheck.attr("checked", false);
+		logger.error("ck off ckid=" + ckid);
 	}
 	if ("INPUT" == tag) {
 		comp.val("");

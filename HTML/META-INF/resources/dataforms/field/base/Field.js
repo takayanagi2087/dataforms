@@ -300,6 +300,122 @@ Field.prototype.addSpan = function(comp) {
 };
 
 /**
+ * テキストボックスをロックします。
+ * @param {Boolean} lk ロックする場合true。
+ */
+Field.prototype.lockTextbox = function(lk) {
+	var comp = this.get();
+	if (lk) {
+		comp.prop("readonly", true);
+		comp.css("border-style", "none");
+		comp.css("outline", "none");
+	} else {
+		comp.prop("readonly", comp.prop("readonly-bak"));
+		comp.css("border-style", "");
+		comp.css("outline", "");
+	}
+};
+
+/**
+ * ラジオボタンをロックします。
+ * @param {Boolean} lk ロックする場合true。
+ */
+Field.prototype.lockRadio = function(lk) {
+	var comp = this.get();
+	var block = comp.parent("span");
+	var v = "";
+	comp.each(function() {
+		if ($(this).prop("checked")) {
+			v = $(this).val();
+		}
+	});
+	var span = this.addSpan(block);
+	if (lk) {
+		block.hide();
+		span.show();
+		this.setTextValue(span, v);
+	} else {
+		block.show();
+		span.hide();
+	}
+};
+
+/**
+ * チェックボックスをロックします。
+ * @param {Boolean} lk ロックする場合true。
+ */
+Field.prototype.lockCheckbox = function(lk) {
+	var comp = this.get();
+	var block = comp.parent('span');
+	var v = [];
+	comp.each(function() {
+		if ($(this).prop("checked")) {
+			v.push($(this).val());
+		}
+	});
+	var span = this.addSpan(block);
+	if (lk) {
+		block.hide();
+		span.show();
+		this.setTextValue(span, v);
+	} else {
+		block.show();
+		span.hide();
+	}
+};
+
+/**
+ * ファイルフィールドをロックします。
+ * @param {Boolean} lk ロックする場合true。
+ */
+Field.prototype.lockFile = function(lk) {
+	var comp = this.get();
+	var span = this.addSpan(comp);
+	var check = this.parent.find("#" + this.selectorEscape(this.id + "_ck"));
+	var fnlink = this.parent.find("#" + this.selectorEscape(this.id + "_link"));
+	if (lk) {
+		check.hide();
+		check.next("label:first").hide();
+		comp.hide();
+		if (comp.val().length > 0) {
+			comp.next("a:first").hide();
+		}
+		span.show();
+		this.setTextValue(span, comp.val());
+	} else {
+		var v = fnlink.attr("href");
+		if (v != null && v.length > 0) {
+			check.show();
+			check.next("label:first").show();
+		} else {
+			check.hide();
+			check.next("label:first").hide();
+		}
+		comp.show();
+		comp.next("a:first").show();
+		span.hide();
+	}
+};
+
+/**
+ * SELECTをロックします。
+ * @param {Boolean} lk ロックする場合true。
+ */
+Field.prototype.lockSelect = function(lk) {
+	var comp = this.get();
+	var v = this.find("option:selected").text();
+	var span = this.addSpan(comp);
+	if (lk) {
+		comp.hide();
+		span.show();
+		span.text(v);
+	} else {
+		comp.show();
+		span.hide();
+	}
+};
+
+/**
  * フィールドのロック/ロック解除を行ないます。
  * @param {Boolean} lk ロックする場合true。
  */
@@ -317,79 +433,15 @@ Field.prototype.lock = function(lk) {
 		|| type.toLowerCase() == "tel"
 		|| type.toLowerCase() == "number"
 		)) || "TEXTAREA" == tag) {
-		if (lk) {
-			comp.prop("readonly", true);
-			comp.css("border-style", "none");
-			comp.css("outline", "none");
-		} else {
-			comp.prop("readonly", comp.prop("readonly-bak"));
-			comp.css("border-style", "");
-			comp.css("outline", "");
-		}
+		this.lockTextbox(lk);
 	} else if ("INPUT" == tag && type.toLowerCase() == "radio") {
-		var block = comp.parent("span");
-		var v = "";
-		comp.each(function() {
-			if ($(this).prop("checked")) {
-				v = $(this).val();
-			}
-		});
-		var span = this.addSpan(block);
-		if (lk) {
-			block.hide();
-			span.show();
-			this.setTextValue(span, v);
-		} else {
-			block.show();
-			span.hide();
-		}
+		this.lockRadio(lk);
 	} else if ("INPUT" == tag && type.toLowerCase() == "checkbox") {
-		var block = comp.parent('span');
-		var v = [];
-		comp.each(function() {
-			if ($(this).prop("checked")) {
-				v.push($(this).val());
-			}
-		});
-		var span = this.addSpan(block);
-		if (lk) {
-			block.hide();
-			span.show();
-			this.setTextValue(span, v);
-		} else {
-			block.show();
-			span.hide();
-		}
+		this.lockCheckbox(lk);
 	} else if ("INPUT" == tag && type.toLowerCase() == "file") {
-		var span = this.addSpan(comp);
-		var check = this.parent.find("#" + this.selectorEscape(this.id + "_ck"));
-		if (lk) {
-			check.hide();
-			check.next("label:first").hide();
-			comp.hide();
-			if (comp.val().length > 0) {
-				comp.next("a:first").hide();
-			}
-			span.show();
-			this.setTextValue(span, comp.val());
-		} else {
-			check.show();
-			check.next("label:first").show();
-			comp.show();
-			comp.next("a:first").show();
-			span.hide();
-		}
+		this.lockFile(lk);
 	} else if ("SELECT" == tag) {
-		var v = this.find("option:selected").text();
-		var span = this.addSpan(comp);
-		if (lk) {
-			comp.hide();
-			span.show();
-			span.text(v);
-		} else {
-			comp.show();
-			span.hide();
-		}
+		this.lockSelect(lk);
 	}
 }
 
