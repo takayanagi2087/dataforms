@@ -403,6 +403,7 @@ Page.prototype.lock = function() {
         width: $(document).width(),
         height: $(document).height()
       });
+    $("#lockLayer").addClass("lockLayerStyle");
 	  $(window).on("resize.lockLayer", function() {
 	    $('#lockLayer').css({
 	      width: $(document).width(),
