@@ -976,7 +976,7 @@ public class SampleExcelReport extends ExcelReport {
 			</pre>
 		</div>
 		<p>
-			次に、Excelのテンプレートとして以下のようなsample.xlsxを用意します。
+			次に、Excelのテンプレートとして以下のようなWebContent/exceltemplate/sample.xlsxを用意します。
 		</p>
 		<figure>
 			<figcaption>Excelテンプレートの内容</figcaption>
@@ -1248,13 +1248,13 @@ public class SampleSelectField extends EnumOptionSingleSelectField {
 	 * &#12467;&#12531;&#12473;&#12488;&#12521;&#12463;&#12479;&#12290;
 	 */
 	public SampleQueryResultForm() {
-		Table table = new SampleTable();
+		SampleTable table = new SampleTable();
 		this.addPkFieldList(table.getPkFieldList());
 		PageScrollHtmlTable htmltable = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, SampleDao.getQueryResultFieldList());
-		htmltable.getFieldList().get(&quot;sampleText&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleNum&quot;).setSortable(true);
-		htmltable.getFieldList().get(&quot;sampleDate&quot;).setSortable(true, SortOrder.DESC);
-		<b>htmltable.getFieldList().get(&quot;sampleSelect&quot;).setSortable(true);</b>
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_TEXT).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_NUM).setSortable(true);
+		htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_DATE).setSortable(true, SortOrder.DESC);
+		<b>htmltable.getFieldList().get(SampleTable.Entity.ID_SAMPLE_SELECT).setSortable(true);</b>
 
 		this.addHtmlTable(htmltable);
 	}

@@ -16,7 +16,7 @@
 	<property name="jar.command" value="D:\eclipse\pleiades-e4.6\java\8\bin\jar.exe"/>
 	<!--property name="jsdoc.command" value="D:\eclipse\jsdoc-releases-3.3\jsdoc.cmd"/-->
 	<property name="jsdoc.command" value="C:\Users\takayanagi\AppData\Roaming\npm\jsdoc.cmd"/>
-	<property name="version.num" value="1.10"/>
+	<property name="version.num" value="1.11"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>
 	<property name="jsdoc.dir" value="./HTML/META-INF/resources/doc/jsdoc"/>
