@@ -301,8 +301,7 @@ EditForm.prototype.save = function() {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
-					var systemName = MessagesUtil.getMessage("message.systemname");
-					currentPage.alert(systemName, result.result, function() {
+					currentPage.alert(null, result.result, function() {
 						form.changeStateForAfterUpdate();
 					});
 				} else {
@@ -330,8 +329,7 @@ EditForm.prototype.del = function() {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				if (result.result != null && result.result.length > 0) {
-					var systemName = MessagesUtil.getMessage("message.systemname");
-					currentPage.alert(systemName, result.result, function() {
+					currentPage.alert(null, result.result, function() {
 						form.changeStateForAfterUpdate();
 					});
 				} else {

@@ -426,13 +426,17 @@ Page.prototype.unlock = function() {
 /**
  * alertの代替えメソッドです。
  * 
- * @param {String} title ダイアログタイトル。
+ * @param {String} title ダイアログタイトル(nullの場合システム名称)。
  * @param {String} msg ダイアログメッセージ。
  * @param {Functuion} func OKボタンが押された際の処理。
  */
 Page.prototype.alert = function(title, msg, func) {
 	var dlg = this.getComponent("alertDialog");
-	dlg.title = title;
+	if (title == null) {
+		dlg.title = MessagesUtil.getMessage("message.systemname");
+	} else {
+		dlg.title = title;
+	}
 	dlg.message = msg;
 	dlg.okFunc = func;
 	dlg.showModal({
@@ -442,14 +446,18 @@ Page.prototype.alert = function(title, msg, func) {
 
 /**
  * confirmの代替えメソッドです。
- * @param {String} title タイトル。
+ * @param {String} title ダイアログタイトル(nullの場合システム名称)。
  * @param {String} msg メッセージ。
  * @param {Function} okFunc OKボタンのダイアログ。
  * @param {Function} cancelFunc キャンセルボタンのダイアログ。
  */
 Page.prototype.confirm = function(title, msg, okFunc, cancelFunc) {
 	var dlg = this.getComponent("confirmDialog");
-	dlg.title = title;
+	if (title == null) {
+		dlg.title = MessagesUtil.getMessage("message.systemname");
+	} else {
+		dlg.title = title;
+	}
 	dlg.message = msg;
 	dlg.okFunc = okFunc;
 	dlg.cancelFunc = cancelFunc;
