@@ -25,6 +25,8 @@ import dataforms.util.FileUtil;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
 
+// TODO:PK以外のインデックス定義の対応
+
 /**
  * テーブルの基本クラスです。
  *

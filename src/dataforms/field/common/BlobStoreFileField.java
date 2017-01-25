@@ -2,6 +2,8 @@ package dataforms.field.common;
 
 import dataforms.dao.sqldatatype.SqlBlob;
 
+
+// TODO:MySQLのBLOBフィールドにはサイズしていがあるので、それに対応するプロパティを追加したい。
 /**
  * BLOB保存ファイルフィールドクラス。
  *
