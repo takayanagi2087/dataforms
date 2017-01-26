@@ -121,16 +121,20 @@ public class MenuForm extends Form {
 			String classname = DataFormsServlet.convertPageClassName((String) m.get("pageClass"));
 			@SuppressWarnings("unchecked")
 			Class<? extends Page> clazz = (Class<? extends Page>) Class.forName(classname);
-	    	Page page = clazz.newInstance();
-	    	page.setRequest(this.getPage().getRequest());
-	    	if (page.isMenuItem()) {
-		    	if (page.isAuthenticated(new HashMap<String, Object>())) {
-		    		String menuName = (String) m.get("menuName");
-		    		log.debug("menuName=" + menuName);
-		    		m.put("menuName", page.decorateMenuName(menuName));
-		    		mlist.add(m);
+			try {
+		    	Page page = clazz.newInstance();
+		    	page.setRequest(this.getPage().getRequest());
+		    	if (page.isMenuItem()) {
+			    	if (page.isAuthenticated(new HashMap<String, Object>())) {
+			    		String menuName = (String) m.get("menuName");
+			    		log.debug("menuName=" + menuName);
+			    		m.put("menuName", page.decorateMenuName(menuName));
+			    		mlist.add(m);
+			    	}
 		    	}
-	    	}
+			} catch (Error e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 		return mlist;
 	}

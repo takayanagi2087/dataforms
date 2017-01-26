@@ -33,7 +33,6 @@ public class AllTypeEditForm extends EditForm {
      */
 	private static Logger log = Logger.getLogger(AllTypeEditForm.class.getName());
 
-
 	/**
 	 * コンストラクタ。
 	 */
