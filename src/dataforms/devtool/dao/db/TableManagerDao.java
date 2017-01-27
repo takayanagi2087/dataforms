@@ -319,6 +319,7 @@ public class TableManagerDao extends Dao {
 		return ret;
 	}
 
+	// TODO:大きなテーブルをエクスポートする際にOutOfMemoryが発生する問題を解決したい。
 	/**
 	 * テーブルのバックアップを取得します。
 	 * @param classname テーブルクラス名。
@@ -462,6 +463,7 @@ public class TableManagerDao extends Dao {
 		return (list.size() > 0);
 	}
 	
+	// TODO:大きなデータをインポートする際にOutOfMemoryが発生する問題を解決したい。
 	/**
 	 * 指定フォルダのデータをインポートします。
 	 * @param classname クラス名。
