@@ -32,7 +32,9 @@ public class DeveloperEditForm extends EditForm {
 	 * コンストラクタ。
 	 */
 	public DeveloperEditForm() {
-		this.addTableFields(new UserInfoTable());
+		UserInfoTable table = new UserInfoTable();
+		this.addTableFields(table);
+		table.getUserNameField().setAutocomplete(false);
 		this.insertFieldAfter(new PasswordField("passwordCheck"), "password");
 	}
 
