@@ -1,6 +1,8 @@
 package dataforms.devtool.dao.db;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -30,6 +32,9 @@ import dataforms.util.ClassFinder;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
+import net.arnx.jsonic.JSONEventType;
+import net.arnx.jsonic.JSONReader;
+import net.arnx.jsonic.JSONWriter;
 
 /**
  * TableManagerPage用のDAOクラス。
@@ -330,6 +335,8 @@ public class TableManagerDao extends Dao {
 	public String exportData(final String classname, final String outdir) throws Exception {
 		final Table tbl = Table.newInstance(classname);
 		String datapath = outdir + "/" + classname.replaceAll("\\.", "/") + ".data.json";
+		log.debug("datapath=" + datapath);
+		
 		String filePath = outdir + "/" + classname.replaceAll("\\.", "/");
 		File ff = new File(filePath);
 		if (ff.exists()) {
@@ -346,40 +353,47 @@ public class TableManagerDao extends Dao {
 				dir.mkdirs();
 			}
 			String sql = "select * from " + tbl.getTableName();
-			List<Map<String, Object>> result = this.executeQuery(sql, null);
-			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-			for (Map<String, Object> m: result) {
-				Map<String, Object> rec = new HashMap<String, Object>();
-				FieldList flist = tbl.getFieldList();
-				for (Field<?> fld : flist) {
-					String id = fld.getId();
-					Object value = m.get(id);
-					if (fld instanceof FileField) 	{
-						if (value != null) {
-							rec.put(id, this.getFileInfo((FileField<?>) fld, value, filePath, tbl, m));
-						}
-					} else {
-						fld.setValueObject(value);
-						if (fld.getClientValue() != null) {
-							fld.setValueObject(value);
-							rec.put(id, fld.getClientValue().toString());
-						} else {
-							rec.put(id, null);
-						}
-					}
-				}
-				list.add(rec);
-			}
-
-			String json = JSON.encode(list, true);
 
 			final PrintWriter out = new PrintWriter(f, "utf-8");
+			JSON json = new JSON();
+			json.setPrettyPrint(true);
+			JSONWriter writer = json.getWriter(out);
 			try {
-				out.write(json);
+				writer.beginArray();
+				try {
+					this.executeQuery(sql, null,  new RecordProcessor() {
+						@Override
+						public boolean process(final Map<String, Object> m) throws Exception {
+							log.debug("m=" + m.toString());
+							Map<String, Object> rec = new HashMap<String, Object>();
+							FieldList flist = tbl.getFieldList();
+							for (Field<?> fld : flist) {
+								String id = fld.getId();
+								Object value = m.get(id);
+								if (fld instanceof FileField) 	{
+									if (value != null) {
+										rec.put(id, TableManagerDao.this.getFileInfo((FileField<?>) fld, value, filePath, tbl, m));
+									}
+								} else {
+									fld.setValueObject(value);
+									if (fld.getClientValue() != null) {
+										fld.setValueObject(value);
+										rec.put(id, fld.getClientValue().toString());
+									} else {
+										rec.put(id, null);
+									}
+								}
+							}
+							writer.value(rec);
+							return true;
+						}
+					});
+				} finally {
+					writer.endArray();
+				}
 			} finally {
 				out.close();
 			}
-
 		}
 		return datapath;
 	}
@@ -472,21 +486,31 @@ public class TableManagerDao extends Dao {
 	 */
 	public void importData(final String classname, final String path) throws Exception {
 		final Table tbl = Table.newInstance(classname);
-		List<Map<String, Object>> list = tbl.getImportData(path);
-		if (list != null) {
-			for (int i = 0; i < list.size(); i++) {
-				Map<String, Object> m = list.get(i);
-				this.convertImportData(m, path, tbl);
-//				log.debug("m=" + JSON.encode(m, true));
-//				Map<String, Object> data = tbl.getFieldList().convertClientToServer(m);
-				Map<String, Object> data = tbl.convertImportData(m);
-//				log.debug("m=" + JSON.encode(data, true));
-				this.setUserIdValue(data);
-				if (this.existRecord(tbl, data)) {
-					this.executeUpdate(tbl, data);
-				} else {
-					this.executeInsert(tbl, data);
+		String file = tbl.getImportData(path);
+		if (file != null) {
+			InputStream is = new FileInputStream(file);
+			try {
+				// JSONReader を取得
+				JSONReader reader = new JSON().getReader(is);
+				JSONEventType type = null;
+				while ((type = reader.next()) != null) {
+					if (type ==  JSONEventType.START_OBJECT) {
+						@SuppressWarnings("unchecked")
+						Map<String, Object> m = (Map<String, Object>) reader.getMap();
+						log.debug("m=" + m.toString());
+						this.convertImportData(m, path, tbl);
+						Map<String, Object> data = tbl.convertImportData(m);
+						this.setUserIdValue(data);
+						if (this.existRecord(tbl, data)) {
+							this.executeUpdate(tbl, data);
+						} else {
+							this.executeInsert(tbl, data);
+						}
+					}
 				}
+
+			} finally {
+				is.close();
 			}
 		}
 	}

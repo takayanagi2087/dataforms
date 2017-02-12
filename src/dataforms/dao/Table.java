@@ -1,7 +1,6 @@
 package dataforms.dao;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -626,28 +625,22 @@ public class Table  {
 	}
 
 	/**
-	 * 指定パス以下のテーブルに対応した、データを取得します。
+	 * 指定パス以下のテーブルに対応した、ファイルのパスを取得します。
 	 * @param path 指定パス。
-	 * @return インポートデータ。
+	 * @return インポートデータのファイルパス。
 	 * @throws Exception 例外。
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getImportData(final String path) throws Exception {
-		List<Map<String, Object>> list = null;
+	public String getImportData(final String path) throws Exception {
 		Class<?> cls = this.getClass();
 		String jsonfile = path + "/" + cls.getName().replaceAll("\\.", "/") + ".data.json";
 		logger.debug("jsonfile=" + jsonfile);
 		File f = new File(jsonfile);
 		if (f.exists()) {
-			FileInputStream is = new FileInputStream(jsonfile);
-			try {
-				String json = new String(FileUtil.readInputStream(is), DataFormsServlet.getEncoding());
-				list = (List<Map<String, Object>>) JSON.decode(json);
-			} finally {
-				is.close();
-			}
+			;
+		} else {
+			jsonfile = null;
 		}
-		return list;
+		return jsonfile;
 	}
 
 	/**
