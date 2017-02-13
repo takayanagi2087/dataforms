@@ -120,12 +120,11 @@ Field.prototype.backupStyle = function() {
  * 関連データ取得がONの場合フィールド値の更新時にこの処理が呼ばれます。
  * 各フィールドのgetRelationDataメソッドが呼び出され、その結果を親フォームに設定します。
  * </pre>
+ * @returns {Object} 取得した関連データ。
  */
 Field.prototype.getRelationData = function() {
 	var m = this.getSyncServerMethod("getRelationData");
 	var form = this.getParentForm();
-//	var param = form.get().serialize();
-//	param += "&currentFieldId=" + this.id;
 	var param = this.getAjaxParameter();
 	var ret = m.execute(param);
 	if (ret.status == ServerMethod.SUCCESS) {
@@ -133,6 +132,7 @@ Field.prototype.getRelationData = function() {
 			form.setFieldValue(k, ret.result[k]);
 		}
 	}
+	return ret;
 };
 
 
