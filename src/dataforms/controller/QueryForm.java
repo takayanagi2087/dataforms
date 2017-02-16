@@ -27,7 +27,7 @@ public abstract class QueryForm extends Form {
 	 * コンストラクタ。
 	 */
 	public QueryForm() {
-		super(Page.ID_QUERY_FORM);
+		super(DataForms.ID_QUERY_FORM);
 	}
 
 	/**

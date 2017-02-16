@@ -40,24 +40,6 @@ public class Page extends DataForms {
      */
     private static Logger log = Logger.getLogger(Page.class.getName());
 
-    /**
-     * 問い合わせフォームのID。
-     */
-    public static final String ID_QUERY_FORM = "queryForm";
-
-    /**
-     * 問い合わせ結果フォームのID。
-     */
-    public static final String ID_QUERY_RESULT_FORM = "queryResultForm";
-    /**
-     * 問い合わせ結果ID。
-     */
-    public static final String ID_QUERY_RESULT = "queryResult";
-    /**
-     * 編集フォームのID。
-     */
-    public static final String ID_EDIT_FORM = "editForm";
-
 	/**
 	 * dataforms.jarのバージョン。
 	 */

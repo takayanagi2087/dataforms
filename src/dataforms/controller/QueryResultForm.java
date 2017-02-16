@@ -33,7 +33,7 @@ public abstract class QueryResultForm extends Form {
 	 * コンストラクタ。
 	 */
 	public QueryResultForm() {
-		super("queryResultForm");
+		super(DataForms.ID_QUERY_RESULT_FORM);
 		this.addField(new BigintField("hitCount"));
 		this.addField(new IntegerField("pageNo"));
 		this.addField(new IntegerField("linesPerPage"));

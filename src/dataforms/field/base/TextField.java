@@ -4,7 +4,7 @@ package dataforms.field.base;
  * テキストフィールドの基本クラス。
  *
  */
-public abstract class TextField extends Field<String> {
+public class TextField extends Field<String> {
     /**
      * Logger.
      */

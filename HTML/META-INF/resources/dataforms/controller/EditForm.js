@@ -59,6 +59,28 @@ EditForm.prototype.attach = function() {
 	form.toEditMode();
 };
 
+
+/**
+ * 更新モードの時にPKをロックします。
+ * 
+ */
+EditForm.prototype.lockPkFields = function() {
+	var lk = false;
+	if (this.saveMode == "new") {
+		lk = false;
+	} else {
+		lk = true;
+	}
+	if (this.pkFieldIdList != null) {
+		for (var i = 0; i < this.pkFieldIdList.length; i++) {
+			var f = this.getComponent(this.pkFieldIdList[i]);
+			if (f != null) {
+				f.lock(lk);
+			}
+		}
+	}
+};
+
 /**
  * 編集モードにします。
  * <pre>
@@ -78,6 +100,7 @@ EditForm.prototype.toEditMode = function() {
 		// いきなり保存するパターン.
 		this.find("#saveButton").show();
 	}
+	this.lockPkFields();
 };
 
 /**
@@ -297,6 +320,7 @@ EditForm.prototype.changeStateForAfterUpdate = function() {
 EditForm.prototype.save = function() {
 	var form = this;
 	if (form.validate()) {
+		this.find("#saveMode").val(this.saveMode);
 		form.submit("save", function(result) {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
