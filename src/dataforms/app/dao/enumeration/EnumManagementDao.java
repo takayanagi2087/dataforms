@@ -177,9 +177,9 @@ public class EnumManagementDao extends Dao {
 		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get("typeNameList");
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get("optionNameList");
-		Table table = new EnumOptionTable();
+		Table table = new EnumTypeNameTable();
 		// 楽観ロックチェック
-		for (Map<String, Object> m: optionNameList) {
+		for (Map<String, Object> m: typeNameList) {
 			boolean ret = this.isUpdatable(table, m);
 			if (!ret) {
 				throw new ApplicationException(this.getPage(), "error.notupdatable");

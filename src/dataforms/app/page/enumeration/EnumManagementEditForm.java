@@ -37,6 +37,7 @@ public class EnumManagementEditForm extends EditForm {
 //		this.addTableFields(table);
 		this.addField(table.getEnumTypeCodeField()).addValidator(new RequiredValidator());
 		Table typeNameTable = new EnumTypeNameTable();
+		this.setPkFieldIdList(typeNameTable.getPkFieldList());
 		EditableHtmlTable typeNameList = new EditableHtmlTable("typeNameList", typeNameTable.getFieldList());
 		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
 		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
