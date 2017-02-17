@@ -74,7 +74,6 @@ public class WebResourceForm extends Form {
 	 * @param p パラメータ。
 	 * @return 処理結果。
 	 * @throws Exception 例外。
-	 * TODO:htmltable中のhiddenのインデントを修正。
 	 */
 	@WebMethod
 	public JsonResponse generateHtml(final Map<String, Object> p) throws Exception {

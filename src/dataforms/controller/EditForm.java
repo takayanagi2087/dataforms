@@ -16,7 +16,6 @@ import dataforms.util.StringUtil;
 import dataforms.validator.ValidationError;
 
 
-// TODO:PK自動生成でないテーブルの編集対応。
 /**
  * データ編集フォームクラス。
  *
