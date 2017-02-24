@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Context><Context addWebinfClassesResources="true">
-	<Resource auth="Container"
-		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
-		name="jdbc/dfdb" type="javax.sql.DataSource"
-		url="jdbc:derby:/javadb/dfdb1;create=true"
-		username="" password="" />
+	<Resource name="jdbc/dfdb" auth="Container"
+		type="javax.sql.DataSource" driverClassName="oracle.jdbc.OracleDriver"
+		url="jdbc:oracle:thin:@192.168.56.102:1521:xe"
+		username="dfuser" password="password" maxTotal="20" maxIdle="10"
+		 maxWaitMillis="-1"/>
 	<!--
 	<Resource auth="Container"
 		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"

@@ -16,6 +16,7 @@ import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.dao.sqlgen.SqlParser;
 import dataforms.field.base.Field;
 import dataforms.field.sqltype.NumericField;
+import dataforms.util.StringUtil;
 
 /**
  * Oracle用SQL Generator。
@@ -210,6 +211,23 @@ public class OracleSqlGenerator extends SqlGenerator {
 		String sql = "select count(*) as cnt from (" + orgsql + ")";
 		return sql;
 	}
+
+	/**
+	 * BLOB等のファイルフィールドの更新用SQLを作成します。
+	 * <pre>
+	 * 既にファイルが登録されており、ファイルが送信されない場合は、そのままの値を保持するSQLを生成します。
+	 * </pre>
+	 * @param id フィールドID.
+	 * @return SQL.
+	 */
+	@Override
+	protected String generateUpdateFileFieldSql(final String id) {
+		String pid = StringUtil.camelToSnake(id);
+//		String ret = "case when TO_CHAR(:" + pid + "_kf) = TO_CHAR('1') then " + pid + " else :" + pid + " end ";
+		String ret = "decode(:" + pid + "_kf, '1', " + pid + ",:" + pid + ")";
+		return ret;
+	}
+
 
 
 }

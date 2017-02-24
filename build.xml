@@ -31,7 +31,7 @@
 		<pathelement location="WebContent/WEB-INF/lib/commons-logging.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-validator.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-lang3-3.4.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/jsonic-1.2.10.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/jsonic-1.3.10.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/log4j-1.2.17.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/poi-3.12-20150511.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/poi-excelant-3.12-20150511.jar"/>
