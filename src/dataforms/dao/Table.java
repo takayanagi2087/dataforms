@@ -345,7 +345,7 @@ public class Table  {
 	 */
 	private boolean columnListAccords(final SqlGenerator gen, final List<Map<String, Object>> collist) {
 		if (this.fieldList.size() != collist.size()) {
-			logger.warn(this.getTableName() + ":column count missmatch.");
+			logger.warn(this.getTableName() + ":column count missmatch.(" + this.fieldList.size() +"," + collist.size() + ")");
 			return false;
 		} else {
 			for (int i = 0; i < this.fieldList.size(); i++) {

@@ -99,6 +99,12 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
     };
 
     /**
+     * データベースの製品名を取得します。
+     * @return データベースの製品名。
+     */
+    public abstract String getDatabaseProductName();
+    
+    /**
      * コメントがサポートされているかどうかを返します。
      * <pre>
      * DBMSに対応したサブクラスで実装します。

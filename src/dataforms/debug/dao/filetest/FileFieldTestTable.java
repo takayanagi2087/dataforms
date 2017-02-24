@@ -3,6 +3,7 @@ package dataforms.debug.dao.filetest;
 import java.util.Map;
 
 import dataforms.dao.Table;
+import dataforms.dao.sqlgen.mysql.MysqlSqlGenerator;
 import dataforms.debug.field.filetest.FileCommentField;
 import dataforms.field.common.BlobStoreAudioField;
 import dataforms.field.common.BlobStoreFileField;
@@ -28,7 +29,8 @@ public class FileFieldTestTable extends Table {
 		this.setComment("");
 		this.addPkField(new RecordIdField()); //レコードID
 		this.addField(new FileCommentField()); //ファイルコメント
-		this.addField(new BlobStoreFileField("blobFile")); //
+		BlobStoreFileField blob = (BlobStoreFileField) this.addField(new BlobStoreFileField("blobFile")); //
+		blob.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "blob");
 		this.addField(new FolderStoreFileField("folderFile")); //
 		this.addField(new BlobStoreImageField("blobImage")); //
 		this.addField(new FolderStoreImageField("folderImage")); //

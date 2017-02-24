@@ -5,13 +5,19 @@ import java.sql.Connection;
 import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.dao.QueryPager;
 import dataforms.dao.sqlgen.SqlGenerator;
+import dataforms.field.base.Field;
 
 /**
  * Apache Derby用SQL Generator.
  *
  */
-@SqlGeneratorImpl(databaseProductName = "Apache Derby")
+@SqlGeneratorImpl(databaseProductName = DerbySqlGenerator.DATABASE_PRODUCT_NAME)
 public class DerbySqlGenerator extends SqlGenerator {
+	/**
+	 * データベースシステムの名称。
+	 */
+	public static final String DATABASE_PRODUCT_NAME = "Apache Derby";
+	
 	/**
 	 * コンストラクタ.
 	 * @param conn JDBC接続情報.
@@ -19,7 +25,22 @@ public class DerbySqlGenerator extends SqlGenerator {
 	public DerbySqlGenerator(final Connection conn) {
 		super(conn);
 	}
+	
+	@Override
+	public String getDatabaseProductName() {
+		return DATABASE_PRODUCT_NAME;
+	}
 
+	
+	@Override
+	public String getDatabaseType(final Field<?> field) {
+		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
+		if (type != null) {
+			return type;
+		}
+		return super.getDatabaseType(field);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * テーブル、カラムのcommentはサポートされていません。

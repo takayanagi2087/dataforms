@@ -13,13 +13,18 @@ import dataforms.field.base.Field;
  * PostgreSQL用SQL Generator。
  *
  */
-@SqlGeneratorImpl(databaseProductName = "PostgreSQL")
+@SqlGeneratorImpl(databaseProductName = PgsqlSqlGenerator.DATABASE_PRODUCT_NAME)
 public class PgsqlSqlGenerator extends SqlGenerator {
     /**
      * Logger.
      */
 //    private static Logger log = Logger.getLogger(PgsqlSqlGenerator.class.getName());
 
+	/**
+	 * データベースシステムの名称。
+	 */
+	public static final String DATABASE_PRODUCT_NAME = "PostgreSQL";
+			
 
 	/**
 	 * コンストラクタ.
@@ -29,6 +34,11 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 		super(conn);
 	}
 
+	@Override
+	public String getDatabaseProductName() {
+		return DATABASE_PRODUCT_NAME;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * シーケンスをサポートしているのでtrueを返します。
@@ -85,6 +95,10 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 	 */
 	@Override
 	public String getDatabaseType(final Field<?> field) {
+		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
+		if (type != null) {
+			return type;
+		}
 		if (field instanceof SqlBlob) {
 			return "bytea";
 		} else if (field instanceof SqlClob) {

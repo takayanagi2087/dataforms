@@ -205,6 +205,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * ソート可能フラグ。
 	 */
 	private boolean sortable = false;
+	
 
 
 	/**
@@ -1202,4 +1203,49 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	public MatchType getDefaultMatchType() {
 		return MatchType.FULL;
 	}
+	
+	
+	/**
+	 * データベースごとのタイプマップ。
+	 */
+	private Map<String, String> dbDependentTypeMap = null;
+
+	/**
+	 * 標準以外のデータ型を使用する場合に指定します。
+	 * <pre>
+	 * SqlBlobから派生したフィールドは、通常はblob型のカラムが作成されます。
+	 * ところがRDBMSによってはblobに対応するデータ型の名称が異なる場合があります。
+	 * たとえばMySQLではlongblobで作成されるようになっています。
+	 * さらにMySQLではblobに対応するデータ型は最大サイズによってtinyblob、blob、mediumblob、longblobの4種類
+	 * があります。
+	 * あえてこれらのデータ型を使用した場合、このメソッドで、RDBMS毎に使用するデータ型を指定することができます。
+	 * MySQLではtinyblobで運用したいフィールドの場合、コンストラクタで以下のように設定します。
+	 * 
+	 * 	setDatabaseType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "tinyblob");
+	 * 
+	 * </pre>
+	 * @param databaseProductName データベース製品名。
+	 * @param typeName データタイプ名。
+	 */
+	public void setDbDependentType(final String databaseProductName, final String typeName) {
+		if (this.dbDependentTypeMap == null) {
+			this.dbDependentTypeMap = new HashMap<String, String>();
+		}
+		this.dbDependentTypeMap.put(databaseProductName, typeName);
+	}
+	
+	/**
+	 * データベース製品名毎の特殊データ型を取得します。
+	 * 
+	 * @param databaseProductName データベース製品名。
+	 * @return RDBMS毎の特殊データ型。
+	 */
+	public String getDbDependentType(final String databaseProductName) {
+		if (this.dbDependentTypeMap != null) {
+			return this.dbDependentTypeMap.get(databaseProductName);
+		} else {
+			return null;
+		}
+	}
+
 }

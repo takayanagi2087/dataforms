@@ -6,10 +6,12 @@ import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.dao.Query;
 import dataforms.dao.QueryPager;
 import dataforms.dao.sqldatatype.SqlBigint;
+import dataforms.dao.sqldatatype.SqlChar;
 import dataforms.dao.sqldatatype.SqlInteger;
 import dataforms.dao.sqldatatype.SqlNumeric;
 import dataforms.dao.sqldatatype.SqlSmallint;
 import dataforms.dao.sqldatatype.SqlTime;
+import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.dao.sqlgen.SqlParser;
 import dataforms.field.base.Field;
@@ -19,14 +21,27 @@ import dataforms.field.sqltype.NumericField;
  * Oracle用SQL Generator。
  *
  */
-@SqlGeneratorImpl(databaseProductName = "Oracle")
+@SqlGeneratorImpl(databaseProductName = OracleSqlGenerator.DATABASE_PRODUCT_NAME)
 public class OracleSqlGenerator extends SqlGenerator {
+	
+	/**
+	 * データベースシステムの名称。
+	 */
+	public static final String DATABASE_PRODUCT_NAME = "Oracle";
+			
+
 	/**
 	 * コンストラクタ.
 	 * @param conn JDBC接続情報.
 	 */
 	public OracleSqlGenerator(final Connection conn) {
 		super(conn);
+	}
+
+	
+	@Override
+	public String getDatabaseProductName() {
+		return DATABASE_PRODUCT_NAME;
 	}
 
 	@Override
@@ -61,6 +76,8 @@ public class OracleSqlGenerator extends SqlGenerator {
 		String ret = super.converTypeNameForDatabaseMetaData(type);
 		if ("varchar2".equals(ret)) {
 			return "varchar";
+		} else if ("char".equals(ret)) {
+				return "char";
 		} else if ("float".equals(ret)) {
 			return "real";
 		} else if (ret.indexOf("timestamp") == 0) {
@@ -78,8 +95,16 @@ public class OracleSqlGenerator extends SqlGenerator {
 	 */
 	@Override
 	public String getDatabaseType(final Field<?> field) {
+		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
+		if (type != null) {
+			return type;
+		}
 		String ret = "";
-		if (field instanceof SqlSmallint) {
+		if (field instanceof SqlVarchar) {
+			ret = "nvarchar2(" + field.getLength() + ")";
+		} else if (field instanceof SqlChar) {
+			ret = "nchar(" + field.getLength() + ")";
+		} else if (field instanceof SqlSmallint) {
 			ret = "number(38,0)";
 		} else if (field instanceof SqlBigint) {
 			ret = "number(38,0)";

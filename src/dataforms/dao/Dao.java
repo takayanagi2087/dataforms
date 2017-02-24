@@ -1076,13 +1076,15 @@ public class Dao implements JDBCConnectableObject {
 	private Map<String, Object> getColiumnInfo(final ResultSet rs) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
 		Map<String, Object> colinfo = new HashMap<String, Object>();
+		String cat = rs.getString("TABLE_CAT");
+		String schem = rs.getString("TABLE_SCHEM");
 		String name = rs.getString("COLUMN_NAME");
 		String type = rs.getString("TYPE_NAME");
 		int size = rs.getInt("COLUMN_SIZE");
 		int scale = rs.getInt("DECIMAL_DIGITS");
 		int nullable = rs.getInt("NULLABLE");
 		String dataType = gen.converTypeNameForDatabaseMetaData(type);
-		if ("char".equals(dataType) || "varchar".equals(dataType)) {
+		if ("char".equals(dataType) || "nchar".equals(dataType) || "varchar".equals(dataType) || "nvarchar".equals(dataType) || "nvarchar2".equals(dataType)) {
 			dataType += "(" + size + ")";
 		} else if ("numeric".equals(dataType) || "number".equals(dataType)) {
 			dataType += "(" + size + "," + scale + ")";
@@ -1090,6 +1092,7 @@ public class Dao implements JDBCConnectableObject {
 		if (nullable == 0) {
 			dataType += " not null";
 		}
+		log.debug(cat + " " + schem + " " + name + " " + dataType);
 		colinfo.put("columnName", name.toLowerCase());
 		colinfo.put("dataType", dataType);
 		return colinfo;
@@ -1105,8 +1108,17 @@ public class Dao implements JDBCConnectableObject {
 		SqlGenerator gen = this.getSqlGenerator();
 		Connection conn = this.getConnection();
 		DatabaseMetaData md = conn.getMetaData();
+		log.debug("currentCatalog=" + conn.getCatalog());
+		String schema = null;
+		try {
+			schema = conn.getSchema();
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+		log.debug("currentSchema=" + schema);
 		List<Map<String, Object>> collist = new ArrayList<Map<String, Object>>();
-		ResultSet rs = md.getColumns(null, null, gen.convertTableNameForDatabaseMetaData(tblname), "%");
+		ResultSet rs = md.getColumns(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tblname), "%");
+		log.debug("----\n");
 		try {
 			while (rs.next()) {
 				Map<String, Object> m = this.getColiumnInfo(rs);
@@ -1115,6 +1127,7 @@ public class Dao implements JDBCConnectableObject {
 		} finally {
 			rs.close();
 		}
+		log.debug("----\n");
 		return collist;
 	}
 
@@ -1130,7 +1143,15 @@ public class Dao implements JDBCConnectableObject {
 		DatabaseMetaData md = conn.getMetaData();
 		List<String> collist = new ArrayList<String>();
 		List<Short> seqlist = new ArrayList<Short>();
-		ResultSet rs = md.getPrimaryKeys(null, null, gen.convertTableNameForDatabaseMetaData(tbl.getTableName()));
+		String schema = null;
+		try {
+			schema = conn.getSchema();
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+		log.debug("currentSchema=" + schema);
+
+		ResultSet rs = md.getPrimaryKeys(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tbl.getTableName()));
 //		ResultSet rs = md.getPrimaryKeys("", "", tbl.getTableName().toLowerCase());
 		try {
 			while (rs.next()) {

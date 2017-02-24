@@ -18,20 +18,29 @@ import dataforms.field.base.Field;
  * MySQL用SQL Generator.
  *
  */
-@SqlGeneratorImpl(databaseProductName = "MySQL")
+@SqlGeneratorImpl(databaseProductName = MysqlSqlGenerator.DATABASE_PRODUCT_NAME)
 public class MysqlSqlGenerator extends SqlGenerator {
     /**
      * Logger.
      */
     private static Logger log = Logger.getLogger(MysqlSqlGenerator.class.getName());
 
-
+	/**
+	 * データベースシステムの名称。
+	 */
+	public static final String DATABASE_PRODUCT_NAME = "MySQL";
+			
 	/**
 	 * コンストラクタ.
 	 * @param conn JDBC接続情報.
 	 */
 	public MysqlSqlGenerator(final Connection conn) {
 		super(conn);
+	}
+	
+	@Override
+	public String getDatabaseProductName() {
+		return DATABASE_PRODUCT_NAME;
 	}
 
 	/**
@@ -183,6 +192,10 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	 */
 	@Override
 	public String getDatabaseType(final Field<?> field) {
+		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
+		if (type != null) {
+			return type;
+		}
 		if (field instanceof SqlBlob) {
 			return "longblob";
 		} else if (field instanceof SqlClob) {
