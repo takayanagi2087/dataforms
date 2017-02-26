@@ -24,6 +24,11 @@ public class EditableHtmlTable extends HtmlTable {
 	private boolean sortable = true;
 
 	/**
+	 * Sortableの切り替えチェックボックスを表示するかどうかのフラグ。
+	 */
+	private boolean sortableSwitching = false;
+	
+	/**
 	 * コンストラクタ。
 	 * @param id テーブルID。
 	 */
@@ -87,12 +92,30 @@ public class EditableHtmlTable extends HtmlTable {
 		this.sortable = sortable;
 	}
 
+	/**
+	 * 行入替チェックボックス表示フラグを返します。
+	 * 
+	 * @return 行入替チェックボックスを表示する場合true。
+	 */
+	public boolean isSortableSwitching() {
+		return sortableSwitching;
+	}
+
+	/**
+	 * 行入替チェックボックス表示フラグを設定します。
+	 * @param sortableSwitching 行入替チェックボックス表示フラグ。
+	 */
+	public void setSortableSwitching(final boolean sortableSwitching) {
+		this.sortableSwitching = sortableSwitching;
+	}
+
 
 	@Override
 	public Map<String, Object> getClassInfo() throws Exception {
 		Map<String, Object> ret = super.getClassInfo();
 		ret.put("readonly", this.isReadonly());
 		ret.put("sortable", this.isSortable());
+		ret.put("sortableSwitching", this.isSortableSwitching());
 		return ret;
 	}
 

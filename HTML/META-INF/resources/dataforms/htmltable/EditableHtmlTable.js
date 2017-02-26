@@ -14,10 +14,29 @@ EditableHtmlTable = createSubclass("EditableHtmlTable", {}, "HtmlTable");
 
 
 /**
+ * ソート切替モードかどうがの判定を行います。
+ * 
+ * @reutrns {Boolean} ソート切替モードの場合true。
+ */
+EditableHtmlTable.prototype.isSortableSwitching = function() {
+	if (!this.sortableSwitching) {
+		if ("ontouchstart" in window) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return true;
+	}
+};
+
+
+/**
  * 行入替機能を有効にします。
  *
  */
 EditableHtmlTable.prototype.enableSortable = function() {
+	logger.error("enableSortable");
 	var thisTable = this;
 	this.get().find("tbody").sortable({
 		start:function(event, ui) {
@@ -37,8 +56,45 @@ EditableHtmlTable.prototype.enableSortable = function() {
  *
  */
 EditableHtmlTable.prototype.disableSortable = function() {
+	logger.error("disableSortable");
 	this.get().find("tbody").sortable("destroy");
 };
+
+
+/**
+ * ロック処理時のソート設定の制御。
+ */
+EditableHtmlTable.prototype.lockSortable = function(lk) {
+	if (this.sortable) {
+		if (!this.isSortableSwitching()) {
+			// sorableの切り替えをしない。
+			if (lk) {
+				this.disableSortable();
+			} else {
+				this.enableSortable();
+			}
+		} else {
+			var ckid = this.id + ".sortable";
+			var ck = this.parent.find("#" + this.selectorEscape(ckid));
+			var sort = ck.prop("checked");
+			if (sort) {
+				// sortのチェックがOnの時のみ切り替える。
+				if (lk) {
+					this.disableSortable();
+					
+				} else {
+					this.enableSortable();
+				}
+			}
+			if (lk) {
+				ck.prop("disabled", true);
+			} else {
+				ck.prop("disabled", false);
+			}
+		}
+	}
+};
+
 
 /**
  * 行入替可能なテーブルに設定します。
@@ -46,15 +102,14 @@ EditableHtmlTable.prototype.disableSortable = function() {
 EditableHtmlTable.prototype.makeSortable = function() {
 	var thisTable = this;
 	var ckid = this.id + ".sortable";
-	if (!("ontouchstart" in window)) {
-		// Mouseデバイスの場合、単純にsortableにするだけ。
-		this.enableSortable();
-	} else {
+	this.enableSortable();
+	if (this.isSortableSwitching()) {
 		// タッチパネルの場合は行入替のOn/Off切り替え機能が必要。
 		var label = MessagesUtil.getMessage("message.table.sortablelabel");
 		var cb = '<input type="checkbox" id="' + ckid + '"><label for="' + ckid + '">' + label + '</label>';
+//		this.get().before(cb);
 		this.find("thead th:first").append(cb);
-		this.find("#" + this.selectorEscape(ckid)).click(function() {
+		this.parent.find("#" + this.selectorEscape(ckid)).click(function() {
 			if ($(this).prop("checked")) {
 				thisTable.find("[id$='\\.addButton']").prop("disabled", true);
 				thisTable.find("[id$='\\.deleteButton']").prop("disabled", true);
@@ -64,8 +119,9 @@ EditableHtmlTable.prototype.makeSortable = function() {
 				thisTable.find("[id$='\\.deleteButton']").prop("disabled", false);
 				thisTable.disableSortable();
 			}
-			return false;
+			return true;
 		});
+		this.disableSortable();
 	}
 };
 
@@ -112,14 +168,13 @@ EditableHtmlTable.prototype.lockEditButton = function(lk) {
 		delbtn.hide();
 		this.find("#" + this.selectorEscape(ckid)).hide();
 		this.find("#" + this.selectorEscape(ckid)).next("label").hide();
-		this.disableSortable();
 	} else {
 		addbtn.show();
 		delbtn.show();
 		this.find("#" + this.selectorEscape(ckid)).show();
 		this.find("#" + this.selectorEscape(ckid)).next("label").show();
-		this.enableSortable();
 	}
+	this.lockSortable(lk);
 };
 
 /**
