@@ -27,8 +27,6 @@ ImageField.prototype.attach = function() {
 	thumb.attr("height", this.thumbnailHeight);
 	
 	thumb.click(function(e) {
-//		var url = thumb.attr("src");
-//		url = url.replace(/\.downloadThumbnail/, ".downloadFullImage");
 		var val = {};
 		val.fileName = link.attr("data-value");
 		val.size = link.attr("data-size");
@@ -37,9 +35,26 @@ ImageField.prototype.attach = function() {
 	});
 	this.get().change(function() {
 		thisField.previewImage(this, thumb)
+		thisField.showDelCheckbox();
 	});
 };
 
+
+/**
+ * 削除チェックボックスの処理を行います。
+ */
+ImageField.prototype.delFile = function(ck) {
+	FileField.prototype.delFile.call(this, ck);
+	// サムネイルの表示制御を追加。
+	var thumbid = this.id + "_thm"; // サムネイルID.
+	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
+	if (ck.prop("checked")) {
+		this.imageUrl = thumb.attr("src");
+		thumb.attr("src", null);
+	} else {
+		thumb.attr("src", this.imageUrl);
+	}
+};
 
 /**
  * 画像ファイル指定時のprevie表示。
@@ -101,8 +116,9 @@ ImageField.prototype.addElements = function(comp) {
 			comp.after(html);
 		} else if (tag == "DIV") {
 			comp.html(html);
-			this.parent.find("#" + this.selectorEscape(this.id + "_ck")).hide();
-			this.parent.find("label[for='" + this.selectorEscape(this.id + "_ck") + "']").hide();
+			//this.parent.find("#" + this.selectorEscape(this.id + "_ck")).hide();
+			//this.parent.find("label[for='" + this.selectorEscape(this.id + "_ck") + "']").hide();
+			this.hideDelCheckbox();
 		}
 	}
 };

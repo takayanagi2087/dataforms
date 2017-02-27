@@ -27,6 +27,7 @@ StreamingField.prototype.attach = function() {
 			logger.log("url=" + url);
 			player.attr("src", url);
 		}
+		thisField.showDelCheckbox();
 	});
 	player.on("abort", function() {
 		logger.log("abort");
@@ -40,6 +41,21 @@ StreamingField.prototype.attach = function() {
 			thisField.deleteTempFile();
 		}, 3000);
 	});
+};
+
+
+/**
+ * 削除チェックボックスの処理を行います。
+ */
+StreamingField.prototype.delFile = function(ck) {
+	FileField.prototype.delFile.call(this, ck);
+	var player = this.getPlayer();
+	if (ck.prop("checked")) {
+		this.url = player.attr("src");
+		player.attr("src", null);
+	} else {
+		player.attr("src", this.url);
+	}
 };
 
 /**
@@ -58,8 +74,7 @@ StreamingField.prototype.addElements = function(comp) {
 			comp.after(html);
 		} else if (tag == "DIV") {
 			comp.html(html);
-			this.parent.find("#" + this.selectorEscape(this.id + "_ck")).hide();
-			this.parent.find("label[for='" + this.selectorEscape(this.id + "_ck") + "']").hide();
+			this.hideDelCheckbox();
 		}
 	}
 };

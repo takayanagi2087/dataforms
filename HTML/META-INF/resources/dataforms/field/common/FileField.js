@@ -30,21 +30,14 @@ FileField.prototype.attach = function() {
 	var fnlink = this.parent.find("#" + this.selectorEscape(linkid))
 	var fnhidden = this.parent.find("[name='" + this.selectorEscape(fnid) + "']");
 	this.parent.find("#" + this.selectorEscape(ckid)).click(function() {
-		logger.log("checked=" + $(this).prop("checked"));
-		if ($(this).prop("checked")) {
-			fnhidden.val("");
-			fnlink.html("");
-			comp.val("");
-		} else {
-			fnlink.html(fnlink.attr("data-value"));
-			fnhidden.val(fnlink.attr("data-value"));
-		}
+		thisComp.delFile($(this));
 	});
 	comp.change(function() {
 		var ck = thisComp.parent.find("#" + thisComp.selectorEscape(ckid));
 		ck.attr("checked", false);
 		fnlink.html(fnlink.attr("data-value"));
 		fnhidden.val(fnlink.attr("data-value"));
+		thisComp.showDelCheckbox();
 	});
 	if (this.readonly) {
 		this.lock(true);
@@ -52,6 +45,47 @@ FileField.prototype.attach = function() {
 		this.lock(false);
 	}
 
+};
+
+/**
+ * 削除チェックボックスの処理を行います。
+ */
+FileField.prototype.delFile = function(ck) {
+	var comp = this.get();
+	var linkid = this.id + "_link"; // ダウンロードリンク.
+	var fnid = this.id + "_fn"; // ファイル名のリンク.
+	var fnlink = this.parent.find("#" + this.selectorEscape(linkid))
+	var fnhidden = this.parent.find("[name='" + this.selectorEscape(fnid) + "']");
+	logger.log("checked=" + ck.prop("checked"));
+	if (ck.prop("checked")) {
+		fnhidden.val("");
+		fnlink.html("");
+		comp.val("");
+	} else {
+		fnlink.html(fnlink.attr("data-value"));
+		fnhidden.val(fnlink.attr("data-value"));
+	}
+};
+
+/**
+ * 削除チェックボックスを表示します。
+ */
+FileField.prototype.showDelCheckbox = function() {
+	var ckid = this.id + "_ck";
+	var delcheck = this.parent.find("#" + this.selectorEscape(ckid));
+	delcheck.show();
+	delcheck.next("label:first").show();
+};
+
+
+/**
+ * 削除チェックボックスを隠します。
+ */
+FileField.prototype.hideDelCheckbox = function() {
+	var ckid = this.id + "_ck";
+	var delcheck = this.parent.find("#" + this.selectorEscape(ckid));
+	delcheck.hide();
+	delcheck.next("label:first").hide();
 };
 
 /**
@@ -99,11 +133,13 @@ FileField.prototype.setValue = function(value) {
 		fnlink.attr("data-dlparam", value.downloadParameter);
 		fnhidden.val(value.fileName);
 		if (this.readonly) {
-			delcheck.hide();
-			delcheck.next("label:first").hide();
+			this.hideDelCheckbox();
 		} else {
-			delcheck.show();
-			delcheck.next("label:first").show();
+			var tag = comp.prop("tagName");
+			var type = comp.prop("type");
+			if ("INPUT" == tag && type == "file") {
+				this.showDelCheckbox();
+			}
 		}
 		delcheck.attr("checked", false);
 	} else {
@@ -115,8 +151,7 @@ FileField.prototype.setValue = function(value) {
 		fnlink.attr("data-size", "");
 		fnlink.attr("data-dlparam", "");
 		fnhidden.val("");
-		delcheck.hide();
-		delcheck.next("label:first").hide();
+		this.hideDelCheckbox();
 		delcheck.attr("checked", false);
 	}
 	if ("INPUT" == tag) {
