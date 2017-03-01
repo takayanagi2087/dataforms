@@ -51,10 +51,11 @@ StreamingField.prototype.delFile = function(ck) {
 	FileField.prototype.delFile.call(this, ck);
 	var player = this.getPlayer();
 	if (ck.prop("checked")) {
-		this.url = player.attr("src");
 		player.attr("src", null);
 	} else {
-		player.attr("src", this.url);
+		if (this.downloadUrl != null) {
+			player.attr("src", this.downloadUrl);
+		}
 	}
 };
 
@@ -112,13 +113,16 @@ StreamingField.prototype.setValue = function(value) {
 	FileField.prototype.setValue.call(this, value);
 	var videoid = this.id + "_player"; // プレーヤーID.
 	var video = this.parent.find("#" + this.selectorEscape(videoid));
+	this.downloadUrl = null;
 	if (value != null) {
 		this.downloadParameter = value.downloadParameter;
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
 		video.attr("src", url);
 		video.attr("data-key", value.downloadParameter);
+		this.downloadUrl = url;
 	} else {
 		video.attr("src", null);
+		this.downloadUrl = null;
 	}
 
 };

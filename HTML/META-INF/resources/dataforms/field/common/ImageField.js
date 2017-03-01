@@ -49,10 +49,11 @@ ImageField.prototype.delFile = function(ck) {
 	var thumbid = this.id + "_thm"; // サムネイルID.
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
 	if (ck.prop("checked")) {
-		this.imageUrl = thumb.attr("src");
 		thumb.attr("src", null);
 	} else {
-		thumb.attr("src", this.imageUrl);
+		if (this.downloadUrl != null) {
+			thumb.attr("src", this.downloadUrl);
+		}
 	}
 };
 
@@ -132,11 +133,14 @@ ImageField.prototype.setValue = function(value) {
 	FileField.prototype.setValue.call(this, value);
 	var thumbid = this.id + "_thm"; // サムネイルID.
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
+	this.downloadUrl = null;
 	if (value != null) {
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
 		thumb.attr("src", url);
+		this.downloadUrl = url;
 	} else {
 		thumb.attr("src", null);
+		this.downloadUrl = null;
 	}
 
 };
