@@ -257,7 +257,7 @@ public class AllTypeDao extends Dao {
 	 * AliasField,SqlFieldのテスト問い合わせ。
 	 *
 	 */
-	private static class AliasQuery extends Query {
+	public static class AliasQuery extends Query {
 		/**
 		 * コンストラクタ。
 		 */
@@ -275,7 +275,7 @@ public class AllTypeDao extends Dao {
 	 * SumField,AvarageFieldのテスト問い合わせ。
 	 *
 	 */
-	private static class SumQuery extends Query {
+	public static class SumQuery extends Query {
 		/**
 		 * コンストラクタ。
 		 */

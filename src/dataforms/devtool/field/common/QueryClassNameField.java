@@ -46,8 +46,11 @@ public class QueryClassNameField extends SimpleClassNameField {
 		if ((c.getModifiers() & Modifier.ABSTRACT) != 0) {
 			return true;
 		}
-		if (c.getName().indexOf("$") > 0) {
+		/*if (c.getName().indexOf("$") > 0) {
 			// インナークラスは除外。
+			return true;
+		}*/
+		if ((c.getModifiers() & Modifier.PUBLIC) == 0) {
 			return true;
 		}
 		try {

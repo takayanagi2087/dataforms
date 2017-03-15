@@ -134,6 +134,16 @@ public class SimpleClassNameField extends VarcharField {
 		return ret;
 	}
 
+	/**
+	 * クラス名を取得します。
+	 * @param c クラス。
+	 * @return クラス名。
+	 */
+	private String getClassName(final Class<?> c) {
+		String []sp = c.getName().split("\\.");
+		return sp[sp.length -1];
+	}
+	
 	@Override
 	protected List<Map<String, Object>> queryAutocompleteSourceList(final 	Map<String, Object> data) throws Exception {
 		String id = (String) data.get("currentFieldId");
@@ -151,11 +161,14 @@ public class SimpleClassNameField extends VarcharField {
 				continue;
 			}
 			
-			String name = c.getSimpleName();
+			String name = this.getClassName(c);
 			if (name.toLowerCase().indexOf(simpleClassName.toLowerCase()) >= 0) {
 				if (!Modifier.isAbstract(c.getModifiers())) {
 					Map<String, Object> m = new HashMap<String, Object>();
-					m.put("className", c.getSimpleName());
+//					m.put("className", c.getSimpleName());
+//					String cls = c.getName();
+//					String []sp = cls.split("\\.");
+					m.put("className", name);
 					m.put(this.getPackageNameFieldId(), c.getPackage().getName());
 					result.add(m);
 				}
