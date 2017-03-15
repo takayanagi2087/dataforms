@@ -128,6 +128,15 @@
 		<param-name>query-string-crypt-password</param-name>
 		<param-value>yyy_password_yyy</param-value>
 	</context-param-->
+	<!--
+		CSRF対策を行う場合以下のパスワードを有効にしてください。
+		指定されたパスワードでセッションIDを暗号化し、CSRFトークンとしてブラウザに送信します。
+	-->
+	<context-param>
+		<param-name>csrf-sessionid-crypt-password</param-name>
+		<param-value>CSRFpassword</param-value>
+	</context-param>
+
 	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
 	<!-- context-param>
 		<param-name>client-messages</param-name>
@@ -301,7 +310,7 @@
 	
 	<!-- セッションタイムアウト -->
 	<session-config>
-		<session-timeout>30</session-timeout>
+		<session-timeout>1</session-timeout>
 	</session-config>
 
 </web-app>

@@ -24,6 +24,7 @@ import dataforms.htmltable.HtmlTable;
 import dataforms.menu.Menu;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.ClassFinder;
+import dataforms.util.CryptUtil;
 import dataforms.util.MessagesUtil;
 import dataforms.util.SequentialProperties;
 import dataforms.util.StringUtil;
@@ -436,7 +437,49 @@ public class Page extends DataForms {
 		"\t\t});\n" +
 		"\t\t-->\n" +
 		"\t\t</script>\n";
+    
+    /**
+     * CSRF対策のTOKENを取得します。
+     * @return CSRF対策のTOKEN。
+     * @throws Exception 例外。
+     */
+    public String getCsrfToken() throws Exception{
+		String token = null;
+		String pass = DataFormsServlet.getCsrfSessionidCrypPassword();
+		if (pass != null) {
+			String sid = this.getRequest().getSession().getId();
+			String key = CryptUtil.encrypt(sid, pass);
+//			token = java.net.URLEncoder.encode(key, DataFormsServlet.getEncoding());
+			token = key; //java.net.URLEncoder.encode(key, DataFormsServlet.getEncoding());
+		}
+		log.debug("csrfToken=" + token);
+		return token;
+    	
+    }
 
+    /**
+     * CSRF対策のリクエストチェックを行います。
+     * @param param パラメータ。
+     * @return 問題ない場合true。
+     * @throws Exception 例外。
+     */
+    public boolean isValidRequest(final Map<String, Object> param) throws Exception {
+    	boolean ret = false;
+    	if (DataFormsServlet.getCsrfSessionidCrypPassword() == null) {
+    		ret = true;
+    	} else {
+    		String csrfToken = (String) param.get("csrfToken");
+    		String token = this.getCsrfToken();
+    		if (!StringUtil.isBlank(csrfToken)) {
+    			String etoken = java.net.URLEncoder.encode(token, DataFormsServlet.getEncoding());
+    			if (csrfToken.equals(token) || csrfToken.equals(etoken)) {
+    				ret = true;
+    			}
+    		}
+    	}
+    	return ret;
+    }
+    
 	/**
 	 * HTMLにcssとscriptを追加します。
 	 * @param html HTML。
@@ -459,8 +502,12 @@ public class Page extends DataForms {
 		if (req.getRequestURI().indexOf(pageclass + "." + this.getPageExt()) >= 0) {
 			sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + "/" + scriptPath + "\"></script>\n");
 		}*/
+		String csrfToken = this.getCsrfToken();
 		sb.append(INIT_SCRIPT0);
 		sb.append("\t\t\tvar page = new " + pageclass + "();\n");
+		if (csrfToken != null) {
+			sb.append("\t\t\tpage.csrfToken=\"" + java.net.URLEncoder.encode(csrfToken, DataFormsServlet.getEncoding()) + "\";\n");
+		}
 		sb.append(INIT_SCRIPT1);
 
 		String s = sb.toString();

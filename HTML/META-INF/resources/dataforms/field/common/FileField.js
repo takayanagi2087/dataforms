@@ -124,6 +124,9 @@ FileField.prototype.setValue = function(value) {
 	if (value != null) {
 		var form = this.getParentForm();
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
+		if (currentPage.csrfToken != null) {
+			url += "&csrfToken=" + currentPage.csrfToken; 
+		}
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		fnlink.attr("href", url);
 		var fnhidden = this.parent.find("[name='" + this.selectorEscape(fnid) + "']");

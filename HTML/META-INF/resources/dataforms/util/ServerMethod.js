@@ -89,6 +89,9 @@ ServerMethod.prototype.callMethod = function(method, param, success, as) {
         param = "";
     }
     param = "dfMethod=" + method + "&" + param;
+    if (currentPage.csrfToken != null) {
+    	param = "csrfToken=" + currentPage.csrfToken + "&" + param; 
+    }
     var me = this;
     var errorfunc = this.onAjaxError;
     $.ajax({ url: this.serverUrl
@@ -311,8 +314,14 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 	form.attr("action", this.servletUrl);
 	form.attr("target", "uploadIFrame"); // POSTの結果の受け取り先を見えないiframeに設定する.
 	this.setHiddenField(form, "dfMethod", method);
+	if (currentPage.csrfToken != null) {
+		this.setHiddenField(form, "csrfToken", currentPage.csrfToken);
+	}
 	form.submit();
 	form.find("#dfMethod").remove();
+	if (currentPage.csrfToken != null) {
+		form.find("#csrfToken").remove();
+	}
 };
 
 

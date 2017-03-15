@@ -61,7 +61,12 @@ import net.arnx.jsonic.JSON;
 @WebServlet(name = "DataFormsServlet", displayName = "DataFormsServlet", urlPatterns = {"*.df" })
 public class DataFormsServlet extends HttpServlet {
 
-    /**
+	/**
+	 * HTML取得のメソッド名。
+	 */
+    private static final String GET_HTML_METHOD_NAME = "getHtml";
+
+	/**
 	 * UID.
 	 */
 	private static final long serialVersionUID = -8576472991434646040L;
@@ -170,6 +175,16 @@ public class DataFormsServlet extends HttpServlet {
      */
     private static ServletInstanceBean servletInstanceBean = null;
     
+    
+    /**
+     * CSRF対策用暗号化キー。
+     * 
+     * <pre>
+     * CSRF対策のため送信する照合情報は、セッションIDを以下のパスワードで暗号化して送信します。
+     * </pre>
+     */
+    private static String csrfSessionidCrypPassword = null;
+    
     /**
      * Pageの拡張子を取得します。
      * <pre>
@@ -183,7 +198,16 @@ public class DataFormsServlet extends HttpServlet {
     	return uplist[0].substring(2);
     }
 
+    
     /**
+     * CSRF対策用暗号化キーを取得します。
+     * @return CSRF対策用暗号化キー。
+     */
+    public static String getCsrfSessionidCrypPassword() {
+		return csrfSessionidCrypPassword;
+	}
+
+	/**
      * ページオーバーライドマップを考慮したクラス名を取得します。
      * @param name クラス名。
      * @return 変換後のクラス名。
@@ -332,12 +356,9 @@ public class DataFormsServlet extends HttpServlet {
 		//
 		CryptUtil.setCryptPassword(this.getServletContext().getInitParameter("crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("crypt-password"));
-		//log.debug("init:cryptPassword=" + CryptUtil.getCryptPassword());
-		//
 		DataFormsServlet.setQueryStringCryptPassword(this.getServletContext().getInitParameter("query-string-crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("query-string-crypt-password"));
-		//log.debug("init:queryStringCryptPassword=" + DataFormsServlet.getQueryStringCryptPassword());
-		//
+		DataFormsServlet.csrfSessionidCrypPassword = this.getServletContext().getInitParameter("csrf-sessionid-crypt-password");
 		Page.setFramePath(this.getServletContext().getInitParameter("frame-path") == null ? "/frame/default"
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
@@ -704,7 +725,7 @@ public class DataFormsServlet extends HttpServlet {
 
 					String method = (String) param.get("dfMethod");
 					if (method == null) {
-						method = "getHtml";
+						method = GET_HTML_METHOD_NAME;
 					}
 					log.info("method=" + method);
 					Map<String, Object> userinfo = page.getUserInfo();
@@ -732,6 +753,13 @@ public class DataFormsServlet extends HttpServlet {
 					if (JsonResponse.class.getName().equals(mt.getName())) {
 						isJsonResponse = true;
 					}
+					
+					if (!GET_HTML_METHOD_NAME.equals(method)) {
+						if (!page.isValidRequest(param)) {
+							throw new ApplicationException(page, "error.csrftoken");
+						}
+					}
+					
 					WebMethod wma = m.getAnnotation(WebMethod.class);
 					if (wma == null) {
 						log.error(MessagesUtil.getMessage(page, "error.notwebmethod", method));

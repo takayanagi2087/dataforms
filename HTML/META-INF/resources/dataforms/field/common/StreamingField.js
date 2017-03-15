@@ -117,6 +117,9 @@ StreamingField.prototype.setValue = function(value) {
 	if (value != null) {
 		this.downloadParameter = value.downloadParameter;
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
+		if (currentPage.csrfToken != null) {
+			url += "&csrfToken=" + currentPage.csrfToken; 
+		}
 		video.attr("src", url);
 		video.attr("data-key", value.downloadParameter);
 		this.downloadUrl = url;

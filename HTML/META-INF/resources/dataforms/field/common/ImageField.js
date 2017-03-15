@@ -87,6 +87,9 @@ ImageField.prototype.showImage = function(img) {
 		if (img != null) {
 			if (img.downloadParameter.length > 0) {
 				var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + img.downloadParameter;
+				if (currentPage.csrfToken != null) {
+					url += "&csrfToken=" + currentPage.csrfToken; 
+				}
 				window.open(url, "_image");
 			}
 		}
@@ -136,6 +139,9 @@ ImageField.prototype.setValue = function(value) {
 	this.downloadUrl = null;
 	if (value != null) {
 		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
+		if (currentPage.csrfToken != null) {
+			url += "&csrfToken=" + currentPage.csrfToken; 
+		}
 		thumb.attr("src", url);
 		this.downloadUrl = url;
 	} else {

@@ -36,7 +36,6 @@ EditableHtmlTable.prototype.isSortableSwitching = function() {
  *
  */
 EditableHtmlTable.prototype.enableSortable = function() {
-	logger.error("enableSortable");
 	var thisTable = this;
 	this.get().find("tbody").sortable({
 		start:function(event, ui) {
