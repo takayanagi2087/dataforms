@@ -27,10 +27,21 @@ ImageField.prototype.attach = function() {
 	thumb.attr("height", this.thumbnailHeight);
 	
 	thumb.click(function(e) {
+		logger.log("file=" + thisField.get().val().length);
+		var fval = thisField.get().val();
 		var val = {};
-		val.fileName = link.attr("data-value");
-		val.size = link.attr("data-size");
-		val.downloadParameter = link.attr("data-dlparam");
+		if (fval.length == 0) {
+			val.fileName = link.attr("data-value");
+			val.size = link.attr("data-size");
+			val.downloadParameter = link.attr("data-dlparam");
+		} else {
+			var fl = thisField.get().get()[0].files[0];
+			var url = URL.createObjectURL(fl);
+			val.fileName = fl.name;
+			val.size = fl.size;
+			val.url = url;
+			logger.log("url=" + url);
+		}
 		thisField.showImage(val);
 	});
 	this.get().change(function() {
@@ -82,10 +93,15 @@ ImageField.prototype.previewImage = function(inputFile, thumb) {
  */
 ImageField.prototype.showImage = function(img) {
 	logger.log("img=" + JSON.stringify(img));
+	if (this.parent.id == "imageForm") {
+		return;
+	}
 	var dlg = currentPage.getComponent("imageDialog");
 	if (dlg == null) {
 		if (img != null) {
-			if (img.downloadParameter.length > 0) {
+			if (img.url != null) {
+				window.open(img.url, "_image");
+			} else {
 				var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + img.downloadParameter;
 				if (currentPage.csrfToken != null) {
 					url += "&csrfToken=" + currentPage.csrfToken; 
@@ -138,12 +154,20 @@ ImageField.prototype.setValue = function(value) {
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
 	this.downloadUrl = null;
 	if (value != null) {
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
-		if (currentPage.csrfToken != null) {
-			url += "&csrfToken=" + currentPage.csrfToken; 
+		var linkid = this.id + "_link";
+		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
+		if (value.url == null) {
+			var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
+			if (currentPage.csrfToken != null) {
+				url += "&csrfToken=" + currentPage.csrfToken; 
+			}
+			thumb.attr("src", url);
+			this.downloadUrl = url;
+		} else {
+			thumb.attr("src", value.url);
+			fnlink.attr("href", "javascript:void(0);");
+			this.downloadUrl = value.url;
 		}
-		thumb.attr("src", url);
-		this.downloadUrl = url;
 	} else {
 		thumb.attr("src", null);
 		this.downloadUrl = null;
