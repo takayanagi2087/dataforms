@@ -345,4 +345,6 @@ public class UserDao extends Dao {
 		}
 		return rec;
 	}
+	
+	// TODO:user情報の検索メソッドがあったほうが便利。
 }
