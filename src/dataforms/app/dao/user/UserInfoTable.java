@@ -54,6 +54,14 @@ public class UserInfoTable extends Table {
 		public static final String ID_USER_NAME = "userName";
 		/** メールアドレスのフィールドID。*/
 		public static final String ID_MAIL_ADDRESS = "mailAddress";
+		
+		/**
+		 * コンストラクタ。
+		 */
+		public Entity() {
+			
+		}
+		
 		/**
 		 * コンストラクタ。
 		 * @param map 操作対象マップ。
