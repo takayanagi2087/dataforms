@@ -79,10 +79,12 @@ input,select,textarea {
 	max-width: 220px;
 	clear: both;
 	padding: 6px;
+	margin: 0px;
+	border:0px;
 }
 
 #bodyTable #mainTd {
-	width: calc(100% - 220px);
+/*	width: calc(100% - 220px);*/
 }
 
 /* メインDIV */
