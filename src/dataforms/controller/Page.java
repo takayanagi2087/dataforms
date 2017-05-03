@@ -199,11 +199,11 @@ public class Page extends DataForms {
 	private static List<String> basicJsCache = null;
 
 	/**
-	 * 基本的jvascriptのリストを取得します。
+	 * 基本的javascriptのリストを取得します。
 	 * @return 基本的jvascriptのリスト。
 	 * @throws Exception 例外。
 	 */
-	private synchronized List<String> getBaseicJsCache() throws Exception {
+	private synchronized List<String> getBasicJsCache() throws Exception {
 		if (basicJsCache == null) {
 			basicJsCache = Collections.synchronizedList(new ArrayList<String>());
 			basicJsCache.add("/dataforms/util/createSubclass.js");
@@ -355,7 +355,7 @@ public class Page extends DataForms {
 				sb.append("\t\t<link type=\"text/css\" href=\"" + context + csspath + "?t=" + t + "\" rel=\"stylesheet\" media=\"" + css[1] + "\"/>\n");
 			}
 		}
-		List<String> basicScripts = this.getBaseicJsCache();
+		List<String> basicScripts = this.getBasicJsCache();
 		for (String js : basicScripts) {
 			String jspath = this.getAppropriatePath(js, this.getRequest());
 			if (jspath != null) {
