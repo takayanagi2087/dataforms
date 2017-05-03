@@ -1569,8 +1569,19 @@ public class Dao implements JDBCConnectableObject {
 		Field<?> lastpk = pklist.get(pklist.size() - 1);
 		for (Map<String, Object> m: list) {
 			if (m.get(lastpk.getId()) == null) {
-				short key = (short) (NumberUtil.shortValue(this.executeScalarQuery(maxsql, data)) + 1);
-				m.put(lastpk.getId(), Short.valueOf(key));
+				// TODO:short以外のキーも対応できるように修正
+				if (lastpk instanceof SmallintField) {
+					short key = (short) (NumberUtil.shortValue(this.executeScalarQuery(maxsql, data)) + 1);
+					m.put(lastpk.getId(), Short.valueOf(key));
+				} else if (lastpk instanceof IntegerField) {
+					int key = (int) (NumberUtil.intValue(this.executeScalarQuery(maxsql, data)) + 1);
+					m.put(lastpk.getId(), Integer.valueOf(key));
+				} else if (lastpk instanceof BigintField) {
+					long key = (long) (NumberUtil.longValue(this.executeScalarQuery(maxsql, data)) + 1);
+					m.put(lastpk.getId(), Long.valueOf(key));
+				} else {
+					throw new Exception("Unsupported primary key type.");
+				}
 				this.executeInsert(table, m);
 			} else {
 				if (this.findRecord(table, m) == null) {
