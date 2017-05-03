@@ -1569,7 +1569,6 @@ public class Dao implements JDBCConnectableObject {
 		Field<?> lastpk = pklist.get(pklist.size() - 1);
 		for (Map<String, Object> m: list) {
 			if (m.get(lastpk.getId()) == null) {
-				// TODO:short以外のキーも対応できるように修正
 				if (lastpk instanceof SmallintField) {
 					short key = (short) (NumberUtil.shortValue(this.executeScalarQuery(maxsql, data)) + 1);
 					m.put(lastpk.getId(), Short.valueOf(key));
