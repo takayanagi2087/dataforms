@@ -5,6 +5,8 @@ import java.util.Map;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.page.base.DeveloperPage;
 
+// TODO:初期化時作成するユーザをdeveloperとadminを切り替えられる設定を追加する。
+
 /**
  * データベース初期化ページクラス。
  * <pre>
