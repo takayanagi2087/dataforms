@@ -232,6 +232,17 @@
 		<param-value>/eclipse/pleiades-e4.6/workspace/dataforms/WebContent</param-value>
 	</context-param>
 	<!-- 
+		データベース初期化時に作成するユーザのレベルを指定します。
+	 -->
+	<context-param>
+		<param-name>initialize-user-level</param-name>
+		<param-value>developer</param-value>
+		<!--
+		<param-value>developer</param-value>
+		<param-value>admin</param-value>
+		-->
+	</context-param>
+	<!-- 
 		データベースの作成時に、初期化するパッケージリストを指定します。 
 		パッケージ名は,区切りで複数設定することができます。
 		データベースを作成するときに、このパッケージリストを参照し、このパッケージ中のテーブルクラスに対応するテーブルを作成します。

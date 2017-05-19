@@ -38,6 +38,18 @@ public class DeveloperEditForm extends EditForm {
 		this.insertFieldAfter(new PasswordField("passwordCheck"), "password");
 	}
 
+	/**
+	 * 初期化時に作成するユーザのレベルを取得します。
+	 * @return 初期化時に作成するユーザのレベル。
+	 */
+	private String getInitializeUserLvel() {
+		String userLevel = getServlet().getServletContext().getInitParameter("initialize-user-level");
+		if (userLevel == null) {
+			userLevel = "admin";
+		}
+		return userLevel;
+		
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -47,8 +59,10 @@ public class DeveloperEditForm extends EditForm {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		this.setFormData("loginId", "developer");
-		this.setFormData("userName", "developer");
+		String userLevel = this.getInitializeUserLvel();
+		
+		this.setFormData("loginId", userLevel);
+		this.setFormData("userName", userLevel);
 	}
 
 	/**
@@ -149,7 +163,7 @@ public class DeveloperEditForm extends EditForm {
 		List<Map<String, Object>> attTable = new ArrayList<Map<String, Object>>();
 		Map<String, Object> att = new HashMap<String, Object>();
 		att.put("userAttributeType", "userLevel");
-		att.put("userAttributeValue", "developer");
+		att.put("userAttributeValue", this.getInitializeUserLvel());
 		att.put("createUserId", userid);
 		att.put("updateUserId", userid);
 		att.put("deleteFlag", "0");
