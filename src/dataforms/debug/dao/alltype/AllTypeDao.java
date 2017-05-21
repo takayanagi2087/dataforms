@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import dataforms.controller.ApplicationException;
 import dataforms.dao.Dao;
+import dataforms.dao.Index;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
@@ -43,6 +44,11 @@ public class AllTypeDao extends Dao {
 	 */
 	public AllTypeDao(final JDBCConnectableObject obj) throws Exception {
 		super(obj);
+		AllTypeTable tbl = new AllTypeTable();
+		List<Index> ilist = tbl.getIndexList();
+		for (Index index: ilist) {
+			log.debug("index=" + index.getClass().getName());
+		}
 	}
 
 

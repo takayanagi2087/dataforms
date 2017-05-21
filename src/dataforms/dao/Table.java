@@ -3,6 +3,7 @@ package dataforms.dao;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ import dataforms.field.common.RecordIdField;
 import dataforms.field.common.UpdateTimestampField;
 import dataforms.field.common.UpdateUserIdField;
 import dataforms.servlet.DataFormsServlet;
+import dataforms.util.ClassFinder;
 import dataforms.util.FileUtil;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
@@ -654,6 +656,26 @@ public class Table  {
 	 */
 	public Map<String, Object> convertImportData(final Map<String, Object> data) {
 		return data;
+	}
+	
+	/**
+	 * テーブルに付随するインデックスの一覧を取得します。
+	 * @return テーブルに付随するインデックスの一覧。
+	 * @throws Exception 例外。
+	 */
+	public List<Index> getIndexList() throws Exception {
+		String pkgname = this.getClass().getPackage().getName();
+		ClassFinder finder = new ClassFinder();
+		List<Class<?>> list = finder.findClasses(pkgname, Index.class);
+		List<Index> ret = new ArrayList<Index>();
+		for (Class<?> c: list) {
+			Index index = (Index) c.newInstance();
+			Table table = index.getTable();
+			if (this.getClass().getName().equals(table.getClass().getName())) {
+				ret.add(index);
+			}
+		}
+		return ret;
 	}
 }
 

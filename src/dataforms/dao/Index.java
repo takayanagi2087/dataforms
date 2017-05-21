@@ -27,23 +27,29 @@ public class Index {
 
 	/**
 	 * コンストラクタ。
-	 * @param unique ユニークフラグ。
-	 * @param table 対象テーブル。
-	 * @param fieldList フィールドリスト。
 	 */
-	public Index(final boolean unique, final Table table, final FieldList fieldList) {
-		this.unique = unique;
-		this.table = table;
-		this.fieldList = fieldList;
+	public Index() {
+		this.unique = false;
+		this.table = null;
+		this.fieldList = null;
 	}
 
 
+
 	/**
-	 * 対象テーブルのインスタンスを取得します。
+	 * 対象テーブル取得します。
 	 * @return 対象テーブル。
 	 */
 	public Table getTable() {
 		return table;
+	}
+
+	/**
+	 * 対象テーブルを設定します。
+	 * @param table 対象テーブル。
+	 */
+	public void setTable(final Table table) {
+		this.table = table;
 	}
 
 
@@ -55,6 +61,14 @@ public class Index {
 		return unique;
 	}
 
+	/**
+	 * 一意フラグを設定します。
+	 * @param unique 一意フラグ。
+	 */
+	public void setUnique(final boolean unique) {
+		this.unique = unique;
+	}
+
 
 	/**
 	 * フィールドリストを取得します。
@@ -64,6 +78,13 @@ public class Index {
 		return fieldList;
 	}
 	
-	
+	/**
+	 * フィールドリストを設定します。
+	 * @param fieldList フィールドリスト。 
+	 */
+	public void setFieldList(final FieldList fieldList) {
+		this.fieldList = fieldList;
+	}
+
 	
 }
