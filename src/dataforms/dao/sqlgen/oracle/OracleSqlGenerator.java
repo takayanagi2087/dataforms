@@ -228,6 +228,4 @@ public class OracleSqlGenerator extends SqlGenerator {
 		return ret;
 	}
 
-
-
 }

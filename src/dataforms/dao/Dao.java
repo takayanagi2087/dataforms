@@ -46,6 +46,7 @@ import dataforms.field.sqltype.VarcharField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
+import net.arnx.jsonic.JSON;
 
 /**
  * データアクセスクラス。
@@ -1097,6 +1098,21 @@ public class Dao implements JDBCConnectableObject {
 		colinfo.put("dataType", dataType);
 		return colinfo;
 	}
+	
+	/**
+	 * Schemaを取得します。
+	 * @param conn JDBC接続情報。
+	 * @return 接続しているSchema。
+	 */
+	private String getSchema(final Connection conn) {
+		String schema = null;
+		try {
+			schema = conn.getSchema();
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+		return schema;
+	}
 
 	/**
 	 * テーブル構造取得します。
@@ -1109,12 +1125,7 @@ public class Dao implements JDBCConnectableObject {
 		Connection conn = this.getConnection();
 		DatabaseMetaData md = conn.getMetaData();
 		log.debug("currentCatalog=" + conn.getCatalog());
-		String schema = null;
-		try {
-			schema = conn.getSchema();
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-		}
+		String schema = getSchema(conn);
 		log.debug("currentSchema=" + schema);
 		List<Map<String, Object>> collist = new ArrayList<Map<String, Object>>();
 		ResultSet rs = md.getColumns(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tblname), "%");
@@ -1131,6 +1142,80 @@ public class Dao implements JDBCConnectableObject {
 		return collist;
 	}
 
+	
+
+	/**
+	 * 指定されたテーブルのインデックスを取得します。
+	 * @param md データベースメタデータ。
+	 * @param catalog カタログ。
+	 * @param schema スキーマ。
+	 * @param table テーブル。
+	 * @param unique ユニークフラグ。
+	 * @return インデックス情報。
+	 * @throws Exception 例外。
+	 */
+	private List<Map<String, Object>> getCurrentDBIndexInfo(final DatabaseMetaData md, final String catalog, final String schema, final String table, final boolean unique) throws Exception {
+		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+		log.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table + ", unique=" + unique);
+		ResultSet rset = md.getIndexInfo(catalog, schema, table, unique, true);
+		try {
+			ResultSetMetaData rmd = rset.getMetaData();
+			while (rset.next()) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				for (int i = 0; i < rmd.getColumnCount(); i++) {
+					String name = StringUtil.snakeToCamel(rmd.getColumnName(i + 1).toLowerCase());
+					Object value = rset.getObject(i + 1);
+					m.put(name, value);
+				}
+				ret.add(m);
+			}
+		} finally {
+			rset.close();
+		}
+		return ret;
+
+	}
+	
+	/**
+	 * 指定されたテーブルのデータベース中のインデックス情報を取得します。
+	 * @param table テーブル。
+	 * @return インデックス情報。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> getCurrentDBIndexInfo(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		Connection conn = this.getConnection();
+		DatabaseMetaData md = conn.getMetaData();
+		String catalog = conn.getCatalog();
+		String schema = getSchema(conn);
+		log.debug("currentSchema=" + schema);
+		String tablename = gen.convertTableNameForDatabaseMetaData(table.getTableName());
+		List<Map<String, Object>> ret = this.getCurrentDBIndexInfo(md, catalog, schema, tablename, true);
+		ret.addAll(this.getCurrentDBIndexInfo(md, catalog, schema, tablename, false));
+		log.debug("indexInfo=" + JSON.encode(ret, true));
+		return ret;
+	}
+	
+	
+	/**
+	 * インデックスが存在するかどうかを確認します。
+	 * @param table テーブル。
+	 * @param idxname インデックス名。
+	 * @return インデックスが存在する場合true。
+	 * @throws Exception 例外。
+	 */
+	protected boolean indexExists(final Table table, final String idxname) throws Exception {
+		boolean ret = false;
+		List<Map<String, Object>> list = this.getCurrentDBIndexInfo(table);
+		for (Map<String, Object> m: list) {
+			String indexName = (String) m.get("indexName");
+			if (idxname.equalsIgnoreCase(indexName)) {
+				ret = true;
+			}
+		}
+		return ret;
+	}
+
 	/**
 	 * PKのリストを取得します。
 	 * @param tbl テーブル。
@@ -1143,12 +1228,7 @@ public class Dao implements JDBCConnectableObject {
 		DatabaseMetaData md = conn.getMetaData();
 		List<String> collist = new ArrayList<String>();
 		List<Short> seqlist = new ArrayList<Short>();
-		String schema = null;
-		try {
-			schema = conn.getSchema();
-		} catch (Exception e) {
-			log.debug(e.getMessage());
-		}
+		String schema = getSchema(conn);
 		log.debug("currentSchema=" + schema);
 
 		ResultSet rs = md.getPrimaryKeys(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tbl.getTableName()));
@@ -1411,6 +1491,8 @@ public class Dao implements JDBCConnectableObject {
 		return (tblcnt > 0);
 	}
 
+	
+	
 
 	/**
 	 * DBから読み込んだマップをアプリケーションで処理しやすい形式に変換します(DBValue→Value変換)。

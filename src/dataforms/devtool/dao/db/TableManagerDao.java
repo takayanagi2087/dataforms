@@ -16,6 +16,7 @@ import dataforms.app.dao.func.FuncInfoTable;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.Page;
 import dataforms.dao.Dao;
+import dataforms.dao.Index;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
@@ -241,22 +242,6 @@ public class TableManagerDao extends Dao {
 		return newname;
 	}
 	
-/*	private void parse(String queryString) {
-	    for (String pair : queryString.split("&")) {
-	        int eq = pair.indexOf("=");
-	        if (eq < 0) {
-	            // key with no value
-	            addParam(URLDecoder.decode(pair), "");
-	        } else {
-	            // key=value
-	            String key = URLDecoder.decode(pair.substring(0, eq));
-	            String value = URLDecoder.decode(pair.substring(eq + 1));
-	            query.add(new KVP(key, value));
-	        }
-	    }
-	}
-*/
-
 	/**
 	 * ダウンロードパラメータをマップに変換する。
 	 * @param param ダウンロードパラメータ。
@@ -538,6 +523,38 @@ public class TableManagerDao extends Dao {
 	}
 
 	/**
+	 * テーブルに付随するインデックスを全て削除します。
+	 * @param table インデックスを削除するテーブル。
+	 * @throws Exception 例外。
+	 */
+	private void dropIndex(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		List<Index> list = table.getIndexList();
+		for (Index index: list) {
+			String idxname = index.getIndexName();
+			if (this.indexExists(table, idxname)) {
+				String sql = gen.generateDropIndexSql(index);
+				this.executeUpdate(sql, (Map<String, Object>) null);
+			}
+		}
+	}
+	
+	
+	/**
+	 * テーブルに付随するインデックスを全て作成します。
+	 * @param table インデックスを作成するテーブル。
+	 * @throws Exception 例外。
+	 */
+	private void createIndex(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		List<Index> list = table.getIndexList();
+		for (Index index: list) {
+			String sql = gen.generateCreateIndexSql(index);
+			this.executeUpdate(sql, (Map<String, Object>) null);
+		}
+	}
+	
+	/**
 	 * テーブルの初期化を行います。
 	 * @param className テーブルクラス名。
 	 * @throws Exception 例外。
@@ -546,9 +563,11 @@ public class TableManagerDao extends Dao {
 		Table tbl = Table.newInstance(className);
 		// テーブルが存在したらバックアップを行う.
 		if (this.tableExists(tbl.getTableName())) {
+			this.dropIndex(tbl);
 			this.moveToBackupTable(className);
 		}
 		this.createTable(className);
+		this.createIndex(tbl);
 		this.importIntialData(className);
 	}
 
@@ -561,8 +580,10 @@ public class TableManagerDao extends Dao {
 	public void updateTable(final String className) throws Exception {
 		Table tbl = Table.newInstance(className);
 		if (this.tableExists(tbl.getTableName())) {
+			this.dropIndex(tbl);
 			this.moveToBackupTable(className);
 			this.createTable(className);
+			this.createIndex(tbl);
 			String bakfile = tbl.getBackupTableName();
 			List<Map<String, Object>> collist = this.getTableColumnList(bakfile);
 			SqlGenerator gen = this.getSqlGenerator();

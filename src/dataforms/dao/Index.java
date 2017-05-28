@@ -1,6 +1,7 @@
 package dataforms.dao;
 
 import dataforms.field.base.FieldList;
+import dataforms.util.StringUtil;
 
 // TODO:インデックスの生成機能を実装する。
 
@@ -86,5 +87,12 @@ public class Index {
 		this.fieldList = fieldList;
 	}
 
-	
+	/**
+	 * DB用のインデックス名称を取得します。
+	 * @return DB用のインデックス名称。
+	 */
+	public String getIndexName() {
+		String clsname = this.getClass().getSimpleName();
+		return StringUtil.camelToSnake(clsname);
+	}
 }

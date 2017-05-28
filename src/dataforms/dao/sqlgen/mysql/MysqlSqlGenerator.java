@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.controller.ApplicationError;
+import dataforms.dao.Index;
 import dataforms.dao.QueryPager;
 import dataforms.dao.Table;
 import dataforms.dao.sqldatatype.SqlBlob;
@@ -209,4 +210,10 @@ public class MysqlSqlGenerator extends SqlGenerator {
 		}
 	}
 
+	@Override
+	public String generateDropIndexSql(final Index index) {
+		return " drop index " + index.getIndexName() + " on " + index.getTable().getTableName();
+	}
+
+	
 }

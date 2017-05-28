@@ -13,6 +13,7 @@ import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
 import dataforms.dao.TableList;
+import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.field.sqlfunc.AliasField;
@@ -46,9 +47,13 @@ public class AllTypeDao extends Dao {
 		super(obj);
 		AllTypeTable tbl = new AllTypeTable();
 		List<Index> ilist = tbl.getIndexList();
+		SqlGenerator gen = this.getSqlGenerator();
 		for (Index index: ilist) {
 			log.debug("index=" + index.getClass().getName());
+			log.debug("create index sql = " + gen.generateCreateIndexSql(index));
+			log.debug("drop index sql = " + gen.generateDropIndexSql(index));
 		}
+		this.getCurrentDBIndexInfo(tbl);
 	}
 
 

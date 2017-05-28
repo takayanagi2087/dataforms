@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import dataforms.annotation.SqlGeneratorImpl;
+import dataforms.dao.Index;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.QueryPager;
@@ -1646,5 +1647,44 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 		return sb.toString();
 	}
+	
+	
+	/**
+	 * Index作成用SQLを作成します。
+	 * @param index インデックス。
+	 * @return インデックス作成用SQL。
+	 */
+	public String generateCreateIndexSql(final Index index) {
+		StringBuilder sb = new StringBuilder();
+		if (index.isUnique()) {
+			sb.append("create unique index ");
+		} else {
+			sb.append("create index ");
+		}
+		sb.append(index.getIndexName());
+		sb.append(" on ");
+		sb.append(index.getTable().getTableName());
+		sb.append(" (");
+		StringBuilder fsb = new StringBuilder();
+		for (Field<?> f: index.getFieldList()) {
+			if (fsb.length() > 0) {
+				fsb.append(",");
+			}
+			fsb.append(f.getDbColumnName());
+		}
+		sb.append(fsb.toString());
+		sb.append(")");
+		return sb.toString();
+	}
 
+	/**
+	 * インデックス削除用SQLを作成します。
+	 * @param index インデックス。
+	 * @return インデックス削除用SQL。
+	 */
+	public String generateDropIndexSql(final Index index) {
+		return "drop index " + index.getIndexName();
+	}
+
+	
 }
