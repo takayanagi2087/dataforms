@@ -1,5 +1,6 @@
 package dataforms.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +102,28 @@ public class Index {
 	}
 	
 	/**
+	 * NonUniqueフラグを取得します。
+	 * @param iflist インデックスフィールドリスト。
+	 * @return NonUniqueフラグ。
+	 */
+	private boolean getNonUnique(final List<Map<String, Object>> iflist) {
+		Object o = iflist.get(0).get("nonUnique");
+		if (o instanceof BigDecimal) {
+			// for oracle
+			BigDecimal v = (BigDecimal) o;
+			if (v.intValue() == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			Boolean b = (Boolean) o;
+			return b.booleanValue();
+		}
+	}
+	
+	
+	/**
 	 * インデックスの構造差があるかチェックします。
 	 * @param iflist インデックスフィールドリスト。
 	 * @return 一致する場合true。
@@ -109,8 +132,8 @@ public class Index {
 		if (iflist.size() == 0) {
 			return false;
 		} else {
-			Boolean nonUnique = (Boolean) iflist.get(0).get("nonUnique");
-			if (this.isUnique() == nonUnique.booleanValue()) {
+			boolean nonUnique = this.getNonUnique(iflist);
+			if (this.isUnique() == nonUnique) {
 				return false;
 			} else {
 				if (iflist.size() != this.getFieldList().size()) {
