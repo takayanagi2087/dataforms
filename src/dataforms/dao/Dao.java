@@ -1217,6 +1217,26 @@ public class Dao implements JDBCConnectableObject {
 	}
 
 	/**
+	 * 指定されたインデックスのフィールドリストを取得します。
+	 * @param table テーブル。
+	 * @param idxname インデックス名称。
+	 * @return インデックスのフィールド情報。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> getIndexFieldList(final Table table, final String idxname) throws Exception {
+		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> list = this.getCurrentDBIndexInfo(table);
+		for (Map<String, Object> m: list) {
+			String indexName = (String) m.get("indexName");
+			if (idxname.equalsIgnoreCase(indexName)) {
+				ret.add(m);
+			}
+		}
+		return ret;
+	}
+	
+	
+	/**
 	 * PKのリストを取得します。
 	 * @param tbl テーブル。
 	 * @return PKリスト。

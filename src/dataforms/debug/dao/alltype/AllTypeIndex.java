@@ -16,8 +16,8 @@ public class AllTypeIndex extends Index {
 		this.setUnique(false);
 		this.setTable(table);
 		this.setFieldList(new FieldList(
-			table.getField("charField"),
-			table.getField("varcharField")
+			table.getField("charField")
+//			, table.getField("varcharField")
 		));
 	}
 

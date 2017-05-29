@@ -404,6 +404,13 @@ public class Table  {
 		} else {
 			return false;
 		}
+		List<Index> ilist = this.getIndexList();
+		for (Index idx: ilist) {
+			List<Map<String, Object>> iflist = dao.getIndexFieldList(this, idx.getIndexName());
+			if (!idx.structureAccords(iflist)) {
+				return false;
+			}
+		}
 		return true;
 	}
 

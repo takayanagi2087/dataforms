@@ -1,5 +1,9 @@
 package dataforms.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.util.StringUtil;
 
@@ -94,5 +98,35 @@ public class Index {
 	public String getIndexName() {
 		String clsname = this.getClass().getSimpleName();
 		return StringUtil.camelToSnake(clsname);
+	}
+	
+	/**
+	 * インデックスの構造差があるかチェックします。
+	 * @param iflist インデックスフィールドリスト。
+	 * @return 一致する場合true。
+	 */
+	public boolean structureAccords(final List<Map<String, Object>> iflist) {
+		if (iflist.size() == 0) {
+			return false;
+		} else {
+			Boolean nonUnique = (Boolean) iflist.get(0).get("nonUnique");
+			if (this.isUnique() == nonUnique.booleanValue()) {
+				return false;
+			} else {
+				if (iflist.size() != this.getFieldList().size()) {
+					return false;
+				} else {
+					for (int i = 0; i < iflist.size(); i++) {
+						Map<String, Object> m = iflist.get(i);
+						String idxname = StringUtil.snakeToCamel(((String) m.get("columnName")).toLowerCase());
+						Field<?> f = this.getFieldList().get(i);
+						if (!f.getId().equals(idxname)) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 }
