@@ -183,7 +183,7 @@ public class TableManagerDao extends Dao {
 		for (Index idx: ilist) {
 			sqllist.add(gen.generateCreateIndexSql(idx));
 			if (indexNames.length() > 0) {
-				indexNames += "<br/>";
+				indexNames += "\n";
 			}
 			indexNames += idx.getClass().getSimpleName();
 		}
