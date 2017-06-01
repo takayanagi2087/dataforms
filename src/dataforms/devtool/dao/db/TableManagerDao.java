@@ -178,6 +178,16 @@ public class TableManagerDao extends Dao {
 		tableInfo.put("tableComment", tbl.getComment());
 		SqlGenerator gen = this.getSqlGenerator();
 		List<String> sqllist = gen.generateCreateTableSqlList(tbl);
+		String indexNames = "";
+		List<Index> ilist = tbl.getIndexList();
+		for (Index idx: ilist) {
+			sqllist.add(gen.generateCreateIndexSql(idx));
+			if (indexNames.length() > 0) {
+				indexNames += "<br/>";
+			}
+			indexNames += idx.getClass().getSimpleName();
+		}
+		tableInfo.put("indexNames", indexNames);
 		StringBuilder sb = new StringBuilder();
 		for (String sql : sqllist) {
 			sb.append(sql); sb.append(";\n");

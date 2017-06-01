@@ -37,7 +37,7 @@
 					<input type="button" id="unselectAllButton" value="全解除" title="全てのテーブルクラスの選択を解除します。"/>&nbsp;
 				</div>
 				<div class="hScrollDiv">
-					<table id="queryResult" style="min-width: 880px;">
+					<table id="queryResult" style="min-width: 1024px;">
 						<thead>
 							<tr>
 								<th>No.</th>
@@ -45,6 +45,7 @@
 								<th>クラス名</th>
 								<th>テーブル名</th>
 								<th>コメント</th>
+								<th>インデックス</th>
 								<th>テーブル有無</th>
 								<th>シーケンス生成</th>
 								<th>構造の差分</th>
@@ -67,6 +68,9 @@
 								</td>
 								<td>
 									<span id="queryResult[0].tableComment"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].indexNames"></span>
 								</td>
 								<td>
 									<span id="queryResult[0].status"></span>
