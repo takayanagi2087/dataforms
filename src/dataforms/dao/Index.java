@@ -8,7 +8,6 @@ import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.util.StringUtil;
 
-// TODO:インデックスの生成機能を実装する。
 
 /**
  * インデックス。
