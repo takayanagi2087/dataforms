@@ -138,6 +138,32 @@
 	&lt;/context-param&gt;
 			</pre>
 		</div>	
+		<h3>初期化時に作成するユーザレベルの設定</h3>
+		<p>
+			データベースの初期化時には、管理者(admin)または開発者(developer)レベルのユーザを1件登録します。
+			ブランクアプリケーション(dfblank_xxx.war)は開発者向けにリリースされているため、
+			以下のように開発者(developer)レベルのユーザを作成するように設定されています。
+			完成されたアプリケーションの場合、開発者(developer)を作成する必要がなくなります。
+			そのようば場合は、以下の設定を管理者(admin)に変更してください。
+		</p>
+		<div class="filecaption">初期化時に作成するユーザレベルの設定(web.xml)</div>
+		<div class="wrappre">
+			<pre>
+	&lt;!-- 
+		データベース初期化時に作成するユーザのレベルを指定します。
+	 --&gt;
+	&lt;context-param&gt;
+		&lt;param-name&gt;initialize-user-level&lt;/param-name&gt;
+		&lt;param-value&gt;developer&lt;/param-value&gt;
+		&lt;!--
+		&lt;param-value&gt;developer&lt;/param-value&gt;
+		&lt;param-value&gt;admin&lt;/param-value&gt;
+		--&gt;
+	&lt;/context-param&gt;
+			</pre>
+		</div>	
+
+
 		<p class="topic">
 			dataforms.jarの各種設定は、web.xmlにまとまっています。
 			この他の項目は、web.xml中のコメントを参照し、適切に設定してください。
