@@ -822,7 +822,7 @@ public class Page extends DataForms {
 	 * @return 指定されたユーザ属性を持つ場合true.
 	 */
 	@SuppressWarnings("unchecked")
-	protected boolean checkUserAttribute(final String t, final String v) {
+	public boolean checkUserAttribute(final String t, final String v) {
 		Map<String, Object> userInfo = (Map<String, Object>) this.getRequest().getSession().getAttribute("userInfo");
 		if (userInfo != null) {
 			List<Map<String, Object>> attlist = (List<Map<String, Object>>) userInfo.get("attTable");
