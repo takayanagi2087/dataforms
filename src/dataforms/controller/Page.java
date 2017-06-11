@@ -681,6 +681,20 @@ public class Page extends DataForms {
 		map.put("browserBackButton", Page.getBrowserBackButton());
 		map.put("dataformsVersion", Page.dataformsVersion);
 		map.put("dataformsVendor", Page.dataformsVendor);
+		Map<String, Object> uinfo = this.getUserInfo();
+		Map<String, Object> userInfo = new HashMap<String, Object>();
+		if (uinfo != null) {
+			userInfo.put("userId", uinfo.get("userId"));
+			userInfo.put("loginId", uinfo.get("loginId"));
+			userInfo.put("userName", uinfo.get("userName"));
+			userInfo.put("mailAddress", uinfo.get("mailAddress"));
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> att = (List<Map<String, Object>>) uinfo.get("attTable");
+			for (Map<String, Object> a: att) {
+				userInfo.put((String) a.get("userAttributeType"), a.get("userAttributeValue"));
+			}
+		}
+		map.put("userInfo", userInfo);
 		return map;
 	}
 

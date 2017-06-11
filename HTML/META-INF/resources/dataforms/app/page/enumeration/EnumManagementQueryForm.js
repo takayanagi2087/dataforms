@@ -15,6 +15,9 @@ EnumManagementQueryForm = createSubclass("EnumManagementQueryForm", {}, "QueryFo
  */
 EnumManagementQueryForm.prototype.attach = function() {
 	QueryForm.prototype.attach.call(this);
+	
+	logger.log("userInfo=" + JSON.stringify(currentPage.userInfo));
+	
 	var thisForm = this;
 	this.find("#exportButton").click(function() {
 		thisForm.exportData()
