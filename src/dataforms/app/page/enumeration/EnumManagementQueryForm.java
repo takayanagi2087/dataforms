@@ -51,7 +51,7 @@ public class EnumManagementQueryForm extends QueryForm {
 			dao.exportData("dataforms.app.dao.enumeration.EnumOptionNameTable", initialDataPath);
 			ret = new JsonResponse(JsonResponse.SUCCESS, MessagesUtil.getMessage(this.getPage(), "message.initializationdatacreated"));
 		} else {
-			ret = new JsonResponse(JsonResponse.APPLICATION_EXCEPTION, MessagesUtil.getMessage(this.getPage(), "error.permission"));
+			ret = new JsonResponse(JsonResponse.INVALID, MessagesUtil.getMessage(this.getPage(), "error.permission"));
 		}
 		return ret;
 	}

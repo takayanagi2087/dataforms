@@ -11,6 +11,17 @@
  * ページは複数のFormと複数のDialogを持つことができます。
  * </pre>
  * @extends DataForms
+ * @prop {Object} userInfo ログインしているユーザ情報。形式は以下の通り。<br/>
+ * <pre>
+ * {
+ *  "userId":1000, // ユーザID
+ *  "loginId":"developer", // ログインID.
+ *  "mailAddress":"", // メールアドレス
+ *  "userName":"developer", // ユーザ名
+ *  "userLevel":"developer", // ユーザレベル
+ *   ... 以下ユーザに設定されたユーザ属性
+ *  }
+ * </pre>
  */
 Page = createSubclass("Page", {id: "mainDiv"}, "DataForms");
 

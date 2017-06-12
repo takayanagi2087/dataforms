@@ -17,11 +17,14 @@ EnumManagementQueryForm.prototype.attach = function() {
 	QueryForm.prototype.attach.call(this);
 	
 	logger.log("userInfo=" + JSON.stringify(currentPage.userInfo));
-	
-	var thisForm = this;
-	this.find("#exportButton").click(function() {
-		thisForm.exportData()
-	});
+	if (currentPage.userInfo.userLevel == "developer") {
+		var thisForm = this;
+		this.find("#exportButton").click(function() {
+			thisForm.exportData()
+		});
+	} else {
+		this.find("#exportButton").remove();
+	}
 };
 
 
