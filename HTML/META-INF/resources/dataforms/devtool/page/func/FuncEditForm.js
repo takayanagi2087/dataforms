@@ -15,8 +15,22 @@ FuncEditForm = createSubclass("FuncEditForm", {}, "EditForm");
  */
 FuncEditForm.prototype.attach = function() {
 	EditForm.prototype.attach.call(this);
+	var thisForm = this;
+	this.find("#exportButton").click(function() {
+		thisForm.exportData()
+	});
+
 };
 
+/**
+ * データのエクスポートを行います。
+ */
+FuncEditForm.prototype.exportData = function() {
+	var thisForm = this;
+	this.submit("export", function(data) {
+		currentPage.alert(null, data.result);
+	});
+};
 
 /**
  * フォームに対してデータを設定します。

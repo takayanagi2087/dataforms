@@ -27,7 +27,9 @@ EnumManagementQueryForm.prototype.attach = function() {
 	}
 };
 
-
+/**
+ * データのエクスポートを行います。
+ */
 EnumManagementQueryForm.prototype.exportData = function() {
 	var thisForm = this;
 	this.submit("export", function(data) {

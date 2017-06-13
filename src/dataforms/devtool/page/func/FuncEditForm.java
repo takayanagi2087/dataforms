@@ -7,11 +7,14 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import dataforms.annotation.WebMethod;
 import dataforms.app.dao.func.FuncInfoDao;
 import dataforms.app.dao.func.FuncInfoTable;
 import dataforms.app.field.func.FuncNameField;
 import dataforms.controller.EditForm;
+import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
+import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.field.common.WebSourcePathField;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.field.base.FieldList;
@@ -147,4 +150,25 @@ public class FuncEditForm extends EditForm {
 	public void deleteData(final Map<String, Object> data) throws Exception {
 		// 何もしない
 	}
+	
+	/**
+	 * 列挙型関連テーブルのエクスポートを行います。
+	 * @param p パラメータ。
+	 * @return Json形式のエクスポート。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public JsonResponse export(final Map<String, Object> p) throws Exception {
+		JsonResponse ret = null;
+		if (this.getPage().checkUserAttribute("userLevel", "developer")) {
+			TableManagerDao dao = new TableManagerDao(this);
+			String initialDataPath = DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
+			dao.exportData("dataforms.app.dao.func.FuncInfoTable", initialDataPath);
+			ret = new JsonResponse(JsonResponse.SUCCESS, MessagesUtil.getMessage(this.getPage(), "message.initializationdatacreated"));
+		} else {
+			ret = new JsonResponse(JsonResponse.INVALID, MessagesUtil.getMessage(this.getPage(), "error.permission"));
+		}
+		return ret;
+	}
+
 }
