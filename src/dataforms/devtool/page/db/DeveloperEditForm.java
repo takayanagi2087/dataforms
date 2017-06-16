@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.EditForm;
 import dataforms.controller.Page;
 import dataforms.devtool.dao.db.TableManagerDao;
+import dataforms.field.common.FlagField;
 import dataforms.util.MessagesUtil;
 import dataforms.util.StringUtil;
 import dataforms.validator.ValidationError;
@@ -26,12 +29,13 @@ public class DeveloperEditForm extends EditForm {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(DeveloperEditForm.class.getName());
+    private static Logger log = Logger.getLogger(DeveloperEditForm.class.getName());
 
 	/**
 	 * コンストラクタ。
 	 */
 	public DeveloperEditForm() {
+		this.addField(new FlagField("userImportFlag"));
 		UserInfoTable table = new UserInfoTable();
 		this.addTableFields(table);
 		table.getUserNameField().setAutocomplete(false);
@@ -60,11 +64,20 @@ public class DeveloperEditForm extends EditForm {
 	public void init() throws Exception {
 		super.init();
 		String userLevel = this.getInitializeUserLvel();
-		
 		this.setFormData("loginId", userLevel);
 		this.setFormData("userName", userLevel);
 	}
 
+	@Override
+	public Map<String, Object> getClassInfo() throws Exception {
+		Map<String, Object> ret = super.getClassInfo();
+		boolean exists = this.userInfoDataExists();
+		log.debug("userInfoDataExists=" + exists);
+		ret.put("userInfoDataExists", exists);
+		return ret;
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 * <pre>
@@ -80,6 +93,10 @@ public class DeveloperEditForm extends EditForm {
 
 	@Override
 	public List<ValidationError> validate(final Map<String, Object> param) throws Exception {
+		String userImportFlag = (String) param.get("userImportFlag");
+		if ("1".equals(userImportFlag)) {
+			return new ArrayList<ValidationError>();
+		}
 		List<ValidationError> list = super.validate(param);
 		if (list.size() == 0) {
 			String password = (String) param.get("password");
@@ -124,19 +141,36 @@ public class DeveloperEditForm extends EditForm {
 		return ret;
 	}
 	
+	/**
+	 * ユーザ情報の初期化データが存在するかチェックします。
+	 * @return 存在する場合true。
+	 * @throws Exception 例外。
+	 */
+	private boolean userInfoDataExists() throws Exception {
+		UserInfoTable table = new UserInfoTable();
+		String path = Page.getServlet().getServletContext().getRealPath("/WEB-INF/initialdata");
+		String userInitialFile = table.getImportData(path);
+		log.debug("userInitialFile=" + userInitialFile);
+		if (userInitialFile != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
-	// TODO:user_infoの初期化データがあるとduplicateが発生する問題を修正する。
+	
 	/**
 	 * データベースの初期化を行います。
 	 * <pre>
 	 * dataforms.app以下のTableクラスに対応したテーブルをDBに作成し
 	 * 初期データを登録します。
 	 * </pre>
+	 * @param userImportFlag ユーザ情報インポートフラグ。
 	 * @throws Exception 例外。
 	 * 
 	 * 
 	 */
-	private void initDb() throws Exception {
+	private void initDb(final String userImportFlag) throws Exception {
 		TableManagerDao tmdao = new TableManagerDao(this);
 		List<String> plist = this.getInitializePackageList();
 		for (String pkg: plist) {
@@ -145,7 +179,19 @@ public class DeveloperEditForm extends EditForm {
 			List<Map<String, Object>> list  = tmdao.queryTableClass(p);
 			for (Map<String, Object> m: list) {
 				String className = (String) m.get("className");
-				tmdao.updateTable(className);
+				if (className.indexOf("dataforms.app.dao.user") == 0) {
+					if ("1".equals(userImportFlag)) {
+						// ユーザ関連テーブルを作成しデータをインポートする。
+						tmdao.updateTable(className);
+					} else {
+						// 入力されたユーザを登録するので、テーブルを作成するのみ。
+						tmdao.createTable(className);
+						//Table tbl = Table.newInstance(className);
+						//tmdao.createIndex(tbl);
+					}
+				} else {
+					tmdao.updateTable(className);
+				}
 			}
 		}
 	}
@@ -158,20 +204,23 @@ public class DeveloperEditForm extends EditForm {
 	 */
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
-		this.initDb();
-		long userid = this.getPage().getUserId();
-		List<Map<String, Object>> attTable = new ArrayList<Map<String, Object>>();
-		Map<String, Object> att = new HashMap<String, Object>();
-		att.put("userAttributeType", "userLevel");
-		att.put("userAttributeValue", this.getInitializeUserLvel());
-		att.put("createUserId", userid);
-		att.put("updateUserId", userid);
-		att.put("deleteFlag", "0");
-		attTable.add(att);
-		data.put("attTable", attTable);
-		this.setUserInfo(data);
-		UserDao dao = new UserDao(this);
-		dao.insertUser(data);
+		String userImportFlag = (String) data.get("userImportFlag");
+		this.initDb(userImportFlag);
+		if (!"1".equals(userImportFlag)) {
+			long userid = this.getPage().getUserId();
+			List<Map<String, Object>> attTable = new ArrayList<Map<String, Object>>();
+			Map<String, Object> att = new HashMap<String, Object>();
+			att.put("userAttributeType", "userLevel");
+			att.put("userAttributeValue", this.getInitializeUserLvel());
+			att.put("createUserId", userid);
+			att.put("updateUserId", userid);
+			att.put("deleteFlag", "0");
+			attTable.add(att);
+			data.put("attTable", attTable);
+			this.setUserInfo(data);
+			UserDao dao = new UserDao(this);
+			dao.insertUser(data);
+		}
 	}
 
 	/**

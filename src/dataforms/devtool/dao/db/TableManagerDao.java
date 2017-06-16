@@ -513,7 +513,7 @@ public class TableManagerDao extends Dao {
 	 * @param className テーブルクラス名。
 	 * @throws Exception 例外。
 	 */
-	protected void createTable(final String className) throws Exception {
+	public void createTable(final String className) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
 		Table tbl = Table.newInstance(className);
 		List<String> sqllist = gen.generateCreateTableSqlList(tbl);
@@ -537,7 +537,7 @@ public class TableManagerDao extends Dao {
 	 * @param table インデックスを削除するテーブル。
 	 * @throws Exception 例外。
 	 */
-	private void dropIndex(final Table table) throws Exception {
+	public void dropIndex(final Table table) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
 		List<Index> list = table.getIndexList();
 		for (Index index: list) {
@@ -555,7 +555,7 @@ public class TableManagerDao extends Dao {
 	 * @param table インデックスを作成するテーブル。
 	 * @throws Exception 例外。
 	 */
-	private void createIndex(final Table table) throws Exception {
+	public void createIndex(final Table table) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
 		List<Index> list = table.getIndexList();
 		for (Index index: list) {
