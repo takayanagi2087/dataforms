@@ -274,6 +274,8 @@ public class WebComponent implements JDBCConnectableObject {
 	}
 
 	/**
+	 * TODO:メソッド名が適切てないので変更を検討する。
+	 * 
 	 * クライアントに渡すクラス情報を取得します。
 	 * <pre>
 	 * 各クラスの情報をJSON形式で渡すため必要なプロパティのマップを作成します。
