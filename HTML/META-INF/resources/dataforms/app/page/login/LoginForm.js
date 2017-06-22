@@ -57,8 +57,4 @@ LoginForm.prototype.attach = function() {
 		form.reset();
 		return false;
 	});
-	this.find('#closeButton').click(function() {
-		form.parent.close();
-		return false;
-	});
 };
