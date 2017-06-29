@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>列挙型グループコード</th>
+							<td><input type="text" id="enumGroupCode" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<input type="hidden" id="enumGroupCode" />
+				<table class="responsive">
+					<tbody>
+					</tbody>
+				</table>
+				<div class="hScrollDiv">
+					<table id="queryResult">
+						<thead>
+							<tr>
+								<th>
+									No.
+								</th>
+								<th>
+									列挙型グループコード
+								</th>
+								<th>
+									列挙型コード数
+								</th>
+								<th>
+									操作
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span id="queryResult[0].rowNo"></span>
+								</td>
+								<td>
+									<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].enumGroupCode"></span></a>
+								</td>
+								<td>
+									<span id="queryResult[0].codeCount"></span>
+								</td>
+								<td>
+									<input type="button" id="queryResult[0].viewButton" value="表示">
+									<input type="button" id="queryResult[0].deleteButton" value="削除">								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<input type="hidden" id="saveMode" />
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>列挙型グループコード</th>
+							<td><input type="text" id="enumGroupCode" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="hScrollDiv">
+					<table id="codeList" class="editableTable">
+						<thead>
+							<tr>
+								<th class="buttonColumn" nowrap>
+									
+								</th>
+								<th class="buttonColumn" nowrap>
+									
+								</th>
+								<th nowrap>
+									No.
+								</th>
+								<th>
+									列挙型コード
+								</th>
+								<th>
+									列挙型名称
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="buttonColumn">
+									<input type="button" id="codeList[0].addButton" value="+"/>
+								</td>
+								<td class="buttonColumn">
+									<input type="button" id="codeList[0].deleteButton" value="-"/>
+								</td>
+								<td style="text-align: right;">
+									<span id="codeList[0].no"></span>
+								</td>
+								<td>
+									<input type="hidden" id="codeList[0].enumGroupCode" />
+									<input type="hidden" id="codeList[0].sortOrder" />
+									<input type="hidden" id="codeList[0].createUserId" />
+									<input type="hidden" id="codeList[0].createTimestamp" />
+									<input type="hidden" id="codeList[0].updateUserId" />
+									<input type="hidden" id="codeList[0].updateTimestamp" />
+									<input type="text" id="codeList[0].enumTypeCode" />
+								</td>
+								<td>
+									<input type="text" id="codeList[0].enumTypeName" />
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<th class="buttonColumn">
+									<input type="button" id="codeList.addButton" value="+"/>
+								</th>
+								<th colspan="4">
+								</th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+
+		</div>
+	</body>
+</html>
