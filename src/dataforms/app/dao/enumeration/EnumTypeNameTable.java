@@ -72,6 +72,14 @@ public class EnumTypeNameTable extends Table {
 		
 		/**
 		 * コンストラクタ。
+		 */
+		public Entity() {
+			
+		}
+		
+		
+		/**
+		 * コンストラクタ。
 		 * @param map 操作対象マップ。
 		 */
 		public Entity(final Map<String, Object> map) {

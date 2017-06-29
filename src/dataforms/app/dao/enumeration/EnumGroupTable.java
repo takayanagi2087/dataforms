@@ -70,6 +70,15 @@ public class EnumGroupTable extends Table {
 		public static final String ID_ENUM_TYPE_CODE = "enumTypeCode";
 		/** ソート順のフィールドID。 */
 		public static final String ID_SORT_ORDER = "sortOrder";
+		
+		/**
+		 * コンストラクタ。
+		 */
+		public Entity() {
+			
+		}
+
+		
 		/**
 		 * コンストラクタ。
 		 * @param map 操作対象マップ。

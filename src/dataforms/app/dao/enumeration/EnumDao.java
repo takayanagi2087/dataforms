@@ -4,13 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dataforms.app.field.enumeration.EnumTypeCodeField;
+import dataforms.app.field.enumeration.EnumTypeNameField;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
+import dataforms.dao.Table;
 import dataforms.dao.TableList;
+import dataforms.field.base.Field.MatchType;
 import dataforms.field.base.FieldList;
 import dataforms.field.sqlfunc.AliasField;
+import dataforms.field.sqlfunc.SqlField;
 
 /**
  * 列挙型関連テーブルアクセスクラス。
@@ -181,4 +186,79 @@ public class EnumDao extends Dao {
 		}
 	}
 	
+	/**
+	 * 列挙型コードの一覧を取得する問合せです。
+	 *
+	 */
+	public static class EnumTypeCodeQuery extends Query {
+		/**
+		 * コンストラクタ。
+		 */
+		public EnumTypeCodeQuery() {
+			this.setDistinct(true);
+			EnumOptionTable table = new EnumOptionTable();
+			this.setFieldList(new FieldList(table.getEnumTypeCodeField()));
+			this.setMainTable(table);
+		}
+	}
+	
+	/**
+	 * 列挙型コードと名称の表を取得する問合せです。
+	 * 
+	 * <pre>
+	 * ブラウザの言語コードをlangCodeというパラメータに指定することによって、
+	 * 言語に応じた名称を取得します。
+	 * </pre>
+	 *
+	 */
+	public static class EnumTypeNameQuery extends Query {
+		/**
+		 * コンストラクタ。
+		 */
+		public EnumTypeNameQuery() {
+			EnumTypeNameTable dt = new EnumTypeNameTable();
+			dt.setAlias("dt");
+			EnumTypeNameTable ct = new EnumTypeNameTable();
+			ct.setAlias("ct");
+			SubQuery table = new SubQuery(new EnumTypeCodeQuery()) {
+				@Override
+				public String getJoinCondition(final Table joinTable, final String alias) {
+					if ("dt".equals(alias)) {
+						return this.getLinkFieldCondition(EnumGroupTable.Entity.ID_ENUM_TYPE_CODE, joinTable, alias, EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE)
+								+ " and dt.lang_code='default'";
+					}
+					if ("ct".equals(alias)) {
+						return this.getLinkFieldCondition(EnumGroupTable.Entity.ID_ENUM_TYPE_CODE, joinTable, alias, EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE)
+								+ " and ct.lang_code=:lang_code";
+					}
+					return super.getJoinCondition(joinTable, alias);
+				}
+			};
+			FieldList flist = new FieldList();
+			flist.addAll(table.getFieldList());
+			flist.add(new SqlField(new EnumTypeNameField(), "(case when ct.enum_type_name is not null then ct.enum_type_name else dt.enum_type_name end)"));
+			this.setFieldList(flist);
+			this.setMainTable(table);
+			this.setLeftJoinTableList(new TableList(dt, ct));
+		}
+	}
+	
+	/**
+	 * EnumTypeCodeのオートコンプリート用の問合せを実行します。
+	 * @param text 入力テキスト。
+	 * @param langCode 言語コード。
+	 * @return オートコンプリート用のリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> queryEnumTypeAutocomplateList(final String text, final String langCode) throws Exception {
+		EnumTypeNameQuery query = new EnumTypeNameQuery();
+		FieldList flist = new FieldList();
+		flist.addField(new EnumTypeCodeField()).setMatchType(MatchType.PART);
+		query.setQueryFormFieldList(flist);
+		EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity();
+		e.setEnumTypeCode(text);
+		e.setLangCode(langCode);
+		query.setQueryFormData(e.getMap());
+		return this.executeQuery(query);
+	}
 }

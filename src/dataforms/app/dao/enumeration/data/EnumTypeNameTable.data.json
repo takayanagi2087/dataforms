@@ -20,46 +20,6 @@
 		"createTimestamp": "20150716223425566"
 	},
 	{
-		"enumTypeName": "Menu Group",
-		"deleteFlag": "0",
-		"createUserId": "0",
-		"updateUserId": "0",
-		"langCode": "default",
-		"enumTypeCode": "menuGroup",
-		"updateTimestamp": "20150716223425579",
-		"createTimestamp": "20150716223425579"
-	},
-	{
-		"enumTypeName": "メニューグループ",
-		"deleteFlag": "0",
-		"createUserId": "0",
-		"updateUserId": "0",
-		"langCode": "ja",
-		"enumTypeCode": "menuGroup",
-		"updateTimestamp": "20150716223425591",
-		"createTimestamp": "20150716223425591"
-	},
-	{
-		"enumTypeName": "Enumeration Group",
-		"deleteFlag": "0",
-		"createUserId": "0",
-		"updateUserId": "0",
-		"langCode": "default",
-		"enumTypeCode": "enumGroup",
-		"updateTimestamp": "20150716223425600",
-		"createTimestamp": "20150716223425600"
-	},
-	{
-		"enumTypeName": "列挙型グループ",
-		"deleteFlag": "0",
-		"createUserId": "0",
-		"updateUserId": "0",
-		"langCode": "ja",
-		"enumTypeCode": "enumGroup",
-		"updateTimestamp": "20150716223425609",
-		"createTimestamp": "20150716223425609"
-	},
-	{
 		"enumTypeName": "部署",
 		"deleteFlag": "0",
 		"createUserId": "0",
