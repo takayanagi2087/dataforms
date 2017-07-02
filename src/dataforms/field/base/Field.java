@@ -796,6 +796,38 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	}
 
 	/**
+	 * データのキーに行IDを追加します。
+	 * <pre>
+	 * データベースから取得したデータを、テーブルの指定行に設定するために
+	 * 各項目のキーに行IDを追加します。
+	 * </pre>
+	 * @param rowid 行ID。
+	 * @param map データ。
+	 * @return 行IDを追加したデータ。
+	 */
+	protected Map<String, Object> addRowInfo(final String rowid, final Map<String, Object> map) {
+		if (StringUtil.isBlank(rowid)) {
+			return map;
+		} else {
+			if (map != null) {
+				Map<String, Object> ret = new HashMap<String, Object>();
+				for (String key: map.keySet()) {
+					if (key.indexOf("].") > 0) {
+						ret.put(key, map.get(key));
+					} else {
+						Object value = map.get(key);
+						ret.put(rowid + "." + key, value);
+					}
+				}
+				return ret;
+			} else {
+				return map;
+			}
+		}
+	}
+	
+	
+	/**
 	 * 関連データを取得します。
 	 * @param param パラメータ。
 	 * @return JsonResponse。
@@ -804,7 +836,9 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
     @WebMethod
 	public JsonResponse getRelationData(final Map<String, Object> param) throws Exception {
     	this.methodStartLog(log, param);
-    	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.queryRelationData(param));
+		String id = (String) param.get("currentFieldId");
+		String rowid = this.getHtmlTableRowId(id);
+    	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.addRowInfo(rowid, this.queryRelationData(param)));
     	this.methodFinishLog(log, param);
     	return ret;
     }
@@ -870,7 +904,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 
 	/**
 	 * 自動入力補完用リストを作成します。
-	 * @param lineid テーブル行ID(tablename[idx]形式の文字列)。
+	 * @param rowid テーブル行ID(tablename[idx]形式の文字列)。
 	 * <pre>
 	 * 基本的にcurrentFieldIdで指定されたフィールドIDをgetHtmlTableRowIdメソッドに渡した結果を指定します。
 	 * この項目を指定することにより、HtmlTable中のフィールドに対応することができるようになります。
@@ -882,19 +916,16 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * @param options オプションフィール。
 	 * @return 結果リスト。
 	 */
-	protected List<Map<String, Object>> convertToAutocompleteList(final String lineid, final List<Map<String, Object>> result, final String valueField, final String labelField, final String ... options) {
+	protected List<Map<String, Object>> convertToAutocompleteList(final String rowid, final List<Map<String, Object>> result, final String valueField, final String labelField, final String ... options) {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> m: result) {
-			Map<String, Object> r = new HashMap<String, Object>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (String f: options) {
+				map.put(f, m.get(f));
+			}
+			Map<String, Object> r = this.addRowInfo(rowid, map);
 			r.put("value", m.get(valueField));
 			r.put("label", m.get(labelField));
-			String prefix = "";
-			if (lineid != null) {
-				prefix = lineid + ".";
-			}
-			for (String f: options) {
-				r.put(prefix + f, m.get(f));
-			}
 			list.add(r);
 		}
 		return list;

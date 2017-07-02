@@ -1,5 +1,6 @@
 package dataforms.app.page.enumeration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import dataforms.app.field.enumeration.EnumTypeNameField;
 import dataforms.controller.EditForm;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.util.MessagesUtil;
 import dataforms.validator.RequiredValidator;
+import dataforms.validator.ValidationError;
 
 /**
  * 編集フォームクラス。
@@ -26,7 +29,7 @@ public class EnumGroupEditForm extends EditForm {
 		FieldList flist = new FieldList();
 		flist.addAll(table.getFieldList());
 		flist.addField(new EnumTypeNameField()).setReadonly(true);
-		flist.get(EnumGroupTable.Entity.ID_ENUM_TYPE_CODE).addValidator(new RequiredValidator()).setAutocomplete(true);
+		flist.get(EnumGroupTable.Entity.ID_ENUM_TYPE_CODE).addValidator(new RequiredValidator()).setAutocomplete(true).setRelationDataAcquisition(true);
 		EditableHtmlTable htmltable = new EditableHtmlTable("codeList", flist);
 		this.addHtmlTable(htmltable);
 		this.setPkFieldIdList(table.getPkFieldList());
@@ -71,17 +74,8 @@ public class EnumGroupEditForm extends EditForm {
 	 */
 	@Override
 	protected Map<String, Object> queryReferData(final Map<String, Object> data) throws Exception {
-//		Table table = new EnumGroupTable();
-		Map<String, Object> ret = this.queryData(data);
-/*		for (Field<?> f: table.getPkFieldList()) {
-			ret.remove(f.getId());
-		}
-		for (Field<?> f: table.getFieldList()) {
-			if (f instanceof FileField) {
-				ret.remove(f.getId());
-			}
-		}*/
-		return ret;
+		// 使用しない。
+		return null;
 	}
 
 
@@ -96,16 +90,7 @@ public class EnumGroupEditForm extends EditForm {
 	 */
 	@Override
 	protected Map<String, Object> queryDataByQueryFormCondition(final Map<String, Object> data) throws Exception {
-	/*	EnumGroupDao dao = new EnumGroupDao(this);
-		QueryForm qf = (QueryForm) this.getPage().getComponent("queryForm");
-		List<Map<String, Object>> list = dao.query(data, qf.getFieldList());
-		if (list.size() == 0) {
-			throw new ApplicationException(this.getPage(), "error.notfounddata");
-		}
-		if (list.size() > 1) {
-			throw new ApplicationException(this.getPage(), "error.cannotidentifydata");
-		}
-		return list.get(0);*/
+		// 今回は呼ばれない。
 		return null;
 	}
 
@@ -136,6 +121,30 @@ public class EnumGroupEditForm extends EditForm {
 		this.setUserInfo(data); // 更新を行うユーザIDを設定する.
 		dao.insert(data);*/
 		// 呼ばれることはない
+	}
+	
+	@Override
+	protected List<ValidationError> validateForm(final Map<String, Object> data) throws Exception {
+		List<ValidationError> ret = super.validateForm(data);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("codeList");
+		if (list != null && list.size() > 0) {
+			HashSet<String> keyset = new HashSet<String>();
+			
+			for (int i = 0; i < list.size(); i++) {
+				Map<String, Object> m = list.get(i);
+				EnumGroupTable.Entity e = new EnumGroupTable.Entity(m);
+				String code = e.getEnumTypeCode();
+				if (keyset.contains(code)) {
+					String fid = "codeList[" + i + "].enumTypeCode";
+					ret.add(new ValidationError(fid, MessagesUtil.getMessage(this.getPage(), "error.duplicateenumcode")));
+				}
+				keyset.add(code);
+			}
+		} else {
+			ret.add(new ValidationError("codeList", MessagesUtil.getMessage(this.getPage(), "error.noenumcode")));
+		}
+		return ret;
 	}
 
 	/**

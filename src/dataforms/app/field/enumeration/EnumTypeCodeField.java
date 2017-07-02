@@ -3,9 +3,12 @@ package dataforms.app.field.enumeration;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.app.dao.enumeration.EnumDao;
 import dataforms.app.dao.enumeration.EnumTypeNameTable;
 import dataforms.field.sqltype.VarcharField;
+import net.arnx.jsonic.JSON;
 
 /**
  * 列挙型コードクラス。
@@ -13,6 +16,11 @@ import dataforms.field.sqltype.VarcharField;
  */
 public class EnumTypeCodeField extends VarcharField {
 
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(EnumTypeCodeField.class);
+	
 	/**
 	 * フィールド長。
 	 */
@@ -57,5 +65,17 @@ public class EnumTypeCodeField extends VarcharField {
 			m.put("listLabel", e.getEnumTypeCode() + " " + e.getEnumTypeName());
 		}
 		return this.convertToAutocompleteList(this.getHtmlTableRowId(id), list, "enumTypeCode", "listLabel", "enumTypeName");
+	}
+	
+
+	@Override
+	protected Map<String, Object> queryRelationData(final Map<String, Object> data) throws Exception {
+		String id = (String) data.get("currentFieldId");
+		log.debug("data=" + JSON.encode(data, true));
+		String enumTypeCode = (String) data.get(id);
+		EnumDao dao = new EnumDao(this);
+		String langCode = this.getPage().getRequest().getLocale().getLanguage();
+		Map<String, Object> ret = dao.queryEnumType(enumTypeCode, langCode);
+		return ret;
 	}
 }

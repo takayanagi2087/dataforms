@@ -261,4 +261,30 @@ public class EnumDao extends Dao {
 		query.setQueryFormData(e.getMap());
 		return this.executeQuery(query);
 	}
+	
+	/**
+	 * 列挙型の情報を取得します。
+	 * 
+	 * @param enumTypeCode 列挙型コード。
+	 * @param langCode 言語コード。
+	 * @return ヒットしたデータマップ。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> queryEnumType(final String enumTypeCode, final String langCode) throws Exception {
+		EnumTypeNameQuery query = new EnumTypeNameQuery();
+		query.setQueryFormFieldList(new FieldList(query.getFieldList().get(EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE)));
+		EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity();
+		e.setEnumTypeCode(enumTypeCode);
+		e.setLangCode(langCode);
+		query.setQueryFormData(e.getMap());
+		Map<String, Object> ret = this.executeRecordQuery(query);
+		if (ret == null) {
+			EnumTypeNameTable.Entity re = new EnumTypeNameTable.Entity();
+			re.setEnumTypeCode(enumTypeCode);
+			re.setEnumTypeName("");
+			ret = re.getMap();
+		}
+		return ret;
+		
+	}
 }
