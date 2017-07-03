@@ -276,6 +276,7 @@ EditForm.prototype.setFormData = function(data) {
 EditForm.prototype.confirm = function() {
 	var form = this;
 	if (form.validate()) {
+		this.find("#saveMode").val(this.saveMode);
 		form.submitWithoutFile("confirm", function(result) {
 			form.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
