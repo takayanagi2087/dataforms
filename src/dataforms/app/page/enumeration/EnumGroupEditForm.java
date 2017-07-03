@@ -129,14 +129,25 @@ public class EnumGroupEditForm extends EditForm {
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("codeList");
 		if (list != null && list.size() > 0) {
+			// 同じ列挙型グルーブコードが指定されている。
+			String saveMode = (String) data.get("saveMode");
+			if ("new".equals(saveMode))	{
+				EnumGroupTable table = new EnumGroupTable();
+				FieldList flist = new FieldList(table.getEnumGroupCodeField());
+				EnumGroupDao dao = new EnumGroupDao(this);
+				List<Map<String, Object>> result = dao.query(data, flist);
+				if (result.size() > 0) {
+					ret.add(new ValidationError(EnumGroupTable.Entity.ID_ENUM_GROUP_CODE, MessagesUtil.getMessage(this.getPage(), "error.duplicate")));
+				}
+			}
+			// 同じ列挙型コードが指定されていなかどうかをチェック。
 			HashSet<String> keyset = new HashSet<String>();
-			
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> m = list.get(i);
 				EnumGroupTable.Entity e = new EnumGroupTable.Entity(m);
 				String code = e.getEnumTypeCode();
 				if (keyset.contains(code)) {
-					String fid = "codeList[" + i + "].enumTypeCode";
+					String fid = "codeList[" + i + "]." + EnumGroupTable.Entity.ID_ENUM_TYPE_CODE;
 					ret.add(new ValidationError(fid, MessagesUtil.getMessage(this.getPage(), "error.duplicateenumcode")));
 				}
 				keyset.add(code);
