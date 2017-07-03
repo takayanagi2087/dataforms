@@ -7,7 +7,6 @@ import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.MailAddressField;
-import dataforms.app.field.user.UserIdField;
 import dataforms.app.field.user.UserNameField;
 import dataforms.controller.EditForm;
 import dataforms.validator.RequiredValidator;
@@ -33,7 +32,7 @@ public class UserSelfEditForm extends EditForm {
 	 * </pre>
 	 */
 	public UserSelfEditForm() {
-		this.addField(new UserIdField());
+		//this.addField(new UserIdField());
 		this.addField(new LoginIdField());
 		this.addField(new UserNameField());
 		this.addField(new MailAddressField()).addValidator(new RequiredValidator());
@@ -86,9 +85,10 @@ public class UserSelfEditForm extends EditForm {
 	@Override
 	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
 //		Long userId = (Long) data.get("userId");
-		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+/*		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
 		Long userId = e.getUserId();
-		return (userId != null);
+		return (userId != null);*/
+		return true;
 	}
 
 	@Override
@@ -101,6 +101,8 @@ public class UserSelfEditForm extends EditForm {
 	@Override
 	protected void updateData(final Map<String, Object> data) throws Exception {
 		this.setUserInfo(data);
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		e.setUserId(this.getPage().getUserId());
 		UserDao dao = new UserDao(this);
 		dao.updateSelfUser(data);
 	}
