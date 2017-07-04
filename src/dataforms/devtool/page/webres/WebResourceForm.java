@@ -1201,12 +1201,15 @@ public class WebResourceForm extends Form {
 	 * @param data データ。
 	 * @return 出力されたファイル。
 	 * @throws Exception 例外。
+	 * 
 	 */
 	private String generateJavascriptFile(final Map<String, Object> data) throws Exception {
 		String forceOverwrite = (String) data.get("forceOverwrite");
 		String sourcePath = (String) data.get("webSourcePath");
-		String superClassName = (String) data.get("javascriptClass");
 		String fullClassName = (String) data.get("className");
+		Class<?> cls = Class.forName(fullClassName);
+		cls.getSuperclass().getSimpleName();
+		String superClassName = cls.getSuperclass().getSimpleName(); // (String) data.get("javascriptClass");
 		String className = ClassNameUtil.getSimpleClassName(fullClassName);
 		String src = this.getStringResourse("template/JavascriptClass.js.template");
 		String gensrc = src.replaceAll("\\$\\{className\\}", className);
