@@ -117,7 +117,7 @@ public final class MessagesUtil {
 	 * @param prop プロパティファイルのパス。
 	 * @return メッセージ。
 	 */
-	public static String getMessage(final Page page, final String messageKey, final String prop) {
+	public static String getMessageFromPropfile(final Page page, final String messageKey, final String prop) {
 		String msg = null;
 		Properties appClientMessages = getProperties(page, prop);
 		if (appClientMessages.containsKey(messageKey)) {
@@ -145,19 +145,19 @@ public final class MessagesUtil {
 	 * @return メッセージ。
 	 */
 	public static String getMessage(final Page page, final String messageKey) {
-		String msg = getMessage(page, messageKey, appClientMessagesName);
+		String msg = getMessageFromPropfile(page, messageKey, appClientMessagesName);
 		if (msg != null) {
 			return msg;
 		}
-		msg = getMessage(page, messageKey, clientMessagesName);
+		msg = getMessageFromPropfile(page, messageKey, clientMessagesName);
 		if (msg != null) {
 			return msg;
 		}
-		msg = getMessage(page, messageKey, appMessagesName);
+		msg = getMessageFromPropfile(page, messageKey, appMessagesName);
 		if (msg != null) {
 			return msg;
 		}
-		msg = getMessage(page, messageKey, messagesName);
+		msg = getMessageFromPropfile(page, messageKey, messagesName);
 		if (msg != null) {
 			return msg;
 		}
