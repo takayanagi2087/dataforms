@@ -25,12 +25,20 @@ public final class MessagesUtil {
 	 */
 	private static String clientMessagesName = null;
 
+	/**
+	 * クライアント用メッセージプロパティ(アプリケーション独自)。
+	 */
+	private static String appClientMessagesName = null;
 
 	/**
 	 * メッセージプロパティ。
 	 */
 	private static String messagesName = null;
 
+	/**
+	 * メッセージプロパティ(アプリケーション独自)。
+	 */
+	private static String appMessagesName = null;
 	/**
      * コンストラクタ。
      */
@@ -57,6 +65,26 @@ public final class MessagesUtil {
 		MessagesUtil.messagesName = messagesName;
 	}
 
+	
+	
+    /**
+     * クライアント用のメッセージリソース(アプリケーション独自)を設定します。
+     * @param appClientMessagesName クライアント用のメッセージリソース(アプリケーション独自)。
+     */
+	public static void setAppClientMessagesName(final String appClientMessagesName) {
+		MessagesUtil.appClientMessagesName = appClientMessagesName;
+	}
+
+
+    /**
+     * サーバ用のメッセージリソース(アプリケーション独自)を設定します。
+     * @param appMessagesName サーバ用のメッセージリソース(アプリケーション独自)。
+     */
+	public static void setAppMessagesName(final String appMessagesName) {
+		MessagesUtil.appMessagesName = appMessagesName;
+	}
+
+
 	/**
 	 * 順序付プロパティファイルを取得します。
 	 * <pre>
@@ -82,37 +110,62 @@ public final class MessagesUtil {
 	}
 
 	/**
-     * メッセージを取得します。
-     * <pre>
-     * {@code
-     * 指定されたキーのメッセージを読み込みます。
-     * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルからメッセージを取得します。
-     * 上記に無い場合、"messages"に指定されたファイルからメッセージを取得します。
-     * 上記に無い場合、"<page-path>.properties"に指定されたファイルからメッセージを取得します。
-     * }
-     * </pre>
-	 * @param page ページ情報。言語の判定などに使用します。
-     * @param messageKey メッセージキー。
-     * @return メッセージ。
-     */
-    public static String getMessage(final Page page, final String messageKey) {
-        Properties clientMessages = getProperties(page, clientMessagesName);
-        if (clientMessages.containsKey(messageKey)) {
-            String msg = clientMessages.getProperty(messageKey);
-            return msg;
-        } else {
-        	Properties  messages = getProperties(page, messagesName);
-            String msg = messages.getProperty(messageKey);
-            if (StringUtil.isBlank(msg)) {
-        		String clsname = page.getClass().getName();
-        		String pageprop = "/" + clsname.replaceAll("\\.", "/");
-        		Map<String, String> pageMap = MessagesUtil.getMessageMap(page, pageprop);
-        		return pageMap.get(messageKey);
-            }
-            return msg;
-        }
-    }
-
+	 * 指定されたプロパティファイルからメッセージを取得ます。
+	 * 
+	 * @param page ページ。
+	 * @param messageKey メッセージキー。
+	 * @param prop プロパティファイルのパス。
+	 * @return メッセージ。
+	 */
+	public static String getMessage(final Page page, final String messageKey, final String prop) {
+		String msg = null;
+		Properties appClientMessages = getProperties(page, prop);
+		if (appClientMessages.containsKey(messageKey)) {
+			msg = appClientMessages.getProperty(messageKey);
+		}
+		return msg;
+	}
+	
+	/**
+	 * メッセージを取得します。
+	 * 
+	 * <pre>
+	 * {@code
+	 * 指定されたキーのメッセージを読み込みます。
+	 * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルからメッセージを取得します。
+	 * 上記に無い場合、"messages"に指定されたファイルからメッセージを取得します。
+	 * 上記に無い場合、"<page-path>.properties"に指定されたファイルからメッセージを取得します。
+	 * }
+	 * </pre>
+	 * 
+	 * @param page
+	 *            ページ情報。言語の判定などに使用します。
+	 * @param messageKey
+	 *            メッセージキー。
+	 * @return メッセージ。
+	 */
+	public static String getMessage(final Page page, final String messageKey) {
+		String msg = getMessage(page, messageKey, appClientMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessage(page, messageKey, clientMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessage(page, messageKey, appMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessage(page, messageKey, messagesName);
+		if (msg != null) {
+			return msg;
+		}
+		String clsname = page.getClass().getName();
+		String pageprop = "/" + clsname.replaceAll("\\.", "/");
+		Map<String, String> pageMap = MessagesUtil.getMessageMap(page, pageprop);
+		return pageMap.get(messageKey);
+	}
 
     /**
      * メッセージを取得します。
@@ -170,7 +223,12 @@ public final class MessagesUtil {
      * @return クライアント用のメッセージマップ.
      */
     public static Map<String, String> getClientMessageMap(final Page page) {
-    	return getMessageMap(page, clientMessagesName);
+    	Map<String, String> ret =  getMessageMap(page, clientMessagesName);
+    	Map<String, String> amap =  getMessageMap(page, appClientMessagesName);
+    	if (amap != null) {
+    		ret.putAll(amap);
+    	}
+    	return ret;
     }
 
 }

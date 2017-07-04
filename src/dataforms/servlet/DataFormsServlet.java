@@ -367,14 +367,26 @@ public class DataFormsServlet extends HttpServlet {
 		if (clientMessages == null) {
 			clientMessages = "/frame/messages/ClientMessages";
 		}
+		String appClientMessages = this.getServletContext().getInitParameter("app-client-messages");
+		if (appClientMessages == null) {
+			appClientMessages = "/frame/messages/AppClientMessages";
+		}
 		String messages = this.getServletContext().getInitParameter("messages");
 		if (messages == null) {
 			messages = "/frame/messages/Messages";
 		}
+		String appMessages = this.getServletContext().getInitParameter("app-messages");
+		if (appMessages == null) {
+			appMessages = "/frame/messages/AppMessages";
+		}
 		log.info("init:clientMessages=" + clientMessages);
+		log.info("init:appClientMessages=" + appClientMessages);
 		log.info("init:messages=" + messages);
+		log.info("init:appMessages=" + appMessages);
 		MessagesUtil.setClientMessagesName(clientMessages);
+		MessagesUtil.setAppClientMessagesName(appClientMessages);
 		MessagesUtil.setMessagesName(messages);
+		MessagesUtil.setAppMessagesName(appMessages);
 		//
 		String topPage = this.getServletContext().getInitParameter("top-page");
 		if (!StringUtil.isBlank(topPage)) {

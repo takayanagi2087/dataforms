@@ -147,6 +147,16 @@
 		<param-name>messages</param-name>
 		<param-value>/frame/messages/Messages</param-value>
 	</context-param-->
+	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
+	<!-- context-param>
+		<param-name>app-client-messages</param-name>
+		<param-value>/frame/messages/AppClientMessages</param-value>
+	</context-param-->
+	<!-- サーバ側で使用するメッセージリソースの名称を指定します。 -->
+	<!-- context-param>
+		<param-name>app-messages</param-name>
+		<param-value>/frame/messages/AppMessages</param-value>
+	</context-param-->
 	<!-- フレームレイアウトのパスを指定します。 -->
 	<context-param>
 		<param-name>frame-path</param-name>
