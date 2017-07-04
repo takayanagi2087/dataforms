@@ -7,21 +7,21 @@
 	<body>
 		<div id="mainDiv">
 			<form id="queryForm">
-				<div class="formHeader">検索条件</div>
+				<div class="formHeader">Query contition</div>
 				<table class="responsive">
 					<tbody>
 						<tr>
-							<th>列挙型グループコード</th>
+							<th>Enumeration group code</th>
 							<td><input type="text" id="enumGroupCode" /></td>
 						</tr>
 					</tbody>
 				</table>
-				<input type="submit" id="queryButton" value="検索">
-				<input type="button" id="resetButton" value="リセット">&nbsp;
-				<input type="button" id="newButton" value="新規登録">
+				<input type="submit" id="queryButton" value="Query">
+				<input type="button" id="resetButton" value="reset">&nbsp;
+				<input type="button" id="newButton" value="New">
 			</form>
 			<form id="queryResultForm">
-				<div class="formHeader">検索結果</div>
+				<div class="formHeader">Query result</div>
 				<input type="hidden" id="enumGroupCode" />
 				<table class="responsive">
 					<tbody>
@@ -35,13 +35,13 @@
 									No.
 								</th>
 								<th>
-									列挙型グループコード
+									Enumeration group code
 								</th>
 								<th>
-									列挙型コード数
+									Enumeration count
 								</th>
 								<th>
-									操作
+									Operation
 								</th>
 							</tr>
 						</thead>
@@ -57,8 +57,8 @@
 									<span id="queryResult[0].codeCount"></span>
 								</td>
 								<td>
-									<input type="button" id="queryResult[0].viewButton" value="表示">
-									<input type="button" id="queryResult[0].deleteButton" value="削除">								</td>
+									<input type="button" id="queryResult[0].viewButton" value="View">
+									<input type="button" id="queryResult[0].deleteButton" value="Delete">								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -70,7 +70,7 @@
 				<table class="responsive">
 					<tbody>
 						<tr>
-							<th>列挙型グループコード</th>
+							<th>Enumeration group code</th>
 							<td><input type="text" id="enumGroupCode" /></td>
 						</tr>
 					</tbody>
@@ -89,10 +89,10 @@
 									No.
 								</th>
 								<th>
-									列挙型コード
+									Enumeration code
 								</th>
 								<th>
-									列挙型名称
+									Enumeration name
 								</th>
 							</tr>
 						</thead>
@@ -132,11 +132,11 @@
 						</tfoot>
 					</table>
 				</div>
-				<input type="button" id="confirmButton" value="確認"/>
-				<input type="button" id="saveButton" value="登録"/>
-				<input type="button" id="resetButton" value="リセット"/>
-				<input type="button" id="deleteButton" value="削除"/>
-				<input type="button" id="backButton" value="戻る"/>
+				<input type="button" id="confirmButton" value="Confirm"/>
+				<input type="button" id="saveButton" value="Save"/>
+				<input type="button" id="resetButton" value="Reset"/>
+				<input type="button" id="deleteButton" value="Delete"/>
+				<input type="button" id="backButton" value="Back"/>
 			</form>
 
 		</div>

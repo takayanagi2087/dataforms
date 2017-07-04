@@ -166,6 +166,7 @@
 			<figcaption>デフォルトレイアウト</figcaption>
 			<img src="layout.png" style="width:50%; height:50%;"/>
 		</figure>
+		<!--  
 		<p>
 			dataforms.jarの中のWEBリソースをカスタマイズするには、これらのファイルを「WEBリソースエクスポート」の機能でWebContent内に展開する必要があります。
 			システム名称を変更するには、メッセージリソースファイルをエクスポートし、それを編集します。
@@ -179,6 +180,12 @@
 			上の図では、ファイル名に"frame/messages"を指定して検索しています。
 			これらのメッセージリソースをエクスポートし、WebContent/frame/messages/ClientMessages.properties,ClientMessages_ja.properties中の
 			message.systemnameの内容を修正すれば、各ページに表示されるシステム名称を変更することができます。
+		</p>
+		-->
+		<p>
+			システム名称はAppClientMessage*.propertiesというファイルに、message.systemnameというキーで登録されています。
+			以下のようにEclipseのプロパティエディタで編集します。
+			なお、アプリケーション独自のメッセージは、AppClientMessage*.propertiesやAppMessage*.propertiesに登録していきます。
 		</p>
 		<figure>
 			<figcaption>システム名の編集</figcaption>
