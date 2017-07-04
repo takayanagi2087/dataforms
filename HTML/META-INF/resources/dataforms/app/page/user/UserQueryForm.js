@@ -31,7 +31,9 @@ UserQueryForm.prototype.attach = function() {
  */
 UserQueryForm.prototype.exportData = function() {
 	var thisForm = this;
-	this.submit("export", function(data) {
-		currentPage.alert(null, data.result);
+	currentPage.confirm(null, MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"), function() {
+		thisForm.submit("export", function(data) {
+			currentPage.alert(null, data.result);
+		});
 	});
 };
