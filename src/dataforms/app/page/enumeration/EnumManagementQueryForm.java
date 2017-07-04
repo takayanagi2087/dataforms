@@ -45,7 +45,7 @@ public class EnumManagementQueryForm extends QueryForm {
 		JsonResponse ret = null;
 		if (this.getPage().checkUserAttribute("userLevel", "developer")) {
 			TableManagerDao dao = new TableManagerDao(this);
-			String initialDataPath = DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
+			String initialDataPath =  DeveloperPage.getExportInitalDataPath(this.getPage()); //DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
 			dao.exportData("dataforms.app.dao.enumeration.EnumOptionTable", initialDataPath);
 			dao.exportData("dataforms.app.dao.enumeration.EnumTypeNameTable", initialDataPath);
 			dao.exportData("dataforms.app.dao.enumeration.EnumOptionNameTable", initialDataPath);

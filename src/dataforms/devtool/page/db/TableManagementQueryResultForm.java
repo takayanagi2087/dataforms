@@ -206,7 +206,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		if (StringUtil.isBlank(DeveloperPage.getWebSourcePath())) {
 			throw new ApplicationException(this.getPage(), "error.webresourcepathnotfound");
 		}
-		String initialDataPath = DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
+		String initialDataPath =  DeveloperPage.getExportInitalDataPath(this.getPage()); // DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
 		for (String cls : classlist) {
 			dao.exportData(cls, initialDataPath);
 		}

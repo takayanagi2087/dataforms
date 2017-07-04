@@ -162,7 +162,7 @@ public class FuncEditForm extends EditForm {
 		JsonResponse ret = null;
 		if (this.getPage().checkUserAttribute("userLevel", "developer")) {
 			TableManagerDao dao = new TableManagerDao(this);
-			String initialDataPath = DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
+			String initialDataPath =  DeveloperPage.getExportInitalDataPath(this.getPage()); //DeveloperPage.getWebSourcePath() + "/WEB-INF/initialdata";
 			dao.exportData("dataforms.app.dao.func.FuncInfoTable", initialDataPath);
 			ret = new JsonResponse(JsonResponse.SUCCESS, MessagesUtil.getMessage(this.getPage(), "message.initializationdatacreated"));
 		} else {

@@ -3,6 +3,8 @@ package dataforms.devtool.page.base;
 import java.util.Map;
 
 import dataforms.app.page.base.BasePage;
+import dataforms.controller.ApplicationException;
+import dataforms.controller.Page;
 import dataforms.servlet.DataFormsServlet;
 
 /**
@@ -65,6 +67,21 @@ public abstract class DeveloperPage extends BasePage {
 		DeveloperPage.webSourcePath = webSourcePath;
 	}
 
+	/**
+	 * 初期化データをエクスポートするパスを取得します。
+	 * @param page ページ情報。
+	 * @return 初期化データをエクスポートするパス。
+	 * @throws Exception 例外。
+	 */
+	public static String getExportInitalDataPath(final Page page) throws Exception {
+		String p = getWebSourcePath();
+		if (p == null) {
+			throw new ApplicationException(page, "error.webresourcepathnotfound");
+		}
+		return p + "/WEB-INF/initialdata"; 
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 * ユーザレベルがdeveloperのユーザのみアクセス可能です。
