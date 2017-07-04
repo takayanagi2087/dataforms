@@ -59,7 +59,7 @@ public class FieldList extends ArrayList<Field<?>> {
 			}
 		}
 		if (ret == null) {
-			log.error("field not found id=" + id);
+			log.debug("field not found id=" + id);
 		}
 		return ret;
 	}
