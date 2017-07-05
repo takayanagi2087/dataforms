@@ -75,6 +75,7 @@ WebComponent.prototype.getQueryString = function() {
  * 同期サーバメソッドを取得します。
  * @param {String} method メソッド名。
  * @returns {SyncServerMethod} 同期サーバメソッド。
+ * @Deprecated 
  */
 WebComponent.prototype.getSyncServerMethod = function(method) {
 //	return new SyncServerMethod(this.id + "." + method);

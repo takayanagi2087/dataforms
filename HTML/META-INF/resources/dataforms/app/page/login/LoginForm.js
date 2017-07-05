@@ -26,9 +26,6 @@ LoginForm.prototype.login = function() {
 				if (form.parent instanceof Dialog) {
 					form.parent.close();
 				}
-				currentPage.getComponent("loginInfoForm").update();
-				currentPage.getComponent("sideMenuForm").update();
-				// window.location.href = currentPage.contextPath + "/dataforms/app/page/top/TopPage." + currentPage.pageExt;
 				currentPage.toTopPage();
 			} else {
 				form.parent.setErrorInfo(form.getValidationResult(result), form);

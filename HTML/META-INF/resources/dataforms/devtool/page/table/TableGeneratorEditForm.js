@@ -157,52 +157,53 @@ TableGeneratorEditForm.prototype.onCalcClass = function(element) {
 	if (p.length > 0 && c.length > 0) {
 		var classname = p + "." + c;
 		logger.log("classname=" + classname);
-		var method = this.getSyncServerMethod("getFieldClassInfo");
-		var ret = method.execute("classname=" + classname);
-		if (ret.status == ServerMethod.SUCCESS) {
-			var dfflg = tbl.getSameRowField(element, "isDataformsField");
-			var len = tbl.getSameRowField(element, "fieldLength");
-			var cmnt = tbl.getSameRowField(element, "comment");
-			var bpkg = tbl.getSameRowField(element, "superPackageName");
-			var bcls = tbl.getSameRowField(element, "superSimpleClassName");
-			var owm = tbl.getSameRowField(element, "overwriteMode");
-			dfflg.val(ret.result.isDataformsField);
-			if (ret.result.isDataformsField == "1") {
-				if (ret.result.fieldLength != null && ret.result.fieldLength.length > 0) {
-					len.val(ret.result.fieldLength);
-					tbl.getComponent(len.attr("id")).lock(false);
-				} else {
-					len.val("");
-					tbl.getComponent(len.attr("id")).lock(true);
-				}
-				bpkg.val(ret.result.superClassPackage);
-				bcls.val(ret.result.superClassSimpleName);
-				cmnt.val(ret.result.fieldComment);
-				tbl.getComponent(bpkg.attr("id")).lock(true);
-				tbl.getComponent(bcls.attr("id")).lock(true);
-				owm.hide();
-			} else {
-				if (ret.result.fieldLength != null && ret.result.fieldLength.length > 0) {
-					if (len.val().length == 0) {
+		var method = this.getAsyncServerMethod("getFieldClassInfo");
+		method.execute("classname=" + classname, function(ret) {
+			if (ret.status == ServerMethod.SUCCESS) {
+				var dfflg = tbl.getSameRowField(element, "isDataformsField");
+				var len = tbl.getSameRowField(element, "fieldLength");
+				var cmnt = tbl.getSameRowField(element, "comment");
+				var bpkg = tbl.getSameRowField(element, "superPackageName");
+				var bcls = tbl.getSameRowField(element, "superSimpleClassName");
+				var owm = tbl.getSameRowField(element, "overwriteMode");
+				dfflg.val(ret.result.isDataformsField);
+				if (ret.result.isDataformsField == "1") {
+					if (ret.result.fieldLength != null && ret.result.fieldLength.length > 0) {
 						len.val(ret.result.fieldLength);
+						tbl.getComponent(len.attr("id")).lock(false);
+					} else {
+						len.val("");
+						tbl.getComponent(len.attr("id")).lock(true);
 					}
-				}
-				if (ret.result.superClassPackage != null) {
 					bpkg.val(ret.result.superClassPackage);
-				}
-				if (ret.result.superClassSimpleName != null) {
 					bcls.val(ret.result.superClassSimpleName);
-				}
-				if (ret.result.fieldComment != null && ret.result.fieldComment.length > 0) {
-					if (cmnt.val().length == 0) {
-						cmnt.val(ret.result.fieldComment);
+					cmnt.val(ret.result.fieldComment);
+					tbl.getComponent(bpkg.attr("id")).lock(true);
+					tbl.getComponent(bcls.attr("id")).lock(true);
+					owm.hide();
+				} else {
+					if (ret.result.fieldLength != null && ret.result.fieldLength.length > 0) {
+						if (len.val().length == 0) {
+							len.val(ret.result.fieldLength);
+						}
 					}
+					if (ret.result.superClassPackage != null) {
+						bpkg.val(ret.result.superClassPackage);
+					}
+					if (ret.result.superClassSimpleName != null) {
+						bcls.val(ret.result.superClassSimpleName);
+					}
+					if (ret.result.fieldComment != null && ret.result.fieldComment.length > 0) {
+						if (cmnt.val().length == 0) {
+							cmnt.val(ret.result.fieldComment);
+						}
+					}
+					tbl.getComponent(bpkg.attr("id")).lock(false);
+					tbl.getComponent(bcls.attr("id")).lock(false);
+					owm.show();
 				}
-				tbl.getComponent(bpkg.attr("id")).lock(false);
-				tbl.getComponent(bcls.attr("id")).lock(false);
-				owm.show();
 			}
-		}
+		});
 	}
 };
 
@@ -218,14 +219,15 @@ TableGeneratorEditForm.prototype.onCalcSuperClass = function(element) {
 	if (p.length > 0 && c.length > 0) {
 		var classname = p + "." + c;
 		logger.log("super classname=" + classname);
-		var method = this.getSyncServerMethod("getSuperFieldClassInfo");
-		var ret = method.execute("superclassname=" + classname);
-		if (ret.status == ServerMethod.SUCCESS) {
-			var len = tbl.getSameRowField(element, "fieldLength");
-			if (len.val().length == 0) {
-				len.val(ret.result.fieldLength);
+		var method = this.getAsyncServerMethod("getSuperFieldClassInfo");
+		method.execute("superclassname=" + classname, function(ret) {
+			if (ret.status == ServerMethod.SUCCESS) {
+				var len = tbl.getSameRowField(element, "fieldLength");
+				if (len.val().length == 0) {
+					len.val(ret.result.fieldLength);
+				}
 			}
-		}
+		});
 	}
 };
 

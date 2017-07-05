@@ -8,33 +8,32 @@ createSubclass("LoginInfoForm", {}, "Form");
  * ログイン状態の更新.
  */
 LoginInfoForm.prototype.update = function() {
-	var method = this.getSyncServerMethod("getUserInfo");
-	var ret = method.execute();
-	if (ret.status == ServerMethod.SUCCESS) {
-		if (ret.result.loginId != null) {
-			this.setFormData(ret.result);
-			this.find("#underLoginDiv").show();
-			this.find("#dontLoginDiv").hide();
-		} else {
-			this.find("#underLoginDiv").hide();
-			this.find("#dontLoginDiv").show();
+	var thisForm = this;
+	var method = this.getAsyncServerMethod("getUserInfo");
+	method.execute("", function (ret) {
+		if (ret.status == ServerMethod.SUCCESS) {
+			if (ret.result.loginId != null) {
+				thisForm.setFormData(ret.result);
+				thisForm.find("#underLoginDiv").show();
+				thisForm.find("#dontLoginDiv").hide();
+			} else {
+				thisForm.find("#underLoginDiv").hide();
+				thisForm.find("#dontLoginDiv").show();
+			}
 		}
-	}
-}
+	});
+};
 
 /**
  * ログアウト処理.
  */
 LoginInfoForm.prototype.logout = function() {
-//	window.location.href = currentPage.contextPath + "/dataforms/app/page/top/TopPage." + currentPage.pageExt;
-	currentPage.toTopPage();
-	var method = this.getSyncServerMethod("logout");
-	var ret = method.execute();
-	if (ret.status == ServerMethod.SUCCESS) {
-		this.update();
-		currentPage.getComponent("sideMenuForm").update();
-	}
-}
+	var thisForm = this;
+	var method = this.getAsyncServerMethod("logout");
+	method.execute("", function(ret) {
+		currentPage.toTopPage();
+	});
+};
 
 
 /**

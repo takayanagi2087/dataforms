@@ -20,10 +20,11 @@ UserAttributeValueField = createSubclass("UserAttributeValueField", {}, "EnumOpt
  * @param {String} type ユーザ属性。
  */
 UserAttributeValueField.prototype.setUserAttributeType = function(type) {
-	var m = this.getSyncServerMethod("getTypeOption");
-	var opt = m.execute("type=" + type);
-	if (opt.status == ServerMethod.SUCCESS) {
-//		this.optionList = opt.result;
-		this.setOptionList(opt.result);
-	}
+	var thisField = this;
+	var m = this.getAsyncServerMethod("getTypeOption");
+	var opt = m.execute("type=" + type, function(opt) {
+		if (opt.status == ServerMethod.SUCCESS) {
+			thisField.setOptionList(opt.result);
+		}
+	});
 };

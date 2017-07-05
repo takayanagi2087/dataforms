@@ -120,19 +120,18 @@ Field.prototype.backupStyle = function() {
  * 関連データ取得がONの場合フィールド値の更新時にこの処理が呼ばれます。
  * 各フィールドのgetRelationDataメソッドが呼び出され、その結果を親フォームに設定します。
  * </pre>
- * @returns {Object} 取得した関連データ。
  */
 Field.prototype.getRelationData = function() {
-	var m = this.getSyncServerMethod("getRelationData");
+	var m = this.getAsyncServerMethod("getRelationData");
 	var form = this.getParentForm();
 	var param = this.getAjaxParameter();
-	var ret = m.execute(param);
-	if (ret.status == ServerMethod.SUCCESS) {
-		for (var k in ret.result) {
-			form.setFieldValue(k, ret.result[k]);
+	m.execute(param, function(ret) {
+		if (ret.status == ServerMethod.SUCCESS) {
+			for (var k in ret.result) {
+				form.setFieldValue(k, ret.result[k]);
+			}
 		}
-	}
-	return ret;
+	});
 };
 
 
@@ -476,17 +475,16 @@ Field.prototype.isRequired = function(el) {
  * <pre>
  * 対応するフィールドのgetAutocompleteSourceを呼び出し、入力候補を取得します。
  * </pre>
- * @returns {Array} 入力補完データリスト.
+ * @param {res} リスト設定メソッド.
  */
-Field.prototype.getSource = function() {
-	var method = this.getSyncServerMethod("getAutocompleteSource");
-//	var p = this.id;
+Field.prototype.getSource = function(res) {
+	var method = this.getAsyncServerMethod("getAutocompleteSource");
 	var param = this.getAjaxParameter();
-	var ret = method.execute(param);
-	if (ret.status == ServerMethod.SUCCESS) {
-		return ret.result;
-	}
-	return ret.result;
+	method.execute(param, function(ret) {
+		if (ret.status == ServerMethod.SUCCESS) {
+			res(ret.result);
+		}
+	});
 };
 
 /**
@@ -499,8 +497,7 @@ Field.prototype.setAutocomplete = function() {
 			thisField.id = event.target.id;
 		},
 		source:function(req, res) {
-			var list = thisField.getSource();
-			res(list);
+			var list = thisField.getSource(res);
 		},
 		select: function(event, ui) {
 			for (var k in ui.item) {

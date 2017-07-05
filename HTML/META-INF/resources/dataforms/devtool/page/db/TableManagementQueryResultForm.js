@@ -175,13 +175,14 @@ TableManagementQueryResultForm.prototype.setTableEventHandler = function(queryRe
 			this.find("#" + this.selectorEscape(id)).click(function() {
 				var clsname = $(this).html();
 				var qs="className=" + clsname;
-				var method = thisForm.getSyncServerMethod("getTableInfo");
-				var sqllist = method.execute(qs);
-				if (sqllist.status == ServerMethod.SUCCESS) {
-					thisForm.showTableInfo(sqllist.result);
-				}
+				var method = thisForm.getAsyncServerMethod("getTableInfo");
+				method.execute(qs, function(sqllist) {
+					if (sqllist.status == ServerMethod.SUCCESS) {
+						thisForm.showTableInfo(sqllist.result);
+					}
+				});
 			});
-			var sid = "queryResult[" + i + "].statusVal";
+//			var sid = "queryResult[" + i + "].statusVal";
 		}
 		this.find("[name='checkedClass']").each(function() {
 			$(this).click(function() {

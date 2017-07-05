@@ -25,9 +25,9 @@ TableInfoForm.prototype.attach = function() {
 	this.find("#updateTableButton").click(function() {
 		thisForm.updateTable();
 	});
-	this.find("#DataButton").click(function() {
+/*	this.find("#DataButton").click(function() {
 		thisForm.importData();
-	});
+	});*/
 	this.find("#dropTableButton").click(function() {
 		thisForm.dropTable();
 	});
@@ -75,12 +75,13 @@ TableInfoForm.prototype.initTable = function() {
 	currentPage.confirm(systemName, MessagesUtil.getMessage("message.initTableConfirm"), function() {
 		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = thisForm.getSyncServerMethod("initTable");
-		var result = method.execute(p);
-		if (result.status == ServerMethod.SUCCESS) {
-			thisForm.setFormData(result.result);
-			thisForm.updateTableInfo(result.result);
-		}
+		var method = thisForm.getAsyncServerMethod("initTable");
+		method.execute(p, function(result) {
+			if (result.status == ServerMethod.SUCCESS) {
+				thisForm.setFormData(result.result);
+				thisForm.updateTableInfo(result.result);
+			}
+		});
 	});
 };
 
@@ -93,12 +94,13 @@ TableInfoForm.prototype.dropTable = function() {
 	currentPage.confirm(systemName, MessagesUtil.getMessage("message.dropTableConfirm"), function() {
 		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = thisForm.getSyncServerMethod("dropTable");
-		var result = method.execute(p);
-		if (result.status == ServerMethod.SUCCESS) {
-			thisForm.setFormData(result.result);
-			thisForm.updateTableInfo(result.result);
-		}
+		var method = thisForm.getAsyncServerMethod("dropTable");
+		method.execute(p, function(result) {
+			if (result.status == ServerMethod.SUCCESS) {
+				thisForm.setFormData(result.result);
+				thisForm.updateTableInfo(result.result);
+			}
+		});
 	});
 };
 
@@ -111,42 +113,48 @@ TableInfoForm.prototype.updateTable = function() {
 	currentPage.confirm(systemName, MessagesUtil.getMessage("message.updateTableConfirm"), function() {
 		var clsname = thisForm.find("#className").html();
 		var p = "className=" + clsname;
-		var method = thisForm.getSyncServerMethod("updateTable");
-		var result = method.execute(p);
-		if (result.status == ServerMethod.SUCCESS) {
-			thisForm.setFormData(result.result);
-			thisForm.updateTableInfo(result.result);
-		}
+		var method = thisForm.getAsyncServerMethod("updateTable");
+		method.execute(p, function(result) {
+			if (result.status == ServerMethod.SUCCESS) {
+				thisForm.setFormData(result.result);
+				thisForm.updateTableInfo(result.result);
+			}
+		});
 	});
 };
 
 /**
  * データをエクスポートします。
  */
+/*
 TableInfoForm.prototype.exportData = function() {
 	var clsname = this.find("#className").html();
 	var p = "className=" + clsname;
-	var method = this.getSyncServerMethod("exportData");
-	var result = method.execute(p);
-	if (result.status == ServerMethod.SUCCESS) {
-		this.setFormData(result.result);
-		this.updateTableInfo(result.result);
-		var path = result.result.exportDataPath;
-		var systemName = MessagesUtil.getMessage("message.systemname");
-		currentpage.alert(MessagesUtil.getMessage(systemname, "message.exportInitialDataResult", path));
-	}
+	var method = this.getAsyncServerMethod("exportData");
+	method.execute(p, function(result) {
+		if (result.status == ServerMethod.SUCCESS) {
+			this.setFormData(result.result);
+			this.updateTableInfo(result.result);
+			var path = result.result.exportDataPath;
+			var systemName = MessagesUtil.getMessage("message.systemname");
+			currentpage.alert(MessagesUtil.getMessage(systemname, "message.exportInitialDataResult", path));
+		}
+	});
 };
+*/
 
 /**
  * データをインポートします。
  */
+/*
 TableInfoForm.prototype.importData = function() {
 	var clsname = this.find("#className").html();
 	var p = "className=" + clsname;
-	var method = this.getSyncServerMethod("importData");
-	var result = method.execute(p);
-	if (result.status == ServerMethod.SUCCESS) {
-		this.setFormData(result.result);
-		this.updateTableInfo(result.result);
-	}
-};
+	var method = this.getAsyncServerMethod("importData");
+	method.execute(p, function(result) {
+		if (result.status == ServerMethod.SUCCESS) {
+			this.setFormData(result.result);
+			this.updateTableInfo(result.result);
+		}
+	});
+};*/

@@ -100,8 +100,8 @@ StreamingField.prototype.deleteTempFile = function() {
 	var player = this.parent.find("#" + this.selectorEscape(playerid));
 	var key = player.attr("data-key");
 	logger.log("key=" + key);
-	var m = this.getSyncServerMethod("deleteTempFile");
-	m.execute(key);
+	var m = this.getAsyncServerMethod("deleteTempFile");
+	m.execute(key, function(ret) {});
 };
 
 /**

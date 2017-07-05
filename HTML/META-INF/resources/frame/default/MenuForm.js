@@ -12,11 +12,13 @@ MenuForm.prototype.attach = function() {
  * メニュー項目を更新する.
  */
 MenuForm.prototype.update = function() {
-	var method = this.getSyncServerMethod("getMenu");
-	var ret = method.execute();
-	if (ret.status == ServerMethod.SUCCESS) {
-		this.menu.menuGroupList = ret.result.menuGroupList;
-		this.menu.update();
-	}
+	var thisForm = this;
+	var method = this.getAsyncServerMethod("getMenu");
+	method.execute("", function(ret) {
+		if (ret.status == ServerMethod.SUCCESS) {
+			thisForm.menu.menuGroupList = ret.result.menuGroupList;
+			thisForm.menu.update();
+		}
+	});
 };
 

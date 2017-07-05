@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dataforms.app.field.user.LoginIdField;
+import dataforms.app.field.user.UserNameField;
 import dataforms.dao.Table;
 import dataforms.field.common.BlobStoreFileField;
 import dataforms.field.common.CharSingleSelectField;
@@ -122,6 +124,10 @@ public class AllTypeTable extends Table {
 		this.addField(new FolderStoreFileField("uploadFileData")).setComment("添付ファイル");
 
 		this.addField(new ClobField("clobField")).setComment("CLOB");
+		
+		this.addField(new LoginIdField());
+		this.addField(new UserNameField());
+		
 		this.addField(new DeleteFlagField());
 		this.addUpdateInfoFields();
 	}
