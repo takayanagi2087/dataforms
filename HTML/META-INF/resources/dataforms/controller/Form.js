@@ -125,18 +125,14 @@ Form.prototype.init = function() {
  */
 Form.prototype.attach = function() {
 	if (this.htmlPath != null) {
-		var getParts = new SyncServerMethod("getParts");
-		var result = getParts.execute("parts=" + escape(this.htmlPath));
-		if (result.status == ServerMethod.SUCCESS) {
-			var fhtml = $("<div>" + result.result + "</div>").find("form").html();
-			var obj = this.get();
-			if (obj.size() !=0) {
-				this.get().html(fhtml);
-			} else {
-				obj = $("#" + this.selectorEscape(this.id));
-				obj.html(fhtml);
-				this.parentDivId = obj.parents("div[id]:first").attr("id");
-			}
+		var fhtml = $("<div>" + this.additionalHtmlText + "</div>").find("form").html();
+		var obj = this.get();
+		if (obj.size() !=0) {
+			this.get().html(fhtml);
+		} else {
+			obj = $("#" + this.selectorEscape(this.id));
+			obj.html(fhtml);
+			this.parentDivId = obj.parents("div[id]:first").attr("id");
 		}
 	} else {
 		var obj = $("#" + this.selectorEscape(this.id));

@@ -38,6 +38,13 @@ public abstract class Dialog extends DataForms {
 		return true;
 	}
 
+	@Override
+	public void init() throws Exception {
+		super.init();
+		String path = this.getViewPath();
+		this.setAdditionalHtml(path + ".html");
+	}
+	
 	/**
 	 * タイトルの取得。
 	 * @return タイトル文字列。
@@ -46,13 +53,12 @@ public abstract class Dialog extends DataForms {
 		try {
 			String path = this.getViewPath();
 			String htmlpath = this.getAppropriatePath(path + ".html", this.getPage().getRequest());
-			String htmltext = this.getWebResource(htmlpath); //FileUtil.readTextFile(htmlpath, DataFormsServlet.getEncoding());
+			String htmltext = this.getWebResource(htmlpath);
 			return this.getHtmlTitle(htmltext);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new ApplicationError(e);
 		}
-//		return null;
 	}
 
 	@Override

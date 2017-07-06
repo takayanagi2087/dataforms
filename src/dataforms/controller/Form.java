@@ -168,6 +168,14 @@ public  class Form extends WebComponent {
 		return this.formDataMap.get(id);
 	}
 
+	@Override
+	public void init() throws Exception {
+		super.init();
+		String htmlPath = this.getHtmlPath();
+		if (htmlPath != null) {
+			this.setAdditionalHtml(htmlPath);
+		}
+	}
 
 	@Override
 	public Map<String, Object> getClassInfo() throws Exception {

@@ -22,14 +22,10 @@ Dialog = createSubclass("Dialog", {width: "auto", height: "auto", resizable : tr
  */
 Dialog.prototype.init = function() {
 	DataForms.prototype.init.call(this);
-	// Dialog用HTMLの読み込み.
-	var getParts = new SyncServerMethod("getParts");
 	var dlgdiv = $('body').find('#' + this.selectorEscape(this.id));
 	if (dlgdiv.length == 0) {
-		var htmlstr = getParts.execute("parts=" + escape(this.htmlPath));
-		if (htmlstr.status == 0) {
-			dlgdiv = $('body').append("<div id='" + this.id + "' style='display:none;'>" + htmlstr.result + "</div>");
-		}
+		var htmlstr = this.additionalHtmlText;
+		dlgdiv = $('body').append("<div id='" + this.id + "' style='display:none;'>" + htmlstr + "</div>");
 	}
 	// ダイアログ中のFormの初期化.
 	this.initForm(this.formMap);
