@@ -1,5 +1,6 @@
 package dataforms.field.common;
 
+import dataforms.controller.Page;
 import dataforms.dao.file.AudioData;
 import dataforms.dao.file.FileObject;
 
@@ -24,6 +25,12 @@ public class AudioField extends StreamingField<AudioData> {
 	 */
 	public AudioField(final String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.setAdditionalHtml(Page.getFramePath() + "/AudioField.html");
 	}
 
 

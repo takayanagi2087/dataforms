@@ -2,6 +2,7 @@ package dataforms.field.common;
 
 import java.util.Map;
 
+import dataforms.controller.Page;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.VideoData;
 
@@ -35,6 +36,12 @@ public class VideoField extends StreamingField<VideoData> {
 	 */
 	public VideoField(final String id) {
 		super(id);
+	}
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.setAdditionalHtml(Page.getFramePath() + "/VideoField.html");
 	}
 
 	/**

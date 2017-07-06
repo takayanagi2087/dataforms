@@ -13,6 +13,7 @@ import dataforms.annotation.WebMethod;
 import dataforms.controller.ApplicationError;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.JsonResponse;
+import dataforms.controller.Page;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
@@ -53,6 +54,12 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 	}
 
 
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.setAdditionalHtml(Page.getFramePath() + "/FileField.html");
+	}
+	
 	/**
 	 * ファイルストアを作成します。
 	 * @return ファイルストア。

@@ -273,6 +273,48 @@ public class WebComponent implements JDBCConnectableObject {
 		return jsclass;
 	}
 
+	
+	/**
+	 * コンポーネント周辺に追加するタグを記録したHTMLファイル。
+	 */
+	private String additionalHtml = null;
+
+	/**
+	 * コンポーネント周辺に追加するタグを記録したHTMLファイルを取得します。
+	 * @return コンポーネント周辺に追加するタグを記録したHTMLファイル。
+	 */
+	public String getAdditionalHtml() {
+		return additionalHtml;
+	}
+
+	/**
+	 * コンポーネント周辺に追加するタグを記録したHTMLファイルを設定します。
+	 * @param additionalHtml コンポーネント周辺に追加するタグを記録したHTMLファイル。
+	 */
+	public void setAdditionalHtml(final String additionalHtml) {
+		this.additionalHtml = additionalHtml;
+	}
+
+	/**
+	 * 追加HTMLタグを取得します。
+	 * @return 追加HTMLタグの文字列。
+	 * @throws Exception 例外。
+	 */
+	private String getAdditionalHtmlText() throws Exception {
+		if (this.additionalHtml != null) {
+			String htmlpath = this.getAppropriatePath(this.additionalHtml, this.getPage().getRequest());
+			String htmltext = this.getWebResource(htmlpath); // FileUtil.readTextFile(htmlpath,
+																// DataFormsServlet.getEncoding());
+			if (htmltext != null) {
+				htmltext = this.getHtmlBody(htmltext);
+			}
+			return htmltext;
+		} else {
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * TODO:メソッド名が適切てないので変更を検討する。
 	 * 
@@ -293,6 +335,10 @@ public class WebComponent implements JDBCConnectableObject {
 		String jspath = this.getScriptPath();
 		obj.put("jsPath", jspath);
 		obj.put("jsClass", this.getJsClass());
+		String additionalHtmlText = this.getAdditionalHtmlText(); 
+		if (additionalHtmlText != null) {
+			obj.put("additionalHtmlText", additionalHtmlText);
+		}
 		return obj;
 	}
 
@@ -667,4 +713,73 @@ public class WebComponent implements JDBCConnectableObject {
 		String text = new String(FileUtil.readInputStream(is), DataFormsServlet.getEncoding());
 		return text;
 	}
+	
+	/**
+	 * 言語に応じた適切なファイルパスを検索検索します。
+	 * <pre>
+     * ブラウザの言語に応じた適切なファイルのPathを取得します。
+     * pathに/home/hoge.htmlが指定された場合、以下のような優先順位でパスを選択します。
+     * 言語がjaの場合以下の順序でファイルの存在を確認し、最初に見つけたファイルのパスを返します。
+     * 1. /home/hoge_ja.html
+     * 2. /home/hoge.html
+     * </pre>
+     * @param path パス。
+     * @param req HTTP要求情報。
+     * @return html等のパス。
+     * @throws Exception 例外。
+	 */
+	protected String getAppropriateLangPath(final String path, final HttpServletRequest req) throws Exception {
+ 		String spath = path;
+ 		if (spath.charAt(0) != '/') {
+ 			spath = "/" + spath;
+ 		}
+		String lang = req.getLocale().getLanguage();
+		String ext = FileUtil.getExtention(spath);
+    	String p = spath.replaceAll("\\." + ext + "$", "_" + lang + "." + ext);
+    	if (StringUtil.isBlank(this.getWebResource(p))) {
+        	p = spath.replaceAll("\\." + ext + "$", "." + ext);
+           	if (StringUtil.isBlank(this.getWebResource(p))) {
+            	spath = null;
+        	} else {
+        		spath = p;
+        	}
+    	} else {
+    		spath = p;
+    	}
+   		return spath;
+	}
+	
+	
+    /**
+     * リクエストに応じた適切なファイルpathを取得します。
+     * <pre>
+     * ブラウザの言語、ユーザエージェントに応じた適切なファイルのPathを取得します。
+     * pathに/home/hoge.htmlが指定された場合、以下のような優先順位でパスを選択します。
+     * UserAgentが携帯電話で言語がjaの場合以下の順序でファイルの存在を確認し、最初に見つけたファイルのパスを返します。
+     * 1. /home/hoge_phone_ja.html
+     * 2. /home/hoge_phone.html
+     * 3. /home/hoge_ja.html
+     * 4. /home/hoge.html
+     * </pre>
+     * @param path パス。
+     * @param req HTTP要求情報。
+     * @return html等のパス。
+     * @throws Exception 例外。
+     */
+	public String getAppropriatePath(final String path, final HttpServletRequest req) throws Exception {
+		String ua = req.getHeader("user-agent");
+//		log.debug("user-agent:" + ua);
+		String ret = null;
+	    if (ua.indexOf("iPhone") > 0 || ua.indexOf("iPod") > 0 || ua.indexOf("Android") > 0 && ua.indexOf("Mobile") > 0) {
+			String ext = FileUtil.getExtention(path);
+	    	String htmlpath = path.replaceAll("\\." + ext + "$", "_phone." + ext);
+			ret = getAppropriateLangPath(htmlpath, req);
+	    }
+	    if (ret == null) {
+			ret = getAppropriateLangPath(path, req);
+	    }
+	    return ret;
+	}
+
+
 }

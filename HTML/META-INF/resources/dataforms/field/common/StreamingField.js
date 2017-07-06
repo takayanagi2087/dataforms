@@ -64,19 +64,16 @@ StreamingField.prototype.delFile = function(ck) {
  * @param comp ファイルフィールド。
  */
 StreamingField.prototype.addElements = function(comp) {
-	var getParts = new SyncServerMethod("getParts");
-	var htmlstr = getParts.execute("parts=" + escape(currentPage.framePath + "/" + this.parts));
-	if (htmlstr.status == ServerMethod.SUCCESS) {
-		var html = htmlstr.result.replace(/\$\{fieldId\}/g, this.id);
-		logger.log("htmlstr=" + html);
-		var tag = comp.prop("tagName");
-		var type = comp.prop("type");
-		if ("INPUT" == tag && type == "file") {
-			comp.after(html);
-		} else if (tag == "DIV") {
-			comp.html(html);
-			this.hideDelCheckbox();
-		}
+	var htmlstr = this.additionalHtmlText;
+	var html = htmlstr.replace(/\$\{fieldId\}/g, this.id);
+	logger.log("htmlstr=" + html);
+	var tag = comp.prop("tagName");
+	var type = comp.prop("type");
+	if ("INPUT" == tag && type == "file") {
+		comp.after(html);
+	} else if (tag == "DIV") {
+		comp.html(html);
+		this.hideDelCheckbox();
 	}
 };
 

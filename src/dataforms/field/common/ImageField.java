@@ -5,6 +5,7 @@ import java.util.Map;
 
 import dataforms.annotation.WebMethod;
 import dataforms.controller.ImageResponse;
+import dataforms.controller.Page;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
 import dataforms.dao.file.ImageData;
@@ -41,6 +42,13 @@ public class ImageField extends FileField<ImageData> {
 		super(id);
 	}
 
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.setAdditionalHtml(Page.getFramePath() + "/ImageField.html");
+	}
+	
 	/**
 	 * サムネイル幅を取得します。
 	 * @return サムネイル幅。

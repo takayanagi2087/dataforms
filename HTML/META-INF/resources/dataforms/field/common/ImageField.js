@@ -123,23 +123,18 @@ ImageField.prototype.showImage = function(img) {
  * @param comp ファイルフィールド。
  */
 ImageField.prototype.addElements = function(comp) {
-	var getParts = new SyncServerMethod("getParts");
-	var htmlstr = getParts.execute("parts=" + escape(currentPage.framePath + "/ImageField.html"));
-	if (htmlstr.status == ServerMethod.SUCCESS) {
-		var html = htmlstr.result.replace(/\$\{fieldId\}/g, this.id);
-		var html = html.replace(/\$\{width\}/g, this.thumbnailWidth);
-		var html = html.replace(/\$\{height\}/g, this.thumbnailHeight);
-		logger.log("htmlstr=" + html);
-		var tag = comp.prop("tagName");
-		var type = comp.prop("type");
-		if ("INPUT" == tag && type == "file") {
-			comp.after(html);
-		} else if (tag == "DIV") {
-			comp.html(html);
-			//this.parent.find("#" + this.selectorEscape(this.id + "_ck")).hide();
-			//this.parent.find("label[for='" + this.selectorEscape(this.id + "_ck") + "']").hide();
-			this.hideDelCheckbox();
-		}
+	var htmlstr = this.additionalHtmlText;
+	var html = htmlstr.replace(/\$\{fieldId\}/g, this.id);
+	var html = html.replace(/\$\{width\}/g, this.thumbnailWidth);
+	var html = html.replace(/\$\{height\}/g, this.thumbnailHeight);
+	logger.log("htmlstr=" + html);
+	var tag = comp.prop("tagName");
+	var type = comp.prop("type");
+	if ("INPUT" == tag && type == "file") {
+		comp.after(html);
+	} else if (tag == "DIV") {
+		comp.html(html);
+		this.hideDelCheckbox();
 	}
 };
 
