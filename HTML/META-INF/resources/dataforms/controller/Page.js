@@ -146,34 +146,23 @@ Page.prototype.wrapFrame = function(frame, frameMainDiv, mainDiv) {
  * </pre>
  */
 Page.prototype.layout = function() {
-	var getParts = this.getSyncServerMethod("getParts");
-	var ret = getParts.execute("parts=" + this.framePath + "/Frame.html");
-	if (ret.status == ServerMethod.SUCCESS) {
-		var frame = $("<div id=\"rootDiv\">" + ret.result + "</div>");
-		this.wrapFrame(frame, frame.find("#mainDiv"), $("#mainDiv"));
-		logger.log("frame=" + frame.html());
-	}
-	var getHead = this.getSyncServerMethod("getHead");
-	var hret = getHead.execute("parts=" + this.framePath + "/Frame.html");
-	if (hret.status == ServerMethod.SUCCESS) {
-		var head = $("<div>" + hret.result + "</div>");
-		// ライブラリと競合するタグを削除
-		head.find("meta[charset='UTF-8']").remove();
-		head.find("meta[charset='utf-8']").remove();
-		head.find("link[rel='stylesheet'][href='Frame.css']").remove();
-		head.find("link[rel='stylesheet'][href='FramePC.css']").remove();
-		head.find("link[rel='stylesheet'][href='FrameTB.css']").remove();
-		head.find("link[rel='stylesheet'][href='FrameSP.css']").remove();
-		head.find("title").remove();
-		// /frame/のパス調整。
-		head.find("link[rel='stylesheet'][href*='/frame/']").each(function() {
-			var href = $(this).attr("href");
-			$(this).attr("href", href.replace(/^.*\/frame\//, currentPage.contextPath + "/frame/"));
-		});
-
-		$("head").append(head.html());
-	}
-
+	var frame = $("<div id=\"rootDiv\">" + this.frameBody + "</div>");
+	this.wrapFrame(frame, frame.find("#mainDiv"), $("#mainDiv"));
+	var head = $("<div>" + this.frameHead + "</div>");
+	// ライブラリと競合するタグを削除
+	head.find("meta[charset='UTF-8']").remove();
+	head.find("meta[charset='utf-8']").remove();
+	head.find("link[rel='stylesheet'][href='Frame.css']").remove();
+	head.find("link[rel='stylesheet'][href='FramePC.css']").remove();
+	head.find("link[rel='stylesheet'][href='FrameTB.css']").remove();
+	head.find("link[rel='stylesheet'][href='FrameSP.css']").remove();
+	head.find("title").remove();
+	// /frame/のパス調整。
+	head.find("link[rel='stylesheet'][href*='/frame/']").each(function() {
+		var href = $(this).attr("href");
+		$(this).attr("href", href.replace(/^.*\/frame\//, currentPage.contextPath + "/frame/"));
+	});
+	$("head").append(head.html());
 	var systemName = MessagesUtil.getMessage("message.systemname");
 	if (systemName != null) {
 		$('#systemName').html(systemName);
@@ -314,70 +303,77 @@ Page.prototype.init = function() {
 	this.configureLogger();
 	logger.info("language=" + this.getLanguage());
 	$.datepicker.setDefaults($.datepicker.regional[this.getLanguage()]);
-	//メッセージユーティリティの初期化.
-	MessagesUtil.init();
 
+	var thisPage = this;
+	thisPage.deferred = new $.Deferred;
 	// ページの初期化.
-	var method = this.getSyncServerMethod("getPageInfo");
-	var result = method.execute();
-	for (var key in result.result) {
-		this[key] = result.result[key];
-	}
+	var method = new AsyncServerMethod("getPageInfo");
+	method.execute("", function(result) {
+		for (var key in result.result) {
+			thisPage[key] = result.result[key];
+		}
+		//メッセージユーティリティの初期化.
+		MessagesUtil.init(thisPage.messageMap);
+		
+		thisPage.setCookie("cookiecheck", "true");
+		var cookiecheck = thisPage.getCookie("cookiecheck");
+		logger.log("cookiecheck=" + cookiecheck);
+		if (cookiecheck != "true") {
+			alert(MessagesUtil.getMessage("error.cookienotsupport"));
+			window.history.back();
+		}
+		thisPage.setCookie("cookiecheck", "");
 
-	this.setCookie("cookiecheck", "true");
-	var cookiecheck = this.getCookie("cookiecheck");
-	logger.log("cookiecheck=" + cookiecheck);
-	if (cookiecheck != "true") {
-		alert(MessagesUtil.getMessage("error.cookienotsupport"));
-		window.history.back();
-	}
-	this.setCookie("cookiecheck", "");
+		thisPage.configureLogLevel();
+		thisPage.configureBrowserBackButton();
 
-	this.configureLogLevel();
-	this.configureBrowserBackButton();
-
-	if (!this.noFrame) {
-		this.layout();
-	}
-	// 各フォームの初期化
-	this.initForm(this.formMap);
-	// ダイアログの初期化
-	this.initDialog(this.dialogMap);
-	// バージョン情報などを表示。
-	$("#dataformsVersion").html(this.dataformsVersion);
-//	$("#dataformsVendor").html(this.dataformsVendor);
+		if (!thisPage.noFrame) {
+			thisPage.layout();
+		}
+		// 各フォームの初期化
+		thisPage.initForm(thisPage.formMap);
+		// ダイアログの初期化
+		thisPage.initDialog(thisPage.dialogMap);
+		// バージョン情報などを表示。
+		$("#dataformsVersion").html(thisPage.dataformsVersion);
+//		$("#dataformsVendor").html(this.dataformsVendor);
+//		thisPage.attach0();
+		thisPage.deferred.resolve();
+	});
+	thisPage.promise =  thisPage.deferred.promise();
 };
 
 /**
  * エレメントとの対応付けを行います。
  */
 Page.prototype.attach = function() {
-	DataForms.prototype.attach.call(this);
-	$("#showMenuButton").click(function() {
-		var menu = $("#menuDiv");
-		if (menu.size() == 0) {
-			// leftbarDivの対応は互換性維持のため
-			$("#leftbarDiv").toggle("blind");
-		} else {
-			menu.toggle("blind");
-		}
-		return false;
-	});
-	$("body").click(function() {
-		if ($("#showMenuButton").is(":visible")) {
+	var thisPage = this;
+	thisPage.promise.done(function() {
+		DataForms.prototype.attach.call(thisPage);
+		$("#showMenuButton").click(function() {
 			var menu = $("#menuDiv");
-			if (menu.is(":visible")) {
+			if (menu.size() == 0) {
+				// leftbarDivの対応は互換性維持のため
+				$("#leftbarDiv").toggle("blind");
+			} else {
 				menu.toggle("blind");
 			}
-		}
-		return false;
+			return false;
+		});
+		$("body").click(function() {
+			if ($("#showMenuButton").is(":visible")) {
+				var menu = $("#menuDiv");
+				if (menu.is(":visible")) {
+					menu.toggle("blind");
+				}
+			}
+		});
+		$(window).resize(function() {
+			thisPage.onResize();
+		});
 	});
-	var thisPage = this;
-	$(window).resize(function() {
-		thisPage.onResize();
-	});
-
 };
+
 
 /**
  * リサイズ時の処理を行います。

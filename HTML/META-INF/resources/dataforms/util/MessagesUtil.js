@@ -23,10 +23,10 @@ MessagesUtil.messageMap = null;
 
 /**
  * ClientMessages.properties, &lt;Page&gt;.propertiesに指定されたメッセージを読み込みます。
+ * @param {Object} メッセージマップ。
  */
-MessagesUtil.init = function() {
-	var getmsg = new SyncServerMethod("getClientMessages");
-	MessagesUtil.messageMap = getmsg.execute().result;
+MessagesUtil.init = function(map) {
+	MessagesUtil.messageMap = map;
 };
 
 /**

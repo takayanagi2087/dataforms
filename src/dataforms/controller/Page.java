@@ -360,7 +360,7 @@ public class Page extends DataForms {
 			String jspath = this.getAppropriatePath(js, this.getRequest());
 			if (jspath != null) {
 				String t = this.getLastUpdate(jspath);
-				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\"></script>\n");
+				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\" charset=\"utf-8\"></script>\n");
 			}
 		}
 		List<String> appScripts = this.getAppScript();
@@ -369,7 +369,7 @@ public class Page extends DataForms {
 			String jspath = this.getAppropriatePath(js, this.getRequest());
 			if (jspath != null) {
 				String t = this.getLastUpdate(jspath);
-				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\"></script>\n");
+				sb.append("\t\t<script type=\"text/javascript\" src=\"" + context + jspath + "?t=" + t + "\" charset=\"utf-8\"></script>\n");
 			}
 		}
 		return sb.toString();
@@ -665,6 +665,18 @@ public class Page extends DataForms {
 	@Override
 	public Map<String, Object> getClassInfo() throws Exception {
 		Map<String, Object> map = super.getClassInfo();
+		map.put("messageMap", this.getMessageMap());
+		// フレーム情報の設定。
+		if (!this.isNoFrame()) {
+			String htmlpath = this.getAppropriatePath(this.getPage().getPageFramePath() + "/Frame.html", this.getPage().getRequest());
+			String htmltext = this.getWebResource(htmlpath); 
+			if (htmltext != null) {
+				String frameHead = this.getHtmlHead(htmltext);
+				map.put("frameHead", frameHead);
+				String frameBody = this.getHtmlBody(htmltext);
+				map.put("frameBody", frameBody);
+			}
+		}
 		map.put("clientLogLevel", DataFormsServlet.getClientLogLevel());
 		Map<String, Object> dlgmap = new HashMap<String, Object>();
 		for (String key : this.dialogMap.keySet()) {

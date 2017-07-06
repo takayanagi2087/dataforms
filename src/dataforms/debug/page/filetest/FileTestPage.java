@@ -16,4 +16,5 @@ public class FileTestPage extends AdminPage {
 		this.addForm(new FileTestEditForm());
 		this.addDialog(new ImageDialog());
 	}
+	
 }
