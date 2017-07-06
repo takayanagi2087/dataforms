@@ -24,6 +24,7 @@ SideMenu.prototype.attach = function() {
 		$(this).next().slideToggle("fast", function() {
 			thisMenu.setCookie("menuGroup_" + menuGroupId, $(this).is(":visible"));
 		});
+		return false;
 	});
 	menu.find(".sideMenuGroup").each(function() {
 		var menuGroupId = $(this).attr("data-menu-group-id");

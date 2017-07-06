@@ -370,6 +370,7 @@ Page.prototype.attach = function() {
 				menu.toggle("blind");
 			}
 		}
+		return false;
 	});
 	var thisPage = this;
 	$(window).resize(function() {
