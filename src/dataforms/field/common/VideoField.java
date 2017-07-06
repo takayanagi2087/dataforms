@@ -2,7 +2,6 @@ package dataforms.field.common;
 
 import java.util.Map;
 
-import dataforms.controller.Page;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.VideoData;
 
@@ -41,9 +40,14 @@ public class VideoField extends StreamingField<VideoData> {
 	@Override
 	protected void onBind() {
 		super.onBind();
-		this.setAdditionalHtml(Page.getFramePath() + "/VideoField.html");
 	}
 
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setAdditionalHtml(this.getPage().getPageFramePath() + "/VideoField.html");
+	}
+	
 	/**
 	 * ビデオプレーヤー幅を取得します。
 	 * @return ビデオプレーヤー幅。

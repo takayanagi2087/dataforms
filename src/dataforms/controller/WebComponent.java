@@ -302,9 +302,9 @@ public class WebComponent implements JDBCConnectableObject {
 	 */
 	private String getAdditionalHtmlText() throws Exception {
 		if (this.additionalHtml != null) {
+			log.debug("additionalHtml=" + this.additionalHtml);
 			String htmlpath = this.getAppropriatePath(this.additionalHtml, this.getPage().getRequest());
-			String htmltext = this.getWebResource(htmlpath); // FileUtil.readTextFile(htmlpath,
-																// DataFormsServlet.getEncoding());
+			String htmltext = this.getWebResource(htmlpath); 
 			if (htmltext != null) {
 				htmltext = this.getHtmlBody(htmltext);
 			}

@@ -7,7 +7,7 @@
  * 動画ファイルアップロードフィールドクラス。
  * @extends FileField
  */
-VideoField = createSubclass("VideoField", {parts: "VideoField.html"}, "StreamingField");
+VideoField = createSubclass("VideoField", {}, "StreamingField");
 
 
 /**

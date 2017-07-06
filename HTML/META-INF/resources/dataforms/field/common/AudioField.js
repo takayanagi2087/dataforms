@@ -7,7 +7,7 @@
  * 音声ファイルアップロードフィールドクラス。
  * @extends StreamingField
  */
-AudioField = createSubclass("AudioField", {parts: "AudioField.html"}, "StreamingField");
+AudioField = createSubclass("AudioField", {}, "StreamingField");
 
 
 /**

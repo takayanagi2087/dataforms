@@ -19,17 +19,11 @@ PageScrollHtmlTable.prototype.attach = function() {
 	this.sortOrder = "";
 	var thisTable = this;
 	HtmlTable.prototype.attach.call(this);
-	var m = this.getAsyncServerMethod("getPageController");
-	m.execute("", function (ret) {
-		if (ret.status == ServerMethod.SUCCESS) {
-			thisTable.get().before(ret.result);
-			thisTable.parent.find(":input").each(function() {
-				if ($(this).attr("name") == null) {
-					$(this).attr("name", $(this).attr("id"));
-				}
-			});
+	thisTable.get().before(this.additionalHtmlText);
+	thisTable.parent.find(":input").each(function() {
+		if ($(this).attr("name") == null) {
+			$(this).attr("name", $(this).attr("id"));
 		}
-		
 	});
 	this.sortOrder = this.getSortOrder();
 };

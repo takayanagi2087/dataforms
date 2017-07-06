@@ -5,7 +5,6 @@ import java.util.Map;
 
 import dataforms.annotation.WebMethod;
 import dataforms.controller.ImageResponse;
-import dataforms.controller.Page;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
 import dataforms.dao.file.ImageData;
@@ -46,7 +45,12 @@ public class ImageField extends FileField<ImageData> {
 	@Override
 	protected void onBind() {
 		super.onBind();
-		this.setAdditionalHtml(Page.getFramePath() + "/ImageField.html");
+	}
+	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setAdditionalHtml(this.getPage().getPageFramePath() + "/ImageField.html");
 	}
 	
 	/**
