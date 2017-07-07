@@ -102,8 +102,8 @@ public class  NumericValidator extends FieldValidator {
 	 * @throws Exception 例外。
 	 */
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> info = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> info = super.getProperties();
 		info.put("precision", this.getPrecision());
 		info.put("scale", this.getScale());
 		return info;

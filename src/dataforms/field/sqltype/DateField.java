@@ -98,8 +98,8 @@ public class DateField extends DateTimeField<Date> implements SqlDate {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("datepickerEnabled", this.datepickerEnabled);
 		return ret;
 	}

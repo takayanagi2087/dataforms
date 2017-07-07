@@ -210,16 +210,16 @@ public class MenuForm extends Form {
 	public JsonResponse getMenu(final Map<String, Object> param) throws Exception {
 		//List<Map<String, Object>> pageList = this.getMenuList();
 		this.menu.setPageList(this.getMenuList());
-    	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.menu.getClassInfo());
+    	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.menu.getProperties());
     	return ret;
     }
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret =  super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret =  super.getProperties();
 		Menu menu = this.getMenu();
-		ret.put(menu.getId(), menu.getClassInfo());
+		ret.put(menu.getId(), menu.getProperties());
 		return ret;
 	}
 

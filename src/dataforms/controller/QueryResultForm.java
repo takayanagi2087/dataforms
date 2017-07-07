@@ -67,8 +67,8 @@ public abstract class QueryResultForm extends Form {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("pkFieldList", this.pkFieldList);
 		return ret;
 	}

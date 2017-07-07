@@ -62,8 +62,8 @@ public abstract class Dialog extends DataForms {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map =  super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map =  super.getProperties();
 		map.put("title", this.getTitle());
 		return map;
 	}

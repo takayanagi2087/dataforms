@@ -114,8 +114,8 @@ public class ZipCodeField extends VarcharField {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> m = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> m = super.getProperties();
 		m.put("addressFieldId", this.getAddressFieldId());
 		m.put("addressFieldId2", this.getAddressFieldId2());
 		m.put("addressFieldId3", this.getAddressFieldId3());

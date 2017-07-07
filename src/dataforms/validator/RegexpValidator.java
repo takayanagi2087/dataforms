@@ -68,8 +68,8 @@ public class RegexpValidator extends FieldValidator {
 	}
 
 	@Override
-	public final Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public final Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		map.put("pattern", this.pattern);
 		return map;
 	}

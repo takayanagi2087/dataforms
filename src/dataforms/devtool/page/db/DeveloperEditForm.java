@@ -69,8 +69,8 @@ public class DeveloperEditForm extends EditForm {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		boolean exists = this.userInfoDataExists();
 		log.debug("userInfoDataExists=" + exists);
 		ret.put("userInfoDataExists", exists);

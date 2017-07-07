@@ -83,8 +83,8 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("optionList", this.optionList);
 		return ret;
 	}

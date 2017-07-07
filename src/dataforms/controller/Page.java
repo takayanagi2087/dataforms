@@ -663,8 +663,8 @@ public class Page extends DataForms {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		map.put("messageMap", this.getMessageMap());
 		// フレーム情報の設定。
 		if (!this.isNoFrame()) {
@@ -680,7 +680,7 @@ public class Page extends DataForms {
 		map.put("clientLogLevel", DataFormsServlet.getClientLogLevel());
 		Map<String, Object> dlgmap = new HashMap<String, Object>();
 		for (String key : this.dialogMap.keySet()) {
-			dlgmap.put(key, this.dialogMap.get(key).getClassInfo());
+			dlgmap.put(key, this.dialogMap.get(key).getProperties());
 		}
 		map.put("dialogMap", dlgmap);
 		map.put("contextPath", this.getRequest().getContextPath());
@@ -795,7 +795,7 @@ public class Page extends DataForms {
 	public JsonResponse getPageInfo(final Map<String, Object> params) throws Exception {
 		this.methodStartLog(log, params);
 		this.init();
-		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.getClassInfo());
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.getProperties());
 		this.methodFinishLog(log, ret);
 		return ret;
 	}

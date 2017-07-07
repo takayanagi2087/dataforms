@@ -119,8 +119,8 @@ public abstract class NumberField<TYPE> extends Field<TYPE> {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret =  super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret =  super.getProperties();
 		ret.put("precision", this.precision);
 		ret.put("scale", this.scale);
 		ret.put("commaFormat", this.commaFormat);

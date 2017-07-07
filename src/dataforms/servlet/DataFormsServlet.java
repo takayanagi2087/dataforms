@@ -254,11 +254,12 @@ public class DataFormsServlet extends HttpServlet {
 
 
 
-    /**
-     * WEBリソースアクセス用のURLを取得します。
-     * @return WEBリソースアクセス用のURL。
-     */
-    public static String getWebResourceUrl() {
+	/**
+	 * WEBリソースアクセス用のURLを取得します。
+	 * 
+	 * @return WEBリソースアクセス用のURL。
+	 */
+	public static String getWebResourceUrl() {
 		return webResourceUrl;
 	}
 
@@ -363,30 +364,7 @@ public class DataFormsServlet extends HttpServlet {
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
 
-		String clientMessages = this.getServletContext().getInitParameter("client-messages");
-		if (clientMessages == null) {
-			clientMessages = "/frame/messages/ClientMessages";
-		}
-		String appClientMessages = this.getServletContext().getInitParameter("app-client-messages");
-		if (appClientMessages == null) {
-			appClientMessages = "/frame/messages/AppClientMessages";
-		}
-		String messages = this.getServletContext().getInitParameter("messages");
-		if (messages == null) {
-			messages = "/frame/messages/Messages";
-		}
-		String appMessages = this.getServletContext().getInitParameter("app-messages");
-		if (appMessages == null) {
-			appMessages = "/frame/messages/AppMessages";
-		}
-		log.info("init:clientMessages=" + clientMessages);
-		log.info("init:appClientMessages=" + appClientMessages);
-		log.info("init:messages=" + messages);
-		log.info("init:appMessages=" + appMessages);
-		MessagesUtil.setClientMessagesName(clientMessages);
-		MessagesUtil.setAppClientMessagesName(appClientMessages);
-		MessagesUtil.setMessagesName(messages);
-		MessagesUtil.setAppMessagesName(appMessages);
+		this.getMessageProperties();
 		//
 		String topPage = this.getServletContext().getInitParameter("top-page");
 		if (!StringUtil.isBlank(topPage)) {
@@ -423,6 +401,36 @@ public class DataFormsServlet extends HttpServlet {
 		// DB存在チェック.
 		this.checkDbConnection();
 
+	}
+
+	/**
+	 * メッセージプロパティの設定情報を取得します。
+	 */
+	private void getMessageProperties() {
+		String clientMessages = this.getServletContext().getInitParameter("client-messages");
+		if (clientMessages == null) {
+			clientMessages = "/frame/messages/ClientMessages";
+		}
+		String appClientMessages = this.getServletContext().getInitParameter("app-client-messages");
+		if (appClientMessages == null) {
+			appClientMessages = "/frame/messages/AppClientMessages";
+		}
+		String messages = this.getServletContext().getInitParameter("messages");
+		if (messages == null) {
+			messages = "/frame/messages/Messages";
+		}
+		String appMessages = this.getServletContext().getInitParameter("app-messages");
+		if (appMessages == null) {
+			appMessages = "/frame/messages/AppMessages";
+		}
+		log.info("init:clientMessages=" + clientMessages);
+		log.info("init:appClientMessages=" + appClientMessages);
+		log.info("init:messages=" + messages);
+		log.info("init:appMessages=" + appMessages);
+		MessagesUtil.setClientMessagesName(clientMessages);
+		MessagesUtil.setAppClientMessagesName(appClientMessages);
+		MessagesUtil.setMessagesName(messages);
+		MessagesUtil.setAppMessagesName(appMessages);
 	}
 
 	/**

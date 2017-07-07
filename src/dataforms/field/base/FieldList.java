@@ -117,7 +117,7 @@ public class FieldList extends ArrayList<Field<?>> {
 	public List<Map<String, Object>> getFieldListClassInfo() throws Exception {
 		List<Map<String, Object>> fieldList = new ArrayList<Map<String, Object>>();
 		for (Field<?> f : this) {
-			fieldList.add(f.getClassInfo());
+			fieldList.add(f.getProperties());
 		}
 		return fieldList;
 	}

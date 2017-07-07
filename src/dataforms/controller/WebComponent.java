@@ -313,19 +313,29 @@ public class WebComponent implements JDBCConnectableObject {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * 各オブジェクトのプロパティマップを作成します。
+	 * <pre>
+	 * 互換性維持のため残しておきます。
+	 * </pre>
+	 * @return クライアントに渡すプロパティ情報。
+	 * @throws Exception 例外。
+	 * @deprecated getPropertiesに置き換え。
+	 */
+	public Map<String, Object> getClassInfo() throws Exception {
+		return new HashMap<String, Object>();
+	}
 	
 	/**
-	 * TODO:メソッド名が適切てないので変更を検討する。
-	 * 
-	 * クライアントに渡すクラス情報を取得します。
+	 * 各オブジェクトのプロパティマップを作成します。。
 	 * <pre>
 	 * 各クラスの情報をJSON形式で渡すため必要なプロパティのマップを作成します。
 	 * </pre>
-	 * @return クライアントに渡すクラス情報。
+	 * @return クライアントに渡すプロパティ情報。
 	 * @throws Exception 例外。
 	 */
-	public Map<String, Object> getClassInfo() throws Exception {
+	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> obj = new HashMap<String, Object>();
 		if (this.id != null) {
 			obj.put("id", this.id);
@@ -339,6 +349,9 @@ public class WebComponent implements JDBCConnectableObject {
 		if (additionalHtmlText != null) {
 			obj.put("additionalHtmlText", additionalHtmlText);
 		}
+		// 互換性維持のための処理
+		Map<String, Object> oldmap = this.getClassInfo();
+		obj.putAll(oldmap);
 		return obj;
 	}
 

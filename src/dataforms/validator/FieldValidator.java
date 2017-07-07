@@ -103,8 +103,8 @@ public abstract class FieldValidator extends WebComponent {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		map.put("fieldId", this.fieldId);
 		map.put("messageKey", this.messageKey);
 		return map;

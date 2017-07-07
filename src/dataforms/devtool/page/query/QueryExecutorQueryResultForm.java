@@ -86,7 +86,7 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 			}
 		}
 		this.htmlTable.getFieldList().getOrderByFieldList(sortOrder);
-		ret.put("htmlTable", htmlTable.getClassInfo());
+		ret.put("htmlTable", htmlTable.getProperties());
 		log.debug("result=" + JSON.encode(ret, true));
 		return ret;
 	}
@@ -130,7 +130,7 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 			Map<String, Object> r = (Map<String, Object>) ret.getResult();
 			r.put("headerHtml", this.getHeaderHtml());
 			r.put("dataHtml", this.getDataHtml());
-			r.put("htmlTable", this.htmlTable.getClassInfo());
+			r.put("htmlTable", this.htmlTable.getProperties());
 			return ret;
 		} catch (Exception e) {
 			Map<String, Object> einfo = new HashMap<String, Object>();

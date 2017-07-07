@@ -106,8 +106,8 @@ public class FunctionSelectField extends SingleSelectField<Long> {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("packageFieldId", this.getPackageFieldId());
 		ret.put("packageOption", this.getPackageOption());
 		return ret;

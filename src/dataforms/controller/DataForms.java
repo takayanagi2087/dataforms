@@ -186,7 +186,7 @@ public class DataForms extends WebComponent {
 		for (String key : keyset) {
 			WebComponent f = this.getFormMap().get(key);
 			if (f instanceof Form) {
-				map.put(key, f.getClassInfo());
+				map.put(key, f.getProperties());
 			}
 		}
 		return map;
@@ -198,8 +198,8 @@ public class DataForms extends WebComponent {
 	 *
 	 */
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		map.put("formMap", this.getFormInfo());
 		return map;
 	}

@@ -605,12 +605,12 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		if (this.validatorList != null) {
 			List<Map<String, Object>> vlist = new ArrayList<Map<String, Object>>();
 			for (FieldValidator f : this.validatorList) {
-				vlist.add(f.getClassInfo());
+				vlist.add(f.getProperties());
 			}
 			map.put("validatorList", vlist);
 		}

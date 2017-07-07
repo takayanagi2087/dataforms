@@ -43,8 +43,8 @@ public class FileSizeValidator extends FieldValidator {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("maxFileSize", this.getMaxFileSize());
 		return ret;
 	}

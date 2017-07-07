@@ -178,13 +178,13 @@ public  class Form extends WebComponent {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> map = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> map = super.getProperties();
 		map.put("clientValidation", DataFormsServlet.isClientValidation());
 		map.put("fieldList", this.fieldList.getFieldListClassInfo());
 		List<Map<String, Object>> tlist = new ArrayList<Map<String, Object>>();
 		for (HtmlTable ht : this.htmlTableList) {
-			tlist.add(ht.getClassInfo());
+			tlist.add(ht.getProperties());
 		}
 		map.put("htmlTableList", tlist);
 		map.put("formData", this.convertToClientData(this.formDataMap));

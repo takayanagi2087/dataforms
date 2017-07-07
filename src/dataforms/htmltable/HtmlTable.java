@@ -110,8 +110,8 @@ public class HtmlTable extends WebComponent {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("fieldList", this.fieldList.getFieldListClassInfo());
 		return ret;
 	}

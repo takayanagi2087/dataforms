@@ -150,8 +150,8 @@ public class ImageField extends FileField<ImageData> {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("thumbnailWidth", this.getThumbnailWidth());
 		ret.put("thumbnailHeight", this.getThumbnailHeight());
 		return ret;

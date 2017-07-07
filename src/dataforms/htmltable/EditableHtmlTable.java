@@ -111,8 +111,8 @@ public class EditableHtmlTable extends HtmlTable {
 
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		ret.put("readonly", this.isReadonly());
 		ret.put("sortable", this.isSortable());
 		ret.put("sortableSwitching", this.isSortableSwitching());

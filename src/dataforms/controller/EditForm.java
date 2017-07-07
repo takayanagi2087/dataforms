@@ -86,8 +86,8 @@ public abstract class EditForm extends Form {
 	}
 
 	@Override
-	public Map<String, Object> getClassInfo() throws Exception {
-		Map<String, Object> ret = super.getClassInfo();
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
 		if (this.pkFieldIdList != null) {
 			ret.put("pkFieldIdList", this.pkFieldIdList);
 		}
