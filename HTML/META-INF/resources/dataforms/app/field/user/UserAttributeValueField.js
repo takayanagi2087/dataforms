@@ -25,10 +25,9 @@ UserAttributeValueField.prototype.setValue = function(v) {
 	// この設定処理は選択肢がそろっていないので空振りします。
 	EnumOptionSingleSelectField.prototype.setValue.call(this, v);
 	// 一旦値を保持し、選択肢を取得してから設定します。
-	this.value = v;
 	var tid = this.id.replace("userAttributeValue", "userAttributeType");
 	var type = this.parent.find("#" + this.selectorEscape(tid)).val();
-	this.setUserAttributeType(type);
+	this.setUserAttributeType(type, v);
 }
 
 
@@ -39,14 +38,15 @@ UserAttributeValueField.prototype.setValue = function(v) {
  * </pre>
  * @param {String} type ユーザ属性。
  */
-UserAttributeValueField.prototype.setUserAttributeType = function(type) {
+UserAttributeValueField.prototype.setUserAttributeType = function(type, v) {
 	var thisField = this;
 	var m = this.getAsyncServerMethod("getTypeOption");
 	var opt = m.execute("type=" + type, function(opt) {
 		if (opt.status == ServerMethod.SUCCESS) {
 			thisField.setOptionList(opt.result);
-			// setValueから呼ばれた場合、保持した値を設定します。
-			thisField.get().val(thisField.value);
+			if (v != null) {
+				EnumOptionSingleSelectField.prototype.setValue.call(thisField, v);
+			}
 		}
 	});
 };

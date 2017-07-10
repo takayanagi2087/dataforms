@@ -23,7 +23,7 @@ UserAttributeTypeField.prototype.attach = function() {
 	this.get().change(function() {
 		thisField.setUserAttributeValueOption($(this).attr("id"), $(this).val());
 	});
-}
+};
 
 /**
  * ユーザ属性値の選択肢を設定します。
@@ -34,7 +34,7 @@ UserAttributeTypeField.prototype.setUserAttributeValueOption = function(id, type
 	var vid = id.replace("userAttributeType", "userAttributeValue");
 	var val = this.parent.getComponent(vid);
 	val.setUserAttributeType(type);
-}
+};
 
 /**
  * 値の設定を行ないます。
@@ -46,7 +46,5 @@ UserAttributeTypeField.prototype.setUserAttributeValueOption = function(id, type
  */
 UserAttributeTypeField.prototype.setValue = function(v) {
 	EnumTypeSingleSelectField.prototype.setValue.call(this, v);
-	if (v != null) {
-		this.setUserAttributeValueOption(this.id, v);
-	}
-}
+};
+
