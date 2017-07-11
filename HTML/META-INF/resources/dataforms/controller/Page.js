@@ -303,17 +303,9 @@ Page.prototype.init = function() {
 	this.configureLogger();
 	logger.info("language=" + this.getLanguage());
 	$.datepicker.setDefaults($.datepicker.regional[this.getLanguage()]);
-
 	var thisPage = this;
-
 	thisPage.configureLogLevel();
 	thisPage.configureBrowserBackButton();
-
-	thisPage.setCookie("cookiecheck", "true");
-	var cookiecheck = thisPage.getCookie("cookiecheck");
-	logger.log("cookiecheck=" + cookiecheck);
-	thisPage.setCookie("cookiecheck", "");
-
 	// ページの初期化.
 	var method = new AsyncServerMethod("getPageInfo");
 	method.execute("", function(result) {
@@ -322,12 +314,6 @@ Page.prototype.init = function() {
 		}
 		//メッセージユーティリティの初期化.
 		MessagesUtil.init(thisPage.messageMap);
-		
-		if (cookiecheck != "true") {
-			alert(MessagesUtil.getMessage("error.cookienotsupport"));
-			window.history.back();
-		}
-
 
 		if (!thisPage.noFrame) {
 			thisPage.layout();
@@ -339,6 +325,17 @@ Page.prototype.init = function() {
 		// バージョン情報などを表示。
 		$("#dataformsVersion").html(thisPage.dataformsVersion);
 //		$("#dataformsVendor").html(this.dataformsVendor);
+		// クッキーチェック
+		if (thisPage.cookieCheck) {
+			thisPage.setCookie("cookiecheck", "true");
+			var cookiecheck = thisPage.getCookie("cookiecheck");
+			logger.log("cookiecheck=" + cookiecheck);
+			if (cookiecheck != "true") {
+				alert(MessagesUtil.getMessage("error.cookienotsupport"));
+			}
+			thisPage.setCookie("cookiecheck", "");
+		}
+		// 
 		thisPage.attach();
 	});
 };

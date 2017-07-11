@@ -295,7 +295,7 @@ WebComponent.prototype.getCookie = function(name) {
     var result = null;
     var cookieName = name + '=';
     var allcookies = document.cookie;
-	//console.log("allcookies = " + allcookies);
+	logger.log("getCookie():allcookies = " + allcookies);
     var sp = allcookies.split(";");
     for (var i = 0; i < sp.length; i++) {
         var c = sp[i].trim();
@@ -317,9 +317,9 @@ WebComponent.prototype.setCookie = function(name, val) {
 	var expires = new Date();
 	expires.setTime(now.getTime() + 365*24*60*60*1000);
 	var x = name + "=" + encodeURIComponent(val) + "; expires=" + expires.toGMTString() + "; path=" + currentPage.contextPath + ";";
-	//console.log("cookie x = " + x);
+	logger.log("setCookie():cookie x = " + x);
 	document.cookie = x;
-	//console.log("document.cookie=" + document.cookie);
+	logger.log("setCookie():document.cookie=" + document.cookie);
 };
 
 /**

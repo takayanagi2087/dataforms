@@ -186,6 +186,8 @@ public class DataFormsServlet extends HttpServlet {
      */
     private static String csrfSessionidCrypPassword = null;
     
+     
+    
     /**
      * Pageの拡張子を取得します。
      * <pre>
@@ -361,6 +363,14 @@ public class DataFormsServlet extends HttpServlet {
 		DataFormsServlet.setQueryStringCryptPassword(this.getServletContext().getInitParameter("query-string-crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("query-string-crypt-password"));
 		DataFormsServlet.csrfSessionidCrypPassword = this.getServletContext().getInitParameter("csrf-sessionid-crypt-password");
+		
+		DataFormsServlet.cookieCheck = Boolean.parseBoolean(
+				this.getServletContext().getInitParameter("cookie-check") == null ? "false"
+				: this.getServletContext().getInitParameter("cookie-check")
+		);
+		
+		
+		
 		Page.setFramePath(this.getServletContext().getInitParameter("frame-path") == null ? "/frame/default"
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
@@ -990,4 +1000,32 @@ public class DataFormsServlet extends HttpServlet {
 		super.destroy();
 		BlobFileStore.cleanup();
 	}
+
+   /**
+     * ブラウザのクッキー受け入れチェックフラグ。
+     * 
+     */
+    private static boolean cookieCheck = false;
+
+
+    
+    /**
+     * ブラウザのクッキー受け入れチェックフラグを取得します。
+     * @return ブラウザのクッキー受け入れチェックフラグ。
+     */
+    public static boolean isCookieCheck() {
+		return cookieCheck;
+	}
+
+
+    /**
+     * ブラウザのクッキー受け入れチェックフラグを指定します。
+     * @param cookieCheck ブラウザのクッキー受け入れチェックフラグ。
+     */
+	public static void setCookieCheck(final boolean cookieCheck) {
+		DataFormsServlet.cookieCheck = cookieCheck;
+	}
+	
+	
+	
 }

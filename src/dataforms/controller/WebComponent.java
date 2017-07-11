@@ -685,12 +685,36 @@ public class WebComponent implements JDBCConnectableObject {
     	Pattern p = Pattern.compile("<head[\\s\\S]*>[\\s\\S]*</head>",
     			Pattern.MULTILINE
     	);
+    	String ret = null;
     	Matcher m = p.matcher(htmltext);
     	if (m.find()) {
-    		return m.group().replaceAll("(<[Hh][Ee][Aa][Dd][\\s\\S]*?>)|(</[Hh][Ee][Aa][Dd]>)", "");
+    		ret =  m.group().replaceAll("(<[Hh][Ee][Aa][Dd][\\s\\S]*?>)|(</[Hh][Ee][Aa][Dd]>)", "");
     	} else {
-    		return htmltext;
+    		ret = htmltext;
     	}
+    	StringBuffer sb = new StringBuffer();
+    	String []lines = ret.split("[\r\n]");
+    	for (String line: lines) {
+    		line = line.trim();
+    		if (StringUtil.isBlank(line.trim())) {
+    			continue;
+    		}
+    		Matcher mat = Pattern.compile("<meta.*charset=[\"']UTF\\-8[\"'].*>", Pattern.CASE_INSENSITIVE).matcher(line);
+    		if (mat.find()) {
+    			continue;
+    		}
+    		mat = Pattern.compile("<link.*href=\"Frame.*\\.css\".*>", Pattern.CASE_INSENSITIVE).matcher(line);
+    		if (mat.find()) {
+    			continue;
+    		}
+    		mat = Pattern.compile("<title>.*</title>", Pattern.CASE_INSENSITIVE).matcher(line);
+    		if (mat.find()) {
+    			continue;
+    		}
+    		sb.append(line);
+    		sb.append("\n");
+    	}
+    	return sb.toString();
     }
 
 	

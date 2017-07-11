@@ -136,7 +136,14 @@
 		<param-name>csrf-sessionid-crypt-password</param-name>
 		<param-value>CSRFpassword</param-value>
 	</context-param>
-
+	<!--
+		ブラウザがクッキーを許可していることを確認する場合、trueを指定してください。
+	-->
+	<context-param>
+		<param-name>cookie-check</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	
 	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
 	<!-- context-param>
 		<param-name>client-messages</param-name>

@@ -617,7 +617,7 @@ public class Page extends DataForms {
      * ページ毎のクライアントメッセージ送信モードを取得します。
      * <pre>
      * ページ単位にメッセージの送信モード変更したい場合は、このメソッドをオーバーライドしてください。
-     *      * </pre>
+     * </pre>
      * @return ページ毎のクライアントメッセージ送信モード。
      */
     public MessagesUtil.ClientMessageTransfer getClientMessageTransfer() {
@@ -697,12 +697,24 @@ public class Page extends DataForms {
 		this.dialogMap.put(dlg.getId(), dlg);
 		this.addComponent(dlg);
 	}
+	
+	/**
+	 * クッキーチェックフラグを取得します。
+	 * <pre>
+	 * ページ毎にクッキーチェックフラグを変更する場合は、このメソッドをオーバーライドしてください。
+	 * </pre>
+	 * @return クッキーチェックフラグ。
+	 */
+	public Boolean getCookieCheck() {
+		return DataFormsServlet.isCookieCheck();
+	}
 
 	@Override
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> map = super.getProperties();
 		map.put("messageMap", this.getMessageMap());
 		map.put("clientMessageTransfer", this.getClientMessageTransfer());
+		map.put("cookieCheck", this.getCookieCheck());
 		// フレーム情報の設定。
 		if (!this.isNoFrame()) {
 			String htmlpath = this.getAppropriatePath(this.getPage().getPageFramePath() + "/Frame.html", this.getPage().getRequest());
