@@ -41,6 +41,7 @@ import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
 import dataforms.util.MessagesUtil;
+import dataforms.util.MessagesUtil.ClientMessageTransfer;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
 
@@ -431,6 +432,12 @@ public class DataFormsServlet extends HttpServlet {
 		MessagesUtil.setAppClientMessagesName(appClientMessages);
 		MessagesUtil.setMessagesName(messages);
 		MessagesUtil.setAppMessagesName(appMessages);
+		
+		String clientMessagesTransfer = this.getServletContext().getInitParameter("client-message-transfer");
+		if (clientMessagesTransfer == null) {
+			clientMessagesTransfer = "CLIENT_ONLY";
+		}
+		MessagesUtil.setClientMessageTransfer(ClientMessageTransfer.valueOf(clientMessagesTransfer));
 	}
 
 	/**

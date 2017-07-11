@@ -131,6 +131,7 @@ ServerMethod.prototype.callMethod = function(method, param, success, as) {
  * </pre>
  * @extends ServerMethod
  * @param {String} m メソッド名。
+ * @deprecated 
  */
 var SyncServerMethod = function() {
 	ServerMethod.apply(this, arguments);

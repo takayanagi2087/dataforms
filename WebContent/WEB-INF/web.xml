@@ -157,6 +157,25 @@
 		<param-name>app-messages</param-name>
 		<param-value>/frame/messages/AppMessages</param-value>
 	</context-param-->
+	<!-- 
+		メッセージリソースのブラウザ送信設定 
+		CLIENT_ONLY:(default)
+			client-message,app-client-messageとXXXPage.propertiesのみ送信します。
+			message, app-messageはJavascriptで使用不可となります。
+		ALL:
+			ページに関する全メッセージリソースをクライアントに送信します。
+			Javascriptで全てのメッセージを使えますが、メッセージを全て送信するので
+			初期転送のサイズが大きくなります。
+		SEND_AT_ANY_TIME:非推奨(@deprecated )
+			旧バージョンとの互換性を維持するためのモードです。
+			初期化時にclient-message,app-client-messageとXXXPage.propertiesのみ送信します。
+			message, app-messageは必要な時に送信されますが、その通信は同期通信を使用するため
+			将来的に使用できなくなる可能性があります。
+	-->
+	<context-param>
+		<param-name>client-message-transfer</param-name>
+		<param-value>CLIENT_ONLY</param-value>
+	</context-param>
 	<!-- フレームレイアウトのパスを指定します。 -->
 	<context-param>
 		<param-name>frame-path</param-name>

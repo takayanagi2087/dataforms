@@ -39,6 +39,56 @@ public final class MessagesUtil {
 	 * メッセージプロパティ(アプリケーション独自)。
 	 */
 	private static String appMessagesName = null;
+	
+	/**
+	 * クライアントメッセージ送信モード。
+	 *
+	 */
+	public static enum ClientMessageTransfer {
+		/**
+		 * ページに関する全メッセージリソースをクライアントに送信します。
+		 */
+		ALL, 
+		/**
+		 * client-message,app-client-messageとXXXPage.propertiesのみ送信します。
+	 	 * message, app-messageはJavascriptで使用不可となります。
+		 */
+		CLIENT_ONLY,
+		/**
+	 	 * 旧バージョンとの互換性を維持するためのモードです。
+		 * 初期化時にclient-message,app-client-messageとXXXPage.propertiesのみ送信します。
+	 	 * message, app-messageは必要な時に送信されますが、その通信は同期通信を使用するため
+	 	 * 将来的に使用できなくなる可能性があります。
+		 */
+		@Deprecated
+		SEND_AT_ANY_TIME
+	}
+	
+
+	/**
+	 * クライアントメッセージモード。
+	 */
+	private static ClientMessageTransfer clientMessageTransfer = null;
+	
+	
+	/**
+	 * クライアントメッセージモードを取得します。
+	 * @return クライアントメッセージモード。
+	 */
+	public static ClientMessageTransfer getClientMessageTransfer() {
+		return clientMessageTransfer;
+	}
+
+
+	/**
+	 * クライアントメッセージモードを設定します。
+	 * @param clientMessageTransfer クライアントメッセージモード。
+	 */
+	public static void setClientMessageTransfer(final ClientMessageTransfer clientMessageTransfer) {
+		MessagesUtil.clientMessageTransfer = clientMessageTransfer;
+	}
+
+
 	/**
      * コンストラクタ。
      */
@@ -126,47 +176,6 @@ public final class MessagesUtil {
 		return msg;
 	}
 	
-	/**
-	 * メッセージを取得します。
-	 * 
-	 * <pre>
-	 * {@code
-	 * 指定されたキーのメッセージを読み込みます。
-	 * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルからメッセージを取得します。
-	 * 上記に無い場合、"messages"に指定されたファイルからメッセージを取得します。
-	 * 上記に無い場合、"<page-path>.properties"に指定されたファイルからメッセージを取得します。
-	 * }
-	 * </pre>
-	 * 
-	 * @param page
-	 *            ページ情報。言語の判定などに使用します。
-	 * @param messageKey
-	 *            メッセージキー。
-	 * @return メッセージ。
-	 */
-	public static String getMessage(final Page page, final String messageKey) {
-		String msg = getMessageFromPropfile(page, messageKey, appClientMessagesName);
-		if (msg != null) {
-			return msg;
-		}
-		msg = getMessageFromPropfile(page, messageKey, clientMessagesName);
-		if (msg != null) {
-			return msg;
-		}
-		msg = getMessageFromPropfile(page, messageKey, appMessagesName);
-		if (msg != null) {
-			return msg;
-		}
-		msg = getMessageFromPropfile(page, messageKey, messagesName);
-		if (msg != null) {
-			return msg;
-		}
-		String clsname = page.getClass().getName();
-		String pageprop = "/" + clsname.replaceAll("\\.", "/");
-		Map<String, String> pageMap = MessagesUtil.getMessageMap(page, pageprop);
-		return pageMap.get(messageKey);
-	}
-
     /**
      * メッセージを取得します。
      * <pre>
@@ -208,27 +217,99 @@ public final class MessagesUtil {
         return map;
     }
 
+	/**
+	 * メッセージを取得します。
+	 * 
+	 * <pre>
+	 * {@code
+	 * 指定されたキーのメッセージを読み込みます。
+	 * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルからメッセージを取得します。
+	 * 上記に無い場合、"messages"に指定されたファイルからメッセージを取得します。
+	 * 上記に無い場合、"<page-path>.properties"に指定されたファイルからメッセージを取得します。
+	 * }
+	 * </pre>
+	 * 
+	 * @param page
+	 *            ページ情報。言語の判定などに使用します。
+	 * @param messageKey
+	 *            メッセージキー。
+	 * @return メッセージ。
+	 */
+	public static String getMessage(final Page page, final String messageKey) {
+		
+		String clsname = page.getClass().getName();
+		String pageprop = "/" + clsname.replaceAll("\\.", "/");
+		Map<String, String> pageMap = MessagesUtil.getMessageMap(page, pageprop);
+		String msg =  pageMap.get(messageKey);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessageFromPropfile(page, messageKey, appClientMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessageFromPropfile(page, messageKey, appMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessageFromPropfile(page, messageKey, clientMessagesName);
+		if (msg != null) {
+			return msg;
+		}
+		msg = getMessageFromPropfile(page, messageKey, messagesName);
+		if (msg != null) {
+			return msg;
+		}
+		return "";
+	}
 
-    /**
-     * クライアント用のメッセージマップを取得します。
-     * <pre>
-     * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルから
-     * メッセージマップを取得します。
-     * このマップはページの初期化時にクライアントに送信され、javascriptから
-     * 通信を行わずに利用できるものになります。
-     * 基本的にクライアントバリデーション用のメッセージマップです。
-     * </pre>
-     *
-	 * @param page ページ情報。言語の判定などに使用する.
-     * @return クライアント用のメッセージマップ.
-     */
-    public static Map<String, String> getClientMessageMap(final Page page) {
-    	Map<String, String> ret =  getMessageMap(page, clientMessagesName);
-    	Map<String, String> amap =  getMessageMap(page, appClientMessagesName);
-    	if (amap != null) {
-    		ret.putAll(amap);
-    	}
-    	return ret;
-    }
+
+
+	/**
+	 * クライアント用のメッセージマップを取得します。
+	 * 
+	 * <pre>
+	 * サーブレットの初期化パラメータ、"client-messages"に指定されたファイルから
+	 * メッセージマップを取得します。
+	 * このマップはページの初期化時にクライアントに送信され、javascriptから
+	 * 通信を行わずに利用できるものになります。
+	 * 基本的にクライアントバリデーション用のメッセージマップです。
+	 * </pre>
+	 *
+	 * @param page
+	 *            ページ情報。言語の判定などに使用する.
+	 * @return クライアント用のメッセージマップ.
+	 */
+	public static Map<String, String> getClientMessageMap(final Page page) {
+		ClientMessageTransfer trans = page.getClientMessageTransfer();
+		Map<String, String> ret = new HashMap<String, String>();
+		if (trans == ClientMessageTransfer.ALL) {
+			Map<String, String> map  = getMessageMap(page, messagesName);
+			if (map != null) {
+				ret.putAll(map);
+			}
+		}
+		Map<String, String> map0 = getMessageMap(page, clientMessagesName);
+		if (map0 != null) {
+			ret.putAll(map0);
+		}
+		if (trans == ClientMessageTransfer.ALL) {
+			Map<String, String> map1 = getMessageMap(page, appMessagesName);
+			if (map0 != null) {
+				ret.putAll(map1);
+			}
+		}
+		Map<String, String> map2 = getMessageMap(page, appClientMessagesName);
+		if (map0 != null) {
+			ret.putAll(map2);
+		}
+		String clsname = page.getClass().getName();
+		String pageprop = "/" + clsname.replaceAll("\\.", "/");
+		Map<String, String> map3 = MessagesUtil.getMessageMap(page, pageprop);
+		if (map0 != null) {
+			ret.putAll(map3);
+		}
+		return ret;
+	}
 
 }

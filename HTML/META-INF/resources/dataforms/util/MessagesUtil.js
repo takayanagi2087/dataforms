@@ -41,17 +41,22 @@ MessagesUtil.init = function(map) {
 MessagesUtil.getMessage = function() {
 	var msg = MessagesUtil.messageMap[arguments[0]];
 	if (msg == null) {
-		// 存在しないメッセージはajaxで取得する.
-		var method = new SyncServerMethod("getServerMessage");
-		var r = method.execute("key=" + arguments[0]);
-		this.messageMap[arguments[0]] = r.result;
-		msg = r.result;
+		if (currentPage.clientMessageTransfer == "SEND_AT_ANY_TIME") {
+			// 存在しないメッセージはajaxで取得しますが、
+			// 同期通信なので、非推奨です。
+			var method = new SyncServerMethod("getServerMessage");
+			var r = method.execute("key=" + arguments[0]);
+			this.messageMap[arguments[0]] = r.result;
+			msg = r.result;
+		}
 	}
-	for (var i = 1; i < arguments.length; i++) {
-		var rex = RegExp('\\{' + (i - 1) +  '\\}');
-		if (msg.match(rex)) {
-			var mid = RegExp.lastMatch;
-			msg = msg.replace(mid, arguments[i]);
+	if (msg != null) {
+		for (var i = 1; i < arguments.length; i++) {
+			var rex = RegExp('\\{' + (i - 1) +  '\\}');
+			if (msg.match(rex)) {
+				var mid = RegExp.lastMatch;
+				msg = msg.replace(mid, arguments[i]);
+			}
 		}
 	}
 	return msg;

@@ -590,15 +590,27 @@ public class Page extends DataForms {
 	}
 
     /**
+     * ページ毎のクライアントメッセージ送信モードを取得します。
+     * <pre>
+     * ページ単位にメッセージの送信モード変更したい場合は、このメソッドをオーバーライドしてください。
+     *      * </pre>
+     * @return ページ毎のクライアントメッセージ送信モード。
+     */
+    public MessagesUtil.ClientMessageTransfer getClientMessageTransfer() {
+    	return MessagesUtil.getClientMessageTransfer();
+    }
+    
+    
+    /**
      * ページに対応したメッセージマップを取得します。
      * @return ページに対応したメッセージマップ。
      */
 	protected Map<String, String> getMessageMap() {
 		Map<String, String> map = MessagesUtil.getClientMessageMap(this);
-		String clsname = this.getClass().getName();
-		String pageprop = "/" + clsname.replaceAll("\\.", "/");
-		Map<String, String> pageMap = MessagesUtil.getMessageMap(this.getPage(), pageprop);
-		map.putAll(pageMap);
+//		String clsname = this.getClass().getName();
+//		String pageprop = "/" + clsname.replaceAll("\\.", "/");
+//		Map<String, String> pageMap = MessagesUtil.getMessageMap(this.getPage(), pageprop);
+//		map.putAll(pageMap);
 		return map;
 	}
 
@@ -666,6 +678,7 @@ public class Page extends DataForms {
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> map = super.getProperties();
 		map.put("messageMap", this.getMessageMap());
+		map.put("clientMessageTransfer", this.getClientMessageTransfer());
 		// フレーム情報の設定。
 		if (!this.isNoFrame()) {
 			String htmlpath = this.getAppropriatePath(this.getPage().getPageFramePath() + "/Frame.html", this.getPage().getRequest());
