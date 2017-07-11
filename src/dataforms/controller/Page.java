@@ -298,6 +298,24 @@ public class Page extends DataForms {
 		}
 	}
 
+
+	/**
+	 * ダイアログ関連スクリプトリストを取得する。
+	 * @param list スクリプトリスト。
+	 * @param dialog ダイアログ。
+	 * @throws Exception 例外。
+	 */
+	protected void getDialogAppScripts(final List<String> list, final Dialog dialog) throws Exception {
+		this.getScriptTree(list, dialog.getClass());
+		Map<String, WebComponent> map = dialog.getFormMap();
+		for (String key: map.keySet()) {
+			WebComponent f = (WebComponent) map.get(key);
+			if (f instanceof Form) {
+				this.getFormAppScripts(list, (Form) f);
+			}
+		}
+	}
+
 	/**
 	 * Dataforms関連スクリプトリストを取得する。
 	 * @param list スクリプトリスト。
@@ -311,6 +329,12 @@ public class Page extends DataForms {
 			WebComponent f = (WebComponent) map.get(key);
 			if (f instanceof Form) {
 				this.getFormAppScripts(list, (Form) f);
+			}
+		}
+		for (String key: this.getDialogMap().keySet()) {
+			WebComponent d = (WebComponent) map.get(key);
+			if (d instanceof Dialog) {
+				this.getDialogAppScripts(list, (Dialog) d);
 			}
 		}
 	}
@@ -560,7 +584,7 @@ public class Page extends DataForms {
 		String htmlpath = this.getWebResourcePath(this.getClass()) + ".html";
 		htmlpath = this.getAppropriatePath(htmlpath, req);
 		log.info("sendHtml=" + htmlpath);
-		String htmltext = this.getWebResource(htmlpath); //FileUtil.readTextFile(htmlpath, DataFormsServlet.getEncoding());
+		String htmltext = this.getWebResource(htmlpath);
 		String scripts = this.getWebResource(DataFormsServlet.getCssAndScript());
 		scripts = scripts.replaceAll("\\$\\{context\\}", req.getContextPath());
 

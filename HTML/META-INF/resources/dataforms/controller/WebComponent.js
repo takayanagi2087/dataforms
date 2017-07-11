@@ -144,6 +144,9 @@ WebComponent.prototype.newInstance = function(clazz) {
 		if (classname in window) {
 			eval("var obj = new " + classname + "(this);");
 		} else {
+			// この処理は転送されていないJavascriptクラスを読み込むための処理です。
+			// 基本的にgetHtmlで<script></script>タグに展開されるので、現在は呼ばれないはずです。
+			logger.log("jspath=" + jspath);
 			var getJs = new SyncServerMethod("getJs");
 			var scriptstr = getJs.execute("parts=" + escape(jspath));
 			if (scriptstr.result != null) {
