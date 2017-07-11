@@ -305,7 +305,15 @@ Page.prototype.init = function() {
 	$.datepicker.setDefaults($.datepicker.regional[this.getLanguage()]);
 
 	var thisPage = this;
-	thisPage.deferred = new $.Deferred;
+
+	thisPage.configureLogLevel();
+	thisPage.configureBrowserBackButton();
+
+	thisPage.setCookie("cookiecheck", "true");
+	var cookiecheck = thisPage.getCookie("cookiecheck");
+	logger.log("cookiecheck=" + cookiecheck);
+	thisPage.setCookie("cookiecheck", "");
+
 	// ページの初期化.
 	var method = new AsyncServerMethod("getPageInfo");
 	method.execute("", function(result) {
@@ -315,17 +323,11 @@ Page.prototype.init = function() {
 		//メッセージユーティリティの初期化.
 		MessagesUtil.init(thisPage.messageMap);
 		
-		thisPage.setCookie("cookiecheck", "true");
-		var cookiecheck = thisPage.getCookie("cookiecheck");
-		logger.log("cookiecheck=" + cookiecheck);
 		if (cookiecheck != "true") {
 			alert(MessagesUtil.getMessage("error.cookienotsupport"));
 			window.history.back();
 		}
-		thisPage.setCookie("cookiecheck", "");
 
-		thisPage.configureLogLevel();
-		thisPage.configureBrowserBackButton();
 
 		if (!thisPage.noFrame) {
 			thisPage.layout();
@@ -337,10 +339,8 @@ Page.prototype.init = function() {
 		// バージョン情報などを表示。
 		$("#dataformsVersion").html(thisPage.dataformsVersion);
 //		$("#dataformsVendor").html(this.dataformsVendor);
-//		thisPage.attach0();
-		thisPage.deferred.resolve();
+		thisPage.attach();
 	});
-	thisPage.promise =  thisPage.deferred.promise();
 };
 
 /**
@@ -348,29 +348,27 @@ Page.prototype.init = function() {
  */
 Page.prototype.attach = function() {
 	var thisPage = this;
-	thisPage.promise.done(function() {
-		DataForms.prototype.attach.call(thisPage);
-		$("#showMenuButton").click(function() {
+	DataForms.prototype.attach.call(thisPage);
+	$("#showMenuButton").click(function() {
+		var menu = $("#menuDiv");
+		if (menu.size() == 0) {
+			// leftbarDivの対応は互換性維持のため
+			$("#leftbarDiv").toggle("blind");
+		} else {
+			menu.toggle("blind");
+		}
+		return false;
+	});
+	$("body").click(function() {
+		if ($("#showMenuButton").is(":visible")) {
 			var menu = $("#menuDiv");
-			if (menu.size() == 0) {
-				// leftbarDivの対応は互換性維持のため
-				$("#leftbarDiv").toggle("blind");
-			} else {
+			if (menu.is(":visible")) {
 				menu.toggle("blind");
 			}
-			return false;
-		});
-		$("body").click(function() {
-			if ($("#showMenuButton").is(":visible")) {
-				var menu = $("#menuDiv");
-				if (menu.is(":visible")) {
-					menu.toggle("blind");
-				}
-			}
-		});
-		$(window).resize(function() {
-			thisPage.onResize();
-		});
+		}
+	});
+	$(window).resize(function() {
+		thisPage.onResize();
 	});
 };
 

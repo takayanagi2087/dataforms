@@ -457,7 +457,7 @@ public class Page extends DataForms {
 //		"\t\t\tdf.clientValidation = false;\n" +
 		"\t\t\twindow.currentPage = page;\n" +
 		"\t\t\tpage.init();\n" +
-		"\t\t\tpage.attach();\n" +
+//		"\t\t\tpage.attach();\n" +
 		"\t\t});\n" +
 		"\t\t-->\n" +
 		"\t\t</script>\n";
