@@ -304,14 +304,14 @@ Page.prototype.init = function() {
 	logger.info("language=" + this.getLanguage());
 	$.datepicker.setDefaults($.datepicker.regional[this.getLanguage()]);
 	var thisPage = this;
-	thisPage.configureLogLevel();
-	thisPage.configureBrowserBackButton();
 	// ページの初期化.
 	var method = new AsyncServerMethod("getPageInfo");
 	method.execute("", function(result) {
 		for (var key in result.result) {
 			thisPage[key] = result.result[key];
 		}
+		thisPage.configureLogLevel();
+		thisPage.configureBrowserBackButton();
 		//メッセージユーティリティの初期化.
 		MessagesUtil.init(thisPage.messageMap);
 
