@@ -78,6 +78,9 @@ public class QueryExecutorQueryResultForm extends QueryResultForm {
 		Dao dao = new Dao(this);
 		Map<String, Object> ret = dao.executePageQuery(sql, data);
 		FieldList flist = dao.getResultSetFieldList();
+		for (Field<?> f: flist) {
+			f.init();
+		}
 		this.htmlTable.getFieldList().clear();
 		this.htmlTable.getFieldList().addAll(flist);
 		for (Field<?> f: this.htmlTable.getFieldList()) {
