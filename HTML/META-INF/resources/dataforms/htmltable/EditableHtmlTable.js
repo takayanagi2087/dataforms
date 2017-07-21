@@ -55,7 +55,6 @@ EditableHtmlTable.prototype.enableSortable = function() {
  *
  */
 EditableHtmlTable.prototype.disableSortable = function() {
-	logger.error("disableSortable");
 	this.get().find("tbody").sortable("destroy");
 };
 
