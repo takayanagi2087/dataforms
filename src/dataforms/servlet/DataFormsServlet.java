@@ -35,8 +35,10 @@ import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
 import dataforms.controller.Response;
 import dataforms.controller.WebComponent;
+import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
+import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
@@ -409,9 +411,10 @@ public class DataFormsServlet extends HttpServlet {
 		this.setupServletInstanceBean();
 		super.init();
 		WebComponent.setServlet(this);
-		// DB存在チェック.
+		// DB存在チェック。
 		this.checkDbConnection();
-
+		// DBの存在チェック。
+		this.checkDBStructure();
 	}
 
 	/**
@@ -499,6 +502,42 @@ public class DataFormsServlet extends HttpServlet {
 		}
 	}
 
+	
+	
+	
+	/**
+	 * データベースの構造チェック。
+	 * 
+	 */
+	private void checkDBStructure() {
+		try {
+			Connection conn = this.getConnection();
+			try {
+				JDBCConnectableObject cobj = new JDBCConnectableObject() {
+					@Override
+					public final Connection getConnection() {
+						return conn;
+					}
+				};
+				TableManagerDao dao = new TableManagerDao(cobj);
+				List<Map<String, Object>> list = dao.queryTableClass("dataforms.app", "");
+				for (Map<String, Object> m: list) {
+					String differenceVal = (String) m.get("differenceVal");
+					if ("1".equals(differenceVal)) {
+						String className = (String) m.get("className");
+						log.info("update table structure=" + className);
+						dao.updateTable(className);
+					}
+				}
+				conn.commit();
+			} finally {
+				conn.close();
+			}
+		} catch (Exception e) {
+    		log.error(e.getMessage(), e);
+		}
+	}
+	
 	/**
 	 * JDBC接続を取得します。
 	 * @return JDBC接続。
