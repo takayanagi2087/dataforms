@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFShape;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import dataforms.controller.Page;
@@ -783,4 +784,21 @@ public class ExcelReport extends Report {
 	public void setSheetName(final int sheetIndex, final String name) {
 		this.workbook.setSheetName(sheetIndex, name);
 	}
+	
+	/**
+	 * 指定されたシートを指定されたパスワードでロックします。
+	 * @param sh シート。
+	 * @param password パスワード。
+	 */
+	public void lockSheet(final XSSFSheet sh, final String password) {
+		sh.lockDeleteColumns(true);
+		sh.lockDeleteRows(true);
+		sh.lockFormatCells(true);
+		sh.lockFormatRows(true);
+		sh.lockInsertColumns(true);
+		sh.lockInsertRows(true);
+		sh.protectSheet(password);
+		sh.enableLocking();
+	}
+
 }
