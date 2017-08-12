@@ -58,6 +58,8 @@ public class UserEditForm extends EditForm {
 	@Override
 	public void init() throws Exception {
 		super.init();
+		this.setFormData("externalUserFlag", "0");
+		this.setFormData("enabledFlag", "1");
 		if (!this.admin) {
 			// 監理者でなければ、自分自身のユーザ情報を取得.
 			Map<String, Object> userInfo = this.getPage().getUserInfo();
