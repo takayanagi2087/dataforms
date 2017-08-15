@@ -24,6 +24,10 @@ public class LoginInfoForm extends Form {
      */
     private static Logger log = Logger.getLogger(LoginInfoForm.class.getName());
 
+	/**
+	 * ユーザ登録ページを有効フラグ。
+	 */
+	private static boolean enableUserRegistPage = false;
 
 	/**
 	 * コンストラクタ。
@@ -34,6 +38,24 @@ public class LoginInfoForm extends Form {
 		this.addField(new UserNameField());
 	}
 
+	/**
+	 * ユーザ登録ページを有効フラグを取得します。
+	 * @return ユーザ登録ページを有効フラグ。
+	 */
+	public static boolean isEnableUserRegistPage() {
+		return enableUserRegistPage;
+	}
+
+	/**
+	 * ユーザ登録ページを有効フラグを設定します。
+	 * @param enableUserRegistPage ユーザ登録ページを有効フラグ。
+	 */
+	public static void setEnableUserRegistPage(final boolean enableUserRegistPage) {
+		LoginInfoForm.enableUserRegistPage = enableUserRegistPage;
+	}
+
+
+	
 	@Override
 	public void init() throws Exception {
 		super.init();
@@ -100,9 +122,16 @@ public class LoginInfoForm extends Form {
 		Map<String, Object> userInfo = this.getPage().getUserInfo();
 		log.info("logout success=" + userInfo.get("loginId") + "(" + userInfo.get("userId") + ")");
 		this.getPage().getRequest().getSession().setAttribute("userInfo", null);
-    	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, "");
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, "");
 		this.methodFinishLog(log, ret);
-    	return ret;
+		return ret;
     }
 
+
+    @Override
+	public Map<String, Object> getProperties() throws Exception {
+		Map<String, Object> ret = super.getProperties();
+		ret.put("enableUserRegistPage", LoginInfoForm.isEnableUserRegistPage());
+		return ret;
+	}
 }

@@ -354,6 +354,13 @@
 			]
 		</param-value>
 	</context-param>
+	<!-- 
+		ユーザ登録ページの有効/無効設定
+	 -->
+	<context-param>
+		<param-name>enable-user-regist-page</param-name>
+		<param-value>true</param-value>
+	</context-param>
 	
 	<!-- セッションタイムアウト -->
 	<session-config>

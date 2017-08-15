@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import dataforms.annotation.WebMethod;
 import dataforms.app.errorpage.ConfigErrorPage;
+import dataforms.app.form.LoginInfoForm;
 import dataforms.controller.ApplicationException;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
@@ -407,7 +408,13 @@ public class DataFormsServlet extends HttpServlet {
 			FileObject.setContentTypeList(ctlist);
 		}
 		
-		
+		// ユーザ登録ページ関連設定
+		Boolean enableUserRegistPage = Boolean.parseBoolean(
+			this.getServletContext().getInitParameter("enable-user-regist-page") == null ? "false"
+			: this.getServletContext().getInitParameter("enable-user-regist-page")
+		);
+		LoginInfoForm.setEnableUserRegistPage(enableUserRegistPage);
+		//
 		this.setupServletInstanceBean();
 		super.init();
 		WebComponent.setServlet(this);

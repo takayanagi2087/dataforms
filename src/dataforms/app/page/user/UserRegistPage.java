@@ -3,15 +3,18 @@ package dataforms.app.page.user;
 import dataforms.app.page.base.BasePage;
 
 /**
- * ユーザ情報入力ページクラス。
+ * 外部ユーザ登録ページ。
  *
  */
-public class RegistUserPage extends BasePage {
+public class UserRegistPage extends BasePage {
+	
+	
 	/**
 	 * コンストラクタ。
 	 */
-	public RegistUserPage() {
-		this.addForm(new UserEditForm(false));
+	public UserRegistPage() {
+		this.addForm(new UserRegistForm());
 		this.setMenuItem(false);
 	}
+	
 }
