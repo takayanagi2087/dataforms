@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.app.errorpage.ConfigErrorPage;
 import dataforms.app.form.LoginInfoForm;
+import dataforms.app.page.user.UserRegistForm;
 import dataforms.controller.ApplicationException;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.Page;
@@ -68,7 +69,7 @@ public class DataFormsServlet extends HttpServlet {
 	/**
 	 * HTML取得のメソッド名。
 	 */
-    private static final String GET_HTML_METHOD_NAME = "getHtml";
+	private static final String GET_HTML_METHOD_NAME = "getHtml";
 
 	/**
 	 * UID.
@@ -76,187 +77,187 @@ public class DataFormsServlet extends HttpServlet {
 	private static final long serialVersionUID = -8576472991434646040L;
 
 	/**
-     * Logger.
-     */
-    private static Logger log = Logger.getLogger(DataFormsServlet.class.getName());
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(DataFormsServlet.class.getName());
 
-    /**
-     * jndi-prefix.
-     */
-    private static String jndiPrefix = null;
+	/**
+	 * jndi-prefix.
+	 */
+	private static String jndiPrefix = null;
 
-    /**
-     * データソース名称.
-     */
-    private static String dataSourceName = null;
+	/**
+	 * データソース名称.
+	 */
+	private static String dataSourceName = null;
 
-    /**
-     * WEBリソースアクセス用URL。
-     */
-    private static String webResourceUrl = null;
+	/**
+	 * WEBリソースアクセス用URL。
+	 */
+	private static String webResourceUrl = null;
 
-    /**
-     * 文字コード.
-     */
-    private static String encoding = null;
+	/**
+	 * 文字コード.
+	 */
+	private static String encoding = null;
 
-    /**
-     * JSONの出力モード指定.
-     */
-    private static boolean jsonDebug = false;
+	/**
+	 * JSONの出力モード指定.
+	 */
+	private static boolean jsonDebug = false;
 
-    /**
-     * 一時ファイル領域.
-     */
-    private static String tempDir = null;
+	/**
+	 * 一時ファイル領域.
+	 */
+	private static String tempDir = null;
 
-    /**
-     * データエクスポート、インポートディレクトリ.
-     */
-    private static String exportImportDir = null;
+	/**
+	 * データエクスポート、インポートディレクトリ.
+	 */
+	private static String exportImportDir = null;
 
-    /**
-     * CSSとSCRIPT.
-     */
-    private static String cssAndScript = null;
+	/**
+	 * CSSとSCRIPT.
+	 */
+	private static String cssAndScript = null;
 
-    /**
-     * エラーページ.
-     */
-    private static String errorPage = null;
+	/**
+	 * エラーページ.
+	 */
+	private static String errorPage = null;
 
-    /**
-     * javascriptでのバリデーションを有効にする.
-     */
-    private static boolean clientValidation = true;
-
-
-    /**
-     * javascriptのログレベルを設定.
-     */
-    private static String clientLogLevel = "info";
-
-    /**
-     * アップロードデータフォルダ.
-     */
-    private static String uploadDataFolder = null;
+	/**
+	 * javascriptでのバリデーションを有効にする.
+	 */
+	private static boolean clientValidation = true;
 
 
-    /**
-     * データソースのオブジェクト.
-     */
-    private DataSource dataSource = null;
+	/**
+	 * javascriptのログレベルを設定.
+	 */
+	private static String clientLogLevel = "info";
+
+	/**
+	 * アップロードデータフォルダ.
+	 */
+	private static String uploadDataFolder = null;
 
 
-    /**
-     * サポート言語.
-     */
-    private static String supportLanguage = null;
-
-    /**
-     * 開発ツールの無効化フラグ。
-     */
-    private static boolean disableDeveloperTools = true;
+	/**
+	 * データソースのオブジェクト.
+	 */
+	private DataSource dataSource = null;
 
 
-    /**
-     * QueryStringを暗号化する際に使用するパスワード。
-     */
-    private static String queryStringCryptPassword = "yyy_password_yyy";
-    
-    /**
-     * 設定の状態.
-     */
-    private static String configStatus = null;
+	/**
+	 * サポート言語.
+	 */
+	private static String supportLanguage = null;
 
-    /**
-     * ページオーバーライドマップ。
-     */
-    private static Map<String, String> pageOverrideMap = new HashMap<String, String>();
+	/**
+	 * 開発ツールの無効化フラグ。
+	 */
+	private static boolean disableDeveloperTools = true;
 
-    /**
-     * サーブレットインスタンス設定Bean.
-     */
-    private static ServletInstanceBean servletInstanceBean = null;
-    
-    
-    /**
-     * CSRF対策用暗号化キー。
-     * 
-     * <pre>
-     * CSRF対策のため送信する照合情報は、セッションIDを以下のパスワードで暗号化して送信します。
-     * </pre>
-     */
-    private static String csrfSessionidCrypPassword = null;
-    
-     
-    
-    /**
-     * Pageの拡張子を取得します。
-     * <pre>
-     * Servletアノテーションの先頭のURLパターンから、拡張子を取得します。
-     * </pre>
-     * @return Pageの拡張子。
-     */
-    public String getPageExt() {
-    	WebServlet an = this.getClass().getAnnotation(WebServlet.class);
-    	String[] uplist = an.urlPatterns();
-    	return uplist[0].substring(2);
-    }
 
-    
-    /**
-     * CSRF対策用暗号化キーを取得します。
-     * @return CSRF対策用暗号化キー。
-     */
-    public static String getCsrfSessionidCrypPassword() {
+	/**
+	 * QueryStringを暗号化する際に使用するパスワード。
+	 */
+	private static String queryStringCryptPassword = "yyy_password_yyy";
+	
+	/**
+	 * 設定の状態.
+	 */
+	private static String configStatus = null;
+
+	/**
+	 * ページオーバーライドマップ。
+	 */
+	private static Map<String, String> pageOverrideMap = new HashMap<String, String>();
+
+	/**
+	 * サーブレットインスタンス設定Bean.
+	 */
+	private static ServletInstanceBean servletInstanceBean = null;
+	
+	
+	/**
+	 * CSRF対策用暗号化キー。
+	 * 
+	 * <pre>
+	 * CSRF対策のため送信する照合情報は、セッションIDを以下のパスワードで暗号化して送信します。
+	 * </pre>
+	 */
+	private static String csrfSessionidCrypPassword = null;
+	
+	 
+	
+	/**
+	 * Pageの拡張子を取得します。
+	 * <pre>
+	 * Servletアノテーションの先頭のURLパターンから、拡張子を取得します。
+	 * </pre>
+	 * @return Pageの拡張子。
+	 */
+	public String getPageExt() {
+		WebServlet an = this.getClass().getAnnotation(WebServlet.class);
+		String[] uplist = an.urlPatterns();
+		return uplist[0].substring(2);
+	}
+
+	
+	/**
+	 * CSRF対策用暗号化キーを取得します。
+	 * @return CSRF対策用暗号化キー。
+	 */
+	public static String getCsrfSessionidCrypPassword() {
 		return csrfSessionidCrypPassword;
 	}
 
 	/**
-     * ページオーバーライドマップを考慮したクラス名を取得します。
-     * @param name クラス名。
-     * @return 変換後のクラス名。
-     */
-    public static String convertPageClassName(final String name) {
-    	String classname = name;
-    	if (pageOverrideMap.containsKey(name)) {
-    		classname = pageOverrideMap.get(name);
-    		log.info("page-override=" + name + "->" + classname);
-    	}
-    	return classname;
-    }
+	 * ページオーバーライドマップを考慮したクラス名を取得します。
+	 * @param name クラス名。
+	 * @return 変換後のクラス名。
+	 */
+	public static String convertPageClassName(final String name) {
+		String classname = name;
+		if (pageOverrideMap.containsKey(name)) {
+			classname = pageOverrideMap.get(name);
+			log.info("page-override=" + name + "->" + classname);
+		}
+		return classname;
+	}
 
 	/**
-     * ページオーバーライドマップを初期化します。
-     */
-    private void initPageOverrideMap() {
-    	Enumeration<String> e = this.getServletContext().getInitParameterNames();
-    	while (e.hasMoreElements()) {
-    		String key = e.nextElement();
-    		if (key.trim().indexOf("page-override:") == 0) {
-    			String keyclass = key.trim().replaceAll("page-override:", "");
-    			String classname = this.getServletContext().getInitParameter(key);
-    			DataFormsServlet.pageOverrideMap.put(keyclass, classname);
-    		}
-    	}
-    }
+	 * ページオーバーライドマップを初期化します。
+	 */
+	private void initPageOverrideMap() {
+		Enumeration<String> e = this.getServletContext().getInitParameterNames();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+			if (key.trim().indexOf("page-override:") == 0) {
+				String keyclass = key.trim().replaceAll("page-override:", "");
+				String classname = this.getServletContext().getInitParameter(key);
+				DataFormsServlet.pageOverrideMap.put(keyclass, classname);
+			}
+		}
+	}
 
 	/**
-     * 各メティア対応のスタイルシート設定を取得します。
-     */
-    private void initMediaCss() {
-    	Enumeration<String> e = this.getServletContext().getInitParameterNames();
-    	while (e.hasMoreElements()) {
-    		String key = e.nextElement();
-    		if (key.trim().indexOf("css-media:") == 0) {
-    			String cssfile = key.trim().replaceAll("css-media:", "");
-    			String media = this.getServletContext().getInitParameter(key);
-    			log.debug("css=" + cssfile + ",media=" + media);
-    			Page.addPreloadCss(cssfile, media);
-    		}
-    	}
-    }
+	 * 各メティア対応のスタイルシート設定を取得します。
+	 */
+	private void initMediaCss() {
+		Enumeration<String> e = this.getServletContext().getInitParameterNames();
+		while (e.hasMoreElements()) {
+			String key = e.nextElement();
+			if (key.trim().indexOf("css-media:") == 0) {
+				String cssfile = key.trim().replaceAll("css-media:", "");
+				String media = this.getServletContext().getInitParameter(key);
+				log.debug("css=" + cssfile + ",media=" + media);
+				Page.addPreloadCss(cssfile, media);
+			}
+		}
+	}
 
 
 
@@ -270,9 +271,9 @@ public class DataFormsServlet extends HttpServlet {
 	}
 
 	/**
-     * 初期化パラメータを取得します。
-     * @throws ServletException 例外。
-     */
+	 * 初期化パラメータを取得します。
+	 * @throws ServletException 例外。
+	 */
 	@Override
 	public void init() throws ServletException {
 		this.initPageOverrideMap();
@@ -408,12 +409,7 @@ public class DataFormsServlet extends HttpServlet {
 			FileObject.setContentTypeList(ctlist);
 		}
 		
-		// ユーザ登録ページ関連設定
-		Boolean enableUserRegistPage = Boolean.parseBoolean(
-			this.getServletContext().getInitParameter("enable-user-regist-page") == null ? "false"
-			: this.getServletContext().getInitParameter("enable-user-regist-page")
-		);
-		LoginInfoForm.setEnableUserRegistPage(enableUserRegistPage);
+		this.getUserRegistConf();
 		//
 		this.setupServletInstanceBean();
 		super.init();
@@ -422,6 +418,21 @@ public class DataFormsServlet extends HttpServlet {
 		this.checkDbConnection();
 		// DBの存在チェック。
 		this.checkDBStructure();
+	}
+
+
+	/**
+	 * ユーザ登録関連設定を取得します。
+	 */
+	public void getUserRegistConf() {
+		// ユーザ登録ページ関連設定
+		LoginInfoForm.setUserRegistPage(this.getServletContext().getInitParameter("user-regist-page"));
+		UserRegistForm.setUserEnablePage(this.getServletContext().getInitParameter("user-enable-page"));
+		Boolean userEnableMail = Boolean.parseBoolean(
+			this.getServletContext().getInitParameter("send-user-enable-mail") == null ? "false"
+			: this.getServletContext().getInitParameter("send-user-enable-mail")
+		);
+		UserRegistForm.setUserEnableMail(userEnableMail);
 	}
 
 	/**
@@ -489,23 +500,23 @@ public class DataFormsServlet extends HttpServlet {
 			// web.xmlにデータソースの指定が無い場合。
 			DataFormsServlet.configStatus = "error.notfounddatasourcesetting";
 		} else {
-	    	try {
-	    		if (DataFormsServlet.dataSourceName != null) {
-	    	    	Context initContext = new InitialContext();
-	    	    	String dspath = DataFormsServlet.jndiPrefix + DataFormsServlet.dataSourceName;
-	    	    	log.info("lookup data source=" + dspath);
-	    	    	this.dataSource = (DataSource) initContext.lookup(dspath);
-	    		}
-	    	} catch (NameNotFoundException e) {
+			try {
+				if (DataFormsServlet.dataSourceName != null) {
+					Context initContext = new InitialContext();
+					String dspath = DataFormsServlet.jndiPrefix + DataFormsServlet.dataSourceName;
+					log.info("lookup data source=" + dspath);
+					this.dataSource = (DataSource) initContext.lookup(dspath);
+				}
+			} catch (NameNotFoundException e) {
 				// アプリケーションサーバにデータソースの設定が無い場合。
-	    		log.error(e.getMessage(), e);
-	    		DataFormsServlet.configStatus = "error.notfounddatasource";
-	    	} catch (Exception e) {
-	    		// DBサーバが動作していない場合のエラーであるため、運用時トラブルで発生する可能性がある。
-	    		// そのため設定エラーとしない。
-    			//DataFormsServlet.dbStatus = "error.cannotconnectdatasource";
-	    		log.error(e.getMessage(), e);
-	    	}
+				log.error(e.getMessage(), e);
+				DataFormsServlet.configStatus = "error.notfounddatasource";
+			} catch (Exception e) {
+				// DBサーバが動作していない場合のエラーであるため、運用時トラブルで発生する可能性がある。
+				// そのため設定エラーとしない。
+				//DataFormsServlet.dbStatus = "error.cannotconnectdatasource";
+				log.error(e.getMessage(), e);
+			}
 		}
 	}
 
@@ -541,7 +552,7 @@ public class DataFormsServlet extends HttpServlet {
 				conn.close();
 			}
 		} catch (Exception e) {
-    		log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -552,14 +563,14 @@ public class DataFormsServlet extends HttpServlet {
 	 */
 	public final Connection getConnection() throws Exception {
 		if (DataFormsServlet.dataSourceName != null) {
-	    	Connection conn = this.dataSource.getConnection();
-	    	conn.setAutoCommit(false);
-	    	return conn;
+			Connection conn = this.dataSource.getConnection();
+			conn.setAutoCommit(false);
+			return conn;
 		} else {
 			return null;
 		}
 
-    }
+	}
 
 	/**
 	 * エラーページを取得します。
@@ -691,59 +702,59 @@ public class DataFormsServlet extends HttpServlet {
 	}
 
 	/**
-     * リクエストに対応したFormクラス名を取得します。
-     * @param context コンテキスト。
-     * @param uri URI。
-     * @return クラス名。
-     */
-    private String getTargetClassName(final String context, final String uri) {
-    	String path = uri.substring(context.length() + 1);
-    	int idx = path.lastIndexOf(".");
-    	if (idx >= 0) {
-    		path = path.substring(0, idx);
-    	}
-    	path = path.replaceAll("/", ".");
-    	return path;
-    }
+	 * リクエストに対応したFormクラス名を取得します。
+	 * @param context コンテキスト。
+	 * @param uri URI。
+	 * @return クラス名。
+	 */
+	private String getTargetClassName(final String context, final String uri) {
+		String path = uri.substring(context.length() + 1);
+		int idx = path.lastIndexOf(".");
+		if (idx >= 0) {
+			path = path.substring(0, idx);
+		}
+		path = path.replaceAll("/", ".");
+		return path;
+	}
 
-    /**
-     * 指定したクラスのインスタンスを作成します。
-     * @param classname クラス名。
-     * @return クラスのインスタンス。
-     * @throws Exception 例外。
-     */
-    private Page newDataFormsInstance(final String classname) throws Exception {
-    	@SuppressWarnings("unchecked")
+	/**
+	 * 指定したクラスのインスタンスを作成します。
+	 * @param classname クラス名。
+	 * @return クラスのインスタンス。
+	 * @throws Exception 例外。
+	 */
+	private Page newDataFormsInstance(final String classname) throws Exception {
+		@SuppressWarnings("unchecked")
 		Class<? extends Page> clazz = (Class<? extends Page>) Class.forName(classname);
-    	Page dataforms = clazz.newInstance();
-    	return dataforms;
-    }
+		Page dataforms = clazz.newInstance();
+		return dataforms;
+	}
 
 
-    /**
-     * リクエストに対応したPageのインスタンスを取得します。
-     * @param req HTTP要求情報。
-     * @return DataFormsのインスタンス。
-     * @throws Exception 例外。
-     */
+	/**
+	 * リクエストに対応したPageのインスタンスを取得します。
+	 * @param req HTTP要求情報。
+	 * @return DataFormsのインスタンス。
+	 * @throws Exception 例外。
+	 */
 	protected final Page getPage(final HttpServletRequest req) throws Exception {
 		String pageext = this.getPageExt();
 		if (DataFormsServlet.configStatus == null) {
 			String uri = req.getRequestURI();
-	    	String context = req.getContextPath();
-	    	log.info("context=" + context + ", uri=" + uri);
-	    	String classname = DataFormsServlet.convertPageClassName(this.getTargetClassName(context, uri));
-	    	log.info("classname=" + classname);
-	    	Page page = this.newDataFormsInstance(classname);
-	    	page.setPage(page);
-	    	page.setRequest(req);
-	    	page.setPageExt(pageext);
+			String context = req.getContextPath();
+			log.info("context=" + context + ", uri=" + uri);
+			String classname = DataFormsServlet.convertPageClassName(this.getTargetClassName(context, uri));
+			log.info("classname=" + classname);
+			Page page = this.newDataFormsInstance(classname);
+			page.setPage(page);
+			page.setRequest(req);
+			page.setPageExt(pageext);
 			return page;
 		} else {
 			ConfigErrorPage page = new ConfigErrorPage(DataFormsServlet.configStatus);
 			page.setPage(page);
 			page.setRequest(req);
-	    	page.setPageExt(pageext);
+			page.setPageExt(pageext);
 			return page;
 		}
 	}
@@ -901,12 +912,12 @@ public class DataFormsServlet extends HttpServlet {
 	}
 
 
-    /**
-     * パラメータを取得します。
-     * @param req HTTP要求情報。
-     * @return パラメータマップ。
-     * @throws Exception 例外。
-     */
+	/**
+	 * パラメータを取得します。
+	 * @param req HTTP要求情報。
+	 * @return パラメータマップ。
+	 * @throws Exception 例外。
+	 */
 	protected Map<String, Object> getParameterMap(final HttpServletRequest req) throws Exception {
 		if (ServletFileUpload.isMultipartContent(req)) {
 			return this.getParameterMapForMultipart(req);
@@ -1015,14 +1026,14 @@ public class DataFormsServlet extends HttpServlet {
 	 * @throws Exception 例外。
 	 */
 	private void redirectErrorPage(final HttpServletRequest req, final HttpServletResponse resp, final String message) throws Exception {
-    	String context = req.getContextPath();
-    	String url = context + DataFormsServlet.errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
-    	log.info("errorPage=" + url);
-    	try {
-        	resp.sendRedirect(url);
-    	} catch (Exception e) {
-    		log.error(e.getMessage(), e);
-    	}
+		String context = req.getContextPath();
+		String url = context + DataFormsServlet.errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
+		log.info("errorPage=" + url);
+		try {
+			resp.sendRedirect(url);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -1047,27 +1058,25 @@ public class DataFormsServlet extends HttpServlet {
 		BlobFileStore.cleanup();
 	}
 
-   /**
-     * ブラウザのクッキー受け入れチェックフラグ。
-     * 
-     */
-    private static boolean cookieCheck = false;
+	/**
+	 * ブラウザのクッキー受け入れチェックフラグ。
+	 * 
+	 */
+	private static boolean cookieCheck = false;
 
-
-    
-    /**
-     * ブラウザのクッキー受け入れチェックフラグを取得します。
-     * @return ブラウザのクッキー受け入れチェックフラグ。
-     */
-    public static boolean isCookieCheck() {
+	/**
+	 * ブラウザのクッキー受け入れチェックフラグを取得します。
+	 * @return ブラウザのクッキー受け入れチェックフラグ。
+	 */
+	public static boolean isCookieCheck() {
 		return cookieCheck;
 	}
 
 
-    /**
-     * ブラウザのクッキー受け入れチェックフラグを指定します。
-     * @param cookieCheck ブラウザのクッキー受け入れチェックフラグ。
-     */
+	/**
+	 * ブラウザのクッキー受け入れチェックフラグを指定します。
+	 * @param cookieCheck ブラウザのクッキー受け入れチェックフラグ。
+	 */
 	public static void setCookieCheck(final boolean cookieCheck) {
 		DataFormsServlet.cookieCheck = cookieCheck;
 	}

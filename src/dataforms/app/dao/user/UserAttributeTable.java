@@ -39,6 +39,13 @@ public class UserAttributeTable extends Table {
 		public static final String ID_USER_ATTRIBUTE_TYPE = "userAttributeType";
 		/** ユーザ属性値フィールID。 */
 		public static final String ID_USER_ATTRIBUTE_VALUE = "userAttributeValue";
+
+		/**
+		 * コンストラクタ。
+		 */
+		public Entity() {
+		}
+
 		/**
 		 * コンストラクタ。
 		 * @param map 操作対象マップ。

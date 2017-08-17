@@ -331,10 +331,10 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public Map<String, Object> login(final Map<String, Object> data) throws Exception {
-//		data.put(UserInfoTable.Entity.ID_PASSWORD, CryptUtil.encrypt((String) data.get(UserInfoTable.Entity.ID_PASSWORD)));
 		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
 		e.setPassword(CryptUtil.encrypt(e.getPassword()));
 		GetLoginIdQuery query = new GetLoginIdQuery(data);
+		query.setCondition("m.enabled_flag='1'");
 		Map<String, Object> rec = this.executeRecordQuery(query);
 		if (rec != null) {
 			data.put(UserInfoTable.Entity.ID_USER_ID, rec.get(UserInfoTable.Entity.ID_USER_ID));

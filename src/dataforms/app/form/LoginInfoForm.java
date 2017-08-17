@@ -25,9 +25,9 @@ public class LoginInfoForm extends Form {
     private static Logger log = Logger.getLogger(LoginInfoForm.class.getName());
 
 	/**
-	 * ユーザ登録ページを有効フラグ。
+	 * ユーザ登録ページのアドレス。
 	 */
-	private static boolean enableUserRegistPage = false;
+	private static String userRegistPage = null;
 
 	/**
 	 * コンストラクタ。
@@ -38,24 +38,23 @@ public class LoginInfoForm extends Form {
 		this.addField(new UserNameField());
 	}
 
+
 	/**
-	 * ユーザ登録ページを有効フラグを取得します。
-	 * @return ユーザ登録ページを有効フラグ。
+	 * ユーザ登録ページのアドレスを取得します。
+	 * @return ユーザ登録ページのアドレス
 	 */
-	public static boolean isEnableUserRegistPage() {
-		return enableUserRegistPage;
+	public static String getUserRegistPage() {
+		return userRegistPage;
 	}
 
 	/**
-	 * ユーザ登録ページを有効フラグを設定します。
-	 * @param enableUserRegistPage ユーザ登録ページを有効フラグ。
+	 * ユーザ登録ページのアドレスを設定します。
+	 * @param userRegistPage ユーザ登録ページのアドレス。
 	 */
-	public static void setEnableUserRegistPage(final boolean enableUserRegistPage) {
-		LoginInfoForm.enableUserRegistPage = enableUserRegistPage;
+	public static void setUserRegistPage(final String userRegistPage) {
+		LoginInfoForm.userRegistPage = userRegistPage;
 	}
 
-
-	
 	@Override
 	public void init() throws Exception {
 		super.init();
@@ -131,7 +130,7 @@ public class LoginInfoForm extends Form {
     @Override
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> ret = super.getProperties();
-		ret.put("enableUserRegistPage", LoginInfoForm.isEnableUserRegistPage());
+		ret.put("userRegistPage", LoginInfoForm.getUserRegistPage());
 		return ret;
 	}
 }

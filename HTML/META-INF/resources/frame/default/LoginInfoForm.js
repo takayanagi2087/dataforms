@@ -46,9 +46,9 @@ LoginInfoForm.prototype.attach = function() {
 	form.find('#loginButton').click(function () {
 		thisPage.showLoginDialog();
 	});
-	if (this.enableUserRegistPage) {
+	if (form.userRegistPage != null) {
 		form.find('#regUserButton').click(function() {
-			window.location.href = thisPage.contextPath + "/dataforms/app/page/user/UserRegistPage." + currentPage.pageExt;
+			window.location.href = thisPage.contextPath + form.userRegistPage + "." + currentPage.pageExt;
 		});
 	} else {
 		form.find('#regUserButton').remove();

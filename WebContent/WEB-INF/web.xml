@@ -207,7 +207,39 @@
 		<param-name>page-override:dataforms.app.page.user.UserSelfEditPage</param-name>
 		<param-value>dataforms.app.page.base.HiddenPage</param-value>
 	</context-param>
+	<context-param>
+		<param-name>page-override:dataforms.app.page.user.UserRegistPage</param-name>
+		<param-value>dataforms.app.page.base.HiddenPage</param-value>
+	</context-param>
 	 -->
+	<!-- 
+		ユーザ登録ページのパス。
+	 -->
+	<context-param>
+		<param-name>user-regist-page</param-name>
+		<param-value>/dataforms/app/page/user/UserRegistPage</param-value>
+	</context-param>
+	<!-- 
+		ユーザ有効化ページのパス。
+	 -->
+	<context-param>
+		<param-name>user-enable-page</param-name>
+		<param-value>/dataforms/app/page/user/UserEnablePage</param-value>
+	</context-param>
+	<!-- 
+		ユーザ登録時のメール送信確認フラグ。
+	 -->
+	<context-param>
+		<param-name>send-user-enable-mail</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<!-- 
+		メールセッション名。
+	 -->
+	<context-param>
+		<param-name>mail-session</param-name>
+		<param-value>mail/Session</param-value>
+	</context-param>
 	<!--
 		開発ツールの無効フラグを設定します。
 		システムリリース時には無効にしたほうが安全です。
@@ -354,14 +386,6 @@
 			]
 		</param-value>
 	</context-param>
-	<!-- 
-		ユーザ登録ページの有効/無効設定
-	 -->
-	<context-param>
-		<param-name>enable-user-regist-page</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>
