@@ -428,11 +428,11 @@ public class DataFormsServlet extends HttpServlet {
 		// ユーザ登録ページ関連設定
 		LoginInfoForm.setUserRegistPage(this.getServletContext().getInitParameter("user-regist-page"));
 		UserRegistForm.setUserEnablePage(this.getServletContext().getInitParameter("user-enable-page"));
-		Boolean userEnableMail = Boolean.parseBoolean(
-			this.getServletContext().getInitParameter("send-user-enable-mail") == null ? "false"
-			: this.getServletContext().getInitParameter("send-user-enable-mail")
-		);
-		UserRegistForm.setUserEnableMail(userEnableMail);
+		String conf = this.getServletContext().getInitParameter("user-regist-page-config");
+		Map<String, Object> m = JSON.decode(conf);
+		log.debug("m.class=" + m.getClass().getName());
+		log.debug("conf=" + m.toString());
+		UserRegistForm.setConfig(m);
 	}
 
 	/**

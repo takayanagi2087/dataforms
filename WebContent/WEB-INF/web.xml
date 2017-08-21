@@ -220,7 +220,20 @@
 		<param-value>/dataforms/app/page/user/UserRegistPage</param-value>
 	</context-param>
 	<!-- 
-		ユーザ有効化ページのパス。
+		外部ユーザ登録ページ設定情報。
+	 -->
+	<context-param>
+		<param-name>user-regist-page-config</param-name>
+		<param-value>
+			{
+				"loginIdIsMail": false, // MailをログインIDとする。
+				"mailCheck": true, // メールアドレスのチェックを行う。
+				"sendUserEnableMail": true // メールアドレスのチェックを行う。
+			}
+		</param-value>
+	</context-param>
+	<!-- 
+		外部ユーザ有効化ページのパス。
 	 -->
 	<context-param>
 		<param-name>user-enable-page</param-name>
