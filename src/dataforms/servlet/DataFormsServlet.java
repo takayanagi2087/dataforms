@@ -42,6 +42,7 @@ import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.page.base.DeveloperPage;
+import dataforms.mail.MailSender;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
 import dataforms.util.MessagesUtil;
@@ -433,6 +434,10 @@ public class DataFormsServlet extends HttpServlet {
 		log.debug("m.class=" + m.getClass().getName());
 		log.debug("conf=" + m.toString());
 		UserRegistForm.setConfig(m);
+		// メール関連設定。
+		MailSender.setJndiPrefix(this.getServletContext().getInitParameter("jndi-prefix"));
+		MailSender.setMailSessionName(this.getServletContext().getInitParameter("mail-session"));
+		MailSender.setMailFrom(this.getServletContext().getInitParameter("mail-from"));
 	}
 
 	/**

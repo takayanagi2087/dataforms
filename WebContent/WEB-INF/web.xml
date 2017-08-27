@@ -26,6 +26,16 @@
 		<param-name>data-source</param-name>
 		<param-value>jdbc/dfdb</param-value>
 	</context-param>
+	<!-- メールセッション名。 -->
+	<context-param>
+		<param-name>mail-session</param-name>
+		<param-value>mail/Session</param-value>
+	</context-param>
+	<!-- メール送信元アドレス。 -->
+	<context-param>
+		<param-name>mail-from</param-name>
+		<param-value>hoge@hogehoge.jp</param-value>
+	</context-param>
 
 	<!--
 	このライブラリは、サーバ側の処理でdataforms.jar中のWEBリソース(html,css,jsファイル)を
@@ -197,18 +207,31 @@
 		メニューにも表示されず、アクセスできないページになります。
 		つまり既存ページを隠すことができます。
 	 -->
+	<!-- パスワード変更ページを隠す場合は以下を有効にしてください。 -->
 	<!--
 	<context-param>
 		<param-name>page-override:dataforms.app.page.user.ChangePasswordPage</param-name>
 		<param-value>dataforms.app.page.base.HiddenPage</param-value>
 	</context-param>
-
+	 -->
+	<!-- ユーザ情報変更ページを隠す場合は以下を有効にしてください。 -->
+	<!--
 	<context-param>
 		<param-name>page-override:dataforms.app.page.user.UserSelfEditPage</param-name>
 		<param-value>dataforms.app.page.base.HiddenPage</param-value>
 	</context-param>
+	-->
+	<!-- ユーザ登録ページを隠す場合は以下を有効にしてください。 -->
+	<!--
 	<context-param>
 		<param-name>page-override:dataforms.app.page.user.UserRegistPage</param-name>
+		<param-value>dataforms.app.page.base.HiddenPage</param-value>
+	</context-param>
+	-->
+	<!-- ユーザ有効化ページを隠す場合は以下を有効にしてください。 -->
+	<!--
+	<context-param>
+		<param-name>page-override:dataforms.app.page.user.UserEnablePage</param-name>
 		<param-value>dataforms.app.page.base.HiddenPage</param-value>
 	</context-param>
 	 -->
@@ -226,7 +249,7 @@
 		<param-name>user-regist-page-config</param-name>
 		<param-value>
 			{
-				"loginIdIsMail": false, // MailをログインIDとする。
+				"loginIdIsMail": true, // MailをログインIDとする。
 				"mailCheck": true, // メールアドレスのチェックを行う。
 				"sendUserEnableMail": true // メールアドレスのチェックを行う。
 			}
@@ -245,13 +268,6 @@
 	<context-param>
 		<param-name>send-user-enable-mail</param-name>
 		<param-value>true</param-value>
-	</context-param>
-	<!-- 
-		メールセッション名。
-	 -->
-	<context-param>
-		<param-name>mail-session</param-name>
-		<param-value>mail/Session</param-value>
 	</context-param>
 	<!--
 		開発ツールの無効フラグを設定します。

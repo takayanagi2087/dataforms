@@ -5,22 +5,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.Session;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
+
 import dataforms.app.dao.user.UserAttributeTable;
 import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.MailAddressField;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.EditForm;
+import dataforms.controller.WebComponent;
 import dataforms.field.base.Field;
+import dataforms.mail.MailSender;
+import dataforms.mail.MailTemplate;
+import dataforms.servlet.DataFormsServlet;
+import dataforms.util.CryptUtil;
 import dataforms.validator.MailAddressValidator;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
+import net.arnx.jsonic.JSON;
 
 /**
  * 外部ユーザ登録フォーム。
  *
  */
 public class UserRegistForm extends EditForm {
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(UserRegistForm.class);
+	
+	
 	/**
 	 * ユーザ有効化ページ。
 	 */
@@ -42,7 +59,7 @@ public class UserRegistForm extends EditForm {
 		if (loginIdIsMail) {
 			loginIdField.addValidator(new MailAddressValidator());
 		}
-		this.addField(table.getUserNameField()).addValidator(new RequiredValidator());
+		this.addField(table.getUserNameField()).addValidator(new RequiredValidator()).setAutocomplete(false);
 		this.addField(table.getMailAddressField()).addValidator(new RequiredValidator());
 		Boolean mailCheck = (Boolean) config.get("mailCheck");
 		if (mailCheck) {
@@ -137,6 +154,45 @@ public class UserRegistForm extends EditForm {
 		return list;
 	}
 	
+	/**
+	 * 確認メール送信。
+	 * 
+	 * @param data 登録データ。
+	 * @throws Exception 例外。
+	 */
+	protected void sendMail(final Map<String, Object> data) throws Exception {
+		String path = this.getAppropriatePath("/mailTemplate/userRegistMail.txt", this.getPage().getRequest());
+		String text = this.getWebResource(path);
+		log.debug("mailTemplate=" + text);
+		MailTemplate template = new MailTemplate(text, null);
+		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+		template.addToAddress(e.getMailAddress());
+		template.setFrom(MailSender.getMailFrom());
+		template.setReplyTo(MailSender.getMailFrom());
+		template.setArg(UserInfoTable.Entity.ID_USER_NAME, e.getUserName());
+		
+		HttpServletRequest req = this.getPage().getRequest();
+		String url = req.getRequestURL().toString();
+		String uri = req.getRequestURI();
+		url = url.replaceAll(uri, req.getContextPath()) + UserRegistForm.getUserEnablePage() + 
+				"." + WebComponent.getServlet().getPageExt();
+		
+		Map<String, Object> m = new HashMap<String, Object>();
+		m.put(UserInfoTable.Entity.ID_USER_ID, data.get(UserInfoTable.Entity.ID_USER_ID));
+//		m.put(UserInfoTable.Entity.ID_LOGIN_ID, data.get(UserInfoTable.Entity.ID_LOGIN_ID));
+		m.put(UserInfoTable.Entity.ID_MAIL_ADDRESS, data.get(UserInfoTable.Entity.ID_MAIL_ADDRESS));
+//		m.put(UserInfoTable.Entity.ID_USER_NAME, data.get(UserInfoTable.Entity.ID_USER_NAME));
+		String json = JSON.encode(m);
+		String key = CryptUtil.encrypt(json, DataFormsServlet.getQueryStringCryptPassword());
+		String enckey = java.net.URLEncoder.encode(key, DataFormsServlet.getEncoding());
+		url += "?key=" + enckey;
+		template.setLink("enableUserPage", url, url);
+		Session session = MailSender.getMailSession();
+		MailSender sender = new MailSender();
+		sender.send(template, session);
+	}
+	
+	
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
 		this.setUserInfo(data);
@@ -157,6 +213,9 @@ public class UserRegistForm extends EditForm {
 		data.put("attTable", attTable);
 		UserDao dao = new UserDao(this);
 		dao.insertUser(data);
+		if (sendUserEnableMail) {
+			this.sendMail(data);
+		}
 	}
 
 	@Override

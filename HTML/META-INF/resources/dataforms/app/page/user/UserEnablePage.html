@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="editForm">
+				<input type="hidden" id="saveMode" />
+				<input type="hidden" id="updateUserId" />
+				<input type="hidden" id="updateTimestamp" />
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>氏名</th>
+							<td><span id="userName"></span></td>
+						</tr>
+						<tr>
+							<th>ログインID.</th>
+							<td><input type="text" id="loginId"></td>
+						</tr>
+						<tr>
+							<th>パスワード</th>
+							<td><input type="password" id="password" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+		</div>
+	</body>
+</html>

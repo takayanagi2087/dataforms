@@ -198,6 +198,19 @@ public class UserDao extends Dao {
 	}
 
 	/**
+	 * userIdを指定して、そのユーザ情報を取得します。
+	 * @param userId ユーザID。
+	 * @return ユーザ情報マップ。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> queryUserInfo(final Long userId) throws Exception {
+		//Map<String, Object> p = new HashMap<String, Object>();
+		UserInfoTable.Entity p = new UserInfoTable.Entity();
+		p.setUserId(userId);
+		return this.getSelectedData(p.getMap());
+	}
+	
+	/**
 	 * 更新可能かどうかを判定します。
 	 * @param data パラメータ。
 	 * @return 更新可能な場合true。
@@ -284,6 +297,31 @@ public class UserDao extends Dao {
 
 
 	/**
+	 * ユーザを有効にします
+	 * @param data POSTされたデータ。
+	 * @throws Exception 例外。
+	 */
+	public void enableUser(final Map<String, Object> data) throws Exception {
+		if (!this.isUpdatableUser(data)) {
+			throw new ApplicationException(this.getPage(), "error.notupdatable");
+		}
+		UserInfoTable.Entity p = new UserInfoTable.Entity(data);
+		UserInfoTable.Entity e = new UserInfoTable.Entity();
+		e.setUserId(p.getUserId());
+		e.setEnabledFlag("1");
+		UserInfoTable tbl = new UserInfoTable();
+		this.executeUpdate(tbl,
+			new FieldList(
+				tbl.getEnabledFlagField()
+				, tbl.getUpdateUserIdField()
+				, tbl.getUpdateTimestampField()
+			),
+			new FieldList(tbl.getUserIdField()), e.getMap(), true);
+	}
+
+
+	
+	/**
 	 * ユーザ自身が更新できる項目を更新します。
 	 * @param data 更新データ。
 	 * @throws Exception 例外。
@@ -345,6 +383,4 @@ public class UserDao extends Dao {
 		}
 		return rec;
 	}
-	
-	// TODO:user情報の検索メソッドがあったほうが便利。
 }
