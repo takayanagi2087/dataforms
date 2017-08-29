@@ -16,7 +16,7 @@
 	<property name="jar.command" value="D:\eclipse\pleiades-e4.6\java\8\bin\jar.exe"/>
 	<!--property name="jsdoc.command" value="D:\eclipse\jsdoc-releases-3.3\jsdoc.cmd"/-->
 	<property name="jsdoc.command" value="C:\Users\takayanagi\AppData\Roaming\npm\jsdoc.cmd"/>
-	<property name="version.num" value="1.20"/>
+	<property name="version.num" value="1.21"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>
 	<property name="jsdoc.dir" value="./HTML/META-INF/resources/doc/jsdoc"/>
@@ -40,43 +40,44 @@
 		<pathelement location="WebContent/WEB-INF/lib/poi-scratchpad-3.12-20150511.jar"/>
 	</path>
 	<path id="EAR ライブラリー.libraryclasspath"/>
-	<path id="Apache Tomcat v8.0 [Apache Tomcat v8.0].libraryclasspath">
-		<pathelement location="../../tomcat/8/lib/annotations-api.jar"/>
-		<pathelement location="../../tomcat/8/lib/catalina-ant.jar"/>
-		<pathelement location="../../tomcat/8/lib/catalina-ha.jar"/>
-		<pathelement location="../../tomcat/8/lib/catalina-storeconfig.jar"/>
-		<pathelement location="../../tomcat/8/lib/catalina-tribes.jar"/>
-		<pathelement location="../../tomcat/8/lib/catalina.jar"/>
-		<pathelement location="../../tomcat/8/lib/derby.jar"/>
-		<pathelement location="../../tomcat/8/lib/derbyclient.jar"/>
-		<pathelement location="../../tomcat/8/lib/derbyLocale_ja_JP.jar"/>
-		<pathelement location="../../tomcat/8/lib/ecj-P20140317-1600.jar"/>
-		<pathelement location="../../tomcat/8/lib/el-api.jar"/>
-		<pathelement location="../../tomcat/8/lib/jasper-el.jar"/>
-		<pathelement location="../../tomcat/8/lib/jasper.jar"/>
-		<pathelement location="../../tomcat/8/lib/jsp-api.jar"/>
-		<pathelement location="../../tomcat/8/lib/mysql-connector-java.jar"/>
-		<pathelement location="../../tomcat/8/lib/postgresql-jdbc.jar"/>
-		<pathelement location="../../tomcat/8/lib/servlet-api.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-api.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-coyote.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-dbcp.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-i18n-es.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-i18n-fr.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-i18n-ja.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-jdbc.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-jni.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-spdy.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-util-scan.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-util.jar"/>
-		<pathelement location="../../tomcat/8/lib/tomcat-websocket.jar"/>
-		<pathelement location="../../tomcat/8/lib/websocket-api.jar"/>
+	<path id="Apache Tomcat v9.0 [Apache Tomcat v9.0].libraryclasspath">
+		<pathelement location="../../tomcat/9/lib/annotations-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/catalina-ant.jar"/>
+		<pathelement location="../../tomcat/9/lib/catalina-ha.jar"/>
+		<pathelement location="../../tomcat/9/lib/catalina-storeconfig.jar"/>
+		<pathelement location="../../tomcat/9/lib/catalina-tribes.jar"/>
+		<pathelement location="../../tomcat/9/lib/catalina.jar"/>
+		<pathelement location="../../tomcat/9/lib/derby.jar"/>
+		<pathelement location="../../tomcat/9/lib/derbyclient.jar"/>
+		<pathelement location="../../tomcat/9/lib/derbyLocale_ja_JP.jar"/>
+		<pathelement location="../../tomcat/9/lib/ecj-P20140317-1600.jar"/>
+		<pathelement location="../../tomcat/9/lib/el-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/jasper-el.jar"/>
+		<pathelement location="../../tomcat/9/lib/jasper.jar"/>
+		<pathelement location="../../tomcat/9/lib/jsp-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/mysql-connector-java.jar"/>
+		<pathelement location="../../tomcat/9/lib/postgresql-jdbc.jar"/>
+		<pathelement location="../../tomcat/9/lib/servlet-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-coyote.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-dbcp.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-i18n-es.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-i18n-fr.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-i18n-ja.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-jdbc.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-jni.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-spdy.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-util-scan.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-util.jar"/>
+		<pathelement location="../../tomcat/9/lib/tomcat-websocket.jar"/>
+		<pathelement location="../../tomcat/9/lib/websocket-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/javax.mail-1.6.0.jar"/>
 	</path>
 	<path id="dataforms.classpath">
 		<pathelement location="build/classes"/>
 		<path refid="Web App ライブラリー.libraryclasspath"/>
 		<path refid="EAR ライブラリー.libraryclasspath"/>
-		<path refid="Apache Tomcat v8.0 [Apache Tomcat v8.0].libraryclasspath"/>
+		<path refid="Apache Tomcat v9.0 [Apache Tomcat v9.0].libraryclasspath"/>
 	</path>
 	<target name="init">
 		<mkdir dir="build/classes"/>
