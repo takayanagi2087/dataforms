@@ -6,7 +6,7 @@ import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.controller.ApplicationException;
 import dataforms.controller.EditForm;
-import dataforms.util.CryptUtil;
+import dataforms.util.MessagesUtil;
 
 /**
  * ユーザ有効化フォームクラス。
@@ -21,7 +21,6 @@ public class UserEnableForm extends EditForm {
 		UserInfoTable table = new UserInfoTable();
 		this.addField(table.getUserNameField()).removeRequiredValidator();
 		this.addField(table.getLoginIdField()).removeRequiredValidator();
-//		this.addField(table.getMailAddressField()).removeRequiredValidator();
 		this.addField(table.getPasswordField());
 		this.addField(table.getUpdateUserIdField());
 		this.addField(table.getUpdateTimestampField());
@@ -34,7 +33,6 @@ public class UserEnableForm extends EditForm {
 		UserInfoTable.Entity e = new UserInfoTable.Entity(d);
 		this.setFormData(UserInfoTable.Entity.ID_USER_NAME, e.getUserName());
 		this.setFormData(UserInfoTable.Entity.ID_LOGIN_ID, e.getLoginId());
-//		this.setFormData(UserInfoTable.Entity.ID_MAIL_ADDRESS, e.getMailAddress());
 	}
 	
 	@Override
@@ -60,7 +58,7 @@ public class UserEnableForm extends EditForm {
 		Long userId = (Long) this.getPage().getRequest().getSession().getAttribute(UserInfoTable.Entity.ID_USER_ID);
 		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
 		e.setUserId(userId);
-		String cpass = CryptUtil.encrypt(e.getPassword());
+		String cpass = e.getPassword();
 		UserDao dao = new UserDao(this);
 		Map<String, Object> m = dao.queryUserInfo(userId);
 		UserInfoTable.Entity ui = new UserInfoTable.Entity(m);
@@ -73,6 +71,12 @@ public class UserEnableForm extends EditForm {
 	@Override
 	public void deleteData(final Map<String, Object> data) throws Exception {
 
+	}
+	
+	@Override
+	protected String getSavedMessage(final Map<String, Object> data) {
+		String msg = MessagesUtil.getMessage(this.getPage(), "message.userenabled");
+		return msg;
 	}
 
 }

@@ -308,6 +308,7 @@ public class UserDao extends Dao {
 		UserInfoTable.Entity p = new UserInfoTable.Entity(data);
 		UserInfoTable.Entity e = new UserInfoTable.Entity();
 		e.setUserId(p.getUserId());
+		e.setUpdateUserId(p.getUserId());
 		e.setEnabledFlag("1");
 		UserInfoTable tbl = new UserInfoTable();
 		this.executeUpdate(tbl,
