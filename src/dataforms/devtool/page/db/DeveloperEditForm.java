@@ -217,6 +217,8 @@ public class DeveloperEditForm extends EditForm {
 			att.put("deleteFlag", "0");
 			attTable.add(att);
 			data.put("attTable", attTable);
+			UserInfoTable.Entity e = new UserInfoTable.Entity(data);
+			e.setEnabledFlag("1");
 			this.setUserInfo(data);
 			UserDao dao = new UserDao(this);
 			dao.insertUser(data);
