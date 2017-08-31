@@ -251,7 +251,7 @@
 			{
 				"loginIdIsMail": true, // MailをログインIDとする。
 				"mailCheck": true, // メールアドレスのチェックを行う。
-				"sendUserEnableMail": true // メールアドレスのチェックを行う。
+				"sendUserEnableMail": true // ユーザ有効化ページのURLをメールする。
 			}
 		</param-value>
 	</context-param>
