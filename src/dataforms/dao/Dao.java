@@ -1314,6 +1314,7 @@ public class Dao implements JDBCConnectableObject {
 				Entity u = new Entity(uinfo);
 				java.sql.Timestamp ut1 = u.getUpdateTimestamp(); //(java.sql.Timestamp) uinfo.get("updateTimestamp");
 //				return /*uid0.equals(uid1) &&*/ ut0.equals(ut1);
+				log.debug("isUpdatable:ut0=" + ut0.toString() + ",ut1=" + ut1.toString());
 				return ut0.getTime() == ut1.getTime();
 			} else {
 				log.warn("There is no updateUserId, updateTimestamp on this page.Therefore the exclusive control does not work.");
