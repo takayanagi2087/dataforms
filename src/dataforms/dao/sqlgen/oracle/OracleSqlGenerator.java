@@ -15,7 +15,6 @@ import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.dao.sqlgen.SqlParser;
 import dataforms.field.base.Field;
-import dataforms.field.sqltype.NumericField;
 import dataforms.util.StringUtil;
 
 /**
@@ -112,7 +111,7 @@ public class OracleSqlGenerator extends SqlGenerator {
 		} else if (field instanceof SqlInteger) {
 			ret = "number(38,0)";
 		} else if (field instanceof SqlNumeric) {
-			NumericField nf = (NumericField) field;
+			SqlNumeric nf = (SqlNumeric) field;
 			ret = "number(" + nf.getPrecision() + "," + nf.getScale() + ")";
 		} else if (field instanceof SqlTime) {
 			ret = "timestamp";

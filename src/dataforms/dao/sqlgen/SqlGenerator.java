@@ -42,7 +42,6 @@ import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.GroupSummaryField;
 import dataforms.field.sqlfunc.MaxField;
 import dataforms.field.sqlfunc.SqlField;
-import dataforms.field.sqltype.NumericField;
 import dataforms.util.ClassFinder;
 import dataforms.util.StringUtil;
 
@@ -261,7 +260,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		} else if (field instanceof SqlDouble) {
 			ret = "real";
 		} else if (field instanceof SqlNumeric) {
-			NumericField nf = (NumericField) field;
+			SqlNumeric nf = (SqlNumeric) field;
 			ret = "numeric(" + nf.getPrecision() + "," + nf.getScale() + ")";
 		} else if (field instanceof SqlDate) {
 			ret = "date";
