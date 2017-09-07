@@ -115,6 +115,13 @@ Field.prototype.backupStyle = function() {
 };
 
 /**
+ * 関連データの更新後に呼び出されるメソッドです。
+ */
+Field.prototype.onUpdateRelationField = function() {
+	logger.log("onUpdateRelationField");
+};
+
+/**
  * 関連データの取得を行います。
  * <pre>
  * 関連データ取得がONの場合フィールド値の更新時にこの処理が呼ばれます。
@@ -122,6 +129,7 @@ Field.prototype.backupStyle = function() {
  * </pre>
  */
 Field.prototype.getRelationData = function() {
+	var thisField = this;
 	var m = this.getAsyncServerMethod("getRelationData");
 	var form = this.getParentForm();
 	var param = this.getAjaxParameter();
@@ -131,6 +139,7 @@ Field.prototype.getRelationData = function() {
 				form.setFieldValue(k, ret.result[k]);
 			}
 		}
+		thisField.onUpdateRelationField();
 	});
 };
 
@@ -515,6 +524,7 @@ Field.prototype.setAutocomplete = function() {
 				var form = thisField.getParentForm();
 				form.onCalc($(event.target));
 			}
+			thisField.onUpdateRelationField();
 		}
 	});
 };
