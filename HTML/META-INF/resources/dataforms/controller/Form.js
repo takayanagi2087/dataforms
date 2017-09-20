@@ -328,17 +328,6 @@ Form.prototype.lockFields = function(lk) {
 	for (var i = 0; i < this.htmlTables.length; i++) {
 		this.htmlTables[i].lockFields(lk);
 	}
-	// datepicker対応
-	var dpbtn = this.find(".ui-datepicker-trigger")
-	if (lk) {
-		dpbtn.each(function() {
-			$(this).hide();
-		});
-	} else {
-		dpbtn.each(function() {
-			$(this).show();
-		});
-	}
 };
 
 /**

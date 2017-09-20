@@ -119,3 +119,20 @@ DateField.prototype.onDestroy = function() {
 	Field.prototype.onDestroy.call(this);
 };
 
+/**
+ * フィールドのロックを行う。
+ * <pre>
+ * ボタンの表示/非表示制御を追加します。
+ * </pre>
+ */
+DateField.prototype.lock = function(lk) {
+	DateTimeField.prototype.lock.call(this, lk);
+	var tbtn = this.get().next(".ui-datepicker-trigger:first");
+	if (lk) {
+		tbtn.hide();
+	} else {
+		tbtn.show();
+	}
+};
+
+
