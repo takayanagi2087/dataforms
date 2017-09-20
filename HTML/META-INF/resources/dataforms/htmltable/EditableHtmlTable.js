@@ -37,17 +37,20 @@ EditableHtmlTable.prototype.isSortableSwitching = function() {
  */
 EditableHtmlTable.prototype.enableSortable = function() {
 	var thisTable = this;
-	this.get().find("tbody").sortable({
-		start:function(event, ui) {
-		},
-		update:function(event, ui) {
-			var cnt = thisTable.find("tbody>tr").size();
-			var lasttr = thisTable.find("tbody>tr:last");
-			var sel = "[id^='" + thisTable.selectorEscape(thisTable.id + "[" + (cnt - 1) + "]") + "']";
-			thisTable.resetIdIndex();
-		},
-		axis: "y"
-	});
+	if (this.isSortable != true) {
+		this.get().find("tbody").sortable({
+			start:function(event, ui) {
+			},
+			update:function(event, ui) {
+				var cnt = thisTable.find("tbody>tr").size();
+				var lasttr = thisTable.find("tbody>tr:last");
+				var sel = "[id^='" + thisTable.selectorEscape(thisTable.id + "[" + (cnt - 1) + "]") + "']";
+				thisTable.resetIdIndex();
+			},
+			axis: "y"
+		});
+		this.isSortable = true;
+	}
 };
 
 /**
@@ -55,7 +58,10 @@ EditableHtmlTable.prototype.enableSortable = function() {
  *
  */
 EditableHtmlTable.prototype.disableSortable = function() {
-	this.get().find("tbody").sortable("destroy");
+	if (this.isSortable == true) {
+		this.get().find("tbody").sortable("destroy");
+		this.isSortable = false;
+	}
 };
 
 
