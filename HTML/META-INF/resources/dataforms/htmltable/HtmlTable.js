@@ -383,10 +383,14 @@ HtmlTable.prototype.getLineField = function(idx, field) {
 /**
  * 指定行のフィールドを取得します。
  * @param {Integer} idx 指定行。
- * @param {Field} field フィールド。
+ * @param {Object} fobj フィールドIDまたはカラムフィールド。
  * @returns {Field} フィールド。
  */
-HtmlTable.prototype.getRowField = function(idx, field) {
+HtmlTable.prototype.getRowField = function(idx, fobj) {
+	var field = fobj;
+	if (!(fobj instanceof Field)) {
+		field = this.getColumnField(fobj);
+	}
 	var f = $.extend(true, {}, field);
 	f.id = this.id + "[" + idx + "]." + field.id;
 	f.initValidator(f.validatorList);
@@ -660,6 +664,15 @@ HtmlTable.prototype.setRowSpan = function(id) {
 		}
 		this.getTd(startrow, id).prop("rowspan", rowspan);
 	}
+};
+
+/**
+ * テーブルの行数を取得します。
+ * @returns {Number} テーブルの行数。
+ */
+HtmlTable.prototype.getRowCount = function() {
+	var n = this.find("tbody>tr").length;
+	return n;
 };
 
 
