@@ -248,16 +248,21 @@ EditableHtmlTable.prototype.onAddTr = function(rowid) {
 
 /**
  * 行を追加します。
- * @param {Element} btn 追加ボタン。
+ * @param {Object} rowinfo 追加ボタンまたは追加する行。
  * <pre>
- * 	&lt;tfoot&gt;のtableid.addButtonの場合nullが設定されます。
+ * 	rowinfoには挿入する行のElementまたは行のインデックス値を指定します。
+ * 	rowinfoにnullを設定すると最終行に追加されます。
  * </pre>
  */
-EditableHtmlTable.prototype.addRow = function(btn) {
+EditableHtmlTable.prototype.addRow = function(rowinfo) {
 	var thisTable = this;
 	var rowIndex = null;
-	if (btn != null) {
-		rowIndex = thisTable.getRowIndex($(btn));
+	if (rowinfo != null) {
+		if (rowinfo instanceof Element) {
+			rowIndex = thisTable.getRowIndex($(rowinfo));
+		} else {
+			rowIndex = rowinfo;
+		}
 	}
 	var lidx = thisTable.addTr(rowIndex);
 	this.onAddTr(thisTable.id + "[" + lidx + "]");
