@@ -250,7 +250,7 @@ EditableHtmlTable.prototype.onAddTr = function(rowid) {
  * 行を追加します。
  * @param {Object} rowinfo 追加ボタンまたは追加する行。
  * <pre>
- * 	rowinfoには挿入する行のElementまたは行のインデックス値を指定します。
+ * 	rowinfoには挿入する行のElementまたはjQueryオブジェクトまたは行のインデックス値を指定します。
  * 	rowinfoにnullを設定すると最終行に追加されます。
  * </pre>
  */
@@ -260,6 +260,8 @@ EditableHtmlTable.prototype.addRow = function(rowinfo) {
 	if (rowinfo != null) {
 		if (rowinfo instanceof Element) {
 			rowIndex = thisTable.getRowIndex($(rowinfo));
+		} else if (typeof rowinfo.attr == "function") {
+			rowIndex = thisTable.getRowIndex(rowinfo);
 		} else {
 			rowIndex = rowinfo;
 		}
