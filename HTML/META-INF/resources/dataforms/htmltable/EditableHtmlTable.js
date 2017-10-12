@@ -266,6 +266,9 @@ EditableHtmlTable.prototype.addRow = function(rowinfo) {
 			rowIndex = rowinfo;
 		}
 	}
+	if (this.getRowCount() == 0) {
+		rowIndex = null;
+	}
 	var lidx = thisTable.addTr(rowIndex);
 	this.onAddTr(thisTable.id + "[" + lidx + "]");
 	this.resetIdIndex();
