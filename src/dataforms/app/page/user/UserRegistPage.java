@@ -14,7 +14,7 @@ public class UserRegistPage extends BasePage {
 	 */
 	public UserRegistPage() {
 		this.addForm(new UserRegistForm());
-		this.setMenuItem(false);
+		this.setMenuItem(true);
 	}
 	
 }
