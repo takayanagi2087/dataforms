@@ -321,12 +321,12 @@
 	<!-- 開発ツールのjavaソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>java-source-path</param-name>
-		<param-value>/eclipse/pleiades-e4.6/workspace/dataforms/src</param-value>
+		<param-value>/eclipse/pleiades-e4.7.1/workspace/dataforms/src</param-value>
 	</context-param>
 	<!-- 開発ツールのhtml,javascript等のWEBリソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>web-source-path</param-name>
-		<param-value>/eclipse/pleiades-e4.6/workspace/dataforms/WebContent</param-value>
+		<param-value>/eclipse/pleiades-e4.7.1/workspace/dataforms/WebContent</param-value>
 	</context-param>
 	<!-- 
 		データベース初期化時に作成するユーザのレベルを指定します。
