@@ -19,6 +19,7 @@ DateField.prototype.setDatepicker = function() {
 	var comp = this.get();
 	var tag = comp.prop("tagName");
 	var type = comp.prop("type");
+	var thisField = this;
 	if (tag == "INPUT" && type == "text") {
 		$("#" + this.selectorEscape(this.id)).datepicker({
 			dateFormat: datepickerFormat
@@ -28,6 +29,10 @@ DateField.prototype.setDatepicker = function() {
 			,beforeShow:function(input, inst) {
 			}
 			,onSelect:function(datetext, inst) {
+				if (thisField.calcEventField) {
+					var form = thisField.getParentForm();
+					form.onCalc($(this));
+				}
 			}
 		});
 	}
