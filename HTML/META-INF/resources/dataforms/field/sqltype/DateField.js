@@ -12,6 +12,18 @@
 DateField = createSubclass("DateField", {}, "DateTimeField");
 
 /**
+ * Datepickerで日付を選択したときに呼び出されます。
+ * @param {String} datetext 日付テキスト。
+ * @param {Object} Datepickerのインスタンス。
+ */
+DateField.prototype.onSelect = function(datetext, inst) {
+	if (this.calcEventField) {
+		var form = this.getParentForm();
+		form.onCalc($(this));
+	}
+};
+
+/**
  * Datepickerの設定を行います。
  */
 DateField.prototype.setDatepicker = function() {
@@ -29,10 +41,7 @@ DateField.prototype.setDatepicker = function() {
 			,beforeShow:function(input, inst) {
 			}
 			,onSelect:function(datetext, inst) {
-				if (thisField.calcEventField) {
-					var form = thisField.getParentForm();
-					form.onCalc($(this));
-				}
+				thisField.onSelect(datetext, inst);
 			}
 		});
 	}
