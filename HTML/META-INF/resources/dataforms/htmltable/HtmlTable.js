@@ -597,7 +597,7 @@ HtmlTable.prototype.getSameLineField = function(f, tid) {
 };
 
 /**
- * 同じ行の指定フィールドを取得します。
+ * 指定フィールドと同じ行のフィールドを取得します。
  * @param {jQuery} f 指定フィールドに対応したjQueryオブジェクト。
  * @param {String} tid 取得するフィールドID.
  * @return {jQuery} 見つけた要素のjQueryオブジェクト。
