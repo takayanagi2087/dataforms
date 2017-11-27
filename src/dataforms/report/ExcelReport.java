@@ -490,35 +490,37 @@ public class ExcelReport extends Report {
 					int cidx = cell.getColumnIndex();
 					String value = cell.getStringCellValue();
 					if (value != null) {
-						if (value.charAt(0) == '$') {
-							CellPosition p = new CellPosition(ridx, cidx);
-							String str = value.substring(1);
-							String[]sp = str.split("[\\{\\}]");
-							ret.put(sp[0].trim(), p);
-							if (sp.length == 2) {
-								@SuppressWarnings("unchecked")
-								Map<String, Object> opt = (Map<String, Object>) JSON.decode(sp[1], Map.class);
-								log.debug("opt=" + opt.toString());
-								if (opt.containsKey("aspect")) {
-									p.setAspect((String) opt.get("aspect"));
-								}
-								if (opt.containsKey("rows")) {
-									p.setRows(((BigDecimal) opt.get("rows")).intValue());
-								}
-								if (opt.containsKey("columns")) {
-									p.setColumns(((BigDecimal) opt.get("columns")).intValue());
-								}
-								if (opt.containsKey("dx1")) {
-									p.setDx1(((BigDecimal) opt.get("dx1")).intValue());
-								}
-								if (opt.containsKey("dy1")) {
-									p.setDy1(((BigDecimal) opt.get("dy1")).intValue());
-								}
-								if (opt.containsKey("dx2")) {
-									p.setDx2(((BigDecimal) opt.get("dx2")).intValue());
-								}
-								if (opt.containsKey("dy2")) {
-									p.setDy2(((BigDecimal) opt.get("dy2")).intValue());
+						if (value.length() > 0) {
+							if (value.charAt(0) == '$') {
+								CellPosition p = new CellPosition(ridx, cidx);
+								String str = value.substring(1);
+								String[]sp = str.split("[\\{\\}]");
+								ret.put(sp[0].trim(), p);
+								if (sp.length == 2) {
+									@SuppressWarnings("unchecked")
+									Map<String, Object> opt = (Map<String, Object>) JSON.decode(sp[1], Map.class);
+									log.debug("opt=" + opt.toString());
+									if (opt.containsKey("aspect")) {
+										p.setAspect((String) opt.get("aspect"));
+									}
+									if (opt.containsKey("rows")) {
+										p.setRows(((BigDecimal) opt.get("rows")).intValue());
+									}
+									if (opt.containsKey("columns")) {
+										p.setColumns(((BigDecimal) opt.get("columns")).intValue());
+									}
+									if (opt.containsKey("dx1")) {
+										p.setDx1(((BigDecimal) opt.get("dx1")).intValue());
+									}
+									if (opt.containsKey("dy1")) {
+										p.setDy1(((BigDecimal) opt.get("dy1")).intValue());
+									}
+									if (opt.containsKey("dx2")) {
+										p.setDx2(((BigDecimal) opt.get("dx2")).intValue());
+									}
+									if (opt.containsKey("dy2")) {
+										p.setDy2(((BigDecimal) opt.get("dy2")).intValue());
+									}
 								}
 							}
 						}
