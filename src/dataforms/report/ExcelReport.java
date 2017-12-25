@@ -30,6 +30,8 @@ import dataforms.field.base.Field;
 import dataforms.util.MapUtil;
 import net.arnx.jsonic.JSON;
 
+
+// TODO:Excelの数式コピーの相対指定対応がない。
 /**
  * Excel形式のレポートクラス。
  *

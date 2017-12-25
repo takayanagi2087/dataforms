@@ -37,6 +37,8 @@ import net.arnx.jsonic.JSONEventType;
 import net.arnx.jsonic.JSONReader;
 import net.arnx.jsonic.JSONWriter;
 
+// TODO:テーブルインポート時にシーケンスを設定する処理が漏れている。
+
 /**
  * TableManagerPage用のDAOクラス。
  *

@@ -37,8 +37,10 @@ import dataforms.util.FileUtil;
 import dataforms.util.MessagesUtil;
 import dataforms.validator.ValidationError;
 
+// TODO:validatorの生成の際attachメソッドの生成は不要。
 /**
  * Webリソース作成フォームクラス。
+ * 
  */
 public class WebResourceForm extends Form {
 	/**
