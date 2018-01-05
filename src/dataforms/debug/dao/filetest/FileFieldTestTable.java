@@ -30,7 +30,7 @@ public class FileFieldTestTable extends Table {
 		this.addPkField(new RecordIdField()); //レコードID
 		this.addField(new FileCommentField()); //ファイルコメント
 		BlobStoreFileField blob = (BlobStoreFileField) this.addField(new BlobStoreFileField("blobFile")); //
-		blob.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "blob");
+		blob.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "mediumblob");
 		this.addField(new FolderStoreFileField("folderFile")); //
 		this.addField(new BlobStoreImageField("blobImage")); //
 		this.addField(new FolderStoreImageField("folderImage")); //

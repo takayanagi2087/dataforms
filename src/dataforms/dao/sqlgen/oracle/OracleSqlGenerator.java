@@ -5,6 +5,7 @@ import java.sql.Connection;
 import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.dao.Query;
 import dataforms.dao.QueryPager;
+import dataforms.dao.Table;
 import dataforms.dao.sqldatatype.SqlBigint;
 import dataforms.dao.sqldatatype.SqlChar;
 import dataforms.dao.sqldatatype.SqlInteger;
@@ -58,6 +59,15 @@ public class OracleSqlGenerator extends SqlGenerator {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * nullを返します。
+	 */
+	@Override
+	public String generateAdjustSequenceSql(final Table table) throws Exception {
+		return null;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * テーブル情報を取得するときには、DatabaseMetadataに対し、大文字のテーブル名を渡す必要があるので

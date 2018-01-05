@@ -475,7 +475,7 @@ public class TableManagerDao extends Dao {
 	
 	/**
 	 * 指定フォルダのデータをインポートします。
-	 * @param classname クラス名。
+	 * @param classname テーブルクラス名。
 	 * @param path データのパス。
 	 * @throws Exception データ。
 	 */
@@ -503,7 +503,22 @@ public class TableManagerDao extends Dao {
 						}
 					}
 				}
-
+				SqlGenerator gen = this.getSqlGenerator();
+				if (gen.isSequenceSupported()) {
+					if (tbl.recordIdExists() && tbl.isAutoIncrementId()) {
+						String sql = gen.generateAdjustSequenceSql(tbl);
+						if (sql != null) {
+							this.executeQuery(sql, (Map<String, Object>) null);
+						} else {
+							String maxsql = gen.generateGetMaxValueSql(tbl, tbl.getIdField(), new FieldList(), null);
+							Long max = NumberUtil.longValueObject(this.executeScalarQuery(maxsql, null));
+							String dssql = gen.generateDropSequenceSql(tbl.getSequenceName());
+							this.executeUpdate(dssql, (Map<String, Object>) null);
+							String cssql = gen.generateCreateSequenceSql(tbl.getSequenceName(), max.longValue() + 1);
+							this.executeUpdate(cssql, (Map<String, Object>) null);
+						}
+					}
+				}
 			} finally {
 				is.close();
 			}

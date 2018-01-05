@@ -4,10 +4,12 @@ import java.sql.Connection;
 
 import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.dao.QueryPager;
+import dataforms.dao.Table;
 import dataforms.dao.sqldatatype.SqlBlob;
 import dataforms.dao.sqldatatype.SqlClob;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
+import dataforms.util.StringUtil;
 
 /**
  * PostgreSQL用SQL Generator。
@@ -47,6 +49,24 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 	public boolean isSequenceSupported() {
 		return true;
 	}
+
+	/**
+	 * インポートされたデータに応じてシーケンスを調整します。。
+	 * @param table テーブル。
+	 * @return シーケンス調整SQL。
+	 * @throws Exception 例外。
+	 */
+	@Override
+	public String generateAdjustSequenceSql(final Table table) throws Exception {
+		String seqName = table.getSequenceName();
+		Field<?> idField = table.getIdField();
+		String tableName = table.getTableName();
+		String ret = "select setval('" + seqName + 
+				"', (select max(" + StringUtil.camelToSnake(idField.getId()) +
+				") + 1 from " + tableName + "))";
+		return ret;
+	}
+
 
 	/**
 	 * {@inheritDoc}

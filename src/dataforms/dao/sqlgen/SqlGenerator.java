@@ -495,7 +495,18 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return ret;
 	}
 
+	/**
+	 * インポートされたデータに応じてシーケンスを調整します。。
+	 * @param table テーブル。
+	 * @return シーケンス調整SQL。
+	 * @throws Exception 例外。
+	 */
+	public String generateAdjustSequenceSql(final Table table) throws Exception {
+		return null;
+	}
 
+	
+	
 	/**
 	 * レコードIDの取得SQLを取得します。
 	 * @param table テーブル。
