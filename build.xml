@@ -16,7 +16,7 @@
 	<property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/>
 	<!--property name="jsdoc.command" value="D:\eclipse\jsdoc-releases-3.3\jsdoc.cmd"/-->
 	<property name="jsdoc.command" value="C:\Users\takayanagi\AppData\Roaming\npm\jsdoc.cmd"/>
-	<property name="version.num" value="1.21"/>
+	<property name="version.num" value="1.22"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>
 	<property name="jsdoc.dir" value="./HTML/META-INF/resources/doc/jsdoc"/>
@@ -71,7 +71,7 @@
 		<pathelement location="../../tomcat/9/lib/tomcat-util.jar"/>
 		<pathelement location="../../tomcat/9/lib/tomcat-websocket.jar"/>
 		<pathelement location="../../tomcat/9/lib/websocket-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/javax.mail-1.6.0.jar"/>
+		<pathelement location="../../tomcat/9/lib/javax.mail.jar"/>
 	</path>
 	<path id="dataforms.classpath">
 		<pathelement location="build/classes"/>
