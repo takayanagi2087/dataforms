@@ -1,29 +1,43 @@
 package dataforms.controller;
 
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
 import dataforms.servlet.DataFormsServlet;
 
 /**
- * Htmlの応答情報クラス。
+ * テキスト応答クラス。
  *
  */
-public class HtmlResponse extends TextResponse {
+public class TextResponse extends Response {
+
 	/**
 	 * コンストラクタ。
 	 * @param result 実行結果。
 	 */
-	public HtmlResponse(final String result) {
-		super(result);
-//		this.setResult(result);
-		this.setContentType("text/html; charset=" + DataFormsServlet.getEncoding());
+	public TextResponse(final String result) {
+		this.setResult(result);
+		this.setContentType("text/plain; charset=" + DataFormsServlet.getEncoding());
+	}
+
+	/**
+	 * コンストラクタ。
+	 * @param result 実行結果。
+	 * @param contentType content-typeヘッダの値。
+	 */
+	public TextResponse(final String result, final String contentType) {
+		this.setResult(result);
+		this.setContentType(contentType);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * <pre>
-	 * HTMLを送信します。
+	 * テキストを送信します。
 	 * </pre>
 	 */
-/*	@Override
+	@Override
 	public void send(final HttpServletResponse resp) throws Exception {
 		resp.setContentType(this.getContentType());
 		resp.setCharacterEncoding(DataFormsServlet.getEncoding());
@@ -36,5 +50,6 @@ public class HtmlResponse extends TextResponse {
 		} finally {
 			out.close();
 		}
-	}*/
+	}
+
 }
