@@ -752,7 +752,7 @@ public class WebComponent implements JDBCConnectableObject {
 	}
 	
 	/**
-	 * 言語に応じた適切なファイルパスを検索検索します。
+	 * 言語に応じた適切なファイルパスを検索します。
 	 * <pre>
      * ブラウザの言語に応じた適切なファイルのPathを取得します。
      * pathに/home/hoge.htmlが指定された場合、以下のような優先順位でパスを選択します。
@@ -770,7 +770,10 @@ public class WebComponent implements JDBCConnectableObject {
  		if (spath.charAt(0) != '/') {
  			spath = "/" + spath;
  		}
-		String lang = req.getLocale().getLanguage();
+ 		String lang = DataFormsServlet.getFixedLanguage();
+ 		if (lang == null) {
+ 			lang = req.getLocale().getLanguage();
+ 		}
 		String ext = FileUtil.getExtention(spath);
     	String p = spath.replaceAll("\\." + ext + "$", "_" + lang + "." + ext);
     	if (StringUtil.isBlank(this.getWebResource(p))) {

@@ -121,6 +121,12 @@
 		<param-name>support-language</param-name>
 		<param-value>ja,xx,yy</param-value>
 	</context-param-->
+	
+	<!-- ブラウザの言語設定を無視し、言語を固定する場合は以下の設定を有効にします。	-->
+	<!--context-param>
+		<param-name>fixed-language</param-name>
+		<param-value>en</param-value>
+	</context-param-->
 	<!--
 		CryptUtilで使用する暗号用デフォルトパスワードを指定します。
 		UserInfoTableのパスワードの暗号化で使用するので、 ユーザ登録後変更するとログインできなくなります。

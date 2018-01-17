@@ -873,7 +873,11 @@ public class Page extends DataForms {
 	 * @return 現在の言語コード.
 	 */
 	public String getCurrentLanguage() {
-		String lang = this.getRequest().getLocale().getLanguage();
+		String lang = DataFormsServlet.getFixedLanguage();
+		if (lang == null) {
+			lang = this.getRequest().getLocale().getLanguage();
+		}
+		log.debug("request language=" + lang);
 		if (DataFormsServlet.getSupportLanguage().indexOf(lang) < 0) {
 			lang = "default";
 		}

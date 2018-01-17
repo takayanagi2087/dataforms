@@ -39,7 +39,7 @@ public class WebResourceQueryForm extends QueryForm {
 	public void init() throws Exception {
 		super.init();
 		EnumDao dao = new EnumDao(this);
-		List<Map<String, Object>> list = dao.getOptionList("webCompType", this.getPage().getRequest().getLocale().getLanguage());
+		List<Map<String, Object>> list = dao.getOptionList("webCompType", this.getPage().getCurrentLanguage());
 		List<String> tlist = new ArrayList<String>();
 		for (Map<String, Object> m: list) {
 			tlist.add((String) m.get("value"));

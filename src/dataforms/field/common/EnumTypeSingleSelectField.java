@@ -37,7 +37,8 @@ public class EnumTypeSingleSelectField extends SingleSelectField<String> impleme
 	public void init() throws Exception {
 		super.init();
 		EnumDao dao = new EnumDao(this);
-		String lang = this.getPage().getRequest().getLocale().getLanguage();
+//		String lang = this.getPage().getRequest().getLocale().getLanguage();
+		String lang = this.getPage().getCurrentLanguage();
 		this.setOptionList(dao.getTypeList(this.enumGroupCode, lang));
 	}
 

@@ -156,6 +156,11 @@ public class DataFormsServlet extends HttpServlet {
 	private static String supportLanguage = null;
 
 	/**
+	 * 固定言語.
+	 */
+	private static String fixedLanguage = null;
+
+	/**
 	 * 開発ツールの無効化フラグ。
 	 */
 	private static boolean disableDeveloperTools = true;
@@ -358,6 +363,9 @@ public class DataFormsServlet extends HttpServlet {
 		}
 		log.info("init:supportLanguage=" + DataFormsServlet.supportLanguage);
 		//
+		DataFormsServlet.fixedLanguage = this.getServletContext().getInitParameter("fixed-language");
+		log.info("init:fixedLanguage=" + DataFormsServlet.fixedLanguage);
+		
 		DataFormsServlet.disableDeveloperTools = Boolean
 				.parseBoolean(this.getServletContext().getInitParameter("disable-developer-tools") == null ? "true"
 						: this.getServletContext().getInitParameter("disable-developer-tools"));
@@ -672,6 +680,14 @@ public class DataFormsServlet extends HttpServlet {
 	 */
 	public static String getSupportLanguage() {
 		return supportLanguage;
+	}
+
+	/**
+	 * 言語固定設定を行った場合、その言語を返します。
+	 * @return 固定された言語。
+	 */
+	public static String getFixedLanguage() {
+		return fixedLanguage;
 	}
 
 	/**

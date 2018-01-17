@@ -59,7 +59,7 @@ public class EnumGroupEditForm extends EditForm {
 	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
 		EnumGroupDao dao = new EnumGroupDao(this);
 		EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity(data);
-		e.setLangCode(this.getPage().getRequest().getLocale().getLanguage());
+		e.setLangCode(this.getPage().getCurrentLanguage());
 		Map<String, Object> ret = dao.query(data);
 		return ret;
 	}

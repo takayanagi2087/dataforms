@@ -58,7 +58,7 @@ public class EnumTypeCodeField extends VarcharField {
 		String id = (String) data.get("currentFieldId");
 		String val = (String) data.get(id);
 		EnumDao dao = new EnumDao(this);
-		String langCode = this.getPage().getRequest().getLocale().getLanguage();
+		String langCode = this.getPage().getCurrentLanguage();
 		List<Map<String, Object>> list = dao.queryEnumTypeAutocomplateList(val, langCode);
 		for (Map<String, Object> m: list) {
 			EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity(m);
@@ -74,7 +74,7 @@ public class EnumTypeCodeField extends VarcharField {
 		log.debug("data=" + JSON.encode(data, true));
 		String enumTypeCode = (String) data.get(id);
 		EnumDao dao = new EnumDao(this);
-		String langCode = this.getPage().getRequest().getLocale().getLanguage();
+		String langCode = this.getPage().getCurrentLanguage();
 		Map<String, Object> ret = dao.queryEnumType(enumTypeCode, langCode);
 		return ret;
 	}
