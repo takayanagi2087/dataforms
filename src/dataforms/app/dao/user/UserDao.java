@@ -198,19 +198,6 @@ public class UserDao extends Dao {
 	}
 
 	/**
-	 * userIdを指定して、そのユーザ情報を取得します。
-	 * @param userId ユーザID。
-	 * @return ユーザ情報マップ。
-	 * @throws Exception 例外。
-	 */
-	public Map<String, Object> queryUserInfo(final Long userId) throws Exception {
-		//Map<String, Object> p = new HashMap<String, Object>();
-		UserInfoTable.Entity p = new UserInfoTable.Entity();
-		p.setUserId(userId);
-		return this.getSelectedData(p.getMap());
-	}
-	
-	/**
 	 * 更新可能かどうかを判定します。
 	 * @param data パラメータ。
 	 * @return 更新可能な場合true。
@@ -383,5 +370,52 @@ public class UserDao extends Dao {
 			throw new ApplicationException(this.getPage(), "error.invaliduserid");
 		}
 		return rec;
+	}
+	
+	/**
+	 * userIdを指定して、そのユーザ情報を取得します。
+	 * @param userId ユーザID。
+	 * @return ユーザ情報マップ。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> queryUserInfo(final Long userId) throws Exception {
+		//Map<String, Object> p = new HashMap<String, Object>();
+		UserInfoTable.Entity p = new UserInfoTable.Entity();
+		p.setUserId(userId);
+		return this.getSelectedData(p.getMap());
+	}
+	
+	/**
+	 * loginIdを指定して、そのユーザ情報を取得します。
+	 * @param loginId ユーザID。
+	 * @return ユーザ情報マップ。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> queryUserInfo(final String loginId) throws Exception {
+		UserInfoTable table = new UserInfoTable();
+		FieldList flist = new FieldList(table.getLoginIdField());
+		UserInfoTable.Entity e = new UserInfoTable.Entity();
+		e.setMailAddress(loginId);
+		List<Map<String, Object>> list =  this.queryUserList(flist, e.getMap());
+		if (list.size() > 0) {
+			return this.getSelectedData(list.get(0));
+		} else {
+			return null;
+		}
+	}
+	
+
+	/**
+	 * メールアドレスを指定してユーザを検索します。
+	 * @param mail メールアドレス。
+	 * @return ユーザリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> queryUserListByMail(final String mail) throws Exception {
+		UserInfoTable table = new UserInfoTable();
+		FieldList flist = new FieldList(table.getMailAddressField());
+		UserInfoTable.Entity e = new UserInfoTable.Entity();
+		e.setMailAddress(mail);
+		return this.queryUserList(flist, e.getMap());
 	}
 }
