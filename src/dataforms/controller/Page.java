@@ -877,7 +877,7 @@ public class Page extends DataForms {
 		if (lang == null) {
 			lang = this.getRequest().getLocale().getLanguage();
 		}
-		log.debug("request language=" + lang);
+//		log.debug("request language=" + lang);
 		if (DataFormsServlet.getSupportLanguage().indexOf(lang) < 0) {
 			lang = "default";
 		}

@@ -471,7 +471,8 @@ Field.prototype.isRequired = function(el) {
 	var type = el.prop("type");
 	if ("INPUT" == tag || "TEXTAREA" == tag || "SELECT" == tag) {
 		for (var i = 0; i < this.validatorList.length; i++) {
-			if (this.validatorList[i].jsClass == "RequiredValidator") {
+			var v = this.newInstance(this.validatorList[i]);
+			if (v instanceof RequiredValidator) {
 				return true;
 			}
 		}

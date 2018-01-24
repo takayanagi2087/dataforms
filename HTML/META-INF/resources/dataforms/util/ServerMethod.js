@@ -105,6 +105,7 @@ ServerMethod.prototype.callMethod = function(method, param, success, as) {
 		  if (window.currentPage != null) {
 			  window.currentPage.unlock();
 		  }
+		  // TODO:SUCCESS, INVALID以外の値を返した場合の処理に対応できたほうが良い。
 		  if (data.status == ServerMethod.SUCCESS || data.status == ServerMethod.INVALID) {
 			  success.call(me, data, type);
 		  } else if (data.status == ServerMethod.APPLICATION_EXCEPTION) {
@@ -296,6 +297,7 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 		var data = $(contents).find('body').text();
 		try {
 			data = window.eval('(' + data + ')');
+			// TODO:SUCCESS, INVALID以外の値を返した場合の処理に対応できたほうが良い。
 			if (data.status == ServerMethod.SUCCESS || data.status == ServerMethod.INVALID) {
 				success.call(me, data);
 			} else if (data.status == ServerMethod.APPLICATION_EXCEPTION) {
