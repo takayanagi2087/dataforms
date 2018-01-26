@@ -26,7 +26,11 @@
 		<param-name>data-source</param-name>
 		<param-value>jdbc/dfdb</param-value>
 	</context-param>
-	<!-- メールセッション名。 -->
+	<!-- 
+		メールセッション名。
+		メール送信機能を使わない場合は以下の設定をコメントアウトしてください。
+		java9でメール送信機能を使う場合、javaの起動オプションに\-\-add-modules java.activationを指定してください。
+	 -->
 	<context-param>
 		<param-name>mail-session</param-name>
 		<param-value>mail/Session</param-value>

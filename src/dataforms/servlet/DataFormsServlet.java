@@ -443,9 +443,12 @@ public class DataFormsServlet extends HttpServlet {
 		log.debug("conf=" + m.toString());
 		UserRegistForm.setConfig(m);
 		// メール関連設定。
-		MailSender.setJndiPrefix(this.getServletContext().getInitParameter("jndi-prefix"));
-		MailSender.setMailSessionName(this.getServletContext().getInitParameter("mail-session"));
-		MailSender.setMailFrom(this.getServletContext().getInitParameter("mail-from"));
+		String mailSession = this.getServletContext().getInitParameter("mail-session");
+		if (mailSession != null) {
+			MailSender.setJndiPrefix(this.getServletContext().getInitParameter("jndi-prefix"));
+			MailSender.setMailSessionName(mailSession);
+			MailSender.setMailFrom(this.getServletContext().getInitParameter("mail-from"));
+		}
 	}
 
 	/**
