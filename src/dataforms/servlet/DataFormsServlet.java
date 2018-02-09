@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.app.errorpage.ConfigErrorPage;
 import dataforms.app.form.LoginInfoForm;
+import dataforms.app.page.user.PasswordResetMailForm;
 import dataforms.app.page.user.UserRegistForm;
 import dataforms.controller.ApplicationException;
 import dataforms.controller.JsonResponse;
@@ -437,6 +438,7 @@ public class DataFormsServlet extends HttpServlet {
 		// ユーザ登録ページ関連設定
 		LoginInfoForm.setUserRegistPage(this.getServletContext().getInitParameter("user-regist-page"));
 		UserRegistForm.setUserEnablePage(this.getServletContext().getInitParameter("user-enable-page"));
+		PasswordResetMailForm.setPasswordResetPage(this.getServletContext().getInitParameter("password-reset-page"));
 		String conf = this.getServletContext().getInitParameter("user-regist-page-config");
 		Map<String, Object> m = JSON.decode(conf);
 		log.debug("m.class=" + m.getClass().getName());

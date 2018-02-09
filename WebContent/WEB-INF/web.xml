@@ -279,6 +279,13 @@
 		<param-name>send-user-enable-mail</param-name>
 		<param-value>true</param-value>
 	</context-param>
+	<!-- 
+		パスワードリセットページのパス。
+	 -->
+	<context-param>
+		<param-name>password-reset-page</param-name>
+		<param-value>/dataforms/app/page/user/PasswordResetPage</param-value>
+	</context-param>
 	<!--
 		開発ツールの無効フラグを設定します。
 		システムリリース時には無効にしたほうが安全です。
