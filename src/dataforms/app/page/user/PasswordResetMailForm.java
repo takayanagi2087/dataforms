@@ -100,7 +100,7 @@ public class PasswordResetMailForm extends EditForm {
 			String enckey = java.net.URLEncoder.encode(key, DataFormsServlet.getEncoding());
 			url += "?key=" + enckey;
 			logger.debug("url=" + url);
-			urllist += (url + "\n");
+			urllist = url;
 		}
 		template.setLink("passwordResetPage", urllist, urllist);
 

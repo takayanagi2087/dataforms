@@ -11,6 +11,7 @@ import dataforms.app.field.user.PasswordField;
 import dataforms.controller.ApplicationException;
 import dataforms.controller.EditForm;
 import dataforms.util.MessagesUtil;
+import dataforms.util.NumberUtil;
 import dataforms.validator.ValidationError;
 
 /**
@@ -19,11 +20,19 @@ import dataforms.validator.ValidationError;
  */
 public class ChangePasswordForm extends EditForm {
 	/**
-	 * コンストラクタ。
+	 * パスワードリセットモード。
 	 */
-	public ChangePasswordForm() {
+	private boolean resetMode = false;
+	/**
+	 * コンストラクタ。
+	 * @param reset trueの場合パスワードリセットモード。
+	 */
+	public ChangePasswordForm(final boolean reset) {
+		this.resetMode = reset;
 		this.addField(new LoginIdField()).removeRequiredValidator();
-		this.addField(new PasswordField("oldPassword"));
+		if (!this.resetMode) {
+			this.addField(new PasswordField("oldPassword"));
+		}
 		this.addField(new PasswordField());
 		this.addField(new PasswordField("passwordCheck"));
 	}
@@ -31,27 +40,36 @@ public class ChangePasswordForm extends EditForm {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
-		this.setFormData(UserInfoTable.Entity.ID_LOGIN_ID, loginId);
+		if (this.resetMode) {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> resetInfo = (Map<String, Object>) this.getPage().getRequest().getSession().getAttribute(PasswordResetPage.PASSWORD_RESET_INFO);
+			UserInfoTable.Entity e = new UserInfoTable.Entity(resetInfo);
+			this.setFormData(UserInfoTable.Entity.ID_LOGIN_ID, e.getLoginId());
+		} else {
+			if (this.getPage().getUserInfo() != null) {
+				String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
+				this.setFormData(UserInfoTable.Entity.ID_LOGIN_ID, loginId);
+			}
+		}
 	}
 
 	@Override
 	public List<ValidationError> validate(final Map<String, Object> param) throws Exception {
 		List<ValidationError> list = super.validate(param);
 		if (list.size() == 0) {
-			try {
-				UserDao dao = new UserDao(this);
-				String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
-				Map<String, Object> p = new HashMap<String, Object>();
-//				p.put("loginId", loginId);
-//				p.put("password", param.get("oldPassword"));
-				UserInfoTable.Entity e = new UserInfoTable.Entity(p);
-				e.setLoginId(loginId);
-				e.setPassword((String) param.get("oldPassword"));
-				dao.login(p);
-			} catch (ApplicationException e) {
-				String msg = MessagesUtil.getMessage(this.getPage(), "error.oldpasswordnotmatch");
-				list.add(new ValidationError("oldPassword", msg));
+			if (!this.resetMode) {
+				try {
+						UserDao dao = new UserDao(this);
+						String loginId = (String) this.getPage().getUserInfo().get(UserInfoTable.Entity.ID_LOGIN_ID);
+						Map<String, Object> p = new HashMap<String, Object>();
+						UserInfoTable.Entity e = new UserInfoTable.Entity(p);
+						e.setLoginId(loginId);
+						e.setPassword((String) param.get("oldPassword"));
+						dao.login(p);
+				} catch (ApplicationException e) {
+					String msg = MessagesUtil.getMessage(this.getPage(), "error.oldpasswordnotmatch");
+					list.add(new ValidationError("oldPassword", msg));
+				}
 			}
 
 			String password = (String) param.get("password");
@@ -81,9 +99,14 @@ public class ChangePasswordForm extends EditForm {
 	protected void updateData(final Map<String, Object> data) throws Exception {
 		UserDao dao = new UserDao(this);
 		this.setUserInfo(data);
-//		data.put("userId", this.getPage().getUserId());
 		UserInfoTable.Entity e = new UserInfoTable.Entity(data);
-		e.setUserId(this.getPage().getUserId());
+		if (this.resetMode) {
+			@SuppressWarnings("unchecked")
+			Map<String, Object> resetInfo = (Map<String, Object>) this.getPage().getRequest().getSession().getAttribute(PasswordResetPage.PASSWORD_RESET_INFO);
+			e.setUserId(NumberUtil.longValueObject(resetInfo.get("userId")));
+		} else {
+			e.setUserId(this.getPage().getUserId());
+		}
 		dao.updatePassword(data);
 	}
 

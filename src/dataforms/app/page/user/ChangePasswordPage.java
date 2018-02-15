@@ -11,6 +11,6 @@ public class ChangePasswordPage extends UserPage {
 	 * コンストラクタ。
 	 */
 	public ChangePasswordPage() {
-		this.addForm(new ChangePasswordForm());
+		this.addForm(new ChangePasswordForm(false));
 	}
 }
