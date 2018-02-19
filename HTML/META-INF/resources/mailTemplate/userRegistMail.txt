@@ -1,7 +1,7 @@
-ユーザ登録依頼を受け付けました。
+User registration request accepted.
 
-${userName} 様
+${userName}
 
-以下のURLをアクセスし、ユーザ情報を登録してください。
+Please access the following URL and register user information.
 ${enableUserPage}
 

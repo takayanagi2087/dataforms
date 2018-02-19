@@ -33,6 +33,7 @@ public class PasswordResetPage extends BasePage {
 	 */
 	public PasswordResetPage() {
 		this.addForm(new ChangePasswordForm(true));
+		this.setMenuItem(false);
 	}
 	
 	
