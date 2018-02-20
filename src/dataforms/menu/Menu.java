@@ -94,7 +94,7 @@ public class Menu extends WebComponent {
 				if (!"".equals(mg.get("name"))) {
 					ret.add(mg);
 				}
- 				mg = new HashMap<String, Object>();
+				mg = new HashMap<String, Object>();
 				mg.put("id", p.get("menuGroup"));
 				mg.put("name", p.get("menuGroupName"));
 				linklist = new ArrayList<Map<String, Object>>();

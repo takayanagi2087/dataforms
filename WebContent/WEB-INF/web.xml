@@ -280,6 +280,13 @@
 		<param-value>true</param-value>
 	</context-param>
 	<!-- 
+		パスワードリセットメール送信ページのパス。
+	 -->
+	<context-param>
+		<param-name>password-reset-mail-page</param-name>
+		<param-value>/dataforms/app/page/user/PasswordResetMailPage</param-value>
+	</context-param>
+	<!-- 
 		パスワードリセットページのパス。
 	 -->
 	<context-param>

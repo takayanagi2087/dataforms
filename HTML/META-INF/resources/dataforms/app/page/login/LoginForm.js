@@ -54,4 +54,9 @@ LoginForm.prototype.attach = function() {
 		form.reset();
 		return false;
 	});
+	if (this.passwordResetMailPage != null) {
+		$("#passwordResetLink").attr("href", currentPage.contextPath + this.passwordResetMailPage);
+	} else {
+		$("#passwordResetLink").hide();
+	}
 };
