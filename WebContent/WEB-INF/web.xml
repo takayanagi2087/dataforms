@@ -281,6 +281,7 @@
 	</context-param>
 	<!-- 
 		パスワードリセットメール送信ページのパス。
+		この設定を有効にすると、ログイン画面のパスワードリセットリンクが表示されます。
 	 -->
 	<context-param>
 		<param-name>password-reset-mail-page</param-name>
