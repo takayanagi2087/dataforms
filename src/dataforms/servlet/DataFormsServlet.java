@@ -442,6 +442,10 @@ public class DataFormsServlet extends HttpServlet {
 		LoginForm.setPasswordResetMailPage(this.getServletContext().getInitParameter("password-reset-mail-page"));
 		PasswordResetMailForm.setPasswordResetPage(this.getServletContext().getInitParameter("password-reset-page"));
 		String conf = this.getServletContext().getInitParameter("user-regist-page-config");
+		if (conf == null) {
+			conf = "{\"loginIdIsMail\": true, \"mailCheck\": true, \"sendUserEnableMail\": true}";
+			log.debug("user-regist-page-config is missing. use default. " + conf);
+		}
 		Map<String, Object> m = JSON.decode(conf);
 		log.debug("m.class=" + m.getClass().getName());
 		log.debug("conf=" + m.toString());
