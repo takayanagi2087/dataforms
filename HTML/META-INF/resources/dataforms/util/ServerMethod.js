@@ -304,7 +304,7 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 				me.onCatchApplicationException(data);
 			}
 		} catch (e) {
-			logger.error(e);
+			logger.error(e.message);
 			if (window.currentPage !== undefined) {
 				window.currentPage.unlock();
 			}
