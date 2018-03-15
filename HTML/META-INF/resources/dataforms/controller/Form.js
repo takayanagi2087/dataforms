@@ -224,6 +224,7 @@ Form.prototype.submitWithFile = function(method, func) {
  */
 Form.prototype.submitForDownload = function(method, func) {
 	var form = this;
+	document.cookie = "downloaded=0";
 	var m = new AsyncServerMethod(this.getUniqId() + "." + method);
 	if (func == null) {
 		m.submitWithFile(form.get(), function(ret) {
@@ -233,7 +234,23 @@ Form.prototype.submitForDownload = function(method, func) {
 	} else {
 		m.submitWithFile(form.get(), func);
 	}
-	window.currentPage.unlock();
+//	logger.log("isLocked=" + window.currentPage.isLocked());
+	var tm = setInterval(function() {
+		logger.log("isLocked=" + window.currentPage.isLocked());
+		if (!window.currentPage.isLocked()) {
+			logger.log("stop timer.");
+			clearInterval(tm);
+		} else {
+			var dl = form.getCookie("downloaded");
+			logger.log("dl=" + dl);
+			if ("1" == dl) {
+				window.currentPage.unlock();
+				logger.log("stop timer by downloaded cookie");
+				clearInterval(tm);
+				document.cookie = "downloaded=0";
+			}
+		}
+	}, 500);
 };
 
 /**

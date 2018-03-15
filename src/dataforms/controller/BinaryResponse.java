@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URLEncoder;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -189,6 +190,7 @@ public class BinaryResponse extends FileResponse {
 		resp.setHeader("Accept-Ranges", "bytes");
 		resp.setHeader("Content-Length", "" +  p.getContentLength());
 		resp.setStatus(p.getStatus());
+		resp.addCookie(new Cookie("downloaded", "1"));
 		if (p.getContentRange() != null) {
 			resp.setHeader("Content-Range", p.getContentRange());
 		}

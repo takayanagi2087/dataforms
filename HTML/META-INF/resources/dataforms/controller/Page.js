@@ -427,6 +427,14 @@ Page.prototype.unlock = function() {
 };
 
 /**
+ * ページのロック状態を取得します。
+ * @return ロックされている場合true。
+ */
+Page.prototype.isLocked = function() {
+	return $("#lockLayer").is(":visible");
+};
+
+/**
  * alertの代替えメソッドです。
  * 
  * @param {String} title ダイアログタイトル(nullの場合システム名称)。
