@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.app.errorpage.ConfigErrorPage;
 import dataforms.app.form.LoginInfoForm;
+import dataforms.app.page.backuprestore.BackupForm;
 import dataforms.app.page.login.LoginForm;
 import dataforms.app.page.user.PasswordResetMailForm;
 import dataforms.app.page.user.UserRegistForm;
@@ -292,8 +293,6 @@ public class DataFormsServlet extends HttpServlet {
 		}
 		DataFormsServlet.dataSourceName = this.getServletContext().getInitParameter("data-source");
 		log.info("init:dataSourceName=" + DataFormsServlet.dataSourceName);
-
-
 		String webresurl= this.getServletContext().getInitParameter("web-resource-url");
 		if (!StringUtil.isBlank(webresurl)) {
 			DataFormsServlet.webResourceUrl = webresurl;
@@ -383,13 +382,9 @@ public class DataFormsServlet extends HttpServlet {
 				this.getServletContext().getInitParameter("cookie-check") == null ? "false"
 				: this.getServletContext().getInitParameter("cookie-check")
 		);
-		
-		
-		
 		Page.setFramePath(this.getServletContext().getInitParameter("frame-path") == null ? "/frame/default"
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
-
 		this.getMessageProperties();
 		//
 		String topPage = this.getServletContext().getInitParameter("top-page");
@@ -419,7 +414,13 @@ public class DataFormsServlet extends HttpServlet {
 //			HttpRangeInfo.setBlockSizeList(bslist);
 			FileObject.setContentTypeList(ctlist);
 		}
-		
+
+		String backupFileName = this.getServletContext().getInitParameter("backup-file-name");
+		if (backupFileName == null) {
+			backupFileName = "backup";
+		}
+		BackupForm.setBackupFileName(backupFileName);
+
 		this.getUserRegistConf();
 		//
 		this.setupServletInstanceBean();

@@ -34,6 +34,27 @@ public class BackupForm extends Form {
 	private static Logger log = Logger.getLogger(BackupForm.class);
 	
 	/**
+	 * バックアップファイル名。
+	 */
+	private static String backupFileName = null;
+	
+	/**
+	 * バックアップファイル名を取得します。
+	 * @return バックアップファイル名。
+	 */
+	public static String getBackupFileName() {
+		return backupFileName;
+	}
+
+	/**
+	 * バックアップファイル名を設定します。
+	 * @param backupFileName バックアップファイル名。
+	 */
+	public static void setBackupFileName(final String backupFileName) {
+		BackupForm.backupFileName = backupFileName;
+	}
+
+	/**
 	 * コンストラクタ。
 	 */
 	public BackupForm() {
@@ -105,7 +126,7 @@ public class BackupForm extends Form {
 					}
 					FileUtil.createZipFile(backup.toString() + ".zip", backup.toString());
 					SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
-					resp = new BinaryResponse(backup.toString() + ".zip", "application/zip", "backup" + fmt.format(new Date()) + ".zip");
+					resp = new BinaryResponse(backup.toString() + ".zip", "application/zip", BackupForm.getBackupFileName() + fmt.format(new Date()) + ".zip");
 					((BinaryResponse) resp).setTempFile(new File(backup.toString() + ".zip"));
 				} finally {
 					log.debug("delete:" + backup.toString());

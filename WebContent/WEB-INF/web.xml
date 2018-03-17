@@ -440,6 +440,12 @@
 			]
 		</param-value>
 	</context-param>
+	<!-- バックアップファイル名 -->
+	<context-param>
+		<param-name>backup-file-name</param-name>
+		<param-value>backup</param-value>
+	</context-param>
+	
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>
