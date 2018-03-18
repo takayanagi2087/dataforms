@@ -126,7 +126,7 @@ table.responsive tbody tr th {
 }
 
 /* 入力フィールドの高さ */
-input[type="text"], input[type="email"], input[type="search"],input[type="password"] {
+input[type="text"], input[type="email"], input[type="search"], input[type="password"], input[type="file"] {
 	height: 32px;
 	width: calc(100% - 4px);
 }
