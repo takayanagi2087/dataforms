@@ -210,7 +210,7 @@ ul.accordion ul li:last-child{
 	float: right;
 	height: 100%;
 	vertical-align: bottom;
-	padding-top: 15px;
+	padding-top: 10px;
 }
 
 #alertDialog .buttonDiv,
