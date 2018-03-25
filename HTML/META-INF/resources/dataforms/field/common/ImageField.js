@@ -42,7 +42,9 @@ ImageField.prototype.attach = function() {
 			val.url = url;
 			logger.log("url=" + url);
 		}
-		thisField.showImage(val);
+		if (val.fileName.length > 0) {
+			thisField.showImage(val);
+		}
 	});
 	this.get().change(function() {
 		thisField.previewImage(this, thumb)
