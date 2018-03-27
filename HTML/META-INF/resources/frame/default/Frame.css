@@ -155,7 +155,8 @@ ul.accordion ul li:last-child{
 
 /* 通信中ロック画面のスタイル */
 #lockLayer {
-    background: url(./image/loading.gif) center no-repeat;
+	background: url(./image/loading.gif) center no-repeat;
+	z-index: 10000;
 }
 
 /* 各フォームのスタイル */
@@ -228,3 +229,48 @@ ul.accordion ul li:last-child{
 
 }
 
+/*
+ * カラム固定テーブル用のスタイル。 
+ */
+.columnFixedTable {
+	display: block;
+	position: relative;
+	overflow: scroll;
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0;
+}
+
+.columnFixedTable thead,
+.columnFixedTable tbody,
+.columnFixedTable tfoot {
+	display: block;
+	width: -webkit-max-content;
+	width: -moz-max-content;
+	width: max-content;
+}
+
+.columnFixedTable th,
+.columnFixedTable td {
+	display: inline-block;
+	padding: 0px;
+	font-size: 1.0rem;
+	height: 26px;
+}
+
+.columnFixedTable thead {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0px;
+	z-index: 2;
+}
+
+.stickyColumn {
+	position: -webkit-sticky;
+	position: sticky;
+}
+
+.columnFixedTable thead span {
+	position: relative;
+	top: 4px;
+}

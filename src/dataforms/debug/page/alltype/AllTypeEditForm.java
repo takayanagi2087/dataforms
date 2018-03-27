@@ -16,7 +16,6 @@ import dataforms.debug.dao.alltype.AllTypeAttachFileTable;
 import dataforms.debug.dao.alltype.AllTypeDao;
 import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.debug.report.AlltypeExcelReport;
-import dataforms.field.base.Field;
 import dataforms.htmltable.EditableHtmlTable;
 import dataforms.util.StringUtil;
 import dataforms.validator.FileSizeValidator;
@@ -43,9 +42,10 @@ public class AllTypeEditForm extends EditForm {
 
 		this.getFieldList().get("uploadBlobData").addValidator(new FileSizeValidator(10 * 1024 * 1024));
 		AllTypeAttachFileTable aft = new AllTypeAttachFileTable();
-		aft.getField("fileComment").setSortable(true, Field.SortOrder.DESC);
+//		aft.getField("fileComment").setSortable(true, Field.SortOrder.DESC);
 		EditableHtmlTable tbl = new EditableHtmlTable("attachFileTable", aft.getFieldList());
 		tbl.setSortable(true);
+		tbl.setFixedColumns(5);
 //		tbl.setSortableSwitching(true);
 		this.addHtmlTable(tbl);
 

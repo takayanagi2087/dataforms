@@ -158,8 +158,8 @@ select {
 }
 
 
-#mainDiv table th,
-#mainDiv table td {
+#mainDiv table.responsive th,
+#mainDiv table.responsive td {
 	height: 22px;
 }
 

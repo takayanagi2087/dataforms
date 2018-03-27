@@ -172,10 +172,133 @@ HtmlTable.prototype.setColumnSortEvent = function() {
 };
 
 /**
+ * ヘッダのカラム幅を設定します。
+ * @param {Array} warray カラム幅の配列。
+ */
+HtmlTable.prototype.setHeaderColumnWidth = function(warray) {
+	var i = 0;
+	this.find("thead tr").find("th").each(function() {
+		$(this).width(warray[i++]);
+	});
+};
+
+/**
+ * フッタのカラム幅を設定します。
+ * @param {Array} warray カラム幅の配列。
+ */
+HtmlTable.prototype.setFooterColumnWidth = function(warray) {
+	var i = 0;
+	this.find("tfoot tr").children().each(function() {
+		var colspan = $(this).attr("colspan");
+		if (colspan === undefined) {
+			$(this).width(warray[i++]);
+		} else {
+			var w = 0;
+			var cnt = parseInt(colspan);
+			for (var c = 0; c < cnt; c++) {
+				w += warray[i++];
+			}
+			$(this).width(w);
+		}
+	});
+};
+
+HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
+	var idx = 0;
+	var pos = 0;
+	tr.children().each(function() {
+		if (idx < cols) {
+			$(this).addClass("stickyColumn");
+			$(this).css("top", "0px");
+			$(this).css("left", pos + "px");
+			pos += warray[idx++];
+			$(this).css("z-index", "3");
+		}
+		var html = $(this).html();
+		$(this).html("<span class='headerText'>" + html + "</span>");
+	});
+};
+
+
+HtmlTable.prototype.setTbodyFixedColumn = function(tr, cols, warray) {
+	var idx = 0;
+	var pos = 0;
+	tr.children().each(function() {
+		if (idx < cols) {
+			$(this).addClass("stickyColumn");
+			$(this).css("left", pos + "px");
+			pos += warray[idx++];
+			$(this).css("z-index", "1");
+		}
+	});
+};
+
+HtmlTable.prototype.setTfootFixedColumn = function(tr, cols, warray) {
+	var idx = 0;
+	var pos = 0;
+	tr.children().each(function() {
+		if (idx < cols) {
+			$(this).addClass("stickyColumn");
+			$(this).css("left", pos + "px");
+			pos += warray[idx++];
+			$(this).css("z-index", "1");
+		}
+	});
+};
+
+/**
+ * 固定カラムを設定する。
+ * @param {Number} col 固定カラム数。
+ * @param {Array} warray カラム幅の配列。
+ */
+HtmlTable.prototype.setFixedColumn = function(cols, warray) {
+	var thisTable = this;
+	var idx = 0;
+	var pos = 0;
+	this.find("thead tr").each(function() {
+		thisTable.setTheadFixedColumn($(this), cols, warray);
+	});
+	this.find("tbody tr").each(function() {
+		thisTable.setTbodyFixedColumn($(this), cols, warray);
+	});
+	this.find("tfoot tr").each(function() {
+		thisTable.setTfootFixedColumn($(this), cols, warray);
+	});
+};
+
+/**
+ * 固定カラム用のスタイル設定を行います。
+ */
+HtmlTable.prototype.setFixedColumnStyle = function() {
+	var sd = this.get().closest("div.hScrollDiv");
+	var wbody = 0;
+	var warray = [];
+	this.find("tbody tr").find("td").each(function() {
+		warray.push($(this).width());
+		wbody += $(this).width();
+	});
+	this.find("thead").width(wbody);
+	this.find("tbody").width(wbody);
+	this.find("tfoot").width(wbody);
+	logger.log("wbody=" + wbody);
+	this.setHeaderColumnWidth(warray);
+	this.setFooterColumnWidth(warray);
+	this.get().closest("div.hScrollDiv").css("overflow-x", "hidden");
+	this.get().addClass("columnFixedTable");
+	if (this.fixedColumns > 0) {
+		this.setFixedColumn(this.fixedColumns, warray);
+	}
+};
+
+/**
  * HTMLエレメントとの対応付けを行います。
  */
 HtmlTable.prototype.attach = function() {
 	// WebComponent.prototype.attach.call(this);
+	logger.log("fixedColumns=" + this.fixedColumns);
+	if (this.fixedColumns >= 0) {
+		this.setFixedColumnStyle();
+	}
 	this.setSortMark();
 	this.setColumnSortEvent();
 	var tbl = this.get();
@@ -471,18 +594,25 @@ HtmlTable.prototype.setFormData = function(formData) {
 
 /**
  * 各行の背景色を設定します。
- *
  */
 HtmlTable.prototype.resetBackgroundColor = function() {
 	var fsel = 'input[type="text"],input[type="password"],textarea,select';
-	this.find('tr:even').removeClass("oddTr");
-	this.find('tr:even').find(fsel).removeClass("oddTr");
-	this.find('tr:even').addClass("evenTr");
-	this.find('tr:even').find(fsel).addClass("evenTr");
-	this.find('tr:odd').removeClass("evenTr");
-	this.find('tr:odd').find(fsel).removeClass("evenTr");
-	this.find('tr:odd').addClass("oddTr");
-	this.find('tr:odd').find(fsel).addClass("oddTr");
+	//
+	this.find('tbody tr:even').removeClass("oddTr");
+	this.find('tbody tr:even').find(fsel).removeClass("oddTr");
+	this.find('tbody tr:even td').removeClass("oddTr");
+	//
+	this.find('tbody tr:even').addClass("evenTr");
+	this.find('tbody tr:even').find(fsel).addClass("evenTr");
+	this.find('tbody tr:even td').addClass("evenTr");
+	//
+	this.find('tbody tr:odd').removeClass("evenTr");
+	this.find('tbody tr:odd').find(fsel).removeClass("evenTr");
+	this.find('tbody tr:odd td').removeClass("evenTr");
+	//
+	this.find('tbody tr:odd').addClass("oddTr");
+	this.find('tbody tr:odd').find(fsel).addClass("oddTr");
+	this.find('tbody tr:odd td').addClass("oddTr");
 };
 
 /**

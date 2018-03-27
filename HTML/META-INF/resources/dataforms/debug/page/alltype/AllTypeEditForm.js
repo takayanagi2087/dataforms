@@ -35,10 +35,10 @@ AllTypeEditForm.prototype.attach = function() {
 			}
 		});
 	});
-	$("#test1").html("<script>alert('aaa');</script>");
-	$("#test2").text("<script>alert('bbb');</script>");
-	$("#test3").val("<script>alert('ccc');</script>");
-	alert(MessagesUtil.getMessage("error.duplicate", "aaa"));
+//	$("#test1").html("<script>alert('aaa');</script>");
+//	$("#test2").text("<script>alert('bbb');</script>");
+//	$("#test3").val("<script>alert('ccc');</script>");
+//	alert(MessagesUtil.getMessage("error.duplicate", "aaa"));
 };
 
 /**

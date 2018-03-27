@@ -220,7 +220,7 @@
 				</table>
 				<h2>明細情報</h2>
 				<div class="hScrollDiv">
-					<table id="attachFileTable" class="editableTable">
+					<table id="attachFileTable" class="editableTable" style="height: 300px;">
 						<thead>
 							<tr>
 								<th class="buttonColumn"></th>
@@ -232,8 +232,9 @@
 								<th style="width: 300px;white-space:nowrap;">ファイル</th>
 								<th style="width: 300px;white-space:nowrap;">ドロップダウン</th>
 								<th style="width: 300px;white-space:nowrap;">マルチ選択リストボックス</th>
-								<th style="width: 300px;white-space:nowrap;">ラジオボタン</th>
-								<th style="width: 300px;white-space:nowrap;">チェックボックスリスト</th>
+								<th style="width: 200px;white-space:nowrap;">ラジオボタン</th>
+								<th style="width: 200px;white-space:nowrap;">チェックボックスリスト</th>
+								<th style="width: 80px;white-space:nowrap;">郵便番号</th>
 								<th style="width: 300px;white-space:nowrap;">住所</th>
 							</tr>
 						</thead>
@@ -271,21 +272,21 @@
 								<td style="width: 300px;">
 									<select id="attachFileTable[0].multiSelectListField" size="1" multiple="multiple"></select>
 								</td>
-								<td style="width: 300px;" nowrap>
+								<td style="width: 200px;" nowrap>
 									<span>
 										<input type="radio" id="attachFileTable[0].radioField[0]" name="attachFileTable[0].radioField"/>aaa
 									</span>
 								</td>
-								<td style="width: 300px;" nowrap>
+								<td style="width: 200px;" nowrap>
 									<span>
 										<input type="checkbox" id="attachFileTable[0].checkboxField[0]" name="attachFileTable[0].checkboxField"/>aaa
 									</span>
 								</td>
+								<td style="width: 80px;" nowrap>
+									<input type="text" id="attachFileTable[0].zipCode" style="width:64px;"/>
+								</td>
 								<td style="width: 300px;" nowrap>
-									<span>
-										<input type="text" id="attachFileTable[0].zipCode" style="width:64px;"/>
-										<input type="text" id="attachFileTable[0].address" />
-									</span>
+									<input type="text" id="attachFileTable[0].address" />
 								</td>
 							</tr>
 						</tbody>
@@ -294,7 +295,18 @@
 								<th class="buttonColumn">
 									<button id="attachFileTable.addButton" >+</button>
 								</th>
-								<th colspan="11">&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
 							</tr>
 						</tfoot>
 					</table>

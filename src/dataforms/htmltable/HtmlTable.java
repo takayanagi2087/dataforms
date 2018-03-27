@@ -34,7 +34,13 @@ public class HtmlTable extends WebComponent {
 	 */
 	private FieldList fieldList = new FieldList();
 
-
+	/**
+	 * 固定カラム数。
+	 */
+	private int fixedColumns = -1;
+	
+	
+	
 	/**
 	 * コンストラクタ。
 	 * @param id テーブルID。
@@ -58,6 +64,25 @@ public class HtmlTable extends WebComponent {
 		}
 	}
 
+	/**
+	 * 固定カラム数を取得します。
+	 * @return 固定カラム数。
+	 */
+	public int getFixedColumns() {
+		return fixedColumns;
+	}
+
+	/**
+	 * 固定カラム数を設定します。
+	 * <pre>
+	 * cssでposition:stickyをサポートしたブラウザで動作します。
+	 * IEでは動作しません。
+	 * </pre>
+	 * @param fixedColumns 固定カラム数。
+	 */
+	public void setFixedColumns(final int fixedColumns) {
+		this.fixedColumns = fixedColumns;
+	}
 
 	/**
 	 * テーブルのキャプションを取得します。
@@ -113,6 +138,7 @@ public class HtmlTable extends WebComponent {
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> ret = super.getProperties();
 		ret.put("fieldList", this.fieldList.getFieldListClassInfo());
+		ret.put("fixedColumns", this.getFixedColumns());
 		return ret;
 	}
 
@@ -163,5 +189,4 @@ public class HtmlTable extends WebComponent {
 		}
 		return ret;
 	}
-
 }

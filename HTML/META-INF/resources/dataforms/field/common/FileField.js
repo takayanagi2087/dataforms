@@ -95,7 +95,6 @@ FileField.prototype.hideDelCheckbox = function() {
 FileField.prototype.addElements = function(comp) {
 	var htmlstr = this.additionalHtmlText;
 	var html = htmlstr.replace(/\$\{fieldId\}/g, this.id);
-	logger.log("htmlstr=" + html);
 	var tag = comp.prop("tagName");
 	var type = comp.prop("type");
 	if ("INPUT" == tag && type == "file") {
