@@ -59,7 +59,7 @@ AllTypeEditForm.prototype.getFieldDump = function(id) {
  * 各種getValueのテストを行います。
  */
 AllTypeEditForm.prototype.getValueTest = function() {
-	logger.log("getValueTest()");
+/*	logger.log("getValueTest()");
 	var text = "";
 	text += this.getFieldDump("varcharField");
 	text += this.getFieldDump("numericField");
@@ -74,6 +74,10 @@ AllTypeEditForm.prototype.getValueTest = function() {
 	text += this.getFieldDump("uploadFileData");
 
 //	alert(text);
-	logger.log(text);
+	logger.log(text);*/
+
+	this.find("#attachFileTable thead tr").find("th").each(function() {
+		logger.dir(this);
+	});
 
 };

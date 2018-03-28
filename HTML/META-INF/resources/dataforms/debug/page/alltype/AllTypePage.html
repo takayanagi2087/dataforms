@@ -234,8 +234,7 @@
 								<th style="width: 300px;white-space:nowrap;">マルチ選択リストボックス</th>
 								<th style="width: 200px;white-space:nowrap;">ラジオボタン</th>
 								<th style="width: 200px;white-space:nowrap;">チェックボックスリスト</th>
-								<th style="width: 80px;white-space:nowrap;">郵便番号</th>
-								<th style="width: 300px;white-space:nowrap;">住所</th>
+								<th style="width: 300px;white-space:nowrap;" colspan="2">住所</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -252,13 +251,12 @@
 									<input type="hidden" id="attachFileTable[0].sortOrder" value=""/>
 									<input type="hidden" id="attachFileTable[0].updateUserId" />
 									<input type="hidden" id="attachFileTable[0].updateTimestamp" />
-
 								</td>
 								<td style="width: 82px;">
-									<input type="text" style="width:80px;" id="attachFileTable[0].fileComment" value=""/>
+									<input type="text" id="attachFileTable[0].fileComment" value=""/>
 								</td>
 								<td style="width: 120px; white-space: nowrap;">
-									<input type="text" id="attachFileTable[0].dateField" value="" style="width: 90px !important;"/>
+									<input type="text" id="attachFileTable[0].dateField" value="" style="width: calc(100% - 42px) !important;"/>
 								</td>
 								<td style="width: 300px;" nowrap>
 									<input type="file" id="attachFileTable[0].blobData" value=""/>
@@ -283,7 +281,7 @@
 									</span>
 								</td>
 								<td style="width: 80px;" nowrap>
-									<input type="text" id="attachFileTable[0].zipCode" style="width:64px;"/>
+									<input type="text" id="attachFileTable[0].zipCode" />
 								</td>
 								<td style="width: 300px;" nowrap>
 									<input type="text" id="attachFileTable[0].address" />

@@ -18,7 +18,12 @@ table caption {
 	font-weight: bold;
 	text-align: left; 
 }
-tr {height: 20px; border : 0px;}
+tr {
+	height: 26px;
+	line-height: 26px;
+	border : 0px;
+}
+
 th {background-color: #E0E0FF; text-align:center; font-weight:normal; border : 0px;}
 td {border:0px;}
 h1 {font-size: 120%;}
@@ -183,15 +188,9 @@ ul.accordion ul li:last-child{
 
 /* カラムソート用のボタン関連 */
 .sortableMark {
-	display: inline-block;
-	position: relative;
-	top:3px;
 }
 
 .sortableLabel {
-	display: inline-block;
-	position: relative;
-	top: -4px;
 }
 
 .noscriptDiv {
@@ -250,12 +249,42 @@ ul.accordion ul li:last-child{
 	width: max-content;
 }
 
+.columnFixedTable tr {
+	height: 26px;
+	line-height: 26px;
+}
+
 .columnFixedTable th,
 .columnFixedTable td {
 	display: inline-block;
-	padding: 0px;
+	padding: 1px;
+	border-right-style: solid;
+	border-right-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
 	font-size: 1.0rem;
 	height: 26px;
+}
+
+.columnFixedTable thead:first-child th {
+	border-top-style: solid;
+	border-top-width: 2px;
+}
+
+.columnFixedTable thead th:first-child,
+.columnFixedTable tbody td:first-child,
+.columnFixedTable tfoot th:first-child {
+	border-left-style: solid;
+	border-left-width: 2px;
+}
+
+.columnFixedTable th,
+.columnFixedTable td {
+	border-color: #ffffff;
+}
+
+.columnFixedTable tfoot th {
+	border-color: #e0e0ff;
 }
 
 .columnFixedTable thead {
@@ -264,6 +293,7 @@ ul.accordion ul li:last-child{
 	top: 0px;
 	z-index: 2;
 }
+
 
 .stickyColumn {
 	position: -webkit-sticky;

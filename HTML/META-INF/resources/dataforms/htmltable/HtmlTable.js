@@ -172,23 +172,14 @@ HtmlTable.prototype.setColumnSortEvent = function() {
 };
 
 /**
- * ヘッダのカラム幅を設定します。
+ * テーブルの各カラム幅を設定します。
+ * @param {String} tag "thead"または"tfoot"。
  * @param {Array} warray カラム幅の配列。
+ * @param {Array} warrayAll カラム幅の配列(padding, borderを含めた幅)。
  */
-HtmlTable.prototype.setHeaderColumnWidth = function(warray) {
+HtmlTable.prototype.setColumnWidth = function(tag, warray, warrayAll) {
 	var i = 0;
-	this.find("thead tr").find("th").each(function() {
-		$(this).width(warray[i++]);
-	});
-};
-
-/**
- * フッタのカラム幅を設定します。
- * @param {Array} warray カラム幅の配列。
- */
-HtmlTable.prototype.setFooterColumnWidth = function(warray) {
-	var i = 0;
-	this.find("tfoot tr").children().each(function() {
+	this.find(tag + " tr").children().each(function() {
 		var colspan = $(this).attr("colspan");
 		if (colspan === undefined) {
 			$(this).width(warray[i++]);
@@ -196,13 +187,41 @@ HtmlTable.prototype.setFooterColumnWidth = function(warray) {
 			var w = 0;
 			var cnt = parseInt(colspan);
 			for (var c = 0; c < cnt; c++) {
-				w += warray[i++];
+				if (c < (cnt - 1)) {
+					w += warrayAll[i++];
+				} else {
+					w += warray[i++];
+				}
 			}
 			$(this).width(w);
 		}
 	});
 };
 
+/**
+ * ヘッダのカラム幅を設定します。
+ * @param {Array} warray カラム幅の配列。
+ * @param {Array} warrayAll カラム幅の配列(padding, borderを含めた幅)。
+ */
+HtmlTable.prototype.setHeaderColumnWidth = function(warray, warrayAll) {
+	this.setColumnWidth("thead", warray, warrayAll);
+};
+
+/**
+ * フッタのカラム幅を設定します。
+ * @param {Array} warray カラム幅の配列。
+ * @param {Array} warrayAll カラム幅の配列(padding, borderを含めた幅)。
+ */
+HtmlTable.prototype.setFooterColumnWidth = function(warray, warrayAll) {
+	this.setColumnWidth("tfoot",warray, warrayAll);
+};
+
+/**
+ * thead用の固定カラム設定。
+ * @param {jQuery} tr 設定するtrのjQueryオブジェクト。
+ * @param {Number} cols 固定カラム数。
+ * @param {Array} warray カラム幅の配列。
+ */
 HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
 	var idx = 0;
 	var pos = 0;
@@ -214,12 +233,16 @@ HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
 			pos += warray[idx++];
 			$(this).css("z-index", "3");
 		}
-		var html = $(this).html();
-		$(this).html("<span class='headerText'>" + html + "</span>");
 	});
 };
 
 
+/**
+ * tbody用の固定カラム設定。
+ * @param {jQuery} tr 設定するtrのjQueryオブジェクト。
+ * @param {Number} cols 固定カラム数。
+ * @param {Array} warray カラム幅の配列。
+ */
 HtmlTable.prototype.setTbodyFixedColumn = function(tr, cols, warray) {
 	var idx = 0;
 	var pos = 0;
@@ -233,6 +256,12 @@ HtmlTable.prototype.setTbodyFixedColumn = function(tr, cols, warray) {
 	});
 };
 
+/**
+ * tfoot用の固定カラム設定。
+ * @param {jQuery} tr 設定するtrのjQueryオブジェクト。
+ * @param {Number} cols 固定カラム数。
+ * @param {Array} warray カラム幅の配列。
+ */
 HtmlTable.prototype.setTfootFixedColumn = function(tr, cols, warray) {
 	var idx = 0;
 	var pos = 0;
@@ -267,26 +296,37 @@ HtmlTable.prototype.setFixedColumn = function(cols, warray) {
 };
 
 /**
+ * 指定されたカラムの幅を取得します。
+ * @param {jQuery} col カラムのjQueryオブジェクト。
+ */
+HtmlTable.prototype.getColumnWidth = function(col) {
+	return col.outerWidth(true);
+};
+
+/**
  * 固定カラム用のスタイル設定を行います。
  */
 HtmlTable.prototype.setFixedColumnStyle = function() {
 	var sd = this.get().closest("div.hScrollDiv");
+	this.get().closest("div.hScrollDiv").css("overflow-x", "hidden");
+	this.get().addClass("columnFixedTable");
 	var wbody = 0;
 	var warray = [];
-	this.find("tbody tr").find("td").each(function() {
+	var warrayAll = [];
+	var thisTable = this;
+	this.find("tbody tr:first").find("td").each(function() {
 		warray.push($(this).width());
-		wbody += $(this).width();
+		var fw = thisTable.getColumnWidth($(this));
+		warrayAll.push(fw);
+		wbody += fw;
 	});
 	this.find("thead").width(wbody);
 	this.find("tbody").width(wbody);
 	this.find("tfoot").width(wbody);
-	logger.log("wbody=" + wbody);
-	this.setHeaderColumnWidth(warray);
-	this.setFooterColumnWidth(warray);
-	this.get().closest("div.hScrollDiv").css("overflow-x", "hidden");
-	this.get().addClass("columnFixedTable");
+	this.setHeaderColumnWidth(warray, warrayAll);
+	this.setFooterColumnWidth(warray, warrayAll);
 	if (this.fixedColumns > 0) {
-		this.setFixedColumn(this.fixedColumns, warray);
+		this.setFixedColumn(this.fixedColumns, warrayAll);
 	}
 };
 
