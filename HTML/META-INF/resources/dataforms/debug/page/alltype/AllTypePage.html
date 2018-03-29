@@ -6,6 +6,9 @@
 		<style type="text/css">
 /*			#editForm th {width: 100px;}
 			#queryForm th {width: 100px;}*/
+			#attachFileTable td {
+				height: 100px;
+			}
 		</style>
 		<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 	</head>
@@ -56,16 +59,16 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td style="text-align:right;">
+							<td style="text-align:right;width: 50px;">
 								<span id="queryResult[0].rowNo" ></span>
 								<input type="hidden" id="queryResult[0].recordIdField">
 							</td>
-							<td>
+							<td style="width: 200px;">
 								<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].charField"></span></a>&nbsp;
 							</td>
-							<td><span id="queryResult[0].varcharField"></span></td>
-							<td><span id="queryResult[0].numericField"></span></td>
-							<td>
+							<td style="width: 200px;"><span id="queryResult[0].varcharField"></span></td>
+							<td style="width: 100px;"><span id="queryResult[0].numericField"></span></td>
+							<td style="width: 200px;">
 								<input type="button" id="queryResult[0].viewButton" value="参照">
 								<input type="button" id="queryResult[0].referButton" value="参照登録">
 								<input type="button" id="queryResult[0].deleteButton" value="削除">
@@ -223,8 +226,7 @@
 					<table id="attachFileTable" class="editableTable" style="height: 300px;">
 						<thead>
 							<tr>
-								<th class="buttonColumn"></th>
-								<th class="buttonColumn"></th>
+								<th colspan="2"></th>
 								<th style="width: 24px;" nowrap>No.</th>
 								<th style="white-space:nowrap;">コメント</th>
 								<th style="white-space:nowrap;width:120px;">日付</th>
@@ -268,7 +270,7 @@
 									<select id="attachFileTable[0].dropdownField" ></select>
 								</td>
 								<td style="width: 300px;">
-									<select id="attachFileTable[0].multiSelectListField" size="1" multiple="multiple"></select>
+									<select id="attachFileTable[0].multiSelectListField" size="1" multiple="multiple" style="height:100%;"></select>
 								</td>
 								<td style="width: 200px;" nowrap>
 									<span>
