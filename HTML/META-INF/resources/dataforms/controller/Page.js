@@ -396,23 +396,17 @@ Page.prototype.showLoginDialog = function() {
  * </pre>
  */
 Page.prototype.lock = function() {
-    $("#lockLayer").css({
-        backgroundColor: 'black',
-        position: 'absolute',
-        display: 'block',
-        left: 0,
-        top: 0,
-        opacity: 0.5,
-        width: $(document).width(),
-        height: $(document).height()
-      });
-    $("#lockLayer").addClass("lockLayerStyle");
-	  $(window).on("resize.lockLayer", function() {
-	    $('#lockLayer').css({
-	      width: $(document).width(),
-	      height: $(document).height()
-	    });
-	  });
+	$("#lockLayer").css({
+		display: 'block',
+		width: $(document).width(),
+		height: $(document).height()
+	});
+	$(window).on("resize.lockLayer", function() {
+		$('#lockLayer').css({
+			width: $(document).width(),
+			height: $(document).height()
+		});
+	});
 };
 
 /**

@@ -4,7 +4,6 @@
  * 各デバイス共通のスタイルシートです。
  * Fontの指定や配色などを指定します。
  */
-
 html,body {
 	font-weight: normal;
 	width: 98%;
@@ -40,20 +39,19 @@ h2 {font-size: 120%;}
 	background-color:rgb(232,242,254)
 }
 
+/* 必須入力フィールドのスタイル */
+.requiredFieldLabel:after {
+	content: " (*)";
+	display: inline;
+	color: red;
+}
 
-/* ヘッダブロック */
+/*
+ * ヘッダ領域(開始) 
+ */
 #headerDiv {
 	width: 98%;
 	clear: both;
-}
-
-#bodyTable {
-	table-layout: fixed;
-	width: 98%;
-}
-
-#bodyTable td {
-	vertical-align: top;
 }
 
 #headerDiv table {
@@ -86,10 +84,29 @@ h2 {font-size: 120%;}
  	text-align: right;
 }
 
+/*
+ * ボディ領域(開始) 
+ */
 body > #mainDiv {
 }
 
-/* フッター */
+#bodyTable {
+	table-layout: fixed;
+	width: 98%;
+}
+
+#bodyTable td {
+	vertical-align: top;
+}
+/*
+ * ボディ領域(終了) 
+ */
+
+
+
+/*
+ * フッター領域 
+ */
 #footerDiv {
 	clear: both;
 	background-color: lavender;
@@ -98,7 +115,9 @@ body > #mainDiv {
 }
 
 
-/*　エラーメッセージ領域のスタイル */
+/*
+ * エラーメッセージ領域(開始) 
+ */
 .errorMessages {color: red;}
 /* エラーが発生したフィールドのスタイル */
 .errorField {background-color:mistyrose;}
@@ -106,15 +125,14 @@ body > #mainDiv {
 .warnTr {background-color:khaki;}
 
 .errorTr {background-color:mistyrose;}
+/*
+ * エラーメッセージ領域(終了) 
+ */
 
-/* 必須入力フィールドのスタイル */
-.requiredFieldLabel:after {
-	content: " (*)";
-	display: inline;
-	color: red;
-}
 
-/* アコーディオンメニュー用スタイル(開始).*/
+/*
+ * アコーディオンメニュー用スタイル(開始).
+ */
 li{
 	list-style: none;
 	text-align: left;
@@ -150,19 +168,15 @@ ul.accordion ul li{
 ul.accordion ul li:last-child{
 	border:none;
 }
-/* アコーディオンメニュー用スタイル(終了).*/
+/*
+ * アコーディオンメニュー用スタイル(終了).
+ */
 
 /* 編集可能テーブル用スタイル */
 .editableTable {
 	table-layout: fixed;
 }
 
-
-/* 通信中ロック画面のスタイル */
-#lockLayer {
-	background: url(./image/loading.gif) center no-repeat;
-	z-index: 10000;
-}
 
 /* 各フォームのスタイル */
 #mainDiv form {
@@ -186,26 +200,33 @@ ul.accordion ul li:last-child{
 }
 
 
-/* カラムソート用のボタン関連 */
+/*
+ * カラムソートヘッダ関連(開始) 
+ */
 .sortableMark {
 }
 
 .sortableLabel {
 }
+/*
+ * カラムソートヘッダ関連(終了) 
+ */
 
+/* javascript無効エラーメッセージの位置指定 */
 .noscriptDiv {
 	position:fixed;
 	top:0px;
 	left:0px;
 }
 
-/* スクロールDIV */
+/* 横スクロール用DIV */
 .hScrollDiv {
 	display: block;
 	width: 100%;
 	overflow-x:auto;
 }
 
+/* dataforms.jarのバージョン情報のスタイル */
 #dataformsInfo {
 	float: right;
 	height: 100%;
@@ -213,25 +234,34 @@ ul.accordion ul li:last-child{
 	padding-top: 10px;
 }
 
+/* currentPage.alert(),currentPage.confirm()のスタイル */
 #alertDialog .buttonDiv,
 #confirmDialog .buttonDiv {
 	width: 100%;
 	text-align: center;
 }
 
+/* テキストボックスロック時のスタイル */
 .lockedTextbox {
-	
 }
 
-
-.lockLayerStyle {
-
+/* ページロックDIVのスタイル */
+#lockLayer {
+	background: url(./image/loading.gif) center no-repeat;
+	background-color: black;
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+	opacity: 0.5;
+	z-index: 10000;
 }
 
 /*
- * カラム固定テーブル用のスタイル。 
+ * カラム固定テーブル用のスタイル(開始) 
+ *
  */
-.columnFixedTable {
+table.columnFixedTable {
 	display: block;
 	position: relative;
 	overflow: scroll;
@@ -240,67 +270,101 @@ ul.accordion ul li:last-child{
 	font-size: 0;
 }
 
-.columnFixedTable thead,
-.columnFixedTable tbody,
-.columnFixedTable tfoot {
+table.columnFixedTable thead,
+table.columnFixedTable tbody,
+table.columnFixedTable tfoot {
 	display: block;
 	width: -webkit-max-content;
 	width: -moz-max-content;
 	width: max-content;
 }
 
-.columnFixedTable tr {
+table.columnFixedTable tr {
 	height: 26px;
 	line-height: 26px;
 }
 
-.columnFixedTable th,
-.columnFixedTable td {
+table.columnFixedTable th,
+table.columnFixedTable td {
 	display: inline-block;
 	padding: 1px;
-	border-right-style: solid;
-	border-right-width: 2px;
-	border-bottom-style: solid;
-	border-bottom-width: 2px;
 	font-size: 1.0rem;
 	height: 26px;
-}
-
-.columnFixedTable thead:first-child th {
-	border-top-style: solid;
-	border-top-width: 2px;
-}
-
-.columnFixedTable thead th:first-child,
-.columnFixedTable tbody td:first-child,
-.columnFixedTable tfoot th:first-child {
-	border-left-style: solid;
-	border-left-width: 2px;
-}
-
-.columnFixedTable th,
-.columnFixedTable td {
 	border-color: #ffffff;
+	border-width: 2px;
+	border-style: solid;
 }
 
-.columnFixedTable tfoot th {
+table.columnFixedTable tr td:not(:first-child),
+table.columnFixedTable tr th:not(:first-child) {
+	border-left-style: none;
+}
+
+table.columnFixedTable thead tr:not(:first-child) th,
+table.columnFixedTable tr td {
+	border-top-style: none;
+}
+
+/* --- ボーダー色を背景色以外にする場合以下の設定をコメントアウトしてください。 */
+table.columnFixedTable tr th,
+table.columnFixedTable tr td {
+	border-left-style: none;
+	border-top-style: none;
+}
+/* --- */
+
+table.columnFixedTable tfoot th {
 	border-color: #e0e0ff;
 }
 
-.columnFixedTable thead {
+table.columnFixedTable thead {
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0px;
 	z-index: 2;
 }
 
-
-.stickyColumn {
+table.columnFixedTable .fixedColumn {
 	position: -webkit-sticky;
 	position: sticky;
 }
 
-.columnFixedTable thead span {
-	position: relative;
-	top: 4px;
+/*
+ * カラム固定テーブル用のスタイル(終了)
+ *
+ */
+ 
+ /*
+  * jQuery-uiのdatepiker関連の設定(開始)。
+  */
+.ui-datepicker-trigger {
+	line-height: normal;
+	margin: 0px;
+	width: 25px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #808080;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 6px;
+	padding-right: 6px;
+} 
+ /* Datepickerの設定されたフィールド */
+.hasDatepicker {
+	width: calc(100% - 32px) !important;
 }
+
+/* 範囲フィールドのクラス */
+.rangeField {
+	width: calc((100% - 32x) / 2) !important;
+}
+
+/* 日付範囲フィールドのクラス */
+.dateRangeField {
+	width: calc((100% - 32px) / 2 - 32px) !important;
+}
+
+ /*
+  * jQuery-uiのdatepiker関連の設定(終了)。
+  */
+ 

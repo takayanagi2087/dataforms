@@ -187,19 +187,3 @@ select {
 #queryResultForm #bottomPageButton {
 	width: 48px;
 }
-
-/* Datepickerの設定されたフィールド */
-.hasDatepicker {
-	width: calc(100% - 42px) !important;
-}
-
-/* 範囲フィールドのクラス */
-.rangeField {
-	width: calc((100% - 32px) / 2) !important;
-}
-
-/* 日付範囲フィールドのクラス */
-.dateRangeField {
-	width: calc((100% - 32px) / 2 - 32px) !important;
-}
-
