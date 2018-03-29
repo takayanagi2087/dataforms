@@ -73,12 +73,21 @@ public class HtmlTable extends WebComponent {
 	}
 
 	/**
-	 * 固定カラム数を設定します。
+	 * スクロール時に固定するカラム数を設定します。
 	 * <pre>
-	 * cssでposition:stickyをサポートしたブラウザで動作します。
-	 * IEでは動作しません。
+	 * CSSでposition:stickyをサポートしたブラウザで動作します。
+	 * Chrome/Firefox/Edge/Safariで動作します。IEでは動作しません。
+	 * またEdgeでは、横スクロール時にヘッダの固定部分がちらつくという問題が残っています。
 	 * </pre>
 	 * @param fixedColumns 固定カラム数。
+	 * <pre>
+	 * &lt;td&gt;&lt;/td&gt;の数で固定するカラム数を指定します。
+	 * デフォルト値は-1で、通常のスクロールしないテーブルです。
+	 * 0を指定するとヘッダのみ固定し、tbody以下がスクロールします。
+	 * 1以上を指定すると横スクロール時に左から指定された数分のカラムが固定されます。
+	 * 0以上を指定した場合、対応する&lt;table&gt;&lt;/table&gt;の幅と高さ、
+	 * &lt;tbody&gt;&lt;tbody&gt;中の各&lt;td&gt;&lt;/td&gt;の幅を設定する必要があります。
+	 * </pre>
 	 */
 	public void setFixedColumns(final int fixedColumns) {
 		this.fixedColumns = fixedColumns;
