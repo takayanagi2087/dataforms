@@ -178,23 +178,25 @@ HtmlTable.prototype.setColumnSortEvent = function() {
  * @param {Array} warrayAll カラム幅の配列(padding, borderを含めた幅)。
  */
 HtmlTable.prototype.setColumnWidth = function(tag, warray, warrayAll) {
-	var i = 0;
-	this.find(tag + " tr").children().each(function() {
-		var colspan = $(this).attr("colspan");
-		if (colspan === undefined) {
-			$(this).width(warray[i++]);
-		} else {
-			var w = 0;
-			var cnt = parseInt(colspan);
-			for (var c = 0; c < cnt; c++) {
-				if (c < (cnt - 1)) {
-					w += warrayAll[i++];
-				} else {
-					w += warray[i++];
+	this.find(tag + " tr").each(function () {
+		var i = 0;
+		$(this).children().each(function() {
+			var colspan = $(this).attr("colspan");
+			if (colspan === undefined) {
+				$(this).width(warray[i++]);
+			} else {
+				var w = 0;
+				var cnt = parseInt(colspan);
+				for (var c = 0; c < cnt; c++) {
+					if (c < (cnt - 1)) {
+						w += warrayAll[i++];
+					} else {
+						w += warray[i++];
+					}
 				}
+				$(this).width(w);
 			}
-			$(this).width(w);
-		}
+		});
 	});
 };
 
@@ -227,10 +229,17 @@ HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
 	var pos = 0;
 	tr.children().each(function() {
 		if (idx < cols) {
-			$(this).addClass("stickyColumn");
+			$(this).addClass("fixedColumn");
 			$(this).css("top", "0px");
 			$(this).css("left", pos + "px");
-			pos += warray[idx++];
+			var colspan = $(this).prop("colspan");
+			logger.log("colspan=" + colspan);
+			if (colspan == null) {
+				colspan = 1;
+			}
+			for (var i = 0; i < colspan; i++) {
+				pos += warray[idx++];
+			}
 			$(this).css("z-index", "3");
 		}
 	});
@@ -248,7 +257,7 @@ HtmlTable.prototype.setTbodyFixedColumn = function(tr, cols, warray) {
 	var pos = 0;
 	tr.children().each(function() {
 		if (idx < cols) {
-			$(this).addClass("stickyColumn");
+			$(this).addClass("fixedColumn");
 			$(this).css("left", pos + "px");
 			pos += warray[idx++];
 			$(this).css("z-index", "1");
@@ -267,7 +276,7 @@ HtmlTable.prototype.setTfootFixedColumn = function(tr, cols, warray) {
 	var pos = 0;
 	tr.children().each(function() {
 		if (idx < cols) {
-			$(this).addClass("stickyColumn");
+			$(this).addClass("fixedColumn");
 			$(this).css("left", pos + "px");
 			pos += warray[idx++];
 			$(this).css("z-index", "1");
