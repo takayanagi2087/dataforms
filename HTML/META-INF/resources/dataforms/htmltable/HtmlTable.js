@@ -219,12 +219,12 @@ HtmlTable.prototype.setFooterColumnWidth = function(warray, warrayAll) {
 };
 
 /**
- * thead用の固定カラム設定。
+ * thead,tfoot用の固定カラム設定。
  * @param {jQuery} tr 設定するtrのjQueryオブジェクト。
  * @param {Number} cols 固定カラム数。
  * @param {Array} warray カラム幅の配列。
  */
-HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
+HtmlTable.prototype.lockColumn = function(tr, cols, warray) {
 	var idx = 0;
 	var pos = 0;
 	tr.children().each(function() {
@@ -243,6 +243,17 @@ HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
 			$(this).css("z-index", "3");
 		}
 	});
+};
+
+
+/**
+ * thead用の固定カラム設定。
+ * @param {jQuery} tr 設定するtrのjQueryオブジェクト。
+ * @param {Number} cols 固定カラム数。
+ * @param {Array} warray カラム幅の配列。
+ */
+HtmlTable.prototype.setTheadFixedColumn = function(tr, cols, warray) {
+	this.lockColumn(tr, cols, warray);
 };
 
 
@@ -272,16 +283,7 @@ HtmlTable.prototype.setTbodyFixedColumn = function(tr, cols, warray) {
  * @param {Array} warray カラム幅の配列。
  */
 HtmlTable.prototype.setTfootFixedColumn = function(tr, cols, warray) {
-	var idx = 0;
-	var pos = 0;
-	tr.children().each(function() {
-		if (idx < cols) {
-			$(this).addClass("fixedColumn");
-			$(this).css("left", pos + "px");
-			pos += warray[idx++];
-			$(this).css("z-index", "1");
-		}
-	});
+	this.lockColumn(tr, cols, warray);
 };
 
 /**
@@ -530,7 +532,7 @@ HtmlTable.prototype.clear = function() {
  * このフィールドをgetRowFieldに渡すことにより、行を限定したフィールドを取得することができます。
  * </pre>
  * @param {String} id フィールドID。
- * @returns テーブルのカラムフィールド。 
+ * @returns テーブルのカラムフィールド。
  */
 HtmlTable.prototype.getColumnField = function(id) {
 	for (var i = 0; i < this.fields.length; i++) {
