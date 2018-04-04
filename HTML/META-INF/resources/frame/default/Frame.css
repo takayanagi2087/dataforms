@@ -368,3 +368,6 @@ table.columnFixedTable .fixedColumn {
   * jQuery-uiのdatepiker関連の設定(終了)。
   */
  
+ .rowno {
+ 	width: 48px;
+ }

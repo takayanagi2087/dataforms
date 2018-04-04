@@ -26,6 +26,7 @@ import dataforms.field.common.FileField;
 import dataforms.field.common.FlagField;
 import dataforms.field.common.MultiSelectField;
 import dataforms.field.common.PresenceField;
+import dataforms.field.common.RowNoField;
 import dataforms.field.common.SingleSelectField;
 import dataforms.field.sqltype.ClobField;
 import dataforms.htmltable.EditableHtmlTable;
@@ -703,11 +704,26 @@ public class WebResourceForm extends Form {
 		}
 
 		/**
+		 * カラム幅リスト
+		 */
+		private List<Integer> columnWidthList = null;
+		
+		
+		/**
+		 * カラム幅リストを取得します。
+		 * @return カラム幅リスト。
+		 */
+		protected List<Integer> getColumnWidthList() {
+			return this.columnWidthList;
+		}
+
+		/**
 		 * フィールドに対応たヘッダを出力します。
 		 * @param t テーブル。
 		 * @param sb 出力先文字列バッファ。
 		 */
 		protected void addFieldHeader(final HtmlTable t, final StringBuilder sb) {
+			this.columnWidthList = new ArrayList<Integer>();
 			String tabs = getTabs();
 			this.columnCount = 0;
 			for (Field<?> f: t.getFieldList()) {
@@ -718,6 +734,8 @@ public class WebResourceForm extends Form {
 				sb.append(tabs + "\t\t\t\t\t<th>\n");
 				sb.append(tabs + "\t\t\t\t\t\t" + this.getFieldLabel(f) + "\n");
 				sb.append(tabs + "\t\t\t\t\t</th>\n");
+				int len = this.getFieldLabel(f).length();
+				this.columnWidthList.add(Integer.valueOf((len + 2) * 14));
 			}
 		}
 
@@ -772,11 +790,17 @@ public class WebResourceForm extends Form {
 		protected void addFields(final HtmlTable t, final StringBuilder sb) {
 			String tabs = getTabs();
 			boolean first = true;
+			int idx = 0;
 			for (Field<?> f: t.getFieldList()) {
 				if (f.isHidden() || f instanceof DeleteFlagField) {
 					continue;
 				}
-				sb.append(tabs + "\t\t\t\t\t<td>\n");
+				Integer w = this.columnWidthList.get(idx++);
+				if (this.getTable().getFixedColumns() >= 0) {
+					sb.append(tabs + "\t\t\t\t\t<td style=\"width: " + w + "px;\">\n");
+				} else {
+					sb.append(tabs + "\t\t\t\t\t<td>\n");
+				}
 				sb.append(tabs + "\t\t\t\t\t\t" + this.generateVisibleField(t.getId(), f)+ "\n");
 				if (first) {
 					this.addHiddenFields(t, sb);
@@ -839,11 +863,21 @@ public class WebResourceForm extends Form {
 			String tabs = this.getTabs();
 			boolean first = true;
 			boolean genlink = true;
+			int idx = 0;
 			for (Field<?> f: t.getFieldList()) {
 				if (f.isHidden() || f instanceof DeleteFlagField) {
 					continue;
 				}
-				sb.append(tabs + "\t\t\t\t\t<td>\n");
+				Integer w = this.getColumnWidthList().get(idx++);
+				if (this.getTable().getFixedColumns() >= 0) {
+					if (f instanceof RowNoField) {
+						sb.append(tabs + "\t\t\t\t\t<td class=\"rowno\">\n");
+					} else {
+						sb.append(tabs + "\t\t\t\t\t<td style=\"width: " + w + "px;\">\n");
+					}
+				} else {
+					sb.append(tabs + "\t\t\t\t\t<td>\n");
+				}
 				if (first) {
 					sb.append(tabs + "\t\t\t\t\t\t" + this.generateVisibleField(t.getId(), f) + "\n");
 					this.addHiddenFields(t, sb);
@@ -860,7 +894,11 @@ public class WebResourceForm extends Form {
 				}
 				sb.append(tabs + "\t\t\t\t\t</td>\n");
 			}
-			sb.append(tabs + "\t\t\t\t\t<td>\n");
+			if (this.getTable().getFixedColumns() >= 0) {
+				sb.append(tabs + "\t\t\t\t\t<td style=\"width: 164px;\">\n");
+			} else {
+				sb.append(tabs + "\t\t\t\t\t<td>\n");
+			}
 			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].viewButton\" value=\"表示\">\n");
 			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].referButton\" value=\"参照登録\">\n");
 			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].deleteButton\" value=\"削除\">\n");
@@ -892,12 +930,12 @@ public class WebResourceForm extends Form {
 		@Override
 		protected void addFieldHeader(final HtmlTable t, final StringBuilder sb) {
 			String tabs = this.getTabs();
-			sb.append(tabs + "\t\t\t\t\t<th class=\"buttonColumn\" nowrap>\n");
+			sb.append(tabs + "\t\t\t\t\t<th colspan=\"2\" nowrap>\n");
 			sb.append(tabs + "\t\t\t\t\t\t\n");
 			sb.append(tabs + "\t\t\t\t\t</th>\n");
-			sb.append(tabs + "\t\t\t\t\t<th class=\"buttonColumn\" nowrap>\n");
-			sb.append(tabs + "\t\t\t\t\t\t\n");
-			sb.append(tabs + "\t\t\t\t\t</th>\n");
+//			sb.append(tabs + "\t\t\t\t\t<th class=\"buttonColumn\" nowrap>\n");
+//			sb.append(tabs + "\t\t\t\t\t\t\n");
+//			sb.append(tabs + "\t\t\t\t\t</th>\n");
 			sb.append(tabs + "\t\t\t\t\t<th nowrap>\n");
 			sb.append(tabs + "\t\t\t\t\t\tNo.\n");
 			sb.append(tabs + "\t\t\t\t\t</th>\n");
@@ -914,7 +952,7 @@ public class WebResourceForm extends Form {
 			sb.append(tabs + "\t\t\t\t\t<td class=\"buttonColumn\">\n");
 			sb.append(tabs + "\t\t\t\t\t\t<input type=\"button\" id=\"" + t.getId() + "[0].deleteButton\" value=\"-\"/>\n");
 			sb.append(tabs + "\t\t\t\t\t</td>\n");
-			sb.append(tabs + "\t\t\t\t\t<td style=\"text-align: right;\">\n");
+			sb.append(tabs + "\t\t\t\t\t<td style=\"text-align: right;\" class=\"rowno\">\n");
 			sb.append(tabs + "\t\t\t\t\t\t<span id=\"" + t.getId() + "[0].no\"></span>\n");
 			sb.append(tabs + "\t\t\t\t\t</td>\n");
 			super.addFields(t, sb);

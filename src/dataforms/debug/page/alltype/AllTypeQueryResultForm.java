@@ -29,7 +29,7 @@ public class AllTypeQueryResultForm extends QueryResultForm {
 				, tbl.getField("varcharField").setSortable(true)
 				, tbl.getField("numericField").setSortable(true)
 				);
-		htmltbl.setFixedColumns(2);
+//		htmltbl.setFixedColumns(2);
 		this.addHtmlTable(htmltbl);
 	}
 
