@@ -734,8 +734,7 @@ public class WebResourceForm extends Form {
 				sb.append(tabs + "\t\t\t\t\t<th>\n");
 				sb.append(tabs + "\t\t\t\t\t\t" + this.getFieldLabel(f) + "\n");
 				sb.append(tabs + "\t\t\t\t\t</th>\n");
-				int len = this.getFieldLabel(f).length();
-				this.columnWidthList.add(Integer.valueOf((len + 2) * 14));
+				this.columnWidthList.add(Integer.valueOf(f.calcDefaultColumnWidth()));
 			}
 		}
 

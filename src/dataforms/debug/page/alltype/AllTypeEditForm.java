@@ -45,7 +45,7 @@ public class AllTypeEditForm extends EditForm {
 //		aft.getField("fileComment").setSortable(true, Field.SortOrder.DESC);
 		EditableHtmlTable tbl = new EditableHtmlTable("attachFileTable", aft.getFieldList());
 		tbl.setSortable(true);
-//		tbl.setFixedColumns(5);
+		tbl.setFixedColumns(5);
 		tbl.setSortableSwitching(true);
 		this.addHtmlTable(tbl);
 

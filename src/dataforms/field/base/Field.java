@@ -1279,4 +1279,22 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		}
 	}
 
+	/**
+	 * フィールドのデフォルトカラム幅を計算します。
+	 * <pre>
+	 * setFixedColumnsに0以上が設定されたHtmlTableにフィールドが配置された場合、
+	 * そのテーブルの&lt;tbody&gt;&lt;/tbody&gt;内の各&lt;td&gt;&lt;/td&gt;は、
+	 * その幅を指定する必要があります。
+	 * 解発ツールのWebリソース作成でHTMLを自動生成する場合、このメソットを
+	 * 利用しててテーブルのカラム幅を決定します。
+	 * </pre>
+	 * @return フィールドのデフォルトカラム幅。
+	 */
+	public int calcDefaultColumnWidth() {
+		String label = this.getComment();
+		if (label == null) {
+			label = this.getId();
+		}
+		return (label.length() + 2) * 14;
+	}
 }

@@ -53,4 +53,10 @@ public abstract class DateTimeField<TYPE> extends Field<TYPE> {
 	public dataforms.field.base.Field.MatchType getDefaultMatchType() {
 		return MatchType.RANGE_FROM;
 	}
+	
+	@Override
+	public int calcDefaultColumnWidth() {
+		return 110;
+	}
+			
 }

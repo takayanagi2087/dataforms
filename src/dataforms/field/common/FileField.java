@@ -305,4 +305,9 @@ public abstract class FileField<TYPE extends FileObject> extends Field<TYPE> {
 		ret.setTempFile(tf);
 		return ret;
 	}
+	
+	@Override
+	public int calcDefaultColumnWidth() {
+		return 300;
+	}
 }
