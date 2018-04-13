@@ -926,6 +926,7 @@ public class DataFormsServlet extends HttpServlet {
 					page.releasePage();
 				}
 			} catch (ApplicationException e) {
+				// TODO:JsonResponseを戻り値にしないと、csrfエラーメッセージが表示されな問題を対策する必要がある。
 				log.error(e.getMessageKey() + ":" + e.getMessage(), e);
 				if (isJsonResponse) {
 					Map<String, Object> einfo = new HashMap<String, Object>();
