@@ -122,9 +122,9 @@ body > #mainDiv {
 /* エラーが発生したフィールドのスタイル */
 .errorField {background-color:mistyrose;}
 
-.warnTr {background-color:khaki;}
+tr.warnTr td {background-color:khaki;}
 
-.errorTr {background-color:mistyrose;}
+tr.errorTr td {background-color:mistyrose;}
 /*
  * エラーメッセージ領域(終了) 
  */
