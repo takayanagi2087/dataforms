@@ -8,6 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.formula.EvaluationWorkbook;
+import org.apache.poi.ss.formula.FormulaParser;
+import org.apache.poi.ss.formula.FormulaRenderer;
+import org.apache.poi.ss.formula.FormulaRenderingWorkbook;
+import org.apache.poi.ss.formula.FormulaType;
+import org.apache.poi.ss.formula.ptg.AreaPtg;
+import org.apache.poi.ss.formula.ptg.Ptg;
+import org.apache.poi.ss.formula.ptg.RefPtgBase;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -20,6 +28,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFEvaluationWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,7 +40,6 @@ import dataforms.util.MapUtil;
 import net.arnx.jsonic.JSON;
 
 
-// TODO:Excelの数式コピーの相対指定対応がない。
 /**
  * Excel形式のレポートクラス。
  *
@@ -195,6 +203,7 @@ public class ExcelReport extends Report {
 			FileInputStream is = new FileInputStream(this.templatePath);
 			try {
 				this.workbook = new XSSFWorkbook(is);
+				this.workbook.setForceFormulaRecalculation(true);
 			} finally {
 				is.close();
 			}
@@ -203,7 +212,45 @@ public class ExcelReport extends Report {
 	}
 
 
-
+	/**
+	 * セルの数式をコピーします。
+	 * @param srcCell コピー元
+	 * @param destCell コピー先
+	 */
+	private void copyCellFormula(final Cell srcCell, final Cell destCell) {
+		String formula = srcCell.getCellFormula();
+		EvaluationWorkbook ew = XSSFEvaluationWorkbook.create((XSSFWorkbook) workbook);
+		Ptg[] ptgs = FormulaParser.parse(formula, (XSSFEvaluationWorkbook) ew, FormulaType.CELL, this.getSheetIndex());
+		FormulaRenderingWorkbook rw = (XSSFEvaluationWorkbook) ew;
+		for (Ptg ptg : ptgs) {
+			int shiftRows = destCell.getRowIndex() - srcCell.getRowIndex();
+			int shiftCols = destCell.getColumnIndex() - srcCell.getColumnIndex();
+			if (ptg instanceof RefPtgBase) {
+				RefPtgBase ref = (RefPtgBase) ptg;
+				if (ref.isColRelative()) {
+					ref.setColumn(ref.getColumn() + shiftCols);
+				}
+				if (ref.isRowRelative()) {
+					ref.setRow(ref.getRow() + shiftRows);
+				}
+			} else if (ptg instanceof AreaPtg) {
+				AreaPtg ref = (AreaPtg) ptg;
+				if (ref.isFirstColRelative()) {
+					ref.setFirstColumn(ref.getFirstColumn() + shiftCols);
+				}
+				if (ref.isLastColRelative()) {
+					ref.setLastColumn(ref.getLastColumn() + shiftCols);
+				}
+				if (ref.isFirstRowRelative()) {
+					ref.setFirstRow(ref.getFirstRow() + shiftRows);
+				}
+				if (ref.isLastRowRelative()) {
+					ref.setLastRow(ref.getLastRow() + shiftRows);
+				}
+			}
+		}
+		destCell.setCellFormula(FormulaRenderer.toFormulaString(rw, ptgs));
+	}
 
 	/**
 	 * 行内のセルをコピーする。
@@ -230,7 +277,8 @@ public class ExcelReport extends Report {
 						toCell.setCellValue(cell.getNumericCellValue());
 					}
 				} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
-					toCell.setCellFormula(cell.getCellFormula());
+					//toCell.setCellFormula(cell.getCellFormula());
+					this.copyCellFormula(cell, toCell);
 				} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
 					toCell.setCellValue(cell.getBooleanCellValue());
 				}

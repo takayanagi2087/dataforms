@@ -1,8 +1,5 @@
 package dataforms.debug.report;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-
 import dataforms.debug.dao.alltype.AllTypeAttachFileTable;
 import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.field.common.WebResourceImageField;
@@ -38,12 +35,19 @@ public class AlltypeExcelReport extends ExcelReport {
 		this.addBreakField(htmltable.getFieldList().get("fileComment"));
 	}
 
+/*	@Override
+	protected Workbook getTamplate() throws Exception {
+		Workbook ret = super.getTamplate();
+		ret.setForceFormulaRecalculation(true);
+		return ret;
+	}*/
+
 	
 	@Override
 	public byte[] getReport() throws Exception {
-		Workbook wb = this.getWorkbook();
-		XSSFSheet sh = (XSSFSheet) wb.getSheetAt(0);
-		this.lockSheet(sh, "password");
+//		Workbook wb = this.getWorkbook();
+//		XSSFSheet sh = (XSSFSheet) wb.getSheetAt(0);
+//		this.lockSheet(sh, "password");
 		return super.getReport();
 	}
 
