@@ -356,7 +356,7 @@ table.columnFixedTable .fixedColumn {
 
 /* 範囲フィールドのクラス */
 .rangeField {
-	width: calc((100% - 32x) / 2) !important;
+	width: calc((100% - 32px) / 2) !important;
 }
 
 /* 日付範囲フィールドのクラス */
