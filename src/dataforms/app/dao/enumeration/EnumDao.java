@@ -17,6 +17,8 @@ import dataforms.field.base.FieldList;
 import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.SqlField;
 
+
+// TODO:EnumGrpupTableに登録する列挙型は全言語用意する必要があるが、その制限をなくしたい。
 /**
  * 列挙型関連テーブルアクセスクラス。
  * <pre>
