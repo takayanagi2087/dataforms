@@ -26,18 +26,22 @@
 	</tstamp> 
 	
 	<path id="Web App ライブラリー.libraryclasspath">
+		<pathelement location="WebContent/WEB-INF/lib/commons-codec-1.10.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/commons-collections4-4.1.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-io-2.3.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/commons-logging.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/commons-validator.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-lang3-3.4.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/commons-logging-1.2.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/commons-validator.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/curvesapi-1.04.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/jsonic-1.3.10.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/log4j-1.2.17.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/poi-3.12-20150511.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/poi-excelant-3.12-20150511.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/poi-ooxml-3.12-20150511.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.12-20150511.jar"/>
-		<pathelement location="WebContent/WEB-INF/lib/poi-scratchpad-3.12-20150511.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/poi-3.17.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/poi-excelant-3.17.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/poi-ooxml-3.17.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/poi-scratchpad-3.17.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	</path>
 	<path id="EAR ライブラリー.libraryclasspath"/>
 	<path id="Apache Tomcat v9.0 [Apache Tomcat v9.0].libraryclasspath">

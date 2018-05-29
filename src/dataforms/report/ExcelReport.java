@@ -18,6 +18,7 @@ import org.apache.poi.ss.formula.ptg.Ptg;
 import org.apache.poi.ss.formula.ptg.RefPtgBase;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -27,9 +28,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.Units;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFEvaluationWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -69,7 +70,7 @@ public class ExcelReport extends Report {
 	/**
 	 * 画像描画領域。
 	 */
-	private Drawing drawing = null;
+	private Drawing<?> drawing = null;
 
 	/**
 	 * 出力するシートのインデックス。
@@ -129,14 +130,14 @@ public class ExcelReport extends Report {
 	 * 描画オブジェクトを取得します。
 	 * @return 描画オブジェクト。
 	 */
-	protected Drawing getDrawing() {
+	protected Drawing<?> getDrawing() {
 		return drawing;
 	}
 	/**
 	 * 描画オブジェクトを設定します。
 	 * @param drawing 描画オブジェクト。
 	 */
-	protected void setDrawing(final Drawing drawing) {
+	protected void setDrawing(final Drawing<?> drawing) {
 		this.drawing = drawing;
 	}
 
@@ -268,18 +269,18 @@ public class ExcelReport extends Report {
 				}
 				CellStyle cellstyle = cell.getCellStyle();
 				toCell.setCellStyle(cellstyle);
-				if  (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+				if  (cell.getCellTypeEnum() == CellType.STRING) {
 					toCell.setCellValue(cell.getRichStringCellValue());
-				} else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+				} else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
 					if (DateUtil.isCellDateFormatted(cell)) {
 						toCell.setCellValue(cell.getDateCellValue());
 					} else {
 						toCell.setCellValue(cell.getNumericCellValue());
 					}
-				} else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
+				} else if (cell.getCellTypeEnum() == CellType.FORMULA) {
 					//toCell.setCellFormula(cell.getCellFormula());
 					this.copyCellFormula(cell, toCell);
-				} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+				} else if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
 					toCell.setCellValue(cell.getBooleanCellValue());
 				}
 			}
@@ -535,7 +536,7 @@ public class ExcelReport extends Report {
 		Sheet sheet = wb.getSheetAt(this.sheetIndex);
 		for (Row row: sheet) {
 			for (Cell cell: row) {
-				if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+				if (cell.getCellTypeEnum() == CellType.STRING) {
 					int ridx = cell.getRowIndex();
 					int cidx = cell.getColumnIndex();
 					String value = cell.getStringCellValue();
@@ -683,11 +684,11 @@ public class ExcelReport extends Report {
 		anchor.setCol2(cidx + p.getColumns());
 		anchor.setRow1(ridx);
 		anchor.setRow2(ridx + p.getRows());
-		anchor.setDx1(XSSFShape.EMU_PER_PIXEL * p.getDx1());
-		anchor.setDy1(XSSFShape.EMU_PER_PIXEL * p.getDy1());
-		anchor.setDx2(XSSFShape.EMU_PER_PIXEL * p.getDx2());
-		anchor.setDy2(XSSFShape.EMU_PER_PIXEL * p.getDy2());
-		anchor.setAnchorType(ClientAnchor.MOVE_AND_RESIZE);
+		anchor.setDx1(Units.EMU_PER_PIXEL * p.getDx1());
+		anchor.setDy1(Units.EMU_PER_PIXEL * p.getDy1());
+		anchor.setDx2(Units.EMU_PER_PIXEL * p.getDx2());
+		anchor.setDy2(Units.EMU_PER_PIXEL * p.getDy2());
+		anchor.setAnchorType(ClientAnchor.AnchorType.MOVE_AND_RESIZE);
 		int imgtype = XSSFWorkbook.PICTURE_TYPE_PNG;
 		if (ImageData.CONTENT_TYPE_JPEG.equals(img.getContentType())) {
 			imgtype = XSSFWorkbook.PICTURE_TYPE_JPEG;
