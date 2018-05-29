@@ -46,7 +46,7 @@ public class AllTypeEditForm extends EditForm {
 		EditableHtmlTable tbl = new EditableHtmlTable("attachFileTable", aft.getFieldList());
 		tbl.setSortable(true);
 		tbl.setFixedColumns(5);
-		tbl.setSortableSwitching(true);
+//		tbl.setSortableSwitching(true);
 		this.addHtmlTable(tbl);
 
 		this.getFieldList().get("charField").addValidator(new RequiredValidator());

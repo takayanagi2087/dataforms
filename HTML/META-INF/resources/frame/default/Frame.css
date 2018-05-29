@@ -274,9 +274,9 @@ table.columnFixedTable thead,
 table.columnFixedTable tbody,
 table.columnFixedTable tfoot {
 	display: block;
-	width: -webkit-max-content;
+/*	width: -webkit-max-content;
 	width: -moz-max-content;
-	width: max-content;
+	width: max-content;*/
 }
 
 table.columnFixedTable tr {

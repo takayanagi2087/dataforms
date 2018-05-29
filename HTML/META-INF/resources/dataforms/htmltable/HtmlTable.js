@@ -230,7 +230,7 @@ HtmlTable.prototype.lockColumn = function(tr, cols, warray) {
 	tr.children().each(function() {
 		if (idx < cols) {
 			$(this).addClass("fixedColumn");
-			$(this).css("top", "0px");
+			/*$(this).css("top", "0px");*/
 			$(this).css("left", pos + "px");
 			var colspan = $(this).prop("colspan");
 			logger.log("colspan=" + colspan);
