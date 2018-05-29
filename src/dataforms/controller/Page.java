@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import dataforms.annotation.WebMethod;
+import dataforms.app.dao.user.UserAttributeTable;
 import dataforms.field.base.Field;
 import dataforms.htmltable.HtmlTable;
 import dataforms.menu.Menu;
@@ -927,6 +928,30 @@ public class Page extends DataForms {
 	}
 
 
+	/**
+	 * ユーザ属性を取得します。
+	 * @param attrib 属性名称。
+	 * @return 属性値。
+	 */
+	public String getUserArribute(final String attrib) {
+		String ret = null;
+		Map<String, Object> userInfo = this.getUserInfo();
+		if (userInfo != null) {
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> attlist = (List<Map<String, Object>>) userInfo.get("attTable");
+			for (Map<String, Object> m: attlist) {
+				UserAttributeTable.Entity e = new UserAttributeTable.Entity();
+				e.setMap(m);
+				if (attrib.equals(e.getUserAttributeType())) {
+					ret = e.getUserAttributeValue();
+					break;
+				}
+			}
+		}
+		return ret;
+	}
+
+	
 	/**
 	 * フレームのパスを取得する.
 	 * @return レイアウトのパス.
