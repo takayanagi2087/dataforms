@@ -342,13 +342,67 @@ HtmlTable.prototype.setFixedColumnStyle = function() {
 };
 
 /**
+ * IE用のカラム位置設定。
+ */
+HtmlTable.prototype.setColumnLeftForIe = function(tr) {
+	var idx = 0;
+	var pos = 0;
+	var sx = this.get().scrollLeft();
+	var thisForm = this;
+	tr.children(".fixedColumn").each(function() {
+		$(this).css("left", sx + "px");
+	});
+};
+
+/**
+ * IE用のカラム移動。
+ */
+HtmlTable.prototype.moveColumnForIe = function() {
+	this.get().find("th.fixedColumn").css("position", "relative");
+	this.get().find("td.fixedColumn").css("position", "relative");
+	var thisTable = this;
+	this.find("thead tr").each(function() {
+		thisTable.setColumnLeftForIe($(this));
+	});
+	this.find("tbody tr").each(function() {
+		thisTable.setColumnLeftForIe($(this));
+	});
+	this.find("tfoot tr").each(function() {
+		thisTable.setColumnLeftForIe($(this));
+	});
+	
+};
+
+/**
  * HTMLエレメントとの対応付けを行います。
  */
 HtmlTable.prototype.attach = function() {
 	// WebComponent.prototype.attach.call(this);
 	logger.log("fixedColumns=" + this.fixedColumns);
+	var thisTable = this;
 	if (this.fixedColumns >= 0) {
 		this.setFixedColumnStyle();
+		var ua = navigator.userAgent;
+		var isEdge = (ua.indexOf("Edge") >= 0);
+		var isIe = ua.match(/(msie|MSIE)/) || ua.match(/(T|t)rident/);
+		if (isIe || isEdge) {
+			// Edgeはtheadのstickyの動作がおかしいので、theadの固定をスクリプトで行う。
+			this.get().find("thead").css("position", "relative");
+			thisTable.timeoutId = null;
+			this.get().scroll(function() {
+				if (thisTable.timeoutId != null) {
+					clearTimeout(thisTable.timeoutId);
+					thisTable.timeoutId = null;
+				}
+				thisTable.timeoutId = setTimeout(function () {
+					var top = thisTable.get().scrollTop();
+					thisTable.get().find("thead").css("top", top);
+					if (isIe) {
+						thisTable.moveColumnForIe();
+					}
+				}, 100 ) ;
+			});
+		}
 	}
 	this.setSortMark();
 	this.setColumnSortEvent();
@@ -356,6 +410,7 @@ HtmlTable.prototype.attach = function() {
 	this.trLine = tbl.find("tbody>tr:first").html();
 	this.clear();
 };
+
 
 /**
  * カラムにソートマークを設定する。
