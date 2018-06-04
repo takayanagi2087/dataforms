@@ -169,6 +169,7 @@ select {
 #mainDiv input[type='submit'],
 #mainDiv button {
 	height: 22px;
+	line-height: 16px;
 }
 
 
