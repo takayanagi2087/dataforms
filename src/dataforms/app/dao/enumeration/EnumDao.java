@@ -16,6 +16,7 @@ import dataforms.field.base.Field.MatchType;
 import dataforms.field.base.FieldList;
 import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.SqlField;
+import dataforms.util.StringUtil;
 
 
 // TODO:EnumGrpupTableに登録する列挙型は全言語用意する必要があるが、その制限をなくしたい。
@@ -172,6 +173,9 @@ public class EnumDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public String getOptionName(final String enumTypeCode, final String enumOptionCode, final String langCode) throws Exception {
+		if (StringUtil.isBlank(enumOptionCode)) {
+			return null;
+		}
 		Map<String, Object> data = new HashMap<String, Object>();
 		EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(data);
 		e.setEnumTypeCode(enumTypeCode);
