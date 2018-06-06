@@ -1,5 +1,6 @@
 package dataforms.app.field.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import dataforms.app.page.user.UserEditForm;
 import dataforms.controller.Form;
 import dataforms.controller.JsonResponse;
 import dataforms.field.common.EnumOptionSingleSelectField;
+import dataforms.util.StringUtil;
 import dataforms.validator.RequiredValidator;
 
 /**
@@ -68,7 +70,12 @@ public class UserAttributeValueField extends EnumOptionSingleSelectField {
 		EnumDao dao = new EnumDao(this);
 		String type = (String) param.get("type");
 		String lang = this.getPage().getCurrentLanguage();
-		List<Map<String, Object>> list = dao.getOptionList(type, lang);
+		List<Map<String, Object>> list = null;
+		if (!StringUtil.isBlank(type)) {
+			list = dao.getOptionList(type, lang);
+		} else {
+			list = new ArrayList<Map<String, Object>>();
+		}
 		this.setOptionList(list, true);
 		JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, this.getOptionList());
 		this.methodFinishLog(log, result);
