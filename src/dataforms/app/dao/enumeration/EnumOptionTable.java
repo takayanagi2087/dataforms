@@ -72,6 +72,13 @@ public class EnumOptionTable extends Table {
 		public static final String ID_SORT_ORDER = "sortOrder";
 		/**
 		 * コンストラクタ。
+		 */
+		public Entity() {
+
+		}
+
+		/**
+		 * コンストラクタ。
 		 * @param map 操作対象マップ。
 		 */
 		public Entity(final Map<String, Object> map) {

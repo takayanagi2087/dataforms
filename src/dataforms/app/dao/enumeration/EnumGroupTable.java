@@ -78,7 +78,6 @@ public class EnumGroupTable extends Table {
 			
 		}
 
-		
 		/**
 		 * コンストラクタ。
 		 * @param map 操作対象マップ。
