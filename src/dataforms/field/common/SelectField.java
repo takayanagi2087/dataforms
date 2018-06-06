@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dataforms.dao.Entity;
 import dataforms.field.base.Field;
 
 /**
@@ -17,6 +18,69 @@ import dataforms.field.base.Field;
  */
 public abstract class SelectField<TYPE> extends Field<TYPE> {
 
+	/**
+	 * 選択肢のエンティティクラス。 
+	 *
+	 */
+	public static class OptionEntity extends Entity {
+		/**
+		 * 
+		 */
+		public static final String ID_NAME = "name";
+		/**
+		 * 
+		 */
+		public static final String ID_VALUE = "value";
+		
+		/**
+		 * コンストラクタ。
+		 */
+		public OptionEntity() {
+			
+		}
+		
+		/**
+		 * コンストラクタ。
+		 * @param m 編集対象マップ。
+		 */
+		public OptionEntity(final Map<String, Object> m) {
+			super(m);
+		}
+		
+		/**
+		 * 値を取得します。
+		 * @return 値。
+		 */
+		public String getValue() {
+			return (String) this.getMap().get(ID_VALUE);
+		}
+		
+		/**
+		 * 値を設定します。
+		 * @param value 値。
+		 */
+		public void setValue(final String value) {
+			this.getMap().put(ID_VALUE, value);
+		}
+		
+		/**
+		 * 名称を設定します。
+		 * @return 名称。
+		 */
+		public String getName() {
+			return (String) this.getMap().get(ID_NAME);
+		}
+		
+		/**
+		 * 名称を設定します。
+		 * @param name 名称。
+		 */
+		public void setName(final String name) {
+			this.getMap().put(ID_NAME, name);
+		}
+	}
+	
+	
 	/**
 	 * 選択肢。
 	 */

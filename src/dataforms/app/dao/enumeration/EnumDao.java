@@ -14,6 +14,7 @@ import dataforms.dao.Table;
 import dataforms.dao.TableList;
 import dataforms.field.base.Field.MatchType;
 import dataforms.field.base.FieldList;
+import dataforms.field.common.SelectField;
 import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.SqlField;
 import dataforms.util.StringUtil;
@@ -86,6 +87,26 @@ public class EnumDao extends Dao {
 	}
 
 	/**
+	 * デフォルト言語リストをブラウザ言語リストで更新する。
+	 * @param deflist デフォルト言語リスト。
+	 * @param list ブラウザ言語リスト。
+	 * @return 更新されたリスト。
+	 */
+	private List<Map<String, Object>> updateList(final List<Map<String, Object>> deflist, final List<Map<String, Object>> list) {
+		for (Map<String, Object> m: list) {
+			SelectField.OptionEntity e = new SelectField.OptionEntity(m);
+			for (Map<String, Object> dm: deflist) {
+				SelectField.OptionEntity de = new SelectField.OptionEntity(dm);
+				if (de.getValue().equals(e.getValue())) {
+					de.setName(e.getName());
+					break;
+				}
+			}
+		}
+		return deflist;
+	}
+	
+	/**
 	 * 指定された列挙型グループの列挙型一覧を取得します。
 	 * @param enumGroupCode 列挙型グルーブコード。
 	 * @param langCode 言語コード。
@@ -96,20 +117,14 @@ public class EnumDao extends Dao {
 		Map<String, Object> data = new HashMap<String, Object>();
 		EnumGroupTable.Entity e = new EnumGroupTable.Entity(data);
 		EnumTypeNameTable.Entity ne = new EnumTypeNameTable.Entity(data);
-		/*
-		data.put("enumGroupCode", enumGroupCode);
-		data.put("langCode", langCode);
-		*/
 		e.setEnumGroupCode(enumGroupCode);
-		ne.setLangCode(langCode);
+		ne.setLangCode("default");
 		EnumGroupQuery mq = new EnumGroupQuery(data);
-		List<Map<String, Object>> list = this.executeQuery(mq);
-		if (list.size() == 0) {
-			//data.put("langCode", "default");
-			ne.setLangCode("default");
-			list = this.executeQuery(mq);
-		}
-		return list;
+		List<Map<String, Object>> deflist = this.executeQuery(mq);
+		ne.setLangCode(langCode);
+		List<Map<String, Object>> langlist = this.executeQuery(mq);
+		deflist = this.updateList(deflist, langlist);
+		return deflist;
 	}
 
 
@@ -149,18 +164,14 @@ public class EnumDao extends Dao {
 		Map<String, Object> data = new HashMap<String, Object>();
 		EnumOptionTable.Entity e = new EnumOptionTable.Entity(data);
 		EnumOptionNameTable.Entity ne = new EnumOptionNameTable.Entity(data);
-/*		data.put("enumTypeCode", enumTypeCode);
-		data.put("langCode", langCode);
-*/		e.setEnumTypeCode(enumTypeCode);
-		ne.setLangCode(langCode);
+		e.setEnumTypeCode(enumTypeCode);
+		ne.setLangCode("default");
 		OptionQuery mq = new OptionQuery(data);
-		List<Map<String, Object>> list = this.executeQuery(mq);
-		if (list.size() == 0) {
-			//data.put("langCode", "default");
-			ne.setLangCode("default");
-			list = this.executeQuery(mq);
-		}
-		return list;
+		List<Map<String, Object>> deflist = this.executeQuery(mq);
+		ne.setLangCode(langCode);
+		List<Map<String, Object>> langlist = this.executeQuery(mq);
+		deflist = this.updateList(deflist, langlist);
+		return deflist;
 	}
 
 

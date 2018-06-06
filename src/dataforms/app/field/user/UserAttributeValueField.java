@@ -62,18 +62,16 @@ public class UserAttributeValueField extends EnumOptionSingleSelectField {
 	 * @return 選択肢リスト。
 	 * @throws Exception 例外。
 	 */
-    @WebMethod
+	@WebMethod
 	public JsonResponse getTypeOption(final Map<String, Object> param) throws Exception {
-    	this.methodStartLog(log, param);
-    	EnumDao dao = new EnumDao(this);
-    	String type = (String) param.get("type");
-    	String lang = this.getPage().getCurrentLanguage();
-    	List<Map<String, Object>> list = dao.getOptionList(type, lang);
-    	this.setOptionList(list, true);
-    	JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, this.getOptionList());
-    	this.methodFinishLog(log, result);
-    	return result;
-    }
-
-
+		this.methodStartLog(log, param);
+		EnumDao dao = new EnumDao(this);
+		String type = (String) param.get("type");
+		String lang = this.getPage().getCurrentLanguage();
+		List<Map<String, Object>> list = dao.getOptionList(type, lang);
+		this.setOptionList(list, true);
+		JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, this.getOptionList());
+		this.methodFinishLog(log, result);
+		return result;
+	}
 }
