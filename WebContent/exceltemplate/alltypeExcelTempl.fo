@@ -37,7 +37,9 @@
 								<fo:block margin-left="1mm">$charField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  number-rows-spanned="3"  number-columns-spanned="2"  display-align="center" text-align="center" border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$webImage" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
 						<fo:table-row height="13.5pt">
@@ -188,7 +190,7 @@
 								<fo:block margin-left="1mm"></fo:block>
 							</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row height="31.350000381469727pt">
+						<fo:table-row max-height="31.350000381469727pt">
 							<fo:table-cell  display-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
 								<fo:block margin-left="1mm">$attachFileTable[0].no</fo:block>
 							</fo:table-cell>
@@ -199,13 +201,15 @@
 								<fo:block margin-left="1mm">$attachFileTable[0].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[0].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[0].fileComment</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row height="31.350000381469727pt">
+						<fo:table-row max-height="31.350000381469727pt">
 							<fo:table-cell  display-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
 								<fo:block margin-left="1mm">$attachFileTable[1].no</fo:block>
 							</fo:table-cell>
@@ -216,13 +220,15 @@
 								<fo:block margin-left="1mm">$attachFileTable[1].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[1].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[1].fileComment</fo:block>
 							</fo:table-cell>
 						</fo:table-row>
-						<fo:table-row height="31.350000381469727pt">
+						<fo:table-row max-height="31.350000381469727pt">
 							<fo:table-cell  display-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
 								<fo:block margin-left="1mm">$attachFileTable[2].no</fo:block>
 							</fo:table-cell>
@@ -233,7 +239,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[2].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[2].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[2].fileComment</fo:block>
@@ -250,7 +258,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[3].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[3].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[3].fileComment</fo:block>
@@ -267,7 +277,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[4].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[4].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[4].fileComment</fo:block>
@@ -284,7 +296,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[5].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[5].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[5].fileComment</fo:block>
@@ -301,7 +315,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[6].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[6].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[6].fileComment</fo:block>
@@ -318,7 +334,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[7].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[7].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[7].fileComment</fo:block>
@@ -335,7 +353,9 @@
 								<fo:block margin-left="1mm">$attachFileTable[8].dateField</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center" text-align="center" background-color="#FFFFFF"  border-top-style="solid" border-top-width="thin" border-left-style="solid" border-left-width="thin" border-bottom-style="solid" border-bottom-width="thin" border-right-style="solid" border-right-width="thin">
-								<fo:block margin-left="1mm"></fo:block>
+								<fo:block margin-left="1mm">
+									<fo:external-graphic src="$attachFileTable[8].barcode" width="25.0pt" height="25.0pt" content-width="25.0pt" content-height="25.0pt" border-style="dotted" border-width="thin"/>
+								</fo:block>
 							</fo:table-cell>
 							<fo:table-cell  display-align="center">
 								<fo:block margin-left="1mm">$attachFileTable[8].fileComment</fo:block>

@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,10 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import dataforms.dao.file.ImageData;
 import dataforms.debug.page.alltype.AllTypeEditForm;
 import dataforms.field.base.Field;
+import dataforms.field.common.ImageField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.MapUtil;
 
@@ -133,14 +136,34 @@ public class XslFoReport extends Report {
 	}
 	
 	
+	/**
+	 * 画像をタグに変換します。
+	 * @param data 画像データ。
+	 * @return 画像タグ。
+	 */
+	private String getImageTag(final ImageData data) {
+		if (data != null) {
+			String encoded = Base64.getEncoder().encodeToString(data.getContents());
+			String ret = "data:" + data.getContentType() + ";base64, " + encoded;
+			return ret;
+		} else {
+			return "";
+		}
+	}
+	
 	
 	@Override
 	protected void printField(final int page, final Field<?> field, final Map<String, Object> data) throws Exception {
 		Object cv = "";
 		Object obj = MapUtil.getValue(field.getId(), data);
 		if (obj != null) {
-			field.setValueObject(obj);
-			cv = field.getClientValue();
+			if (field instanceof ImageField) {
+				ImageData img = (ImageData) obj;
+				cv = this.getImageTag(img);
+			} else {
+				field.setValueObject(obj);
+				cv = field.getClientValue();
+			}
 		}
 		logger.debug("id=" + field.getId() + ", value=" + cv.toString());
 		this.pageBuffer = this.pageBuffer.replace("$" + field.getId(), cv.toString());

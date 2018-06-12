@@ -270,7 +270,7 @@ public class FileObject implements Serializable {
 	/**
 	 * ファイルの内容を取得します。
 	 * <pre>
-	 * 小さめのファイルの場合使用し、contentsとは排他利用となります。
+	 * 小さめのファイルの場合使用し、tempFileとは排他利用となります。
 	 * </pre>
 	 * @return ファイルの内容。
 	 */
