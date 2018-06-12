@@ -96,10 +96,39 @@ public class XslFoReport extends Report {
 	 */
 	private List<String> pageList = null;
 	
+	/**
+	 * 指定されたページの未設定フィールドをクリアします。
+	 * @param page ページインデックス。
+	 * @throws Exception 例外。
+	 */
+	protected void clearField(final int page) throws Exception {
+		for (Field<?> field: this.getFieldList()) {
+			this.clearField(page, field);
+		}
+		for (ReportTable tbl: this.getTableList()) {
+			String tblid = tbl.getId();
+			for (int i = 0;; i++) {
+				if (this.pageBuffer.indexOf("$" + tblid + "[") < 0) {
+					break;
+				}
+				for (Field<?> f: tbl.getFieldList()) {
+					String id = f.getId();
+					String fid = tblid + "[" + i + "]." + id;
+					Field<?> field = f.clone();
+					field.setId(fid);
+					this.clearField(page, field);
+				}
+			}
+			
+		}
+	}
+
+	
 	@Override
 	protected void printPage(final int page, final Map<String, Object> data) throws Exception {
 		this.pageBuffer = (new StringBuilder(this.pageBlockFo)).toString();
 		super.printPage(page, data);
+		this.clearField(page);
 		this.pageList.add(this.pageBuffer + "\n");
 	}
 	
@@ -107,14 +136,23 @@ public class XslFoReport extends Report {
 	
 	@Override
 	protected void printField(final int page, final Field<?> field, final Map<String, Object> data) throws Exception {
+		Object cv = "";
 		Object obj = MapUtil.getValue(field.getId(), data);
-		field.setValueObject(obj);
-		Object cv = field.getClientValue();
-		if (cv == null) {
-			cv = "";
+		if (obj != null) {
+			field.setValueObject(obj);
+			cv = field.getClientValue();
 		}
-//		logger.debug("id=" + field.getId() + ", value=" + cv.toString());
+		logger.debug("id=" + field.getId() + ", value=" + cv.toString());
 		this.pageBuffer = this.pageBuffer.replace("$" + field.getId(), cv.toString());
+	}
+
+	/**
+	 * フィールドをクリアします。
+	 * @param page ページインデックス。
+	 * @param field クリアするフィールド。
+	 */
+	protected void clearField(final int page, final Field<?> field) {
+		this.pageBuffer = this.pageBuffer.replace("$" + field.getId(), "");
 	}
 
 
@@ -262,5 +300,8 @@ public class XslFoReport extends Report {
 		logger.debug("xslFo=" + xml);
 		return this.createPdf(xml);
 	}
+	
+	
+
 
 }
