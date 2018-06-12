@@ -177,6 +177,16 @@ public class ExcelReport extends Report {
 	public ExcelReport() {
 
 	}
+
+	/**
+	 * コンストラクタ。
+	 * @param templatePath テンプレートのパス。
+	 */
+	public ExcelReport(final String templatePath) {
+		this.setTemplatePath(templatePath);
+	}
+
+	
 	/**
 	 * テンプレートファイルのパスを取得する。
 	 * @return テンプレートファイルのパス。

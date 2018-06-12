@@ -19,6 +19,9 @@ AllTypeEditForm.prototype.attach = function() {
 	this.find("#printButton").click(function() {
 		thisForm.print();
 	});
+	this.find("#printPdfButton").click(function() {
+		thisForm.printPdf();
+	});
 	this.find("#getValueTestButton").click(function() {
 		thisForm.getValueTest();
 	});
@@ -46,6 +49,13 @@ AllTypeEditForm.prototype.attach = function() {
  */
 AllTypeEditForm.prototype.print = function() {
 	this.submitForDownload("print");
+};
+
+/**
+ * 印刷処理を行います。
+ */
+AllTypeEditForm.prototype.printPdf = function() {
+	this.submitForDownload("printPdf");
 };
 
 AllTypeEditForm.prototype.getFieldDump = function(id) {

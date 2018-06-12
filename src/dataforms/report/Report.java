@@ -237,7 +237,6 @@ public abstract class Report {
 	 * ページ数を計算する。
 	 * <pre>
 	 * 主テーブルの件数からページ数を計算します。
-	 * キーブレークによって改ページするような場合、このメソッドをオーバーライドしてください。
 	 * </pre>
 	 * @param data 出力データ。
 	 * @return ページ数。
@@ -250,7 +249,6 @@ public abstract class Report {
 			// テーブルの指定がない場合1ページ。
 			ret = 1;
 		} else {
-			// breakキーが無い場合。
 			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(id);
 			if (list != null) {

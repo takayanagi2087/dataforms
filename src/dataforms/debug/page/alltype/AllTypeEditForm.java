@@ -16,6 +16,7 @@ import dataforms.debug.dao.alltype.AllTypeAttachFileTable;
 import dataforms.debug.dao.alltype.AllTypeDao;
 import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.debug.report.AlltypeExcelReport;
+import dataforms.debug.report.AlltypeXslFoReport;
 import dataforms.htmltable.EditableHtmlTable;
 import dataforms.util.StringUtil;
 import dataforms.validator.FileSizeValidator;
@@ -169,6 +170,37 @@ public class AllTypeEditForm extends EditForm {
 		byte[] excel = rep.print(data);
 		BinaryResponse ret = new BinaryResponse(excel);
 		ret.setFileName("test001.xlsx");
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
+
+	/**
+	 * 印刷処理を行います。
+	 * @param param パラメータ。
+	 * @return 応答。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public Response printPdf(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		Map<String, Object> data = this.convertToServerData(param);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("attachFileTable");
+		for (int i = 0; i < list.size(); i++) {
+			Map<String, Object> m = list.get(i);
+			m.put("no", Integer.valueOf(i + 1));
+			m.put("barcode", this.getBarcodeImage(Integer.toString(123450000 + i)));
+		}
+		
+		log.debug("list.size()=" + list.size());
+		log.debug("data=" + JSON.encode(data, true));
+		String template = AllTypeEditForm.getServlet().getServletContext().getRealPath("/exceltemplate/alltypeExcelTempl.fo");
+		log.debug("template=" + template);
+		AlltypeXslFoReport rep = new AlltypeXslFoReport(template);
+		byte[] pdf = rep.print(data);
+		BinaryResponse ret = new BinaryResponse(pdf);
+		ret.setFileName("test001.pdf");
+		ret.setContentType("application/pdf");
 		this.methodFinishLog(log, ret);
 		return ret;
 	}
