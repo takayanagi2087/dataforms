@@ -37,8 +37,8 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import dataforms.controller.WebComponent;
 import dataforms.dao.file.ImageData;
-import dataforms.debug.page.alltype.AllTypeEditForm;
 import dataforms.field.base.Field;
 import dataforms.field.common.ImageField;
 import dataforms.servlet.DataFormsServlet;
@@ -284,6 +284,18 @@ public class XslFoReport extends Report {
 		this.pageList = new ArrayList<String>();
 	}
 	
+	
+	/**
+	 * FopFactoryを取得します。
+	 * @return FopFactory。
+	 * @throws Exception 例外。
+	 */
+	private FopFactory newFopFactory() throws Exception {
+		String conf = WebComponent.getServlet().getServletContext().getRealPath(DataFormsServlet.getApacheFopConfig());
+		FopFactory fopFactory = FopFactory.newInstance(new File(conf));
+		return fopFactory;
+	}
+	
 	/**
 	 * FOを指定して、PDFを取得します。
 	 * @param foXml Fo形式の文字列。
@@ -295,10 +307,9 @@ public class XslFoReport extends Report {
 		try {
 			ByteArrayInputStream is = new ByteArrayInputStream(foXml.getBytes(DataFormsServlet.getEncoding()));
 			try {
-				String conf = AllTypeEditForm.getServlet().getServletContext().getRealPath("/WEB-INF/apachefop/fop.xconf");
 				Source fo = new StreamSource(is);
 				//FOPをセットアップする
-				FopFactory fopFactory = FopFactory.newInstance(new File(conf));
+				FopFactory fopFactory = this.newFopFactory();
 				Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, os);
 				//XSL FO⇒PDFに変換する
 				Result result = new SAXResult(fop.getDefaultHandler());
@@ -347,10 +358,9 @@ public class XslFoReport extends Report {
 	private void print(final String foXml, final PrinterJob printJob) throws Exception {
 		ByteArrayInputStream is = new ByteArrayInputStream(foXml.getBytes(DataFormsServlet.getEncoding()));
 		try {
-			String conf = AllTypeEditForm.getServlet().getServletContext().getRealPath("/WEB-INF/apachefop/fop.xconf");
+			FopFactory fopFactory = this.newFopFactory();
 			Source src = new StreamSource(is);
 			//FOPをセットアップする
-			FopFactory fopFactory = FopFactory.newInstance(new File(conf));
 			FOUserAgent userAgent = fopFactory.newFOUserAgent();
 			userAgent.getRendererOptions().put(PrintRenderer.PRINTER_JOB, printJob);
 			PrintRenderer renderer = new PrintRenderer(userAgent);

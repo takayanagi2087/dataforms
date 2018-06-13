@@ -199,7 +199,11 @@ public class DataFormsServlet extends HttpServlet {
 	 */
 	private static String csrfSessionidCrypPassword = null;
 	
-	 
+	
+	/**
+	 * Apache-FOPの設定ファイルのバス。
+	 */
+	private static String apacheFopConfig = "/WEB-INF/apachefop/fop.xconf";
 	
 	/**
 	 * Pageの拡張子を取得します。
@@ -298,18 +302,15 @@ public class DataFormsServlet extends HttpServlet {
 			DataFormsServlet.webResourceUrl = webresurl;
 		}
 		log.info("init:webResourceUrl=" + DataFormsServlet.webResourceUrl);
-		//
 		DataFormsServlet.encoding = this.getServletContext().getInitParameter("encoding");
 		if (DataFormsServlet.encoding == null) {
 			DataFormsServlet.encoding = "utf-8";
 		}
 		log.info("init:encoding=" + DataFormsServlet.encoding);
-		//
 		DataFormsServlet.jsonDebug = Boolean
 				.parseBoolean(this.getServletContext().getInitParameter("json-debug") == null ? "false"
 						: this.getServletContext().getInitParameter("json-debug"));
 		log.info("init:jsonDebug=" + DataFormsServlet.jsonDebug);
-		//
 		DataFormsServlet.tempDir = this.getServletContext().getInitParameter("temp-dir");
 		if (DataFormsServlet.tempDir == null) {
 			DataFormsServlet.tempDir = "/tmp";
@@ -320,19 +321,16 @@ public class DataFormsServlet extends HttpServlet {
 			tmp.mkdirs();
 		}
 		log.info("init:tempDir=" + DataFormsServlet.tempDir);
-		//
 		DataFormsServlet.exportImportDir = this.getServletContext().getInitParameter("export-import-dir");
 		if (DataFormsServlet.exportImportDir == null) {
 			DataFormsServlet.exportImportDir = "/tmp/data";
 		}
 		log.info("init:exportImportDir=" + DataFormsServlet.exportImportDir);
-		//
 		DataFormsServlet.cssAndScript = this.getServletContext().getInitParameter("css-and-scripts");
 		if (DataFormsServlet.cssAndScript == null) {
 			DataFormsServlet.cssAndScript = "/frame/jslib.html";
 		}
 		log.info("init:cssAndScript=" + DataFormsServlet.cssAndScript);
-		//
 		DataFormsServlet.errorPage = this.getServletContext().getInitParameter("error-page");
 		if (DataFormsServlet.errorPage == null) {
 			DataFormsServlet.errorPage = "/dataforms/app/errorpage/ErrorPage." + this.getPageExt();
@@ -340,38 +338,31 @@ public class DataFormsServlet extends HttpServlet {
 			DataFormsServlet.errorPage += ("." + this.getPageExt());
 		}
 		log.info("init:errorPage=" + DataFormsServlet.errorPage);
-		//
 		DataFormsServlet.clientValidation = Boolean
 				.parseBoolean(this.getServletContext().getInitParameter("client-validation") == null ? "true"
 						: this.getServletContext().getInitParameter("client-validation"));
 		log.info("init:clientValidation=" + DataFormsServlet.clientValidation);
-		//
 		DataFormsServlet.clientLogLevel = this.getServletContext().getInitParameter("client-log-level");
 		if (DataFormsServlet.clientLogLevel == null) {
 			DataFormsServlet.clientLogLevel = "info";
 		}
 		log.info("init:clientLogLevel=" + DataFormsServlet.clientLogLevel);
-		//
 		DataFormsServlet.uploadDataFolder = this.getServletContext().getInitParameter("upload-data-folder");
 		if (DataFormsServlet.uploadDataFolder == null) {
 			DataFormsServlet.uploadDataFolder = "/uploadData";
 		}
 		log.info("init:uploadDataFolder=" + DataFormsServlet.uploadDataFolder);
-		//
 		DataFormsServlet.supportLanguage = this.getServletContext().getInitParameter("support-language");
 		if (DataFormsServlet.supportLanguage == null) {
 			DataFormsServlet.supportLanguage = "ja";
 		}
 		log.info("init:supportLanguage=" + DataFormsServlet.supportLanguage);
-		//
 		DataFormsServlet.fixedLanguage = this.getServletContext().getInitParameter("fixed-language");
 		log.info("init:fixedLanguage=" + DataFormsServlet.fixedLanguage);
-		
 		DataFormsServlet.disableDeveloperTools = Boolean
 				.parseBoolean(this.getServletContext().getInitParameter("disable-developer-tools") == null ? "true"
 						: this.getServletContext().getInitParameter("disable-developer-tools"));
 		log.info("init:disableDeveloperTools=" + DataFormsServlet.disableDeveloperTools);
-		//
 		CryptUtil.setCryptPassword(this.getServletContext().getInitParameter("crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("crypt-password"));
 		DataFormsServlet.setQueryStringCryptPassword(this.getServletContext().getInitParameter("query-string-crypt-password") == null ? "d@d@f0ms"
@@ -386,7 +377,6 @@ public class DataFormsServlet extends HttpServlet {
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
 		this.getMessageProperties();
-		//
 		String topPage = this.getServletContext().getInitParameter("top-page");
 		if (!StringUtil.isBlank(topPage)) {
 			Page.setTopPage(topPage);
@@ -397,7 +387,6 @@ public class DataFormsServlet extends HttpServlet {
 		}
 		DeveloperPage.setJavaSourcePath(this.getServletContext().getInitParameter("java-source-path"));
 		DeveloperPage.setWebSourcePath(this.getServletContext().getInitParameter("web-source-path"));
-
 		String streamingBlockSize = this.getServletContext().getInitParameter("streaming-block-size");
 		log.debug("streamingBlockSize=" + streamingBlockSize);
 		if (!StringUtil.isBlank(streamingBlockSize)) {
@@ -411,18 +400,19 @@ public class DataFormsServlet extends HttpServlet {
 		if (!StringUtil.isBlank(contentTypeList)) {
 			@SuppressWarnings("unchecked")
 			List<LinkedHashMap<String, String>> ctlist = (List<LinkedHashMap<String, String>>) JSON.decode(contentTypeList, ArrayList.class);
-//			HttpRangeInfo.setBlockSizeList(bslist);
 			FileObject.setContentTypeList(ctlist);
 		}
-
 		String backupFileName = this.getServletContext().getInitParameter("backup-file-name");
 		if (backupFileName == null) {
 			backupFileName = "backup";
 		}
 		BackupForm.setBackupFileName(backupFileName);
-
+		String apacheFopConfig = this.getServletContext().getInitParameter("apache-fop-config");
+		log.debug("apacheFopConfig=" + contentTypeList);
+		if (apacheFopConfig != null) {
+			DataFormsServlet.setApacheFopConfig(apacheFopConfig);
+		}
 		this.getUserRegistConf();
-		//
 		this.setupServletInstanceBean();
 		super.init();
 		WebComponent.setServlet(this);
@@ -1114,7 +1104,22 @@ public class DataFormsServlet extends HttpServlet {
 	public static void setCookieCheck(final boolean cookieCheck) {
 		DataFormsServlet.cookieCheck = cookieCheck;
 	}
-	
-	
+
+	/**
+	 * Apache-FOPの設定ファイルバスを取得します。
+	 * @return Apache-FOPの設定ファイルバス。
+	 */
+	public static String getApacheFopConfig() {
+		return apacheFopConfig;
+	}
+
+
+	/**
+	 * Apache-FOPの設定ファイルのパスを取得します。
+	 * @param apacheFopConfig Apache-FOPの設定ファイルバス。
+	 */
+	public static void setApacheFopConfig(final String apacheFopConfig) {
+		DataFormsServlet.apacheFopConfig = apacheFopConfig;
+	}
 	
 }

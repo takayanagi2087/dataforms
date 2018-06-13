@@ -445,6 +445,11 @@
 		<param-name>backup-file-name</param-name>
 		<param-value>backup</param-value>
 	</context-param>
+	<!-- apache-fopの設定ファイルのパス -->
+	<context-param>
+		<param-name>apache-fop-config</param-name>
+		<param-value>/WEB-INF/apachefop/fop.xconf</param-value>
+	</context-param>
 	
 	<!-- セッションタイムアウト -->
 	<session-config>
