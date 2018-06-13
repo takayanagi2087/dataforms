@@ -363,12 +363,11 @@ public abstract class Report {
 	}
 
 	/**
-	 * レポートを出力します。
-	 * @param data 出力データ。
-	 * @return 出力データ。
+	 * レポートを作成します。
+	 * @param data レポートに表示するデータ。
 	 * @throws Exception 例外。
 	 */
-	public byte[] print(final Map<String, Object> data) throws Exception {
+	protected void buildReport(final Map<String, Object> data) throws Exception {
 		this.pageStartPositionList = new ArrayList<Integer>();
 		this.getWebResource(data);
 		log.debug("data=" + JSON.encode(data, true));
@@ -378,6 +377,19 @@ public abstract class Report {
 			Map<String, Object> pmap = this.getPageData(i, data);
 			this.printPage(i, pmap);
 		}
+	}
+
+	
+	/**
+	 * レポートを出力します。
+	 * @param data 出力データ。
+	 * @return 出力データ。
+	 * @throws Exception 例外。
+	 */
+	public byte[] print(final Map<String, Object> data) throws Exception {
+		this.buildReport(data);
 		return this.getReport();
 	}
+
+	
 }

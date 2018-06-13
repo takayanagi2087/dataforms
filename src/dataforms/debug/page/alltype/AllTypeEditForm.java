@@ -1,5 +1,6 @@
 package dataforms.debug.page.alltype;
 
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.controller.BinaryResponse;
 import dataforms.controller.EditForm;
+import dataforms.controller.JsonResponse;
 import dataforms.controller.Response;
 import dataforms.dao.file.ImageData;
 import dataforms.debug.dao.alltype.AllTypeAttachFileTable;
@@ -18,6 +20,7 @@ import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.debug.report.AlltypeExcelReport;
 import dataforms.debug.report.AlltypeXslFoReport;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.report.PrintDevices;
 import dataforms.util.StringUtil;
 import dataforms.validator.FileSizeValidator;
 import dataforms.validator.RequiredValidator;
@@ -201,6 +204,42 @@ public class AllTypeEditForm extends EditForm {
 		BinaryResponse ret = new BinaryResponse(pdf);
 		ret.setFileName("test001.pdf");
 		ret.setContentType("application/pdf");
+		this.methodFinishLog(log, ret);
+		return ret;
+	}
+
+	/**
+	 * 印刷処理を行います。
+	 * @param param パラメータ。
+	 * @return 応答。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public Response printOut(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(log, param);
+		Map<String, Object> data = this.convertToServerData(param);
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get("attachFileTable");
+		for (int i = 0; i < list.size(); i++) {
+			Map<String, Object> m = list.get(i);
+			m.put("no", Integer.valueOf(i + 1));
+			m.put("barcode", this.getBarcodeImage(Integer.toString(123450000 + i)));
+		}
+		
+		log.debug("list.size()=" + list.size());
+		log.debug("data=" + JSON.encode(data, true));
+		String template = AllTypeEditForm.getServlet().getServletContext().getRealPath("/exceltemplate/alltypeExcelTempl.fo");
+		log.debug("template=" + template);
+		AlltypeXslFoReport rep = new AlltypeXslFoReport(template);
+		
+		
+		PrinterJob pj = PrinterJob.getPrinterJob();
+		pj.setPrintService(PrintDevices.getPrintService("Microsoft Print to PDF"));
+//		pj.setPrintService(PrintDevices.getPrintService("PX-M5041F"));
+//		pj.setPrintService(PrintDevices.getPrintService("MG6300"));
+//		pj.setPrintService(PrintDevices.getPrintService("EPSON PX-M5041F"));
+		rep.print(data, pj);
+		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, "");
 		this.methodFinishLog(log, ret);
 		return ret;
 	}

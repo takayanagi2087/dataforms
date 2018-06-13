@@ -1,5 +1,6 @@
 package dataforms.report;
 
+import java.awt.print.PrinterJob;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,9 +28,11 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.fop.render.print.PrintRenderer;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -132,6 +135,7 @@ public class XslFoReport extends Report {
 		this.pageBuffer = (new StringBuilder(this.pageBlockFo)).toString();
 		super.printPage(page, data);
 		this.clearField(page);
+		this.pageBuffer = this.pageBuffer.replaceAll("\\<fo:external-graphic(.*?)src=\"\"(.*?)/\\>", "");
 		this.pageList.add(this.pageBuffer + "\n");
 	}
 	
@@ -310,21 +314,69 @@ public class XslFoReport extends Report {
 		return os.toByteArray();
 	}
 
-	
-	
-	@Override
-	public byte[] getReport() throws Exception {
+	/**
+	 * データが設定されたXSL-FO文字列を取得します。
+	 * @return データが設定されたXSL-FO文字列。
+	 * @throws TransformerException 例外。
+	 */
+	protected String getXslFo() throws TransformerException {
 		String xml = this.convertToString(this.docFo);
 		StringBuilder sb = new StringBuilder();
 		for (String p: this.pageList) {
 			sb.append(p);
 		}
 		xml = xml.replace("${pageBlock}", sb.toString());
+		return xml;
+	}
+	
+	@Override
+	public byte[] getReport() throws Exception {
+		String xml = this.getXslFo();
 		logger.debug("xslFo=" + xml);
 		return this.createPdf(xml);
 	}
-	
-	
 
+	
+	/**
+	 * FOを指定したプリンターに印刷します。。
+	 * @param foXml Fo形式の文字列。
+	 * @param printJob 印刷ジョブ。
+	 * @throws Exception 例外。
+	 */
+	@SuppressWarnings("unchecked")
+	private void print(final String foXml, final PrinterJob printJob) throws Exception {
+		ByteArrayInputStream is = new ByteArrayInputStream(foXml.getBytes(DataFormsServlet.getEncoding()));
+		try {
+			String conf = AllTypeEditForm.getServlet().getServletContext().getRealPath("/WEB-INF/apachefop/fop.xconf");
+			Source src = new StreamSource(is);
+			//FOPをセットアップする
+			FopFactory fopFactory = FopFactory.newInstance(new File(conf));
+			FOUserAgent userAgent = fopFactory.newFOUserAgent();
+			userAgent.getRendererOptions().put(PrintRenderer.PRINTER_JOB, printJob);
+			PrintRenderer renderer = new PrintRenderer(userAgent);
+			userAgent.setRendererOverride(renderer);
+			Fop fop = fopFactory.newFop(userAgent);
+			TransformerFactory factory = TransformerFactory.newInstance();
+			Transformer transformer = factory.newTransformer(); // identity transformer
+			Result res = new SAXResult(fop.getDefaultHandler());
+			transformer.transform(src, res);
+		} finally {
+			is.close();
+		}
+	}
+
+	/**
+	 * プリンターに直接印刷します。
+	 * @param data 印刷するデータ。
+	 * @param printJob 印刷JOB。
+	 * @throws Exception 例外。
+	 */
+	public void print(final Map<String, Object> data, final PrinterJob printJob) throws Exception {
+		this.buildReport(data);
+//		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + this.getXslFo();
+		String xml = this.getXslFo();
+		logger.debug("xslFo=" + xml);
+		this.print(xml, printJob);
+	}
 
 }

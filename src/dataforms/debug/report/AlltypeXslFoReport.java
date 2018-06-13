@@ -32,6 +32,6 @@ public class AlltypeXslFoReport extends XslFoReport {
 
 		this.setRowsParPage(9);
 		this.setMainTableId(htmltable.getId());
-		this.addBreakField(htmltable.getFieldList().get("fileComment"));
+		// this.addBreakField(htmltable.getFieldList().get("fileComment"));
 	}
 }

@@ -42,6 +42,7 @@
 		<pathelement location="WebContent/WEB-INF/lib/poi-ooxml-schemas-3.17.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/poi-scratchpad-3.17.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
+		<pathelement location="WebContent/WEB-INF/lib/fop.jar"/>
 	</path>
 	<path id="EAR ライブラリー.libraryclasspath"/>
 	<path id="Apache Tomcat v9.0 [Apache Tomcat v9.0].libraryclasspath">
