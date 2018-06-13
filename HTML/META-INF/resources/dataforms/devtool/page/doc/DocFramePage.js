@@ -30,7 +30,7 @@ DocFramePage.prototype.attach = function() {
 		thisPage.find("#docFrame").attr("src", src);
 
 	});
-	thisPage.find("#docFrame").load(function() {
+	thisPage.find("#docFrame").on('load', function() {
 		thisPage.onLoadDocFrame($(this));
 	});
 

@@ -292,7 +292,7 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 	$('body').append("<iframe style='display:none' id='uploadIFrame' name='uploadIFrame'></iframe>");
 	uiframe = $('#uploadIFrame');
 	// iframeがロードされた場合のイベント処理を登録する.
-	uiframe.load(function() {
+	uiframe.on('load', function() {
 		var contents = $(uiframe).contents().get(0);
 		var data = $(contents).find('body').text();
 		try {
