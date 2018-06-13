@@ -114,7 +114,7 @@ public class XslFoReport extends Report {
 		for (ReportTable tbl: this.getTableList()) {
 			String tblid = tbl.getId();
 			for (int i = 0;; i++) {
-				if (this.pageBuffer.indexOf("$" + tblid + "[") < 0) {
+				if (this.pageBuffer.indexOf("${" + tblid + "[") < 0) {
 					break;
 				}
 				for (Field<?> f: tbl.getFieldList()) {
@@ -170,7 +170,7 @@ public class XslFoReport extends Report {
 			}
 		}
 		logger.debug("id=" + field.getId() + ", value=" + cv.toString());
-		this.pageBuffer = this.pageBuffer.replace("$" + field.getId(), cv.toString());
+		this.pageBuffer = this.pageBuffer.replace("${" + field.getId() + "}", cv.toString());
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class XslFoReport extends Report {
 	 * @param field クリアするフィールド。
 	 */
 	protected void clearField(final int page, final Field<?> field) {
-		this.pageBuffer = this.pageBuffer.replace("$" + field.getId(), "");
+		this.pageBuffer = this.pageBuffer.replace("${" + field.getId() + "}", "");
 	}
 
 

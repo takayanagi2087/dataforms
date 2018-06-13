@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.formula.EvaluationWorkbook;
@@ -534,6 +536,27 @@ public class ExcelReport extends Report {
 	 */
 	private Map<String, CellPosition> cellPositionMap = null;
 
+	
+	/**
+	 * セルの値からフィールドIDを取得します。
+	 * @param value セルの値。
+	 * @return フィールドID。
+	 */
+	private String getFieldId(final String value) {
+		String ret = null;
+		Pattern p = Pattern.compile("\\$\\{(.+?)\\}");
+		Matcher m = p.matcher(value);
+		if (m.find()) {
+			String g = m.group();
+			ret = g.replaceAll("[\\$\\{\\}]", "");
+		} else {
+			String[] sp = value.substring(1).split("[\\{\\}]");
+			ret = sp[0].trim();
+		}
+		log.debug("fieldId=" + ret);
+		return ret;
+	}
+	
 
 	/**
 	 * フィールドIDとセルのマップを取得する。
@@ -556,10 +579,14 @@ public class ExcelReport extends Report {
 								CellPosition p = new CellPosition(ridx, cidx);
 								String str = value.substring(1);
 								String[]sp = str.split("[\\{\\}]");
-								ret.put(sp[0].trim(), p);
-								if (sp.length == 2) {
+								ret.put(this.getFieldId(value), p);
+								if (Pattern.matches("^\\$(.+?)\\{.+\\}$", value) 
+									|| Pattern.matches("^\\$\\{(.+?)\\}\\{.+\\}$", value)) {
+									for (String s: sp) {
+										log.debug("s=" + s);
+									}
 									@SuppressWarnings("unchecked")
-									Map<String, Object> opt = (Map<String, Object>) JSON.decode(sp[1], Map.class);
+									Map<String, Object> opt = (Map<String, Object>) JSON.decode(sp[sp.length - 1], Map.class);
 									log.debug("opt=" + opt.toString());
 									if (opt.containsKey("aspect")) {
 										p.setAspect((String) opt.get("aspect"));
