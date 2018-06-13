@@ -222,7 +222,7 @@ QueryResultForm.prototype.setPagerInfo = function(queryResult) {
 	var hitCount = queryResult.hitCount;
 	var linesPerPage = queryResult.linesPerPage;
 	var pageSelector = this.find("select[id='pageNo']");
-	if (pageSelector.size()) {
+	if (pageSelector.length) {
 		var max = Math.floor(hitCount / linesPerPage);
 		if (hitCount % linesPerPage != 0) {
 			max ++;
@@ -239,7 +239,7 @@ QueryResultForm.prototype.setPagerInfo = function(queryResult) {
  * ページ関連情報を制御します。
  */
 QueryResultForm.prototype.controlPager = function() {
-	if (this.find("#queryResult>tbody>tr").size() == 0) {
+	if (this.find("#queryResult>tbody>tr").length == 0) {
 		this.find("#linesPerPage").prop("disabled", true);
 		this.find("#topPageButton").prop("disabled", true);
 		this.find("#prevPageButton").prop("disabled", true);

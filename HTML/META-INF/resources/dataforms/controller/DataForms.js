@@ -48,12 +48,12 @@ DataForms.prototype.init = function() {
 DataForms.prototype.attach = function() {
 	var editMode = true;
 	var qf = this.find("#queryForm");
-	if (qf.size() > 0) {
+	if (qf.length > 0) {
 		qf.show();
 		editMode = false;
 	}
 	var rf = this.find("#queryResultForm");
-	if (rf.size() > 0) {
+	if (rf.length > 0) {
 		rf.hide();
 		editMode = false;
 	}
@@ -71,7 +71,7 @@ DataForms.prototype.attach = function() {
 		var f = this.find("form:first");
 		f.before('<div class="errorMessages" id="errorMessages"><!--エラーメッセージ領域--></div>');
 	}
-	if (ef.size() == 0) {
+	if (ef.length == 0) {
 		// 編集フォームがない場合
 		this.find("#newButton").hide();
 	}
@@ -124,7 +124,7 @@ DataForms.prototype.setErrorInfo = function(errors, form) {
 DataForms.prototype.toQueryMode = function() {
 	var qf = this.find("#queryForm");
 	var qrf = this.find("#queryResultForm");
-	if (qf.size() > 0 || qrf.size() > 0) {
+	if (qf.length > 0 || qrf.length > 0) {
 		var queryForm = this.getComponent("queryForm");
 		if (queryForm != null) {
 			qf.show();

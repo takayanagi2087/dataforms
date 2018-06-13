@@ -21,7 +21,7 @@ MultiSelectField = createSubclass("MultiSelectField", {}, "SelectField");
  */
 MultiSelectField.prototype.setValue = function(value) {
 	var comp = this.get();
-	if (comp.size() > 0) {
+	if (comp.length > 0) {
 		var tag = comp.prop("tagName");
 		var type = comp.prop("type");
 		if ("INPUT" == tag && type == "checkbox") {

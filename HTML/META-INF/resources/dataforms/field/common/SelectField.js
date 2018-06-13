@@ -20,11 +20,11 @@ SelectField = createSubclass("SelectField", {}, "Field");
  */
 SelectField.prototype.get = function() {
 	var el = Field.prototype.get.call(this);
-	if (el.size() == 0) {
+	if (el.length == 0) {
 //		logger.error("aaa=" + this.getUniqSelector());
 		el = this.parent.find("[id^='" + this.selectorEscape(this.id + "[") + "']");
 	}
-	if (el.size() == 0) {
+	if (el.length == 0) {
 //		logger.error("bbb="+ this.id + "," + this.getUniqSelector());
 		el = this.parent.find("[name='" + this.selectorEscape(this.id) + "']");
 	}
@@ -75,7 +75,7 @@ SelectField.prototype.setOptionList = function(opt) {
 		return;
 	}
 	var el = this.get();
-	if (el.size() > 0) {
+	if (el.length > 0) {
 		if (el.prop("tagName") == "SELECT") {
 			var opthtml = "";
 			for (var i = 0; i < this.optionList.length; i++) {

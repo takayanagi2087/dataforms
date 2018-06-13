@@ -91,7 +91,7 @@ EditForm.prototype.toEditMode = function() {
 	this.mode = "edit";
 	this.lockFields(false);
 	var cb = this.find("#confirmButton");
-	if (cb.size() > 0) {
+	if (cb.length > 0) {
 		// 確認画面があるパターン.
 		cb.show();
 		this.find("#resetButton").show();
@@ -113,7 +113,7 @@ EditForm.prototype.toConfirmMode = function() {
 	this.mode = "confirm";
 	this.lockFields(true);
 	var cb = this.find('#confirmButton');
-	if (cb.size() > 0) {
+	if (cb.length > 0) {
 		// 確認画面があるパターン.
 		cb.hide();
 		this.find('#resetButton').hide();

@@ -30,7 +30,7 @@ TableManagementQueryResultForm.prototype.attach = function() {
 		for (var i = 0;;i++) {
 			var id = "queryResult[" + i + "].statusVal";
 			var st = thisForm.find("#" + thisForm.selectorEscape(id));
-			if (st.size() == 0) {
+			if (st.length == 0) {
 				break;
 			}
 			if (st.val() == "0") {
@@ -44,7 +44,7 @@ TableManagementQueryResultForm.prototype.attach = function() {
 		for (var i = 0;;i++) {
 			var id = "queryResult[" + i + "].differenceVal";
 			var st = thisForm.find("#" + thisForm.selectorEscape(id));
-			if (st.size() == 0) {
+			if (st.length == 0) {
 				break;
 			}
 			if (st.val() == "1") {
@@ -134,7 +134,7 @@ TableManagementQueryResultForm.prototype.attach = function() {
  */
 TableManagementQueryResultForm.prototype.controlButton = function() {
 	var tr = this.find("#queryResult>tbody>tr");
-	if (tr.size() > 0) {
+	if (tr.length > 0) {
 		this.find("#selectAllButton").prop("disabled", false);
 		this.find("#selectNothingButton").prop("disabled", false);
 		this.find("#selectDiffButton").prop("disabled", false);
@@ -146,7 +146,7 @@ TableManagementQueryResultForm.prototype.controlButton = function() {
 		this.find("#unselectAllButton").prop("disabled", true);
 	}
 	var ckcb = this.find("[name='checkedClass']:checked");
-	if (ckcb.size() > 0) {
+	if (ckcb.length > 0) {
 		this.find("#updateTableButton").prop("disabled", false);
 		this.find("#initTableButton").prop("disabled", false);
 		this.find("#dropTableButton").prop("disabled", false);

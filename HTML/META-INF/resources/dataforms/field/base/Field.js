@@ -300,7 +300,7 @@ Field.prototype.performValidator = function(v) {
 Field.prototype.addSpan = function(comp) {
 	var spanid = this.id + "_span";
 	var span = this.parent.find("#" + this.selectorEscape(spanid));
-	if (span.size() == 0) {
+	if (span.length == 0) {
 		comp.after("<span id='" + spanid + "' class='selectSpan'></span>");
 		span = this.parent.find("#" + this.selectorEscape(spanid));
 	}

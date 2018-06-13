@@ -127,7 +127,7 @@ Form.prototype.attach = function() {
 	if (this.htmlPath != null) {
 		var fhtml = $("<div>" + this.additionalHtmlText + "</div>").find("form").html();
 		var obj = this.get();
-		if (obj.size() !=0) {
+		if (obj.length !=0) {
 			this.get().html(fhtml);
 		} else {
 			obj = $("#" + this.selectorEscape(this.id));

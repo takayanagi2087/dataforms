@@ -438,7 +438,7 @@ HtmlTable.prototype.setSortMark = function() {
 				mark = MessagesUtil.getMessage("htmltable.sortable");
 				el.data("order", "NONE");
 			}
-			if (el.find(".sortableMark").size() == 0) {
+			if (el.find(".sortableMark").length == 0) {
 				el.contents().wrap(labelspan).before(mark);
 				el.data("id", field.id);
 			} else {
@@ -633,7 +633,7 @@ HtmlTable.prototype.getRowField = function(idx, fobj) {
  */
 HtmlTable.prototype.addTr = function(l) {
 	var tb = this.find("tbody");
-	var lidx = this.find("tbody>tr").size();
+	var lidx = this.find("tbody>tr").length;
 	var line = this.trLine.replace(/\[0\]/g, "[" + lidx + "]");
 	if (l == null) {
 		tb.append("<tr>" + line + "</tr>");
@@ -760,7 +760,7 @@ HtmlTable.prototype.validate = function() {
 		var flg = false;
 		for (var f = 0; f < this.fields.length; f++) {
 			var fld = this.getRowField(i, this.fields[f]);
-			if (fld.get().size() > 0) {
+			if (fld.get().length > 0) {
 				flg = true;
 				var e = fld.validate();
 				if (e != null) {
@@ -796,7 +796,7 @@ HtmlTable.prototype.lockRow = function(line, lk) {
 	var flg = false;
 	for (var f = 0; f < this.fields.length; f++) {
 		var fld = this.getRowField(line, this.fields[f]);
-		if (fld.get().size() > 0) {
+		if (fld.get().length > 0) {
 			flg = true;
 			fld.lock(lk);
 		}

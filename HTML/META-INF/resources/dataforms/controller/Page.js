@@ -130,7 +130,7 @@ Page.prototype.wrapFrame = function(frame, frameMainDiv, mainDiv) {
 	var fparent = frameMainDiv.parent();
 	logger.log("id=" + fparent.attr("id"));
 	if (fparent.attr("id") != "rootDiv") {
-		logger.log("parent.size()=" + fparent.size());
+		logger.log("parent.length=" + fparent.length);
 		logger.log("id=" + fparent.attr("id"));
 		fparent.empty();
 		p.children().wrapAll(fparent);
@@ -348,7 +348,7 @@ Page.prototype.attach = function() {
 	DataForms.prototype.attach.call(thisPage);
 	$("#showMenuButton").click(function() {
 		var menu = $("#menuDiv");
-		if (menu.size() == 0) {
+		if (menu.length == 0) {
 			// leftbarDivの対応は互換性維持のため
 			$("#leftbarDiv").toggle("blind");
 		} else {

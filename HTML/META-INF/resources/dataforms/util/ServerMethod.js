@@ -258,7 +258,7 @@ AsyncServerMethod.prototype.isUploadForm = function(form) {
  */
 AsyncServerMethod.prototype.setHiddenField = function(form, field, val) {
 	var hid = form.find('#' + field);
-	if (hid.size() == 0) {
+	if (hid.length == 0) {
 		form.append("<input type='hidden' id='" + field + "' name='" + field + "' value='" + val + "'>");
 		hid = form.find('#' + field);
 	}

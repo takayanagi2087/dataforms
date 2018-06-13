@@ -42,7 +42,7 @@ EditableHtmlTable.prototype.enableSortable = function() {
 			start:function(event, ui) {
 			},
 			update:function(event, ui) {
-				var cnt = thisTable.find("tbody>tr").size();
+				var cnt = thisTable.find("tbody>tr").length;
 				var lasttr = thisTable.find("tbody>tr:last");
 				var sel = "[id^='" + thisTable.selectorEscape(thisTable.id + "[" + (cnt - 1) + "]") + "']";
 				thisTable.resetIdIndex();
@@ -202,7 +202,7 @@ EditableHtmlTable.prototype.lockFields = function(lk) {
 EditableHtmlTable.prototype.resetIdIndex = function() {
 	var thisTable = this;
 	var trlist = thisTable.find("tbody>tr,tfoot>tr");
-	for (var i = 0; i < trlist.size(); i++) {
+	for (var i = 0; i < trlist.length; i++) {
 		var c = $(trlist.get(i)).find("[id^='" + thisTable.id + "\\[']");
 		c.each(function() {
 			var id = $(this).attr("id");
@@ -300,7 +300,7 @@ EditableHtmlTable.prototype.deleteRow = function(btn) {
  */
 EditableHtmlTable.prototype.resetLineNo = function() {
 	var trlist = this.find("[id$=\\.no]");
-	for (var i = 0; i < trlist.size(); i++) {
+	for (var i = 0; i < trlist.length; i++) {
 		var lineNoId = this.id + "[" + i + "].no";
 		this.find("#" + this.selectorEscape(lineNoId)).text(i + 1);
 		var sortOrderId = this.id + "[" + i + "].sortOrder";
@@ -319,7 +319,7 @@ EditableHtmlTable.prototype.resetLineNo = function() {
  */
 EditableHtmlTable.prototype.resetRowNo = function() {
 	var trlist = this.find("[id$=\\.no]");
-	for (var i = 0; i < trlist.size(); i++) {
+	for (var i = 0; i < trlist.length; i++) {
 		var lineNoId = this.id + "[" + i + "].no";
 		this.find("#" + this.selectorEscape(lineNoId)).text(i + 1);
 		var sortOrderId = this.id + "[" + i + "].sortOrder";
@@ -338,7 +338,7 @@ EditableHtmlTable.prototype.setTableData = function(list) {
 	var thisTable = this;
 	HtmlTable.prototype.setTableData.call(this, list);
 	var lastAddButton = this.find("tfoot").find("[id$='\\.addButton']");
-	if (lastAddButton.size() == 0) {
+	if (lastAddButton.length == 0) {
 		var lidx = this.addTr();
 		this.find("#" + this.selectorEscape(this.id + "[" + lidx + "].addButton")).click(function() {
 			thisTable.addRow(this);
@@ -347,9 +347,9 @@ EditableHtmlTable.prototype.setTableData = function(list) {
 		this.resetRowNo();
 		if (list != null) {
 			var tdlist = this.find("tbody>tr:eq(" + list.length + ")>td");
-			for (var i = 0; i < tdlist.size(); i++) {
+			for (var i = 0; i < tdlist.length; i++) {
 				var td = $(tdlist.get(i));
-				if (td.find("[id$='addButton']").size() == 0) {
+				if (td.find("[id$='addButton']").length == 0) {
 					td.empty();
 				}
 			}
