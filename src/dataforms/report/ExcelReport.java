@@ -230,7 +230,7 @@ public class ExcelReport extends Report {
 	 * @param srcCell コピー元
 	 * @param destCell コピー先
 	 */
-	private void copyCellFormula(final Cell srcCell, final Cell destCell) {
+	protected void copyCellFormula(final Cell srcCell, final Cell destCell) {
 		String formula = srcCell.getCellFormula();
 		EvaluationWorkbook ew = XSSFEvaluationWorkbook.create((XSSFWorkbook) workbook);
 		Ptg[] ptgs = FormulaParser.parse(formula, (XSSFEvaluationWorkbook) ew, FormulaType.CELL, this.getSheetIndex());
@@ -271,7 +271,7 @@ public class ExcelReport extends Report {
 	 * @param toRow コピー先。
 	 *
 	 */
-	private void copyCells(final Row fromRow, final Row toRow) {
+	protected void copyCells(final Row fromRow, final Row toRow) {
 		for (int j = 0; j < fromRow.getLastCellNum(); j++) {
 			Cell cell = fromRow.getCell(j);
 			if (cell != null) {
@@ -301,12 +301,34 @@ public class ExcelReport extends Report {
 
 	/**
 	 * 1行コピーを行う。
+	 * @param fromSheet シート。
+	 * @param from コピー元行。
+	 * @param toSheet シート。
+	 * @param to コピー先行。
+	 */
+	protected void copyRow(final Sheet fromSheet, final int from, final Sheet toSheet, final int to) {
+		Row fromRow = fromSheet.getRow(from);
+		if (fromRow != null) {
+			Row toRow = toSheet.getRow(to);
+			if (toRow != null) {
+				toSheet.removeRow(toRow);
+			}
+			toRow = toSheet.createRow(to);
+			toRow.setHeight(fromRow.getHeight());
+			this.copyCells(fromRow, toRow);
+		}
+	}
+
+
+	
+	/**
+	 * 1行コピーを行う。
 	 * @param sheet シート。
 	 * @param from コピー元行。
 	 * @param to コピー先行。
 	 */
-	private void copyRow(final Sheet sheet, final int from, final int to) {
-		Row fromRow = sheet.getRow(from);
+	protected void copyRow(final Sheet sheet, final int from, final int to) {
+/*		Row fromRow = sheet.getRow(from);
 		if (fromRow != null) {
 			Row toRow = sheet.getRow(to);
 			if (toRow != null) {
@@ -315,7 +337,8 @@ public class ExcelReport extends Report {
 			toRow = sheet.createRow(to);
 			toRow.setHeight(fromRow.getHeight());
 			this.copyCells(fromRow, toRow);
-		}
+		}*/
+		this.copyRow(sheet, from, sheet, to);
 	}
 
 	/**
@@ -325,7 +348,7 @@ public class ExcelReport extends Report {
 	 * @param rows コピー行数。
 	 * @param to コピー先。
 	 */
-	private void copyRows(final Sheet sheet, final int from, final int rows, final int to) {
+	protected void copyRows(final Sheet sheet, final int from, final int rows, final int to) {
 		for (int i = from; i < rows; i++) {
 			this.copyRow(sheet, from + i,  to + i);
 		}
@@ -844,6 +867,21 @@ public class ExcelReport extends Report {
 		}
 		return os.toByteArray();
 	}
+	
+	/**
+	 * シートのコピーを作成します。
+	 * @param idx コピー元シートのインデックス。
+	 * @throws Exception 例外。
+	 */
+	protected void copySheet(final int idx) throws Exception {
+		Workbook wb = this.getTamplate();
+		wb.cloneSheet(idx);
+		PrintSetup printSetting = wb.getSheetAt(1).getPrintSetup();
+		int lidx = wb.getNumberOfSheets() - 1;
+		wb.getSheetAt(lidx).getPrintSetup().setLandscape(printSetting.getLandscape());
+		wb.getSheetAt(lidx).getPrintSetup().setPaperSize(printSetting.getPaperSize());
+	}
+
 	
 	/**
 	 * シートのコピーを作成します。
