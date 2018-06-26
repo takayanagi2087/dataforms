@@ -40,6 +40,7 @@ import dataforms.controller.Page;
 import dataforms.dao.file.ImageData;
 import dataforms.field.base.Field;
 import dataforms.util.MapUtil;
+import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
 
 
@@ -880,6 +881,14 @@ public class ExcelReport extends Report {
 		int lidx = wb.getNumberOfSheets() - 1;
 		wb.getSheetAt(lidx).getPrintSetup().setLandscape(printSetting.getLandscape());
 		wb.getSheetAt(lidx).getPrintSetup().setPaperSize(printSetting.getPaperSize());
+		// シートの印刷範囲をコピー
+		String pa = wb.getPrintArea(idx);
+		if (!StringUtil.isBlank(pa)) {
+			String[] sp = pa.split("!");
+			if (sp.length >= 2) {
+				wb.setPrintArea(lidx, sp[1]);
+			}
+		}
 	}
 
 	
