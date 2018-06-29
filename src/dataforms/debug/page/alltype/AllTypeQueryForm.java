@@ -4,6 +4,7 @@ import dataforms.controller.QueryForm;
 import dataforms.dao.Table;
 import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.field.base.Field;
+import dataforms.field.base.Field.MatchType;
 import dataforms.field.common.MultiSelectField;
 import dataforms.field.sqltype.DateField;
 import dataforms.field.sqltype.NumericField;
@@ -18,7 +19,7 @@ public class AllTypeQueryForm extends QueryForm {
 	 */
 	public AllTypeQueryForm() {
 		Table tbl = new AllTypeTable();
-		this.addField(tbl.getField("charField")).setCaseInsensitive(true);
+		this.addField(tbl.getField("charField")).setCaseInsensitive(true).setMatchType(MatchType.PART);
 		this.addField(tbl.getField("varcharField").setMatchType(Field.MatchType.PART)).setCaseInsensitive(true);
 		NumericField nf = (NumericField) tbl.getField("numericField");
 		nf.setCommaFormat(true);
