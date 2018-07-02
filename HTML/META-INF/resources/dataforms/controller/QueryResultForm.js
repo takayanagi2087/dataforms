@@ -112,6 +112,11 @@ QueryResultForm.prototype.nextPage = function() {
 
 /**
  * PKフィールドのdisabled属性を設定します。
+ * 
+ * QueryResultFieldにPKフィールドを出力しないように修正したので、
+ * 将来的にはこのメソッドは不要になります。
+ * 古いHTMLでも動作するようにしばらく残しておきます。
+ * 
  * @param {Boolean} disabled disbaled属性。
  */
 QueryResultForm.prototype.setDisabledPkField = function(disabled) {
@@ -283,7 +288,7 @@ QueryResultForm.prototype.setSelectedKey = function(comp) {
 		var id = this.pkFieldList[i];
 		var v = this.queryResult.queryResult[ridx][id];
 		// 処理対象を指定するキーフィールドに値を設定する.
-		this.find("#" + id).val(v);
+		// this.find("#" + id).val(v);
 		var editForm = this.parent.getComponent("editForm");
 		if (editForm != null) {
 			editForm.setFieldValue(id, v);
