@@ -1,4 +1,4 @@
-#dataforms.jar
+# dataforms.jar Java web application framework.
 
 ## Description
 Java Webアプリケーションフレームワークと、その開発ツールです。  
@@ -51,8 +51,10 @@ Servlet 3.0に対応したアプリケーションサーバで動作するはず
 * MariaDB(MySQL) 5.5.37
 * Oralce11g 11.2.0.1.0
 
+## References
+[ドキュメント、サンプル等へのリンク](http://woontai.dip.jp/dataforms.jar/)
+
 ## Licence
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)  
-
 
 
