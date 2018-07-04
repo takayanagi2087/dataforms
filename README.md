@@ -2,20 +2,24 @@
 
 ## Description
 Java Webアプリケーションフレームワークと、その開発ツールです。  
-ドキュメント、開発ツールが整ってきたので公開します。  
+Javaのクラスライブラリ、Javascriptのクラスライブラリ、開発ツール、ドキュメントが全て1つのjarファイルに入っています。
 
 特徴を以下にまとめます。  
 
 * 習得するのに必要な知識は、HTML,Java,Javascript,jQueryくらいです。SQLの基本を押さえておけば、Daoクラス関連の機能もすぐに理解できると思います。
-* 依存ライブラリ(jQuery,jQuery-ui,jsonic,apache-commonsのいくつかとpoi)は少なく、シンプルな構造です。
+* 依存ライブラリ(jQuery,jQuery-ui,jsonic,apache-commonsのいくつかとpoi,apache FOP)は少なく、シンプルな構造です。
 * JSPを使用せず、HTMLをそのまま使用します。
-* dataforms.jarが自動生成する処理が、HTML中のイベントハンドラを適切に設定します。そのため、HTMLにはJavascriptやonxxx等のイベントアトリビュートを一切記述しません。
+* dataforms.jarが自動生成するJavascriptが、HTML中のイベントハンドラを適切に設定します。そのため、HTMLにはJavascriptやonxxx等のイベントアトリビュートを一切記述しません。
 * 開発ツールを装備し、とりあえず動作するJava,Javascript,HTMLを自動生成することができます。
 * データベースのテーブルや問い合わせは、JavaのTable,Queryクラスで定義するため、ほとんどSQLの記述は不要です。
 * データベースのテーブル作成やテーブル構造の変更は、開発ツールで簡単に行うことができます。
 * 複数のベースサーバに対応し、データベースサーバに依存しないアプリケーションの構築が可能です。(開発環境は組み込みApache Derby、運用はPostgreSQLというシステム開発の実績があります。)
 * デフォルトのフレームはレスポンシブデザインになっており、1つのHTMLでPC,タブレット,スマートフォンの画面サイズに対応します。
 * フレームデザインは単純なHTML,CSSで記述してあるので、簡単にカスタマイズすることができます。
+
+
+## References
+[ドキュメント、サンプル等へのリンク](http://woontai.dip.jp/dataforms.jar/)
 
 ## Install
 インストールの手順をまとめると以下のようになります。  
@@ -51,8 +55,6 @@ Servlet 3.0に対応したアプリケーションサーバで動作するはず
 * MariaDB(MySQL) 5.5.37
 * Oralce11g 11.2.0.1.0
 
-## References
-[ドキュメント、サンプル等へのリンク](http://woontai.dip.jp/dataforms.jar/)
 
 ## Licence
 [MIT](https://github.com/takayanagi2087/dataforms/blob/master/LICENSE)  
