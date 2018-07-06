@@ -207,7 +207,9 @@ QueryResultForm.prototype.deleteData = function() {
 	var msg = MessagesUtil.getMessage("message.deleteconfirm");
 	var queryResultForm = this;
 	currentPage.confirm(systemName, msg, function() {
-		queryResultForm.submit("delete", function(result) {
+		logger.log("selectedQueryString=" + queryResultForm.selectedQueryString);
+		var method = queryResultForm.getAsyncServerMethod("delete");
+		method.execute(queryResultForm.selectedQueryString, function(result) {
 			queryResultForm.parent.resetErrorStatus();
 			if (result.status == ServerMethod.SUCCESS) {
 				queryResultForm.changePage();
@@ -282,6 +284,7 @@ QueryResultForm.prototype.controlPager = function() {
  */
 QueryResultForm.prototype.setSelectedKey = function(comp) {
 	// クリックされたボタンと同一行にあるキー項目の値を取得する.
+	this.selectedQueryString = "";
 	var tbl = this.getComponent("queryResult");
 	var ridx = tbl.getRowIndex(comp);
 	for (var i = 0; i < this.pkFieldList.length; i++) {
@@ -289,6 +292,10 @@ QueryResultForm.prototype.setSelectedKey = function(comp) {
 		var v = this.queryResult.queryResult[ridx][id];
 		// 処理対象を指定するキーフィールドに値を設定する.
 		// this.find("#" + id).val(v);
+		if (this.selectedQueryString.length > 0) {
+			this.selectedQueryString += "&"
+		}
+		this.selectedQueryString += (id + "=" + v);
 		var editForm = this.parent.getComponent("editForm");
 		if (editForm != null) {
 			editForm.setFieldValue(id, v);

@@ -1297,4 +1297,28 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		}
 		return (label.length() + 2) * 14;
 	}
+	
+	/**
+	 * HTML生成フラグ。
+	 * <pre>
+	 * 開発ツールでHTMLに出力する場合trueを設定します。
+	 * </pre>
+	 */
+	private boolean htmlGeneration = true;
+
+	/**
+	 * 開発ツールでHTMLを生成するフィールドの場合trueを返します。
+	 * @return HTML生成フラグ。
+	 */
+	public boolean isHtmlGeneration() {
+		return htmlGeneration;
+	}
+
+	/**
+	 * 開発ツールでHTMLを生成するフィールドの場合trueを設定します。
+	 * @param htmlGeneration HTML生成フラグ。
+	 */
+	public void setHtmlGeneration(final boolean htmlGeneration) {
+		this.htmlGeneration = htmlGeneration;
+	}
 }

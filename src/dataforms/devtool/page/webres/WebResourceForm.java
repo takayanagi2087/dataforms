@@ -379,6 +379,9 @@ public class WebResourceForm extends Form {
 			for (WebComponent c: f.getComponentList()) {
 				if (c instanceof Field) {
 					Field<?> field = (Field<?>) c;
+					if (!field.isHtmlGeneration()) {
+						continue;
+					}
 					if (!this.isTargetedForGeneration(c)) {
 						continue;
 					}
@@ -401,6 +404,9 @@ public class WebResourceForm extends Form {
 				if (c instanceof Field) {
 					Field<?> field = (Field<?>) c;
 					if (field.isHidden()) {
+						continue;
+					}
+					if (!field.isHtmlGeneration()) {
 						continue;
 					}
 					if (!this.isTargetedForGeneration(c)) {

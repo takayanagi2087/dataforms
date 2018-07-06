@@ -50,7 +50,8 @@ public abstract class QueryResultForm extends Form {
 	 * @return 追加されたフィールド。
 	 */
 	public Field<?> addPkField(final Field<?> field) {
-//		this.addField(field);
+		// 主キーフィールドはHTMLに出力しない。
+		this.addField(field).setHtmlGeneration(false);
 		this.pkFieldList.add(field.getId());
 		return field;
 	}
