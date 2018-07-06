@@ -21,6 +21,7 @@ import java.util.Map;
 //import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.log4j.Logger;
 
+import dataforms.controller.ApplicationException;
 import dataforms.controller.Page;
 import dataforms.controller.WebComponent;
 import dataforms.dao.file.BlobFileStore;
@@ -1695,6 +1696,86 @@ public class Dao implements JDBCConnectableObject {
 		}
 	}
 
+	/**
+	 * 指定されたレコードと同じPKを持つレコードがリスト中に存在するかどうかをチェックします。
+	 *
+	 * @param table テーブル。
+	 * @param rec レコード。
+	 * @param list レコードリスト。
+	 * @return レコードがリスト中に存在する場合true。
+	 */
+	protected boolean existRecord(final Table table, final Map<String, Object> rec, final List<Map<String, Object>> list) {
+		boolean ret = false;
+		FieldList pklist = table.getPkFieldList();
+		for (Map<String, Object> m: list) {
+			boolean eq = true;
+			for (Field<?> f: pklist) {
+				Object k0 = rec.get(f.getId());
+				Object k1 = m.get(f.getId());
+				if (k1 == null) {
+					continue;
+				}
+				if (!k1.equals(k0)) {
+					eq = false;
+					break;
+				}
+			}
+			if (eq) {
+				ret = true;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * oldlistに存在し、listに存在しないレコードを削除します。
+	 * @param table テーブル。
+	 * @param list 新リスト。
+	 * @param oldlist 旧リスト。
+	 * @throws Exception 例外。
+	 */
+	protected void deleteNotExistRecord(final Table table, final List<Map<String, Object>> list, final List<Map<String, Object>> oldlist) throws Exception {
+		for (Map<String, Object> om: oldlist) {
+			if (!this.existRecord(table, om, list)) {
+				this.executeDelete(table, om);
+			}
+		}
+	}
+
+	/**
+	 * テーブルの全レコードを保存します。
+	 * <pre>
+	 *
+	 * 1.listに含まなれない既存レコードを削除します。
+	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
+	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
+	 *
+	 * </pre>
+	 * @param table テーブル。
+	 * @param list 保存するレコードの全リスト。
+	 * @throws Exception 例外。
+	 */
+	public void saveTable(final Table table, final List<Map<String, Object>> list) throws Exception {
+		Query query = new Query();
+		query.setFieldList(table.getFieldList());
+		query.setMainTable(table);
+		List<Map<String, Object>> oldlist = this.executeQuery(query);
+		this.deleteNotExistRecord(table, list, oldlist);
+		for (Map<String, Object> m: list) {
+			if (this.existRecord(table, m, list)) {
+				boolean ret = this.isUpdatable(table, m);
+				if (!ret) {
+					throw new ApplicationException(this.getPage(), "error.notupdatable");
+				}
+				this.executeUpdate(table, m);
+			} else {
+				this.executeInsert(table, m);
+			}
+		}
+	}
+	
+	
 	/**
 	 * レコードを取得します。
 	 *
