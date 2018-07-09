@@ -10,13 +10,13 @@
  * <pre>
  * データ編集を行うフォームです。
  * </pre>
- * @extends Form
+ * @extends TableUpdateForm
  *
  * @prop {string} mode "edit"(フォームが編集可能な状態)または"confirm"(フォーム全体が編集不可の状態)の値を取ります。
  * @prop {string} saveMode "new"(新規データの入力中)または"update"(既存データの編集中)の値を取ります。
  *
  */
-EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new"}, "Form");
+EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new"}, "TableUpdateForm");
 
 /**
  * HTMLエレメントとの対応付けを行います。
@@ -30,30 +30,10 @@ EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new"}, "Form");
  * </pre>
  */
 EditForm.prototype.attach = function() {
-	Form.prototype.attach.call(this);
+	TableUpdateForm.prototype.attach.call(this);
 	var form = this;
-	form.find('#confirmButton').click(function () {
-		form.confirm();
-		return false;
-	});
-	form.find('#saveButton').click(function () {
-		form.save();
-		return false;
-	});
-	form.find('#resetButton').click(function() {
-		form.reset();
-		return false;
-	});
 	form.find('#deleteButton').click(function() {
 		form.del();
-		return false;
-	});
-	form.find('#backButton').click(function() {
-		if (form.parent.isBrowserBackEnabled()) {
-			history.back();
-		} else {
-			form.back();
-		}
 		return false;
 	});
 	form.toEditMode();
@@ -88,41 +68,10 @@ EditForm.prototype.lockPkFields = function() {
  * </pre>
  */
 EditForm.prototype.toEditMode = function() {
-	this.mode = "edit";
-	this.lockFields(false);
-	var cb = this.find("#confirmButton");
-	if (cb.length > 0) {
-		// 確認画面があるパターン.
-		cb.show();
-		this.find("#resetButton").show();
-		this.find("#saveButton").hide();
-	} else {
-		// いきなり保存するパターン.
-		this.find("#saveButton").show();
-	}
+	TableUpdateForm.prototype.toEditMode.call(this);
 	this.lockPkFields();
 };
 
-/**
- * 確認モードにします。
- * <pre>
- * 各フィールドを編集不可状態にします。
- * </pre>
- */
-EditForm.prototype.toConfirmMode = function() {
-	this.mode = "confirm";
-	this.lockFields(true);
-	var cb = this.find('#confirmButton');
-	if (cb.length > 0) {
-		// 確認画面があるパターン.
-		cb.hide();
-		this.find('#resetButton').hide();
-		this.find('#saveButton').show();
-	} else {
-		// いきなり保存するパターン.
-		this.find('#saveButton').show();
-	}
-};
 
 /**
  * 新規登録モードにします。
@@ -257,7 +206,7 @@ EditForm.prototype.viewData = function() {
  *
  */
 EditForm.prototype.setFormData = function(data) {
-	Form.prototype.setFormData.call(this, data);
+	TableUpdateForm.prototype.setFormData.call(this, data);
 	if (this.saveMode == "new") {
 		this.find('#deleteButton').hide();
 	} else {
@@ -265,79 +214,6 @@ EditForm.prototype.setFormData = function(data) {
 	}
 };
 
-
-/**
- * 確認ボタンのイベント処理を行います。
- * <pre>
- * 対応するEditFormのconfirmメソッドを呼び出し、問題なければ確認モードに遷移します。
- * ファイルアップロードフィールドはサーバーに送信されません。
- * </pre>
- */
-EditForm.prototype.confirm = function() {
-	var form = this;
-	if (form.validate()) {
-		this.find("#saveMode").val(this.saveMode);
-		form.submitWithoutFile("confirm", function(result) {
-			form.parent.resetErrorStatus();
-			if (result.status == ServerMethod.SUCCESS) {
-				form.toConfirmMode();
-				form.parent.pushConfirmModeStatus();
-			} else {
-				form.parent.setErrorInfo(form.getValidationResult(result), form);
-			}
-		});
-	}
-};
-
-/**
- * 保存や削除後の画面状態遷移を行います。
- */
-EditForm.prototype.changeStateForAfterUpdate = function() {
-	var form = this;
-	var queryForm = form.parent.getComponent("queryForm");
-	var resultForm = form.parent.getComponent("queryResultForm");
-	if (queryForm == null && resultForm == null) {
-		form.clearData();
-		currentPage.toTopPage();
-	} else {
-		form.clearData();
-		form.toEditMode();
-		form.parent.toQueryMode();
-		var queryResultForm = form.parent.getComponent("queryResultForm");
-		if (queryResultForm != null) {
-			queryResultForm.changePage();
-		}
-	}
-};
-
-
-/**
- * 保存ボタンのイベント処理を行います。
- * <pre>
- * 対応するEditFormのsaveメソッドを呼び出し、保存処理を行います。
- * ファイルアップロードフィールドもサーバーに送信されます。
- * </pre>
- */
-EditForm.prototype.save = function() {
-	var form = this;
-	if (form.validate()) {
-		this.find("#saveMode").val(this.saveMode);
-		form.submit("save", function(result) {
-			form.parent.resetErrorStatus();
-			if (result.status == ServerMethod.SUCCESS) {
-				if (result.result != null && result.result.length > 0) {
-					currentPage.alert(null, result.result, function() {
-						form.changeStateForAfterUpdate();
-					});
-				} else {
-					form.changeStateForAfterUpdate();
-				}
-			} else {
-				form.parent.setErrorInfo(form.getValidationResult(result), form);
-			}
-		});
-	}
-};
 
 /**
  * 保存ボタンのイベント処理を行います。
@@ -365,16 +241,3 @@ EditForm.prototype.del = function() {
 	});
 };
 
-/**
- * 戻るボタンのイベント処理を行います。
- */
-EditForm.prototype.back = function() {
-	if (this.mode == "edit") {
-		this.clearData();
-		if (!this.parent.toQueryMode()) {
-			currentPage.toTopPage();
-		}
-	} else if (this.mode == "confirm") {
-		this.toEditMode();
-	}
-};

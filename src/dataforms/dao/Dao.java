@@ -1713,6 +1713,7 @@ public class Dao implements JDBCConnectableObject {
 				Object k0 = rec.get(f.getId());
 				Object k1 = m.get(f.getId());
 				if (k1 == null) {
+					eq = false;
 					continue;
 				}
 				if (!k1.equals(k0)) {

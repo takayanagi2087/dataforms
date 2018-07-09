@@ -434,50 +434,50 @@ public  class Form extends WebComponent {
 		return ret;
 	}
 
-    /**
-     * データ中にユーザ情報設定します。
-     * <pre>
-     * セッション中のログイン情報を取得し、以下キーに設定します。
-     * </pre>
-     * 設定内容
-     *
-     * <table>
-     * 	<caption>設定内容</caption>
-     * 	<thead>
-     * 		<tr>
-     * 			<th>キー</th><th>内容</th><th>備考</th>
-     * 		</tr>
-     *	</thead>
-     *	<tbody>
-     * 		<tr>
-     * 			<td>currentUserId</td><td>ユーザID</td><td>ユーザを表す数値</td>
-     * 		</tr>
-     * 		<tr>
-     * 			<td>currentLangCode</td><td>現在のリクエストの言語コード</td><td></td>
-     * 		</tr>
-     * 		<tr>
-     * 			<td>createUserId</td><td>作成ユーザID</td><td></td>
-     * 		</tr>
-     * 		<tr>
-     * 			<td>updateUserId</td><td>更新ユーザID</td><td></td>
-     * 		</tr>
-     * 		<tr>
-     * 			<td>deleteFlag</td><td>削除フラグ</td><td>指定されていなかった場合"0"を設定します。</td>
-     * 		</tr>
-     * 	 </tbody>
-     * </table>
-     * @param data 設定するパラメータ。
-     */
-    @SuppressWarnings("unchecked")
+	/**
+	 * データ中にユーザ情報設定します。
+	 * <pre>
+	 * セッション中のログイン情報を取得し、以下キーに設定します。
+	 * </pre>
+	 * 設定内容
+	 *
+	 * <table>
+	 * 	<caption>設定内容</caption>
+	 * 	<thead>
+	 * 		<tr>
+	 * 			<th>キー</th><th>内容</th><th>備考</th>
+	 * 		</tr>
+	 *	</thead>
+	 *	<tbody>
+	 * 		<tr>
+	 * 			<td>currentUserId</td><td>ユーザID</td><td>ユーザを表す数値</td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<td>currentLangCode</td><td>現在のリクエストの言語コード</td><td></td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<td>createUserId</td><td>作成ユーザID</td><td></td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<td>updateUserId</td><td>更新ユーザID</td><td></td>
+	 * 		</tr>
+	 * 		<tr>
+	 * 			<td>deleteFlag</td><td>削除フラグ</td><td>指定されていなかった場合"0"を設定します。</td>
+	 * 		</tr>
+	 * 	 </tbody>
+	 * </table>
+	 * @param data 設定するパラメータ。
+	 */
+	@SuppressWarnings("unchecked")
 	public void setUserInfo(final Map<String, Object> data) {
-    	long userid = this.getPage().getUserId();
-    	data.put("currentUserId", userid);
-    	String lang = this.getPage().getCurrentLanguage();
-    	data.put("currentLangCode", lang);
-    	data.put("createUserId", userid);
+		long userid = this.getPage().getUserId();
+		data.put("currentUserId", userid);
+		String lang = this.getPage().getCurrentLanguage();
+		data.put("currentLangCode", lang);
+		data.put("createUserId", userid);
 		data.put("updateUserId", userid);
 		if (StringUtil.isBlank(data.get("deleteFlag"))) {
-	    	data.put("deleteFlag", "0");
+			data.put("deleteFlag", "0");
 		}
 		for (String key : this.getComponentMap().keySet()) {
 			Object comp = this.getComponentMap().get(key);
@@ -494,7 +494,16 @@ public  class Form extends WebComponent {
 				}
 			}
 		}
-    }
+	}
 
+	/**
+	 * リスト中の全マップにユーザ情報を設定します。
+	 * @param list リスト。
+	 */
+	public void setUserInfo(final List<Map<String, Object>> list) {
+		for (Map<String, Object> m : list) {
+			this.setUserInfo(m);
+		}
+	}
 
 }
