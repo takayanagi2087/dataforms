@@ -6,6 +6,23 @@
 	</head>
 	<body>
 		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>キー1</th>
+							<td><input type="text" id="key1" /></td>
+						</tr>
+						<tr>
+							<th>キー2</th>
+							<td><input type="text" id="key2" /></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+			</form>
 			<form id="editForm">
 				<div class="formHeader"><span id="editFormTitle"></span></div>
 				<table class="responsive">
@@ -21,6 +38,12 @@
 								</th>
 								<th nowrap>
 									No.
+								</th>
+								<th>
+									キー1
+								</th>
+								<th>
+									キー2
 								</th>
 								<th>
 									コメント
@@ -42,12 +65,19 @@
 									<span id="list[0].no"></span>
 								</td>
 								<td>
-									<input type="text" id="list[0].comment" />
+									<input type="text" id="list[0].key1" />
 									<input type="hidden" id="list[0].smallMasterId" />
+									<input type="hidden" id="list[0].sortOrder" />
 									<input type="hidden" id="list[0].createUserId" />
 									<input type="hidden" id="list[0].createTimestamp" />
 									<input type="hidden" id="list[0].updateUserId" />
 									<input type="hidden" id="list[0].updateTimestamp" />
+								</td>
+								<td>
+									<input type="text" id="list[0].key2" />
+								</td>
+								<td>
+									<input type="text" id="list[0].comment" />
 								</td>
 								<td>
 									<input type="file" id="list[0].attachFile" />
@@ -59,7 +89,7 @@
 								<th class="buttonColumn">
 									<input type="button" id="list.addButton" value="+"/>
 								</th>
-								<th colspan="4">
+								<th colspan="6">
 								</th>
 							</tr>
 						</tfoot>

@@ -15,6 +15,7 @@ public class SmallMasterPage extends BasePage {
 	 * コンストラクタ。
 	 */
 	public SmallMasterPage() {
+		this.addForm(new SmallMasterQueryForm());
 		this.addForm(new SmallMasterEditForm());
 	}
 

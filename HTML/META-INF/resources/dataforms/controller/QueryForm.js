@@ -79,9 +79,20 @@ QueryForm.prototype.showEditForm = function() {
 	if (editForm != null) {
 		var condition = this.get().serialize();
 		editForm.updateData(condition);
-//		this.parent.find("#editForm").show();
-/*		var condition = this.get().serialize();
-		resultForm.condition = condition;
-		resultForm.changePage();*/
 	}
+};
+
+
+QueryForm.prototype.toEditMode = function() {
+	this.lockFields(false);
+	this.find('#queryButton').show();
+	this.find('#resetButton').show();
+	this.find('#newButton').show();
+};
+
+QueryForm.prototype.toConfirmMode = function() {
+	this.lockFields(true);
+	this.find('#queryButton').hide();
+	this.find('#resetButton').hide();
+	this.find('#newButton').hide();
 };

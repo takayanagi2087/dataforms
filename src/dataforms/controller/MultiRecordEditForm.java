@@ -55,7 +55,8 @@ public abstract class MultiRecordEditForm extends TableUpdateForm {
 	@WebMethod
 	public JsonResponse getDataByQueryFormCondition(final Map<String, Object> param) throws Exception {
 		this.methodStartLog(logger, param);
-		Map<String, Object> data = this.convertToServerData(param);
+		QueryForm qf = (QueryForm) this.getParent().getComponent(Page.ID_QUERY_FORM);
+		Map<String, Object> data = qf.convertToServerData(param);
 		JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, this.convertToClientData(this.queryDataByQueryFormCondition(data)));
 		this.methodFinishLog(logger, result);
 		return result;

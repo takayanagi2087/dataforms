@@ -128,6 +128,7 @@ DataForms.prototype.toQueryMode = function() {
 		var queryForm = this.getComponent("queryForm");
 		if (queryForm != null) {
 			qf.show();
+			queryForm.toEditMode();
 		}
 		var queryResultForm = this.getComponent("queryResultForm");
 		if (queryResultForm != null) {
@@ -157,13 +158,24 @@ DataForms.prototype.toQueryMode = function() {
  * @reutrns {Boolean} EditFormが存在しない場合falseを返します。
  */
 DataForms.prototype.toEditMode = function() {
-	var qf = this.find("#queryForm");
-	qf.hide();
+	var queryForm = this.getComponent("queryForm");
+	if (queryForm != null) {
+		//constructor.name
+		var editForm = this.getComponent("editForm");
+		if (editForm != null && editForm.multiRecord == true) {
+			var qf = this.find("#queryForm");
+			qf.show();
+			queryForm.toConfirmMode();
+		} else {
+			var qf = this.find("#queryForm");
+			qf.hide();
+		}
+	}
 	var rf = this.find("#queryResultForm");
 	rf.hide();
 	var ef = this.find("#editForm");
 	ef.show();
-	return (ef.size > 0);
+	return (ef.length > 0);
 };
 
 

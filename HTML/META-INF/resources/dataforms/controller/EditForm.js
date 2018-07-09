@@ -16,7 +16,7 @@
  * @prop {string} saveMode "new"(新規データの入力中)または"update"(既存データの編集中)の値を取ります。
  *
  */
-EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new"}, "TableUpdateForm");
+EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new", multiRecord: false}, "TableUpdateForm");
 
 /**
  * HTMLエレメントとの対応付けを行います。
