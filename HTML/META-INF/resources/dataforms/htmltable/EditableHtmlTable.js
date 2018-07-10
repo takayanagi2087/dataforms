@@ -203,17 +203,27 @@ EditableHtmlTable.prototype.resetIdIndex = function() {
 	var thisTable = this;
 	var trlist = thisTable.find("tbody>tr,tfoot>tr");
 	for (var i = 0; i < trlist.length; i++) {
-		var c = $(trlist.get(i)).find("[id^='" + thisTable.id + "\\[']");
-		c.each(function() {
-			var id = $(this).attr("id");
-			var newid = id.replace(new RegExp(thisTable.id + "\\[.+?\\]"), thisTable.id + "[" + i + "]")
-			$(this).attr("id", newid);
-			var name = $(this).attr("name");
-			if (name != null) {
-				var newname = name.replace(new RegExp(thisTable.id + "\\[.+?\\]"), thisTable.id + "[" + i + "]")
-				$(this).attr("name", newname);
-			}
-		});
+		{
+			var c = $(trlist.get(i)).find("[id^='" + thisTable.id + "\\[']");
+			c.each(function() {
+				var id = $(this).attr("id");
+				var newid = id.replace(new RegExp(thisTable.id + "\\[.+?\\]"), thisTable.id + "[" + i + "]")
+				$(this).attr("id", newid);
+				var name = $(this).attr("name");
+				if (name != null) {
+					var newname = name.replace(new RegExp(thisTable.id + "\\[.+?\\]"), thisTable.id + "[" + i + "]")
+					$(this).attr("name", newname);
+				}
+			});
+		}
+		{
+			var c = $(trlist.get(i)).find("[for^='" + thisTable.id + "\\[']");
+			c.each(function() {
+				var id = $(this).attr("for");
+				var newid = id.replace(new RegExp(thisTable.id + "\\[.+?\\]"), thisTable.id + "[" + i + "]")
+				$(this).attr("for", newid);
+			});
+		}
 	}
 	this.resetRowNo();
 	// IDを作り直したのでdatepickerを設定し直す.

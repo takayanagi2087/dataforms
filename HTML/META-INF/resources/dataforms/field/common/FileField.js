@@ -37,6 +37,7 @@ FileField.prototype.attach = function() {
 		ck.attr("checked", false);
 		fnlink.html(fnlink.attr("data-value"));
 		fnhidden.val(fnlink.attr("data-value"));
+		thisComp.id = $(this).attr("id");
 		thisComp.showDelCheckbox();
 	});
 	if (this.readonly) {
@@ -72,6 +73,7 @@ FileField.prototype.delFile = function(ck) {
  */
 FileField.prototype.showDelCheckbox = function() {
 	var ckid = this.id + "_ck";
+	logger.log("ckid=" + ckid);
 	var delcheck = this.parent.find("#" + this.selectorEscape(ckid));
 	delcheck.show();
 	delcheck.next("label:first").show();
