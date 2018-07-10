@@ -14,6 +14,7 @@ import dataforms.debug.dao.SmallMasterTable;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.validator.RequiredValidator;
 import net.arnx.jsonic.JSON;
 
 /**
@@ -32,6 +33,9 @@ public class SmallMasterEditForm extends MultiRecordEditForm {
 	 */
 	public SmallMasterEditForm() {
 		SmallMasterTable table = new SmallMasterTable();
+		table.getKey1Field().setReadonly(true);
+		table.getKey2Field().setReadonly(true);
+		table.getCommentField().addValidator(new RequiredValidator());
 		EditableHtmlTable htmlTable = new EditableHtmlTable(MultiRecordEditForm.ID_LIST, table.getFieldList());
 		this.addHtmlTable(htmlTable);
 	}

@@ -107,7 +107,16 @@ HtmlTable.prototype.getLabelElement = function(field) {
 			}
 		}
 		if (idx >= 0) {
-			label = $(theadTr.children()[idx]);
+			var thlist = theadTr.find("th")
+			var hidx = idx;
+			for (var i = 0; i < idx && i < thlist.length; i++) {
+				var colspan = thlist.eq(i).attr("colspan");
+				if (colspan != null) {
+					var cs = parseInt(colspan);
+					hidx -= (cs - 1);
+				}
+			}
+			label = $(theadTr.children()[hidx]);
 		}
 	}
 	return label;
