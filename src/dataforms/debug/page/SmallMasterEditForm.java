@@ -47,6 +47,8 @@ public class SmallMasterEditForm extends MultiRecordEditForm {
 
 	@Override
 	protected Map<String, Object> queryDataByQueryFormCondition(final Map<String, Object> data) throws Exception {
+		logger.debug("data=" + JSON.encode(data) + ",data=" + data);
+		this.getPage().getRequest().getSession().setAttribute("keyMap", data);
 		SmallMasterDao dao = new SmallMasterDao(this);
 		QueryForm qf = (QueryForm) this.getPage().getComponent(Page.ID_QUERY_FORM);
 		FieldList flist = qf.getFieldList();
@@ -72,12 +74,17 @@ public class SmallMasterEditForm extends MultiRecordEditForm {
 	
 	@Override
 	protected void saveTable(final Map<String, Object> data) throws Exception {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> keyMap = (Map<String, Object>) this.getPage().getRequest().getSession().getAttribute("keyMap");
+//		Object key1 = keyMap.get("key1");
+//		logger.debug("keyMap=" + keyMap.getClass().getName());
+//		logger.debug("keyMap=" + JSON.encode(keyMap) + "," + keyMap);
+		QueryForm qf = (QueryForm) this.getPage().getComponent(Page.ID_QUERY_FORM);
 		SmallMasterTable table = new SmallMasterTable();
 		SmallMasterDao dao = new SmallMasterDao(this);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> list = (List<Map<String, Object>>) data.get(MultiRecordEditForm.ID_LIST);
 		this.setUserInfo(list);
-		dao.saveTable(table, list);
-		
+		dao.saveTable(table, list, keyMap, qf.getFieldList());
 	}
 }

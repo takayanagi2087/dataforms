@@ -1755,12 +1755,20 @@ public class Dao implements JDBCConnectableObject {
 	 * </pre>
 	 * @param table テーブル。
 	 * @param list 保存するレコードの全リスト。
+	 * @param cond 条件データ。
+	 * @param flist 条件フィールドリスト。
 	 * @throws Exception 例外。
 	 */
-	public void saveTable(final Table table, final List<Map<String, Object>> list) throws Exception {
+	public void saveTable(final Table table, final List<Map<String, Object>> list, final Map<String, Object> cond, final FieldList flist) throws Exception {
 		Query query = new Query();
 		query.setFieldList(table.getFieldList());
 		query.setMainTable(table);
+		if (flist != null) {
+			query.setQueryFormFieldList(flist);
+		}
+		if (cond != null) {
+			query.setQueryFormData(cond);
+		}
 		List<Map<String, Object>> oldlist = this.executeQuery(query);
 		this.deleteNotExistRecord(table, list, oldlist);
 		for (Map<String, Object> m: list) {
@@ -1776,6 +1784,20 @@ public class Dao implements JDBCConnectableObject {
 		}
 	}
 	
+	/**
+	 * テーブルの全レコードを保存します。
+	 * <pre>
+	 * 1.listに含まなれない既存レコードを削除します。
+	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
+	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
+	 * </pre>
+	 * @param table テーブル。
+	 * @param list 保存するレコードの全リスト。
+	 * @throws Exception 例外。
+	 */
+	public void saveTable(final Table table, final List<Map<String, Object>> list) throws Exception {
+		this.saveTable(table, list, null, null);
+	}
 	
 	/**
 	 * レコードを取得します。
