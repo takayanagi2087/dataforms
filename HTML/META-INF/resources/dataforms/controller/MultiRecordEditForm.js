@@ -12,10 +12,12 @@
  * </pre>
  * @extends TableUpdateForm
  *
- * @prop {string} mode "edit"(フォームが編集可能な状態)または"confirm"(フォーム全体が編集不可の状態)の値を取ります。
+ * @prop {String} mode "edit"(フォームが編集可能な状態)または"confirm"(フォーム全体が編集不可の状態)の値を取ります。
+ * @prop {Boolean} multiRecord 複数レコード編集モードの場合はtrue。このクラスではtrueに設定されます。
+ * @prop {Object} keyMap QueryFormで編集対象を限定した場合、その指定内容を保存します。
  *
  */
-MultiRecordEditForm = createSubclass("MultiRecordEditForm", {mode:"edit", multiRecord: true}, "TableUpdateForm");
+MultiRecordEditForm = createSubclass("MultiRecordEditForm", {mode:"edit", multiRecord: true, keyMap:{}}, "TableUpdateForm");
 
 /**
  * HTMLエレメントとの対応付けを行います。
@@ -29,10 +31,32 @@ MultiRecordEditForm = createSubclass("MultiRecordEditForm", {mode:"edit", multiR
  */
 MultiRecordEditForm.prototype.attach = function() {
 	TableUpdateForm.prototype.attach.call(this);
+	var thisForm = this;
+	var list = this.getComponent("list");
+	list.onAddTr = function(rowid) {
+		EditableHtmlTable.prototype.onAddTr.call(list, rowid);
+		logger.log("custom onAddTr=" + rowid);
+		thisForm.setKeyValue(rowid);
+	}
 	this.toEditMode();
 };
 
+/**
+ * QueryFormで指定されたキー情報を設定します。
+ */
+MultiRecordEditForm.prototype.setKeyValue = function(rowid) {
+	for (var k in this.keyMap) {
+		var id = rowid + "." + k;
+		logger.log("id=" + id);
+		this.find("#" + this.selectorEscape(id)).val(this.keyMap[k]);
+	}
+};
+
+/**
+ * QueryFormで指定された条件でレコードを抽出し、そのレコードを編集対象にします。
+ */
 MultiRecordEditForm.prototype.updateData = function(qs) {
+	this.keyMap = QueryStringUtil.parse(qs);
 	var title = MessagesUtil.getMessage("message.editformtitle.update");
 	this.find("#editFormTitle").text(title);
 	var form = this;

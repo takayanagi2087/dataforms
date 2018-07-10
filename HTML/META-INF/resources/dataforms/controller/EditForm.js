@@ -12,8 +12,10 @@
  * </pre>
  * @extends TableUpdateForm
  *
- * @prop {string} mode "edit"(フォームが編集可能な状態)または"confirm"(フォーム全体が編集不可の状態)の値を取ります。
- * @prop {string} saveMode "new"(新規データの入力中)または"update"(既存データの編集中)の値を取ります。
+ * @prop {String} mode "edit"(フォームが編集可能な状態)または"confirm"(フォーム全体が編集不可の状態)の値を取ります。
+ * @prop {String} saveMode "new"(新規データの入力中)または"update"(既存データの編集中)の値を取ります。
+ * @prop {Boolean} multiRecord 複数レコード編集モードの場合はtrue。このクラスではfalseに設定。
+ * 
  *
  */
 EditForm = createSubclass("EditForm", {mode:"edit", saveMode: "new", multiRecord: false}, "TableUpdateForm");

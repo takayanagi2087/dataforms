@@ -82,7 +82,9 @@ QueryForm.prototype.showEditForm = function() {
 	}
 };
 
-
+/**
+ * 編集モードに移行します。
+ */
 QueryForm.prototype.toEditMode = function() {
 	this.lockFields(false);
 	this.find('#queryButton').show();
@@ -90,6 +92,9 @@ QueryForm.prototype.toEditMode = function() {
 	this.find('#newButton').show();
 };
 
+/**
+ * 確認モードに移行します。
+ */
 QueryForm.prototype.toConfirmMode = function() {
 	this.lockFields(true);
 	this.find('#queryButton').hide();

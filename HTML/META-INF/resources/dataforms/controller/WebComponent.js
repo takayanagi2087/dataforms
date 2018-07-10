@@ -49,8 +49,6 @@ WebComponent.prototype.getParentDataForms = function() {
 }
 
 
-
-
 /**
  * QueryStringを取得します。
  * @returns {Object} QueryStringを展開したオブジェクト。

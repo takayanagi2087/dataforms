@@ -209,6 +209,7 @@ public class Page extends DataForms {
 			basicJsCache = Collections.synchronizedList(new ArrayList<String>());
 			basicJsCache.add("/dataforms/util/createSubclass.js");
 			basicJsCache.add("/dataforms/util/MessagesUtil.js");
+			basicJsCache.add("/dataforms/util/QueryStringUtil.js");
 			basicJsCache.add("/dataforms/util/StringUtil.js");
 			basicJsCache.add("/dataforms/util/NumberUtil.js");
 			basicJsCache.add("/dataforms/util/ServerMethod.js");
