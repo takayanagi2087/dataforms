@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import org.apache.log4j.Logger;
 
 import dataforms.dao.Query;
+import dataforms.devtool.validator.ClassNameValidator;
 
 /**
  * 問合せクラス名フィールドクラス。
@@ -62,4 +63,11 @@ public class QueryClassNameField extends SimpleClassNameField {
 		boolean ret = super.isExcetionClass(classname);
 		return ret;
 	}
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new ClassNameValidator("Query"));
+	}
+
 }

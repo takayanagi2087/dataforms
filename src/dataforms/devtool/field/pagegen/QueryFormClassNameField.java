@@ -1,16 +1,22 @@
 package dataforms.devtool.field.pagegen;
 
-import dataforms.field.sqltype.VarcharField;
-
 /**
  * 問い合わせフォームクラス名フィールドクラス。
  *
  */
-public class QueryFormClassNameField extends VarcharField {
+public class QueryFormClassNameField extends FormClassNameField {
 	/**
 	 * コンストラクタ。
 	 */
 	public QueryFormClassNameField() {
-		super(null, 256);
 	}
+
+	/**
+	 * コンストラクタ。
+	 * @param id フィールドID。
+	 */
+	public QueryFormClassNameField(final String id) {
+		super(id);
+	}
+
 }

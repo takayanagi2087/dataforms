@@ -54,7 +54,7 @@ public class RegexpValidator extends FieldValidator {
 	}
 
 	@Override
-	public final boolean validate(final Object value) throws Exception {
+	public boolean validate(final Object value) throws Exception {
 		if (this.isBlank(value)) {
 			return true;
 		}
@@ -63,12 +63,12 @@ public class RegexpValidator extends FieldValidator {
 	}
 
 	@Override
-	public final String getMessage() {
+	public String getMessage() {
 		return MessagesUtil.getMessage(this.getPage(), this.getMessageKey());
 	}
 
 	@Override
-	public final Map<String, Object> getProperties() throws Exception {
+	public  Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> map = super.getProperties();
 		map.put("pattern", this.pattern);
 		return map;

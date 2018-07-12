@@ -1,6 +1,6 @@
 package dataforms.debug.page;
 
-import dataforms.app.page.base.BasePage;
+import dataforms.app.page.base.AdminPage;
 import dataforms.dao.Dao;
 import dataforms.dao.Table;
 import dataforms.debug.dao.SmallMasterDao;
@@ -10,7 +10,7 @@ import dataforms.debug.dao.SmallMasterTable;
 /**
  * ページクラス。
  */
-public class SmallMasterPage extends BasePage {
+public class SmallMasterPage extends AdminPage {
 	/**
 	 * コンストラクタ。
 	 */

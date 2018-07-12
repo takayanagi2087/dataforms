@@ -1,5 +1,6 @@
 package dataforms.devtool.field.common;
 
+import dataforms.devtool.validator.ClassNameValidator;
 import dataforms.field.base.Field;
 
 /**
@@ -34,5 +35,11 @@ public class FieldClassNameField extends SimpleClassNameField {
 		this.setComment(COMMENT);
 		this.setAutocomplete(true);
 		this.addExceptionPattern(EXCEPTION_PATTERN);
+	}
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new ClassNameValidator("Field"));
 	}
 }

@@ -83,7 +83,10 @@ public class PageGeneratorEditForm extends EditForm {
 		this.addField(new ClassNameField("daoClassName")).setCalcEventField(true);
 		this.addField(new OverwriteModeField("daoClassOverwriteMode"));
 
-		this.addField(new QueryFormClassNameField());
+		Field<?> f = this.addField(new QueryFormClassNameField());
+		log.debug("QueryFormClassNameField.autocomplete=" + f.isAutocomplete());
+		
+		
 		this.addField(new FlagField("queryFormClassFlag"));
 		this.addField(new OverwriteModeField("queryFormClassOverwriteMode"));
 		this.addField(new QueryResultFormClassNameField());

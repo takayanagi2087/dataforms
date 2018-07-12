@@ -1,6 +1,7 @@
 package dataforms.devtool.field.common;
 
 import dataforms.dao.Table;
+import dataforms.devtool.validator.ClassNameValidator;
 
 /**
  * テーブルクラス名フィールドクラス。
@@ -30,4 +31,9 @@ public class TableClassNameField extends SimpleClassNameField {
 		this.setAutocomplete(false);
 	}
 
+	@Override
+	protected void onBind() {
+		super.onBind();
+		this.addValidator(new ClassNameValidator("Table"));
+	}
 }
