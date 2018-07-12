@@ -27,6 +27,7 @@ import dataforms.devtool.field.pagegen.EditFormClassNameField;
 import dataforms.devtool.field.pagegen.QueryFormClassNameField;
 import dataforms.devtool.field.pagegen.QueryResultFormClassNameField;
 import dataforms.devtool.page.base.DeveloperPage;
+import dataforms.devtool.validator.ClassNameValidator;
 import dataforms.field.base.Field;
 import dataforms.field.base.Field.MatchType;
 import dataforms.field.common.CreateTimestampField;
@@ -80,13 +81,9 @@ public class PageGeneratorEditForm extends EditForm {
 		tblcls.setAutocomplete(true);
 		tblcls.setPackageNameFieldId("tablePackageName");
 		this.addField(tblcls);
-		this.addField(new ClassNameField("daoClassName")).setCalcEventField(true);
+		this.addField(new ClassNameField("daoClassName")).setCalcEventField(true).addValidator(new ClassNameValidator("Dao"));
 		this.addField(new OverwriteModeField("daoClassOverwriteMode"));
-
-		Field<?> f = this.addField(new QueryFormClassNameField());
-		log.debug("QueryFormClassNameField.autocomplete=" + f.isAutocomplete());
-		
-		
+		this.addField(new QueryFormClassNameField());
 		this.addField(new FlagField("queryFormClassFlag"));
 		this.addField(new OverwriteModeField("queryFormClassOverwriteMode"));
 		this.addField(new QueryResultFormClassNameField());
