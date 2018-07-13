@@ -62,7 +62,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		this.addField((new FunctionSelectField("mainTableFunctionSelect")).setPackageFieldId("mainTablePackageName")).setComment("主テーブルの機能");
 		this.addField(new PackageNameField("mainTablePackageName")).setComment("主テーブルのパッケージ").addValidator(new RequiredValidator());
 		this.addField((new TableClassNameField("mainTableClassName")).setPackageNameFieldId("mainTablePackageName"))
-			.setAutocomplete(true).setComment("主テーブルクラス名").addValidator(new RequiredValidator()).setCalcEventField(true);
+			.setAutocomplete(true).setRelationDataAcquisition(true).setComment("主テーブルクラス名").addValidator(new RequiredValidator());
 		
 		EditableHtmlTable joinTableList = new JoinHtmlTable("joinTableList");
 		joinTableList.setCaption("JOINするテーブルリスト");

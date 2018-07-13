@@ -79,6 +79,7 @@ public class PageGeneratorEditForm extends EditForm {
 		TableClassNameField tblcls = new TableClassNameField();
 		tblcls.setCalcEventField(true);
 		tblcls.setAutocomplete(true);
+		tblcls.setRelationDataAcquisition(true);
 		tblcls.setPackageNameFieldId("tablePackageName");
 		this.addField(tblcls);
 		this.addField(new ClassNameField("daoClassName")).setCalcEventField(true).addValidator(new ClassNameValidator("Dao"));

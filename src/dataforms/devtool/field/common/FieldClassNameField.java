@@ -22,7 +22,6 @@ public class FieldClassNameField extends SimpleClassNameField {
 	public FieldClassNameField() {
 		this.setBaseClass(Field.class);
 		this.setComment(COMMENT);
-		this.setAutocomplete(true);
 		this.addExceptionPattern(EXCEPTION_PATTERN);
 	}
 	/**
@@ -33,7 +32,6 @@ public class FieldClassNameField extends SimpleClassNameField {
 		super(id);
 		this.setBaseClass(Field.class);
 		this.setComment(COMMENT);
-		this.setAutocomplete(true);
 		this.addExceptionPattern(EXCEPTION_PATTERN);
 	}
 	
@@ -41,5 +39,7 @@ public class FieldClassNameField extends SimpleClassNameField {
 	protected void onBind() {
 		super.onBind();
 		this.addValidator(new ClassNameValidator("Field"));
+		this.setAutocomplete(true);
+		this.setRelationDataAcquisition(true);
 	}
 }

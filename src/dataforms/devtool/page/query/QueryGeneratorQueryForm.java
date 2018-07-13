@@ -17,6 +17,6 @@ public class QueryGeneratorQueryForm extends QueryForm {
 	public QueryGeneratorQueryForm() {
 		this.addField(new FunctionSelectField());
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
-		this.addField(new QueryClassNameField("queryClassName")).setAutocomplete(true);
+		this.addField(new QueryClassNameField("queryClassName")).setAutocomplete(true).setRelationDataAcquisition(true);
 	}
 }

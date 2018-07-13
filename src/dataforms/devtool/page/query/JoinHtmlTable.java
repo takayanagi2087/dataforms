@@ -26,8 +26,7 @@ public class JoinHtmlTable extends EditableHtmlTable {
 			, (new AliasNameField()).setCalcEventField(true)
 			, (new VarcharField("joinCondition", 1024)).setReadonly(true)
 		);
-		flist.get("tableClassName").setAutocomplete(true).setCalcEventField(true);
+		flist.get("tableClassName").setAutocomplete(true).setRelationDataAcquisition(true);
 		this.setFieldList(flist);
 	}
-
 }

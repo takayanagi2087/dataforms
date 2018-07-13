@@ -23,13 +23,14 @@ QueryExecutorQueryForm.prototype.attach = function() {
  * 計算しベント処理。
  * @param {jQuery} f 計算イベントの発生元。 
  */
+/*
 QueryExecutorQueryForm.prototype.onCalc = function(f) {
 	if (f != null) {
 		if (f.attr("id") == "queryClassName") {
 			this.getSql();
 		}
 	}
-};
+};*/
 
 /**
  * Queryクラスに対応するSQLを取得します。

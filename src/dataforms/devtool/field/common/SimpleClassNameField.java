@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import dataforms.field.base.Field;
 import dataforms.field.sqltype.VarcharField;
 import dataforms.util.ClassFinder;
@@ -18,6 +20,11 @@ import dataforms.util.StringUtil;
  *
  */
 public class SimpleClassNameField extends VarcharField {
+	
+	/**
+	 * Logger.
+	 */
+	private static Logger logger = Logger.getLogger(SimpleClassNameField.class);
 
 	/**
 	 * フィールドコメント。
@@ -51,7 +58,8 @@ public class SimpleClassNameField extends VarcharField {
 	public SimpleClassNameField() {
 		super(null, LENGTH);
 		this.setComment(COMMENT);
-		this.setAutocomplete(true);
+		//this.setAutocomplete(true);
+		//this.setRelationDataAcquisition(true);
 		this.setAjaxParameter(AjaxParameter.FORM);
 	}
 
@@ -62,7 +70,8 @@ public class SimpleClassNameField extends VarcharField {
 	public SimpleClassNameField(final String id) {
 		super(id, LENGTH);
 		this.setComment(COMMENT);
-		this.setAutocomplete(true);
+		//this.setAutocomplete(true);
+		//this.setRelationDataAcquisition(true);
 		this.setAjaxParameter(AjaxParameter.FORM);
 	}
 
@@ -148,6 +157,7 @@ public class SimpleClassNameField extends VarcharField {
 	protected List<Map<String, Object>> queryAutocompleteSourceList(final 	Map<String, Object> data) throws Exception {
 		String id = (String) data.get("currentFieldId");
 		String rowid = this.getHtmlTableRowId(id);
+		String colid = this.getHtmlTableColumnId(id);
 		String packageName = (String) data.get(StringUtil.isBlank(rowid) ? this.getPackageNameFieldId() : rowid + "." + this.getPackageNameFieldId());
 		String simpleClassName = (String) data.get(id);
 		ClassFinder finder = new ClassFinder();
@@ -165,16 +175,46 @@ public class SimpleClassNameField extends VarcharField {
 			if (name.toLowerCase().indexOf(simpleClassName.toLowerCase()) >= 0) {
 				if (!Modifier.isAbstract(c.getModifiers())) {
 					Map<String, Object> m = new HashMap<String, Object>();
-//					m.put("className", c.getSimpleName());
-//					String cls = c.getName();
-//					String []sp = cls.split("\\.");
-					m.put("className", name);
+					m.put(colid, name);
 					m.put(this.getPackageNameFieldId(), c.getPackage().getName());
 					result.add(m);
 				}
 			}
 		}
-		return this.convertToAutocompleteList(rowid, result, "className", "className", this.getPackageNameFieldId());
+		return this.convertToAutocompleteList(rowid, result, colid, colid, this.getPackageNameFieldId());
 	}
+	
+	@Override
+	protected Map<String, Object> queryRelationData(final Map<String, Object> data) throws Exception {
+		String id = (String) data.get("currentFieldId");
+		String rowid = this.getHtmlTableRowId(id);
+		String colid = this.getHtmlTableColumnId(id);
+		String packageName = (String) data.get(StringUtil.isBlank(rowid) ? this.getPackageNameFieldId() : rowid + "." + this.getPackageNameFieldId());
+		String simpleClassName = (String) data.get(id);
+		logger.debug("packageName=" + packageName + ", simpleClassName=" + simpleClassName);
+		if (StringUtil.isBlank(simpleClassName)) {
+			return new HashMap<String, Object>();
+		}
+		Map<String, Object> ret = new HashMap<String, Object>();
+		ClassFinder finder = new ClassFinder();
+		List<Class<?>> list = finder.findClasses(packageName, this.baseClass);
+		for (Class<?> c: list) {
+			if (this.isExcetionClass(c.getName())) {
+				continue;
+			}
+			
+			String name = this.getClassName(c);
+			logger.debug("className=" + name);
+			if (name.equals(simpleClassName)) {
+				if (!Modifier.isAbstract(c.getModifiers())) {
+					ret.put(colid, name);
+					ret.put(this.getPackageNameFieldId(), c.getPackage().getName());
+					break;
+				}
+			}
+		}
+		return ret;
+	}
+
 }
 

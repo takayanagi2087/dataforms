@@ -29,7 +29,7 @@ public class WebResourceQueryForm extends QueryForm {
 		funcsel.setPackageOption("page");
 		this.addField(funcsel);
 		this.addField(new PackageNameField()).addValidator(new RequiredValidator());
-		this.addField(new PageClassNameField()).addValidator(new RequiredValidator());
+		this.addField(new PageClassNameField()).addValidator(new RequiredValidator()).setAutocomplete(true);
 		this.addField(new WebComponentTypeListField());
 		this.addField(new FlagField("generatableOnly"));
 		this.addField(new ClassNameField());

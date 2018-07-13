@@ -50,28 +50,36 @@ QueryGeneratorEditForm.prototype.setFormData = function(data) {
 };
 
 /**
+ * フィールドリストを取得します。
+ */
+QueryGeneratorEditForm.prototype.getFieldList = function() {
+	var thisForm = this;
+	this.submit("getFieldList", function(r) {
+		currentPage.resetErrorStatus();
+		if (r.status == ServerMethod.SUCCESS) {
+			logger.log("field list=" + JSON.stringify(r.result));
+			var ftbl = thisForm.getComponent("selectFieldList");
+			ftbl.setTableData(r.result);
+			thisForm.submit("getJoinCondition", function(r) {
+				currentPage.resetErrorStatus();
+				if (r.status == ServerMethod.SUCCESS) {
+					logger.log("field list=" + JSON.stringify(r.result));
+					thisForm.setJoinCondition(r.result);
+				}		
+			});
+		}
+	});
+};
+
+/**
  * テーブルクラス入力時のフィールドリスト取得。
  * @param {jQuery} f 更新されたフィールド。 
  */
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
+	EditForm.prototype.onCalc.call(this);
 	var thisForm = this;
 	if (f != null) {
-		EditForm.prototype.onCalc.call(this);
-		this.submit("getFieldList", function(r) {
-			currentPage.resetErrorStatus();
-			if (r.status == ServerMethod.SUCCESS) {
-				logger.log("field list=" + JSON.stringify(r.result));
-				var ftbl = thisForm.getComponent("selectFieldList");
-				ftbl.setTableData(r.result);
-				thisForm.submit("getJoinCondition", function(r) {
-					currentPage.resetErrorStatus();
-					if (r.status == ServerMethod.SUCCESS) {
-						logger.log("field list=" + JSON.stringify(r.result));
-						thisForm.setJoinCondition(r.result);
-					}		
-				});
-			}
-		});
+		this.getFieldList();
 	}
 };
 
