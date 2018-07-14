@@ -2,22 +2,22 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Function management</title>
+		<title>機能管理</title>
 	</head>
 	<body>
 		<div id="mainDiv">
 			<div class="errorMessages" id="errorMessages"><!-- エラーメッセージ領域  --></div>
 			<form id="editForm">
-				Register the path where the function is to be placed.<br/>
-				Search the Page class in the package corresponding to the path registered as a function and display it on the menu.<br/>
-				Menus are grouped by function.<br/>
-				Register each function and page name in Function.properties of each path.<br/>
-				You can change the display order by dragging the list.<br/>
+				機能を配置するパスを登録します。
+				機能として登録されたパスに対応したパッケージ内のPageクラスを検索し、メニューに表示します。<br/>
+				メニューは機能でグループ分けされます。<br/>
+				各機能,ページの名称は各パスのFunction.propertiesに登録します。<br/>
+				リストのドラッグで表示順の変更が可能です。<br/>
 				<table class="responsive thtd">
 					<tbody>
 						<tr>
 							<th>
-								Web resource output destination
+								Webリソース出力先
 							</th>
 							<td>
 								<input type="text" id="webSourcePath" />
@@ -33,9 +33,9 @@
 								<th class="buttonColumn"></th>
 								<th class="buttonColumn"></th>
 								<th>No.</th>
-								<th>Path</th>
-								<th>Function name (Function.properties setting value)</th>
-								<th>Disabled</th>
+								<th>パス</th>
+								<th>機能名称(Function.properties設定値)</th>
+								<th>無効</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -73,12 +73,12 @@
 						</tfoot>
 					</table>
 				</div>
-				<input type="button" id="confirmButton" value="Confirm"/>
-				<input type="button" id="saveButton" value="Save"/>
-				<input type="button" id="resetButton" value="Reset"/>
-				<input type="button" id="deleteButton" value="Delete"/>
-				<input type="button" id="backButton" value="Back"/>&nbsp;
-				<input type="button" id="exportButton" value="Export as initialization data">
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>&nbsp;
+				<input type="button" id="exportButton" value="初期化データとしてエクスポート">
 				
 			</form>
 		</div>
