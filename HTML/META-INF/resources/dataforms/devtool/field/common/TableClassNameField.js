@@ -26,3 +26,4 @@ TableClassNameField.prototype.onUpdateRelationField = function() {
 		}
 	}
 };
+

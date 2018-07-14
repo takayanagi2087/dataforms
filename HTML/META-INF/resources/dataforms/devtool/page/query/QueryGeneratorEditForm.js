@@ -77,10 +77,10 @@ QueryGeneratorEditForm.prototype.getFieldList = function() {
  */
 QueryGeneratorEditForm.prototype.onCalc = function(f) {
 	EditForm.prototype.onCalc.call(this);
-	var thisForm = this;
+/*	var thisForm = this;
 	if (f != null) {
 		this.getFieldList();
-	}
+	}*/
 };
 
 /**

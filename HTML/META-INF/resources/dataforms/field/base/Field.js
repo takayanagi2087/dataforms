@@ -498,6 +498,15 @@ Field.prototype.getSource = function(res) {
 };
 
 /**
+ * autocompleteの選択時の処理を記述します。
+ */
+Field.prototype.onAutocompleteSelected = function() {
+	if (!this.relationDataAcquisition) {
+		this.onUpdateRelationField();
+	}
+};
+
+/**
  * Autocompleteの設定を行います。
  */
 Field.prototype.setAutocomplete = function() {
@@ -525,7 +534,7 @@ Field.prototype.setAutocomplete = function() {
 				var form = thisField.getParentForm();
 				form.onCalc($(event.target));
 			}
-			thisField.onUpdateRelationField();
+			thisField.onAutocompleteSelected();
 		}
 	});
 };
