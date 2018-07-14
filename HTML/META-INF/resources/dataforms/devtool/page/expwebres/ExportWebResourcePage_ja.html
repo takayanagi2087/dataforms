@@ -7,30 +7,30 @@
 	<body>
 		<div id="mainDiv">
 			<form id="queryForm">
-				<div class="formHeader">Query contition</div>
+				<div class="formHeader">検索条件</div>
 				<table class="responsive thtd">
 					<tbody>
 						<tr>
-							<th>File name</th>
+							<th>ファイル名</th>
 							<td><input type="text" id="fileName" /></td>
 						</tr>
 						<tr>
-							<th>Query option</th>
-							<td><input type="checkbox" id="regexpFlag" value="1"/><label for="regexpFlag">Use regular expressions</label></td>
+							<th>検索オプション</th>
+							<td><input type="checkbox" id="regexpFlag" value="1"/><label for="regexpFlag">正規表現を使用する</label></td>
 						</tr>
 					</tbody>
 				</table>
-				<input type="submit" id="queryButton" value="Query">
-				<input type="button" id="resetButton" value="Reset">&nbsp;
-				<input type="button" id="newButton" value="New">
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
 			</form>
 			<form id="queryResultForm">
-				<div class="formHeader">Query result</div>
+				<div class="formHeader">検索結果</div>
 				<table class="responsive thtd">
 					<tbody>
 						<tr>
 							<th>
-								Web resource output path
+								Webリソース出力パス
 							</th>
 							<td>
 								<input type="text" id="webSourcePath"/>
@@ -38,7 +38,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<input type="button" id="selectNotExportedButton" value="Select what is not exported"/>
+				<input type="button" id="selectNotExportedButton" value="エクスポートされていないものを選択"/>
 				<div class="hScrollDiv">
 					<table id="queryResult">
 						<thead>
@@ -50,10 +50,10 @@
 								<input type="checkbox" id="selAll" value="1">
 							</th>
 							<th>
-								File name
+								ファイル名
 							</th>
 							<th>
-								Presence
+								有無
 							</th>
 						</tr>
 						</thead>
@@ -75,8 +75,8 @@
 						</tbody>
 					</table>
 				</div>
-				<input type="checkbox" id="forceOverwrite" value="1"><label for="forceOverwrite">Forcibly overwrite</label><br/>
-				<input type="button" id="exportButton" value="Export" />
+				<input type="checkbox" id="forceOverwrite" value="1"><label for="forceOverwrite">強制的に上書する</label><br/>
+				<input type="button" id="exportButton" value="エクスポート" />
 			</form>
 		</div>
 	</body>
