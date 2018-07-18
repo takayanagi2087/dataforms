@@ -96,9 +96,11 @@ Form.prototype.setFieldValue = function(fid, value) {
 		var colid = this.getHtmlTableColumnId(fid);
 		var table = this.getComponent(tblid);
 		var field = table.getComponent(colid);
-		var f = $.extend(true, {}, field);
-		f.id = fid;
-		f.setValue(value);
+		if (field != null) {
+			var f = $.extend(true, {}, field);
+			f.id = fid;
+			f.setValue(value);
+		}
 	} else {
 		var field = this.getComponent(fid);
 		if (field != null) {
