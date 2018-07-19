@@ -379,7 +379,7 @@ HtmlTable.prototype.moveColumnForIe = function() {
 	this.find("tfoot tr").each(function() {
 		thisTable.setColumnLeftForIe($(this));
 	});
-	
+
 };
 
 /**
@@ -592,7 +592,7 @@ HtmlTable.prototype.clear = function() {
 /**
  * テーブルのカラムフィールドを所得します。
  * <pre>
- * テーブルの各カラムに割り当てられたフィールドクラスのインスタンスを所得します。
+ * テーブルの各カラムに割り当てられたフィールドクラスのインスタンスを取得します。
  * このフィールドをgetRowFieldに渡すことにより、行を限定したフィールドを取得することができます。
  * </pre>
  * @param {String} id フィールドID。
@@ -843,17 +843,22 @@ HtmlTable.prototype.getSameLineField = function(f, tid) {
 
 /**
  * 指定フィールドと同じ行のフィールドを取得します。
- * @param {jQuery} f 指定フィールドに対応したjQueryオブジェクト。
+ * @param {Object} f 指定フィールドに対応したjQueryオブジェクトまたはFieldオブジェクト。
  * @param {String} tid 取得するフィールドID.
- * @return {jQuery} 見つけた要素のjQueryオブジェクト。
+ * @return {Object} 見つけた要素のjQueryオブジェクトまたはFieldオブジェクト。
  * <pre>
- * fで指定されたjQueryオブジェクトと同じ行にある、tidをもつ要素を取得します。
+ * fで指定されたフィールドと同じ行にある、tidをもつ要素を取得します。
  * </pre>
  */
 HtmlTable.prototype.getSameRowField = function(f, tid) {
-	var id = f.attr("id");
-	var rid = id.replace(/\]\..+$/, "]." + tid);
-	return this.find("#" + this.selectorEscape(rid));
+	if (f instanceof jQuery) {
+		var id = f.attr("id");
+		var rid = id.replace(/\]\..+$/, "]." + tid);
+		return this.find("#" + this.selectorEscape(rid));
+	} else {
+		var rid = f.id.replace(/\]\..+$/, "]." + tid);
+		return this.getComponent(rid);
+	}
 };
 
 /**
