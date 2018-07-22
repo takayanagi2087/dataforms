@@ -302,6 +302,9 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 				success.call(me, data);
 			} else if (data.status == ServerMethod.APPLICATION_EXCEPTION) {
 				me.onCatchApplicationException(data);
+				if (window.currentPage !== undefined) {
+					window.currentPage.unlock();
+				}
 			}
 		} catch (e) {
 			logger.error(e.message);

@@ -10,6 +10,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -626,9 +627,12 @@ public class Dao implements JDBCConnectableObject {
 			} finally {
 				p.removeBlobTempFile(data);
 			}
+		} catch (SQLIntegrityConstraintViolationException th) {
+			log.debug(th.getLocalizedMessage(), th);
+			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
 		} finally {
 			st.close();
-		}
+		} 
 		return ret;
 	}
 
@@ -658,6 +662,9 @@ public class Dao implements JDBCConnectableObject {
 					p.removeBlobTempFile(m);
 				}
 			}
+		} catch (SQLIntegrityConstraintViolationException th) {
+			log.debug(th.getLocalizedMessage(), th);
+			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
 		} finally {
 			st.close();
 		}
