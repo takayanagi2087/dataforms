@@ -64,20 +64,20 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 
 	@Override
 	protected Map<String, Object> queryPage(final Map<String, Object> data, final FieldList flist) throws Exception {
-    	this.methodStartLog(log, data);
-    	TableManagerDao dao = new TableManagerDao(this);
-    	List<Map<String, Object>> queryResult = dao.queryTableClass(data);
-    	List<String> clslist = new ArrayList<String>();
-    	for (Map<String, Object> r: queryResult) {
-    		String statusVal = (String) r.get("statusVal");
-    		if ("0".equals(statusVal)) {
-        		clslist.add((String) r.get("className"));
-    		}
-    	}
-    	Map<String, Object> result = new HashMap<String, Object>();
-    	result.put("checkedClass", clslist);
-    	result.put("queryResult", queryResult);
-    	this.methodFinishLog(log, result);
+		this.methodStartLog(log, data);
+		TableManagerDao dao = new TableManagerDao(this);
+		List<Map<String, Object>> queryResult = dao.queryTableClass(data);
+		List<String> clslist = new ArrayList<String>();
+		for (Map<String, Object> r : queryResult) {
+			String statusVal = (String) r.get("statusVal");
+			if ("0".equals(statusVal)) {
+				clslist.add((String) r.get("className"));
+			}
+		}
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("checkedClass", clslist);
+		result.put("queryResult", queryResult);
+		this.methodFinishLog(log, result);
 		return result;
 	}
 

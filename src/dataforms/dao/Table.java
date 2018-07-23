@@ -406,6 +406,7 @@ public class Table  {
 		}
 		List<Index> ilist = this.getIndexList();
 		for (Index idx: ilist) {
+			logger.debug("index class=" + idx.getClass().getName());
 			List<Map<String, Object>> iflist = dao.getIndexFieldList(this, idx.getIndexName());
 			if (!idx.structureAccords(iflist)) {
 				return false;

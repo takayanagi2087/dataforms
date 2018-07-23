@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.util.StringUtil;
@@ -14,6 +16,12 @@ import dataforms.util.StringUtil;
  *
  */
 public class Index {
+	
+	/**
+	 * Logger。
+	 */
+	private Logger logger = Logger.getLogger(Index.class);
+	
 	/**
 	 * テーブルクラス。
 	 */
@@ -142,6 +150,7 @@ public class Index {
 						Map<String, Object> m = iflist.get(i);
 						String idxname = StringUtil.snakeToCamel(((String) m.get("columnName")).toLowerCase());
 						Field<?> f = this.getFieldList().get(i);
+						logger.debug("indexed field:" + f.getId() + ", " + idxname);
 						if (!f.getId().equals(idxname)) {
 							return false;
 						}

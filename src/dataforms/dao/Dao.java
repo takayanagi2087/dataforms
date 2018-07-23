@@ -1165,7 +1165,7 @@ public class Dao implements JDBCConnectableObject {
 	private List<Map<String, Object>> getCurrentDBIndexInfo(final DatabaseMetaData md, final String catalog, final String schema, final String table, final boolean unique) throws Exception {
 		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
 		log.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table + ", unique=" + unique);
-		ResultSet rset = md.getIndexInfo(catalog, schema, table, unique, true);
+		ResultSet rset = md.getIndexInfo(catalog, schema, table, unique, false);
 		try {
 			ResultSetMetaData rmd = rset.getMetaData();
 			while (rset.next()) {
@@ -1175,7 +1175,10 @@ public class Dao implements JDBCConnectableObject {
 					Object value = rset.getObject(i + 1);
 					m.put(name, value);
 				}
-				ret.add(m);
+				Boolean nonUnique = (Boolean) m.get("nonUnique");
+				if (nonUnique != unique) {
+					ret.add(m);
+				}
 			}
 		} finally {
 			rset.close();
