@@ -578,3 +578,17 @@ Field.prototype.comp = function(a, b) {
 	}
 	return ret;
 };
+
+/**
+ * 同一フォーム内の別フィールドまたは同一テーブルの同一行内のフィールドを取得します。
+ * @param {String} id 取得するフィールドID。
+ * @returns {Field} フィールド。
+ */
+Field.prototype.getNearField = function(id) {
+	var tableId = this.getHtmlTableId(this.id);
+	if (tableId != null) {
+		return this.parent.getSameRowField(this, id);
+	} else {
+		return this.parent.getComponent(id);
+	}
+};
