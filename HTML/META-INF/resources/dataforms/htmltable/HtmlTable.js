@@ -301,6 +301,13 @@ HtmlTable.prototype.setTfootFixedColumn = function(tr, cols, warray) {
  * @param {Array} warray カラム幅の配列。
  */
 HtmlTable.prototype.setFixedColumn = function(cols, warray) {
+	// 固定カラム系の設定を削除。
+	this.find("th").removeClass("fixedColumn");
+	this.find("th").css("left", "");
+	this.find("th").css("z-index", "");
+	this.find("td").removeClass("fixedColumn");
+	this.find("td").css("left", "");
+	this.find("td").css("z-index", "");
 	var thisTable = this;
 	var idx = 0;
 	var pos = 0;
@@ -324,6 +331,31 @@ HtmlTable.prototype.getColumnWidth = function(col) {
 };
 
 /**
+ * 固定カラム幅に対応したカラム数を計算します。
+ */
+HtmlTable.prototype.calcFixedColumns = function(warrayAll, tbodyWidth) {
+	var form = this.getParentForm();
+	var tw = form.get().width();
+	logger.log("tw=" + tw);
+	var fw = tw * this.fixedWidth / 100.0;
+	var cols = 0;
+	var w = 0;
+	for (var i = 0; i < warrayAll.length; i++) {
+		w += warrayAll[i];
+		if (w > fw) {
+			break;
+		}
+		cols++;
+	}
+	if (cols > warrayAll.length) {
+		cols = warrayAll.length;
+	}
+	logger.log("cols=" + cols);
+	this.fixedColumns = cols;
+}
+
+
+/**
  * 固定カラム用のスタイル設定を行います。
  */
 HtmlTable.prototype.setFixedColumnStyle = function() {
@@ -340,14 +372,22 @@ HtmlTable.prototype.setFixedColumnStyle = function() {
 		warrayAll.push(fw);
 		wbody += fw;
 	});
+	
 	this.find("thead").width(wbody);
 	this.find("tbody").width(wbody);
 	this.find("tfoot").width(wbody);
+	if (this.fixedWidth != null) {
+		this.calcFixedColumns(warrayAll, wbody);
+	}
+
 	this.setHeaderColumnWidth(warray, warrayAll);
 	this.setFooterColumnWidth(warray, warrayAll);
 	if (this.fixedColumns > 0) {
 		this.setFixedColumn(this.fixedColumns, warrayAll);
 	}
+	this.tableWidth = wbody;
+	this.columnWidthList = warrayAll;
+	
 };
 
 /**
@@ -382,18 +422,31 @@ HtmlTable.prototype.moveColumnForIe = function() {
 
 };
 
+
+
 /**
  * HTMLエレメントとの対応付けを行います。
  */
 HtmlTable.prototype.attach = function() {
 	// WebComponent.prototype.attach.call(this);
 	logger.log("fixedColumns=" + this.fixedColumns);
+	logger.log("fixedWidth=" + this.fixedWidth);
 	var thisTable = this;
-	if (this.fixedColumns >= 0) {
+	if (this.fixedColumns >= 0 || this.fixedWidth != null) {
+		if (this.fixedWidth != null) {
+			// Windowサイズ変更に伴う固定カラムの設定変更。
+			$(window).resize(function() {
+				thisTable.calcFixedColumns(thisTable.columnWidthList, thisTable.tableWidth);
+				if (thisTable.fixedColumns > 0) {
+					thisTable.setFixedColumn(thisTable.fixedColumns, thisTable.columnWidthList);
+				}
+			});
+		}
 		this.setFixedColumnStyle();
-		var ua = navigator.userAgent;
-		var isEdge = (ua.indexOf("Edge") >= 0);
-		var isIe = ua.match(/(msie|MSIE)/) || ua.match(/(T|t)rident/);
+		var bt = currentPage.getBrowserType();
+		logger.log("browserType=" + bt);
+		var isEdge = (bt == Page.BROWSER_EDGE);
+		var isIe = (bt == Page.BROWSER_IE);
 		if (isIe || isEdge) {
 			// Edgeはtheadのstickyの動作がおかしいので、theadの固定をスクリプトで行う。
 			this.get().find("thead").css("position", "relative");

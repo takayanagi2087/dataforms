@@ -39,7 +39,10 @@ public class HtmlTable extends WebComponent {
 	 */
 	private int fixedColumns = -1;
 	
-	
+	/**
+	 * 固定カラム幅(テーブル幅に対する%)。
+	 */
+	private Double fixedWidth = null;
 	
 	/**
 	 * コンストラクタ。
@@ -92,6 +95,31 @@ public class HtmlTable extends WebComponent {
 	public void setFixedColumns(final int fixedColumns) {
 		this.fixedColumns = fixedColumns;
 	}
+	
+	
+	/**
+	 * 固定カラム幅(%)を取得します。
+	 * @return 固定カラム幅(%)。
+	 */
+	public Double getFixedWidth() {
+		return fixedWidth;
+	}
+
+
+	/**
+	 * 固定カラム幅(%)を設定します。
+	 * 
+	 * <pre>
+	 * このプロパティは固定するカラムをテーブル幅の%で指定します。
+	 * テーブルの幅に応じて、固定するカラムの幅が変化します。
+	 * </pre>
+	 * 
+	 * @param percent 固定カラム幅(%)。
+	 */
+	public void setFixedWidth(final Double percent) {
+		this.fixedWidth = percent;
+	}
+
 
 	/**
 	 * テーブルのキャプションを取得します。
@@ -148,6 +176,7 @@ public class HtmlTable extends WebComponent {
 		Map<String, Object> ret = super.getProperties();
 		ret.put("fieldList", this.fieldList.getFieldListClassInfo());
 		ret.put("fixedColumns", this.getFixedColumns());
+		ret.put("fixedWidth", this.getFixedWidth());
 		return ret;
 	}
 

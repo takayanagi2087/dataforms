@@ -94,6 +94,7 @@ Page.prototype.configureLogLevel = function () {
 	logger.info("info log.");
 	logger.warn("warn log.");
 	logger.error("error log.");
+	logger.info("browser type=" + this.getBrowserType());
 };
 
 
@@ -470,4 +471,67 @@ Page.prototype.confirm = function(title, msg, okFunc, cancelFunc) {
 		minHeight: 100
 	});
 };
+
+
+/**
+ * Microsoft EDGE。
+ */
+Page.BROWSER_EDGE = "edge";
+
+/**
+ *  Microsoft Internet Explorer。
+ */
+Page.BROWSER_IE = "ie";
+
+/**
+ * Google chrome。
+ */
+Page.BROWSER_CHOROME = "chrome";
+
+/**
+ * Safari。
+ */
+Page.BROWSER_SAFARI = "safari";
+
+/**
+ * Firefox。
+ */
+Page.BROWSER_FIREFOX = "firefox";
+
+
+/**
+ * Opera。
+ */
+Page.BROWSER_OPERA = "opera";
+
+
+/**
+ * 其の他ブラウザ。
+ */
+Page.BROWSER_OTHER = "other";
+
+
+/**
+ * ブラウザタイプを取得します。
+ */
+Page.prototype.getBrowserType = function() {
+	var ua = window.navigator.userAgent.toLowerCase();
+	logger.log("ua=" + ua);
+	if (ua.indexOf("edge") >= 0) {
+		return Page.BROWSER_EDGE;
+	} else if (ua.indexOf("msie") >= 0 || ua.indexOf("trident") >= 0) {
+		return Page.BROWSER_IE;
+	} else if (ua.indexOf(" opr") >= 0) {
+		return Page.BROWSER_OPERA;
+	} else if (ua.indexOf("chrome") >= 0) {
+		return Page.BROWSER_CHOROME;
+	} else if (ua.indexOf("firefox") >= 0) {
+		return Page.BROWSER_FIREFOX;
+	} else if (ua.indexOf("safari") >= 0) {
+		return Page.BROWSER_SAFARI;
+	} else {
+		return Page.BROWSER_OTHER;
+	}
+};
+
 

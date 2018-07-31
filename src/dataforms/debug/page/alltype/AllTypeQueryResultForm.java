@@ -30,6 +30,7 @@ public class AllTypeQueryResultForm extends QueryResultForm {
 				, tbl.getField("numericField").setSortable(true)
 				);
 		htmltbl.setFixedColumns(2);
+//		htmltbl.setFixedWidth(50.0);
 		this.addHtmlTable(htmltbl);
 	}
 
