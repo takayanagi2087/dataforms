@@ -485,22 +485,22 @@ public class Table  {
 	/**
 	 * フィールド単位のリンク条件を作成します。
 	 * <pre>
-	 * 以下のような結合条件を作成します。
-	 * alias.field = alias.link_field
+	 * 結合元の別名を"m"とすると、以下のような結合条件を作成します。
+	 * m.field = alias.link_field
 	 * </pre>
 	 * @param table リンク元テーブルのインスタンス。
 	 * @param field フィールド。
-	 * @param joinTable 結合テーブル。
-	 * @param joinTableAlias テーブルの別名。
-	 * @param linkField 結合テーブルのフィールド。
+	 * @param joinTable 結合対象テーブル。
+	 * @param alias 結合対象テーブルの別名。
+	 * @param linkField 結合対象テーブルのフィールド。
 	 * @return 結合条件。
 	 */
-	public final String getLinkFieldCondition(final Table table, final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
+	public final String getLinkFieldCondition(final Table table, final String field, final Table joinTable, final String alias, final String linkField) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(table.getAlias() + ".");
 		sb.append(table.getField(field).getDbColumnName());
 		sb.append("=");
-		sb.append(joinTableAlias);
+		sb.append(alias);
 		sb.append(".");
 		sb.append(joinTable.getField(linkField).getDbColumnName());
 		return sb.toString();
@@ -510,19 +510,35 @@ public class Table  {
 	/**
 	 * フィールド単位のリンク条件を作成します。
 	 * <pre>
-	 * 以下のような結合条件を作成します。
-	 * alias.field = alias.link_field
+	 * 結合元の別名を"m"とすると、以下のような結合条件を作成します。
+	 * m.field = alias.link_field
 	 * </pre>
-	 * @param field フィールド。
-	 * @param joinTable 結合テーブル。
-	 * @param joinTableAlias テーブルの別名。
+	 * @param field フィールドID。
+	 * @param joinTable 結合対象テーブル。
+	 * @param alias 結合対象テーブルの別名。
 	 * @param linkField 結合テーブルのフィールド。
 	 * @return 結合条件。
 	 */
-	public final String getLinkFieldCondition(final String field, final Table joinTable, final String joinTableAlias, final String linkField) {
-		return this.getLinkFieldCondition(this, field, joinTable, joinTableAlias, linkField);
+	public final String getLinkFieldCondition(final String field, final Table joinTable, final String alias, final String linkField) {
+		return this.getLinkFieldCondition(this, field, joinTable, alias, linkField);
 	}
 
+	/**
+	 * フィールド単位のリンク条件を作成します。
+	 * <pre>
+	 * 結合元の別名を"m"とすると、以下のような結合条件を作成します。
+	 * m.field = alias.field
+	 * </pre>
+	 * @param field フィールドID。
+	 * @param joinTable 結合テーブル。
+	 * @param alias テーブルの別名。
+	 * @return 結合条件。
+	 */
+	public final String getLinkFieldCondition(final String field, final Table joinTable, final String alias) {
+		return this.getLinkFieldCondition(field, joinTable, alias, field);
+	}
+
+	
 	/**
 	 * 削除フラグフィールドを取得します。
 	 * @return 削除フラグフィールド。
