@@ -51,12 +51,10 @@
 	またHTTPClientを適切に設定をしても、SSL経由のため効率は良くありません。
 	SSLを使用する場合はアプリケーションサーバのhttpポートを指定したURLを指定してください。
 	 -->
-	<!--
 	<context-param>
 		<param-name>web-resource-url</param-name>
 		<param-value>http://localhost:8080</param-value>
 	</context-param>
-	-->
 	<!-- 使用する文字コードを指定します。-->
 	<!--  context-param>
 		<param-name>encoding</param-name>
@@ -144,10 +142,10 @@
 		BLOBデータ等のダウンロードパラメータの暗号化に使用しています。
 		運用時に変更しても問題ありません。
 	-->
-	<!-- context-param>
+	<context-param>
 		<param-name>query-string-crypt-password</param-name>
 		<param-value>yyy_password_yyy</param-value>
-	</context-param-->
+	</context-param>
 	<!--
 		CSRF対策を行う場合以下のパスワードを有効にしてください。
 		指定されたパスワードでセッションIDを暗号化し、CSRFトークンとしてブラウザに送信します。
@@ -332,6 +330,29 @@
 		<!--
 		<param-value>enabled</param-value>
 		<param-value>disabled</param-value>
+		-->
+	</context-param>
+	<!--
+		自動ログインの有効/無効を設定します。
+	 -->
+	<context-param>
+		<param-name>auto-login</param-name>
+		<param-value>enabled</param-value>
+		<!--
+		<param-value>enabled</param-value>
+		<param-value>disabled</param-value>
+		-->
+	</context-param>
+	<!--
+		自動ログイン関連クッキーのSecure設定。
+		httpsを使用する場合trueに設定してください。
+	 -->
+	<context-param>
+		<param-name>secure-auto-login-cookie</param-name>
+		<param-value>false</param-value>
+		<!--
+		<param-value>true</param-value>
+		<param-value>false</param-value>
 		-->
 	</context-param>
 	<!--

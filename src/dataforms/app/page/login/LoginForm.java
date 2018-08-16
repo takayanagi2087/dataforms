@@ -14,6 +14,8 @@ import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.Form;
 import dataforms.controller.JsonResponse;
+import dataforms.field.common.FlagField;
+import dataforms.util.AutoLoginCookie;
 import dataforms.util.StringUtil;
 import dataforms.validator.ValidationError;
 
@@ -25,13 +27,14 @@ public class LoginForm extends Form {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(LoginForm.class.getName());
+	private static Logger logger = Logger.getLogger(LoginForm.class.getName());
 
 	/**
 	 * ユーザ登録ページのアドレス。
 	 */
 	private static String passwordResetMailPage = null;
 
+	
 	/**
 	 * コンストラクタ。
 	 */
@@ -40,8 +43,24 @@ public class LoginForm extends Form {
 		this.addField(new LoginIdField());
 		PasswordField pw = new PasswordField();
 		this.addField(pw);
+		this.addField(new FlagField(AutoLoginCookie.ID_KEEP_LOGIN));
 	}
 
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setFormData(AutoLoginCookie.ID_KEEP_LOGIN, AutoLoginCookie.getKeepLoginFlag(this.getPage()));
+	}
+	
+	/**
+	 * 自動ログイン処理を行います。
+	 * @throws Exception 例外。
+	 */
+	public void autoLogin() throws Exception {
+		AutoLoginCookie.autoLogin(this.getPage());
+	}
+	
+	
 	/**
 	 * ログインの処理を行います。
 	 * @param params パラメータ。
@@ -54,21 +73,22 @@ public class LoginForm extends Form {
 		Map<String, Object> nopass = new HashMap<String, Object>();
 		nopass.putAll(params);
 		nopass.remove("password");
-		this.methodStartLog(log, nopass);
+		this.methodStartLog(logger, nopass);
 		JsonResponse ret = null;
 		List<ValidationError> elist = this.validate(params);
 		if (elist.size() > 0) {
 			ret = new JsonResponse(JsonResponse.INVALID, elist);
-			log.warn("login fail");
+			logger.warn("login fail");
 		} else {
 			UserDao dao = new UserDao(this);
 			Map<String, Object> userInfo = dao.login(params);
 			HttpSession session = this.getPage().getRequest().getSession();
 			session.setAttribute("userInfo", userInfo);
-			log.info("login success=" + userInfo.get("loginId") + "(" + userInfo.get("userId") + ")");
+			logger.info("login success=" + userInfo.get("loginId") + "(" + userInfo.get("userId") + ")");
+			AutoLoginCookie.setAutoLoginCookie(this.getPage(), params);
 			ret = new JsonResponse(JsonResponse.SUCCESS, "");
 		}
-		this.methodFinishLog(log, ret);
+		this.methodFinishLog(logger, ret);
 		return ret;
 	}
 	
@@ -78,6 +98,7 @@ public class LoginForm extends Form {
 		if (!StringUtil.isBlank(LoginForm.getPasswordResetMailPage())) {
 			ret.put("passwordResetMailPage", LoginForm.getPasswordResetMailPage() + "." + this.getPage().getPageExt());
 		}
+		ret.put("autoLogin", AutoLoginCookie.isAutoLogin());
 		return ret;
 	}
 	

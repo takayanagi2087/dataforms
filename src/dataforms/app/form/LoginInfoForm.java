@@ -9,6 +9,7 @@ import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.UserNameField;
 import dataforms.controller.Form;
 import dataforms.controller.JsonResponse;
+import dataforms.util.AutoLoginCookie;
 
 /**
  * ログイン情報フォームクラス。
@@ -121,6 +122,7 @@ public class LoginInfoForm extends Form {
 		Map<String, Object> userInfo = this.getPage().getUserInfo();
 		log.info("logout success=" + userInfo.get("loginId") + "(" + userInfo.get("userId") + ")");
 		this.getPage().getRequest().getSession().setAttribute("userInfo", null);
+		AutoLoginCookie.clearAutoLoginCookie(this.getPage());
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, "");
 		this.methodFinishLog(log, ret);
 		return ret;

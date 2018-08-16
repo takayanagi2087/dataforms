@@ -13,6 +13,7 @@ import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -1115,5 +1116,22 @@ public class Page extends DataForms {
 		return dataformsCreateDate;
 	}
 
-
+	/**
+	 * 指定された名前のクッキーを取得します。
+	 * @param name クッキーの名称。
+	 * @return 取得されたクッキー。
+	 */
+	public Cookie getCookie(final String name) {
+		Cookie ret = null;
+		Cookie[] cookies = this.getRequest().getCookies();
+		if (cookies != null) {
+			for (Cookie c: cookies) {
+				if (c.getName().equals(name)) {
+					ret = c;
+					break;
+				}
+			}
+		}
+		return ret;
+	}
 }

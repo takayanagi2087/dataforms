@@ -46,6 +46,7 @@ import dataforms.dao.file.FileObject;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.mail.MailSender;
+import dataforms.util.AutoLoginCookie;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
 import dataforms.util.MessagesUtil;
@@ -384,6 +385,14 @@ public class DataFormsServlet extends HttpServlet {
 		String backButton = this.getServletContext().getInitParameter("browser-back-button");
 		if (!StringUtil.isBlank(backButton)) {
 			Page.setBrowserBackButton(backButton);
+		}
+		String autoLogin = this.getServletContext().getInitParameter("auto-login");
+		if (!StringUtil.isBlank(autoLogin)) {
+			AutoLoginCookie.setAutoLogin("enabled".equals(autoLogin));
+		}
+		String secureAutoLoginCookie = this.getServletContext().getInitParameter("secure-auto-login-cookie");
+		if (!StringUtil.isBlank(secureAutoLoginCookie)) {
+			AutoLoginCookie.setSecure("true".equals(secureAutoLoginCookie));
 		}
 		DeveloperPage.setJavaSourcePath(this.getServletContext().getInitParameter("java-source-path"));
 		DeveloperPage.setWebSourcePath(this.getServletContext().getInitParameter("web-source-path"));

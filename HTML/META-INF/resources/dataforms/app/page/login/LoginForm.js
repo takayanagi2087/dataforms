@@ -59,4 +59,11 @@ LoginForm.prototype.attach = function() {
 	} else {
 		$("#passwordResetLink").hide();
 	}
+	if (this.autoLogin) {
+		this.find("#keepLogin").show();
+		this.find("label[for='keepLogin']").show();
+	} else {
+		this.find("#keepLogin").hide();
+		this.find("label[for='keepLogin']").hide();
+	}
 };
