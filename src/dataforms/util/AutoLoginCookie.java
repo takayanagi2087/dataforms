@@ -192,4 +192,19 @@ public final class AutoLoginCookie {
 		}
 		return "0";
 	}
+
+	/**
+	 * 自動ログインクッキーの存在チェックを行います。
+	 * @param page ページ。
+	 * @return 存在する場合true。
+	 */
+	public static boolean exists(final Page page) {
+		Cookie cookie = page.getCookie(ID_AUTO_LOGIN_INFO);
+		if (cookie != null) {
+			if (cookie.getValue().length() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

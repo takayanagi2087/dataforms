@@ -4,7 +4,6 @@ import java.util.Map;
 
 import dataforms.annotation.WebMethod;
 import dataforms.app.page.base.BasePage;
-import dataforms.app.page.login.LoginForm;
 import dataforms.controller.RedirectResponse;
 import dataforms.controller.Response;
 import dataforms.devtool.dao.db.TableManagerDao;
@@ -46,8 +45,6 @@ public class TopPage extends BasePage {
 		String context = this.getRequest().getContextPath();
 		TableManagerDao dao = new TableManagerDao(this);
 		if (dao.isDatabaseInitialized()) {
-			LoginForm loginForm = new LoginForm();
-			loginForm.autoLogin();
 			if (this.getUserInfo() == null) {
 				return new RedirectResponse(context + "/dataforms/app/page/login/LoginPage." + this.getPageExt());
 			} else {

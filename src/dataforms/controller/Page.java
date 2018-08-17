@@ -25,6 +25,7 @@ import dataforms.field.base.Field;
 import dataforms.htmltable.HtmlTable;
 import dataforms.menu.Menu;
 import dataforms.servlet.DataFormsServlet;
+import dataforms.util.AutoLoginCookie;
 import dataforms.util.ClassFinder;
 import dataforms.util.CryptUtil;
 import dataforms.util.MessagesUtil;
@@ -1133,5 +1134,19 @@ public class Page extends DataForms {
 			}
 		}
 		return ret;
+	}
+	
+	/**
+	 * 自動ログインを実行します。
+	 * 
+	 * <pre>
+	 * Cookieに自動ログイン情報が設定されている場合、自動的にログインします。
+	 * </pre>
+	 * 
+	 * 
+	 * @throws Exception 例外。
+	 */
+	public void autoLogin() throws Exception {
+		AutoLoginCookie.autoLogin(this);
 	}
 }

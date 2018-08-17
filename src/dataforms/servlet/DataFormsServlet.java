@@ -897,6 +897,7 @@ public class DataFormsServlet extends HttpServlet {
 					}
 					try {
 						page.setConnection(conn);
+						page.autoLogin();
 						if (!wma.everyone()) {
 							if (!page.isAuthenticated(param)) {
 								throw new ApplicationException(page, "error.auth");
