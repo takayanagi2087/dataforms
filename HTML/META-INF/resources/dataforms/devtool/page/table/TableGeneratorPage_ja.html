@@ -7,29 +7,29 @@
 	<body>
 		<div id="mainDiv">
 			<form id="queryForm">
-				<div class="formHeader">Query contition</div>
+				<div class="formHeader">検索条件</div>
 				<table class="responsive thtd">
 					<tbody>
 						<tr>
-							<th>Function</th>
+							<th>機能</th>
 							<td><select id="functionSelect"></select></td>
 						</tr>
 						<tr>
-							<th>Package name</th>
+							<th>パッケージ名</th>
 							<td><input type="text" id="packageName" /></td>
 						</tr>
 						<tr>
-							<th>Class name</th>
+							<th>クラス名</th>
 							<td><input type="text" id="className" /></td>
 						</tr>
 					</tbody>
 				</table>
-				<input type="submit" id="queryButton" value="Query">
-				<input type="button" id="resetButton" value="Reset">&nbsp;
-				<input type="button" id="newButton" value="New">
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
 			</form>
 			<form id="queryResultForm">
-				<div class="formHeader">Query result</div>
+				<div class="formHeader">検索結果</div>
 				<div class="hScrollDiv">
 					<table id="queryResult">
 						<thead>
@@ -38,25 +38,25 @@
 									No.
 								</th>
 								<th>
-									Class name
+									クラス名
 								</th>
 								<th>
-									Table name
+									テーブル名
 								</th>
 								<th>
-									Comment
+									コメント
 								</th>
 								<th>
-									Presence of table
+									テーブル有無
 								</th>
 								<th>
-									Presence of seq.
+									シーケンス有無
 								</th>
 								<th>
-									Difference
+									構造の差分
 								</th>
 								<th>
-									Number of records
+									レコード件数
 								</th>
 							</tr>
 						</thead>
@@ -96,46 +96,46 @@
 						</tbody>
 					</table>
 				</div>
-				<input type="button" id="printButton" value="Table definition"/>
+				<input type="button" id="printButton" value="テーブル定義書"/>
 			</form>
 			<form id="editForm">
 				<div class="formHeader"><span id="editFormTitle"></span></div>
 				<table class="responsive thtd">
 					<tbody>
 						<tr>
-							<th>Java source path</th>
+							<th>Javaソース出力先</th>
 							<td>
 								<input type="text" id="javaSourcePath"/>
 							</td>
 						</tr>
 						<tr>
-							<th>Function</th>
+							<th>機能</th>
 							<td><select id="functionSelect"></select></td>
 						</tr>
 						<tr>
-							<th>Package</th>
+							<th>パッケージ</th>
 							<td><input type="text" id="packageName"/></td>
 						</tr>
 						<tr>
-							<th>Table class</th>
+							<th>テーブルクラス名</th>
 							<td>
 								<input type="text" id="tableClassName"/>
 							</td>
 						</tr>
 						<tr>
-							<th>Table comment</th>
+							<th>テーブルコメント</th>
 							<td>
 								<input type="text" id="tableComment"/>
 							</td>
 						</tr>
 						<tr>
-							<th>Overwrite mode</th>
+							<th>上書モード</th>
 							<td>
 								<select id="overwriteMode"></select>
 							</td>
 						</tr>
 						<tr>
-							<th>Automatic primary key generation</th>
+							<th>主キー自動生成</th>
 							<td><input type="checkbox" id="autoIncrementId" value="1"/></td>
 						</tr>
 					</tbody>
@@ -144,15 +144,15 @@
 					<tbody>
 						<tr>
 							<td>
-								Field list
+								フィールド一覧
 							</td>
 							<td style="text-align:right;">
 								<div style="width:100%;text-align:right;">
-									<input type="button" id="allErrorButton" value="Overwrite all errors"/>
-									<input type="button" id="allSkipButton" value="Do not overwrite all"/>
-									<input type="button" id="allForceOverwriteButton" value="All forced overwriting"/>
-									<input type="button" id="errorSkipButton" value="Do not overwrite errors"/>
-									<input type="button" id="errorForceButton" value="Forced overwriting of errors"/>
+									<input type="button" id="allErrorButton" value="全て上書きはエラー"/>
+									<input type="button" id="allSkipButton" value="全て上書きしない"/>
+									<input type="button" id="allForceOverwriteButton" value="全て強制上書き"/>
+									<input type="button" id="errorSkipButton" value="エラーしたものは上書きしない"/>
+									<input type="button" id="errorForceButton" value="エラーしたものも強制上書き"/>
 								</div>
 							</td>
 						</tr>
@@ -170,31 +170,31 @@
 									No.
 								</th>
 								<th>
-									Package
+									パッケージ
 								</th>
 								<th>
-									Class
+									クラス
 								</th>
 								<th>
-									Base class package
+									基本クラスパッケージ
 								</th>
 								<th>
-									Base class
+									基本クラス
 								</th>
 								<th>
-									Field ID.
+									フィールドID
 								</th>
 								<th>
-									Length
+									長さ
 								</th >
 								<th>
 									PK
 								</th>
 								<th>
-									Comment
+									コメント
 								</th>
 								<th>
-									Overwrite
+									上書
 								</th>
 							</tr>
 						</thead>
@@ -250,12 +250,12 @@
 						</tfoot>
 					</table>
 				</div>
-				<input type="button" id="confirmButton" value="Confirm"/>
-				<input type="button" id="saveButton" value="Save"/>
-				<input type="button" id="resetButton" value="Reset"/>
-				<input type="button" id="deleteButton" value="Delete"/>
-				<input type="button" id="printButton" value="Table definition"/>
-				<input type="button" id="backButton" value="Back"/>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="printButton" value="テーブル定義書"/>
+				<input type="button" id="backButton" value="戻る"/>
 			</form>
 
 		</div>
