@@ -117,6 +117,16 @@ public  class Form extends WebComponent {
 	}
 
 	/**
+	 * フィールドリスト中のフィールドをフォームに追加ます。
+	 * @param flist フィールドリスト。
+	 */
+	protected void addFieldList(final FieldList flist) {
+		for (Field<?> f : flist) {
+			this.addField(f);
+		}
+	}
+	
+	/**
 	 * HTMLテーブルを追加します。
 	 * @param table HTMLテーブル構造リスト。
 	 */
