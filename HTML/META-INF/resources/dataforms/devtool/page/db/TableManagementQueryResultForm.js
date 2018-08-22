@@ -203,9 +203,20 @@ TableManagementQueryResultForm.prototype.setTableEventHandler = function(queryRe
 
 			}
 		}
+		this.find("[id$='\.tableName']").click(function () {
+			thisForm.showQueryForm($(this));
+		});
 	}
 	this.controlButton();
 };
+
+TableManagementQueryResultForm.prototype.showQueryForm = function(lnk) {
+	var table = lnk.text();
+	logger.log("tableName=" + table);
+	var url = "../query/QueryExecutorPage.df?t=" + table;
+	window.open(url, "_blank")
+};
+
 
 /**
  * 問い合わせの結果を設定します。

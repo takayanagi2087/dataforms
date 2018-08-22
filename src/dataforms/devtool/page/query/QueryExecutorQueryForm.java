@@ -37,6 +37,15 @@ public class QueryExecutorQueryForm extends QueryForm {
 		this.addField(new ClobField("sql")).addValidator(new RequiredValidator());
 	}
 	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		String tableName = (String) this.getPage().getRequest().getSession().getAttribute(QueryExecutorPage.ID_TABLE_NAME);
+		if (tableName != null) {
+			this.setFormData("sql", "select * from " + tableName);
+		}
+	}
+	
 	/**
 	 * 指定された問合せクラスのインスタンスを作成します。
 	 * @param param POSTされたパラメータ。
