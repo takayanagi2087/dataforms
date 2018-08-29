@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.controller.Page;
+import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.servlet.DataFormsServlet;
 import net.arnx.jsonic.JSON;
 
@@ -111,16 +112,19 @@ public final class AutoLoginCookie {
 					}
 					logger.debug("userInfo json=" + json);
 					if (json != null) {
-						@SuppressWarnings("unchecked")
-						Map<String, Object> p = JSON.decode(json, HashMap.class);
-						UserInfoTable.Entity pe = new UserInfoTable.Entity(p);
-						String password = pe.getPassword();
-						password = CryptUtil.decrypt(password);
-						pe.setPassword(password);
-						UserDao dao = new UserDao(page);
-						Map<String, Object> userInfo = dao.login(pe.getMap());
-						HttpSession session = page.getRequest().getSession();
-						session.setAttribute("userInfo", userInfo);
+						TableManagerDao tmdao = new TableManagerDao(page);
+						if (tmdao.isDatabaseInitialized()) {
+							UserDao dao = new UserDao(page);
+							@SuppressWarnings("unchecked")
+							Map<String, Object> p = JSON.decode(json, HashMap.class);
+							UserInfoTable.Entity pe = new UserInfoTable.Entity(p);
+							String password = pe.getPassword();
+							password = CryptUtil.decrypt(password);
+							pe.setPassword(password);
+							Map<String, Object> userInfo = dao.login(pe.getMap());
+							HttpSession session = page.getRequest().getSession();
+							session.setAttribute("userInfo", userInfo);
+						}
 					}
 				}
 			}

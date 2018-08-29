@@ -418,4 +418,5 @@ public class UserDao extends Dao {
 		e.setMailAddress(mail);
 		return this.queryUserList(flist, e.getMap());
 	}
+	
 }
