@@ -519,10 +519,12 @@ public class TableManagerDao extends Dao {
 						} else {
 							String maxsql = gen.generateGetMaxValueSql(tbl, tbl.getIdField(), new FieldList(), null);
 							Long max = NumberUtil.longValueObject(this.executeScalarQuery(maxsql, null));
-							String dssql = gen.generateDropSequenceSql(tbl.getSequenceName());
-							this.executeUpdate(dssql, (Map<String, Object>) null);
-							String cssql = gen.generateCreateSequenceSql(tbl.getSequenceName(), max.longValue() + 1);
-							this.executeUpdate(cssql, (Map<String, Object>) null);
+							if (max != null) {
+								String dssql = gen.generateDropSequenceSql(tbl.getSequenceName());
+								this.executeUpdate(dssql, (Map<String, Object>) null);
+								String cssql = gen.generateCreateSequenceSql(tbl.getSequenceName(), max.longValue() + 1);
+								this.executeUpdate(cssql, (Map<String, Object>) null);
+							}
 						}
 					}
 				}
