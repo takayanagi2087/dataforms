@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import dataforms.app.dao.func.FuncInfoTable;
@@ -491,6 +492,14 @@ public class TableManagerDao extends Dao {
 						@SuppressWarnings("unchecked")
 						Map<String, Object> m = (Map<String, Object>) reader.getMap();
 						log.debug("m=" + m.toString());
+						for (String key: m.keySet()) {
+							Object v = m.get(key);
+							if (v instanceof String) {
+								String str = (String) v;
+//								log.debug("unescape=" + str + "->" + StringEscapeUtils.unescapeHtml4(str));
+								m.put(key, StringEscapeUtils.unescapeHtml4(str));
+							}
+						}
 						this.convertImportData(m, path, tbl);
 						Map<String, Object> data = tbl.convertImportData(m);
 						this.setUserIdValue(data);
