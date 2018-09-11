@@ -1430,7 +1430,29 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 			, ids
 		);
 	}
+
 	/**
+	 * オートコンプリート用のリストを取得します。
+	 * <pre>
+	 * 	List&lt;Map&lt;String, Object&gt;&gt; queryAutocompleteSourceList(final Map&lt;String, Object&gt; data)メソッドの実装に便利なメソッドです。
+	 * </pre>
+	 * @param data 問合せ時にPOSTされたデータ。
+	 * @param query 問合せクラス。
+	 * @param ids フィールドIDリスト
+	 * @return オートコンプリートのリスト。
+	 * @throws Exception 例外。
+	 */
+	protected List<Map<String, Object>> queryAutocompleteSourceList(final Map<String, Object> data, final Query query, final String... ids) throws Exception {
+		return this.queryAutocompleteSourceList(
+			data
+			, query
+			, (Map<String, Object> map, String ... idlist) -> {
+				return (String) map.get(idlist[0]);
+			}
+			, ids
+		);
+	}
+/**
 	 * 関連データを取得します。
 	 * <pre>
 	 * Map&lt;String, Object&gt; queryRelationData(final Map&lt;String, Object&gt; data)メソッドの実装に便利なメソッドです。
