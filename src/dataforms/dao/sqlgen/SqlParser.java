@@ -61,7 +61,7 @@ public class SqlParser {
 	public SqlParser(final String sql) {
 		this.orgSql = sql;
 		this.parsedSql = this.parseSql(this.orgSql);
-		log.debug("parsedSql = " + parsedSql);
+//		log.debug("parsedSql = " + parsedSql);
 	}
 
 	/**

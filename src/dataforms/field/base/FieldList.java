@@ -58,9 +58,9 @@ public class FieldList extends ArrayList<Field<?>> {
 				break;
 			}
 		}
-		if (ret == null) {
+/*		if (ret == null) {
 			log.debug("field not found id=" + id);
-		}
+		}*/
 		return ret;
 	}
 
