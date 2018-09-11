@@ -13,6 +13,8 @@ import dataforms.annotation.WebMethod;
 import dataforms.controller.ApplicationError;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.WebComponent;
+import dataforms.dao.Dao;
+import dataforms.dao.Query;
 import dataforms.dao.Table;
 import dataforms.util.StringUtil;
 import dataforms.validator.FieldValidator;
@@ -31,6 +33,13 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	private static Logger log = Logger.getLogger(Field.class.getName());
 
+	/**
+	 * autocompleteや関連データ取得時に対象のフィールドIDがこのパラメータで渡されます。
+	 */
+	public static final String ID_CURRENT_FIELD_ID = "currentFieldId";
+
+
+	
 	/**
 	 * 条件マッチタイプ。
 	 */
@@ -836,7 +845,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
     @WebMethod
 	public JsonResponse getRelationData(final Map<String, Object> param) throws Exception {
     	this.methodStartLog(log, param);
-		String id = (String) param.get("currentFieldId");
+		String id = (String) param.get(ID_CURRENT_FIELD_ID);
 		String rowid = this.getHtmlTableRowId(id);
     	JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, this.addRowInfo(rowid, this.queryRelationData(param)));
     	this.methodFinishLog(log, param);
@@ -1321,4 +1330,167 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	public void setHtmlGeneration(final boolean htmlGeneration) {
 		this.htmlGeneration = htmlGeneration;
 	}
+	
+	
+	/**
+	 * ラベル構築用インターフェース。
+	 *
+	 */
+	@FunctionalInterface
+	public interface AutocompleteLabelBuilder {
+		/**
+		 * Autocompleteに表示するラベルを構築します。
+		 * @param data データ。
+		 * @param ids マップリスト。
+		 * @return ラベル。
+		 */
+		public String getLabel(final Map<String, Object> data, final String... ids);
+	}
+
+	/**
+	 * 問い合わせ条件の構築用関数インターフェース。
+	 *
+	 */
+	@FunctionalInterface
+	public interface QueryConditionBuilder {
+		/**
+		 * Autocompleteに表示するラベルを構築します。
+		 * @param query 問合せ。
+		 * @param cfid 編集されたフィールドID。
+		 * @param data データ。
+		 * @param ids マップリスト。
+		 */
+		public void setCondition(final Query query, final String cfid, final Map<String, Object> data, final String... ids);
+	}
+
+
+	
+	/**
+	 * オートコンプリート用のリストを取得します。
+	 * <pre>
+	 * 	List&lt;Map&lt;String, Object&gt;&gt; queryAutocompleteSourceList(final Map&lt;String, Object&gt; data)メソッドの
+	 * 実装に便利なメソッドです。
+	 * </pre>
+	 * @param data 問合せ時にPOSTされたデータ。
+	 * @param query 問合せクラス。
+	 * @param lb ラベル構築関数インターフェース。
+	 * @param qcb 問合せ条件構築関数インターフェース。
+	 * @param ids フィールドIDリスト
+	 * @return オートコンプリートのリスト。
+	 * @throws Exception 例外。
+	 */
+	protected List<Map<String, Object>> queryAutocompleteSourceList(final Map<String, Object> data, final Query query, final AutocompleteLabelBuilder lb, final QueryConditionBuilder qcb, final String... ids) throws Exception {
+		String id = (String) data.get(ID_CURRENT_FIELD_ID); // 対象のフィールドIDを取得する。
+		
+		qcb.setCondition(query, id, data, ids);
+		Dao dao = new Dao(this);
+		List<Map<String, Object>> list = dao.executeQuery(query);
+		for (Map<String, Object> m: list) {
+			m.put("label", lb.getLabel(m, ids));
+		}
+		String[] ridlist = new String[ids.length - 1];
+		for (int i = 1; i < ids.length; i++) {
+			ridlist[i - 1] = ids[i];
+		}
+		// 入力候補リストを返す。
+		return this.convertToAutocompleteList(
+				this.getHtmlTableRowId(id), // EditableHtmlTable中のフィールドに対応するため、HtmlTableの行のIDを取得する。
+				list,	// 検索結果リスト。
+				ids[0],	// このフィールドに設定する値
+				"label",	// 選択肢のリストに表示する値
+				ridlist
+		);
+	}
+
+	/**
+	 * オートコンプリート用のリストを取得します。
+	 * <pre>
+	 * 	List&lt;Map&lt;String, Object&gt;&gt; queryAutocompleteSourceList(final Map&lt;String, Object&gt; data)メソッドの実装に便利なメソッドです。
+	 * </pre>
+	 * @param data 問合せ時にPOSTされたデータ。
+	 * @param query 問合せクラス。
+	 * @param lb ラベル構築関数インターフェース。
+	 * @param ids フィールドIDリスト
+	 * @return オートコンプリートのリスト。
+	 * @throws Exception 例外。
+	 */
+	protected List<Map<String, Object>> queryAutocompleteSourceList(final Map<String, Object> data, final Query query, final AutocompleteLabelBuilder lb,  final String... ids) throws Exception {
+		return this.queryAutocompleteSourceList(
+			data
+			, query
+			, lb
+			, (final Query q, final String cfid, final Map<String, Object> d, final String... idlist)->{
+				FieldList flist = new FieldList();
+				flist.addField(query.getFieldList().get(idlist[0])).setMatchType(MatchType.PART);
+				Map<String, Object> p = new HashMap<String, Object>();
+				p.put(idlist[0], d.get(cfid));
+				query.setQueryFormFieldList(flist);
+				query.setQueryFormData(p);
+			}
+			, ids
+		);
+	}
+	/**
+	 * 関連データを取得します。
+	 * <pre>
+	 * Map&lt;String, Object&gt; queryRelationData(final Map&lt;String, Object&gt; data)メソッドの実装に便利なメソッドです。
+	 * </pre>
+	 * @param data 問合せ時にPOSTされたデータ。
+	 * @param query 問合せクラス。
+	 * @param qcb 問合せ条件構築関数インターフェース。
+	 * @param ids IDリスト。
+	 * @return 関連データマップ。
+	 * @throws Exception 例外。
+	 */
+	protected Map<String, Object> queryRelationData(final Map<String, Object> data, final Query query, final QueryConditionBuilder qcb, final String... ids) throws Exception {
+		Map<String, Object> blankMap = new HashMap<String, Object>();
+		for (int i = 1; i < ids.length; i++) {
+			blankMap.put(ids[i], null);
+		}
+		String id = (String) data.get(ID_CURRENT_FIELD_ID);
+//		String fid = this.getHtmlTableColumnId(id);
+		String text = (String) data.get(id);
+		if (StringUtil.isBlank(text)) {
+			return blankMap;
+		}
+		qcb.setCondition(query, id, data, ids);
+		Dao dao = new Dao(this); // Dao使用し、完全一致で検索する。
+		List<Map<String, Object>> list = dao.executeQuery(query);
+		if (list.size() >= 1) {
+			Map<String, Object> ret = new HashMap<String, Object>();
+			for (int i = 1; i < ids.length; i++) {
+				ret.put(ids[i], list.get(0).get(ids[i]));
+			}
+			return ret;
+		} else {
+			return blankMap;
+		}
+	}
+	
+	/**
+	 * 関連データを取得します。
+	 * <pre>
+	 * Map&lt;String, Object&gt; queryRelationData(final Map&lt;String, Object&gt; data)メソッドの実装に便利なメソッドです。
+	 * </pre>
+	 * @param data 問合せ時にPOSTされたデータ。
+	 * @param query 問合せクラス。
+	 * @param ids IDリスト。
+	 * @return 関連データマップ。
+	 * @throws Exception 例外。
+	 */
+	protected Map<String, Object> queryRelationData(final Map<String, Object> data, final Query query, final String... ids) throws Exception {
+		return this.queryRelationData(
+			data
+			, query
+			, (final Query q, final String cfid, final Map<String, Object> d, final String... idlist)->{
+				FieldList flist = new FieldList();
+				flist.addField(query.getFieldList().get(idlist[0])).setMatchType(MatchType.FULL);
+				Map<String, Object> p = new HashMap<String, Object>();
+				p.put(idlist[0], d.get(cfid));
+				query.setQueryFormFieldList(flist);
+				query.setQueryFormData(p);
+			}
+			, ids
+		);
+	}	
 }
