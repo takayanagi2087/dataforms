@@ -7,11 +7,13 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
 import dataforms.controller.ApplicationError;
+import dataforms.dao.TableRelation.ForeignKey;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
@@ -411,6 +413,23 @@ public class Table  {
 			List<Map<String, Object>> iflist = dao.getIndexFieldList(this, idx.getIndexName());
 			if (!idx.structureAccords(iflist)) {
 				return false;
+			}
+		}
+		TableRelation rel = this.getTableRelation();
+		if (rel != null) {
+			logger.debug("tableClassName=" + this.getClass().getName());
+			List<ForeignKey> fklist = rel.getForeignKeyList();
+			Set<String> fkset = dao.getForeignKeyNameSet(this);
+			if (fkset.size() != fklist.size()) {
+				logger.info("table " + this.getTableName() + " foreign key count missmatch.(" + fkset.size() + "," + fklist.size() +  ")");
+				return false;
+			}
+			List<Map<String, Object>> dbfklist = dao.getCurrentDBForeignKeyInfo(this);
+			logger.debug("dbfklist=" + JSON.encode(dbfklist, true));
+			for (ForeignKey fk: fklist) {
+				if (!fk.structureAccords(dbfklist)) {
+					return false;
+				}
 			}
 		}
 		return true;

@@ -568,7 +568,9 @@ public class DataFormsServlet extends HttpServlet {
 					if ("1".equals(differenceVal)) {
 						String className = (String) m.get("className");
 						log.info("update table structure=" + className);
+						dao.dropAllForeignKeys();
 						dao.updateTable(className);
+						dao.createAllForeignKeys();
 					}
 				}
 				conn.commit();

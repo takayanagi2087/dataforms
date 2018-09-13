@@ -2,6 +2,11 @@ package dataforms.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import dataforms.util.StringUtil;
 
 /**
  * テーブル関係を定義するクラスです。
@@ -13,11 +18,19 @@ import java.util.List;
  * </pre>
  */
 public class TableRelation {
+	
+	
 	/**
 	 * 外部キー制約クラス。
 	 *
 	 */
 	public static class ForeignKey {
+		
+		/**
+		 * Logger.
+		 */
+		private static Logger logger = Logger.getLogger(ForeignKey.class);
+
 		/**
 		 * 制約名。
 		 */
@@ -188,6 +201,69 @@ public class TableRelation {
 		 */
 		public void setReferenceFieldIdList(final String[] referenceFieldIdList) {
 			this.referenceFieldIdList = referenceFieldIdList;
+		}
+		
+		/**
+		 * 外部キーのフィールドリストを取得します。
+		 * @param constname 外部キー制約名称。
+		 * @param dbfklist テーブルに付随するDBの外部キー情報。
+		 * @return 外部キーのフィールドリスト。
+		 */
+		private List<Map<String, Object>> getForeignKeyFieldList(final String constname, final List<Map<String, Object>> dbfklist) {
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			for (Map<String, Object> m: dbfklist) {
+				String fkname = (String) m.get("fkName");
+				if (constname.equalsIgnoreCase(fkname)) {
+					list.add(m);
+				}
+			}
+			return list;
+		}
+		
+		/**
+		 * ソース上の外部キーとDB上の外部キーの違いを検出します。
+		 * @param dbfklist DB上の外部キー。
+		 * @return 異なっている場合false
+		 * @throws Exception 例外。
+		 */
+		public boolean structureAccords(final List<Map<String, Object>> dbfklist) throws Exception {
+			String constname = StringUtil.camelToSnake(this.getConstraintName());
+			String tblname = this.getReferenceTableClass().newInstance().getTableName();
+			String[] flist = this.getFieldIdList();
+			String[] rflist = this.getReferenceFieldIdList();
+			
+			List<Map<String, Object>> fldlist = this.getForeignKeyFieldList(constname, dbfklist);
+			logger.debug("fldlist.size()=" + fldlist.size());
+			if (flist.length != fldlist.size()) {
+				logger.info("foreign key " + constname + " field count missmatch.");
+				return false;
+			}
+			if (rflist.length != fldlist.size()) {
+				logger.info("foreign key " + constname + " field count missmatch.");
+				return false;
+			}
+			int fidx = 0;
+			for (Map<String, Object> m: fldlist) {
+				String fld = StringUtil.camelToSnake(flist[fidx]);
+				String rfld = StringUtil.camelToSnake(rflist[fidx]);
+				fidx++;
+				String pktable = (String) m.get("pktableName");
+				String fkcol = (String) m.get("fkcolumnName");
+				String pkcol = (String) m.get("pkcolumnName");
+				if (!tblname.equalsIgnoreCase(pktable)) {
+					logger.info("foreign key " + constname + " tabe name missmatch.(" + tblname + "," + pktable +  ")");
+					return false;
+				}
+				if (!fld.equalsIgnoreCase(fkcol)) {
+					logger.info("foreign key " + constname + " fk column name missmatch.(" + fld + "," + fkcol +  ")");
+					return false;
+				}
+				if (!rfld.equalsIgnoreCase(pkcol)) {
+					logger.info("foreign key " + constname + " pk column name missmatch.(" + rfld + "," + pkcol +  ")");
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 	
