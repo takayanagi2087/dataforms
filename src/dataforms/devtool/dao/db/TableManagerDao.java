@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class TableManagerDao extends Dao {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(TableManagerDao.class.getName());
+    private static Logger logger = Logger.getLogger(TableManagerDao.class.getName());
 
 	/**
 	 * コンストラクタ。
@@ -305,7 +306,7 @@ public class TableManagerDao extends Dao {
 			}
 		}
 		Map<String, Object> dlp = this.getDownloadParamMap(fo.getDownloadParameter());
-		log.debug("dlp=" + JSON.encode(dlp, true));
+		logger.debug("dlp=" + JSON.encode(dlp, true));
 		ret.put("filename", fo.getFileName());
 		String key = "";
 		for (Field<?> pkf: table.getPkFieldList()) {
@@ -333,7 +334,7 @@ public class TableManagerDao extends Dao {
 	public String exportData(final String classname, final String outdir) throws Exception {
 		final Table tbl = Table.newInstance(classname);
 		String datapath = outdir + "/" + classname.replaceAll("\\.", "/") + ".data.json";
-		log.debug("datapath=" + datapath);
+		logger.debug("datapath=" + datapath);
 		
 		String filePath = outdir + "/" + classname.replaceAll("\\.", "/");
 		File ff = new File(filePath);
@@ -362,7 +363,7 @@ public class TableManagerDao extends Dao {
 					this.executeQuery(sql, null,  new RecordProcessor() {
 						@Override
 						public boolean process(final Map<String, Object> m) throws Exception {
-							log.debug("m=" + m.toString());
+							logger.debug("m=" + m.toString());
 							Map<String, Object> rec = new HashMap<String, Object>();
 							FieldList flist = tbl.getFieldList();
 							for (Field<?> fld : flist) {
@@ -494,7 +495,7 @@ public class TableManagerDao extends Dao {
 					if (type ==  JSONEventType.START_OBJECT) {
 						@SuppressWarnings("unchecked")
 						Map<String, Object> m = (Map<String, Object>) reader.getMap();
-						log.debug("m=" + m.toString());
+						logger.debug("m=" + m.toString());
 						for (String key: m.keySet()) {
 							Object v = m.get(key);
 							if (v instanceof String) {
@@ -574,6 +575,14 @@ public class TableManagerDao extends Dao {
 			if (this.indexExists(table, idxname)) {
 				String sql = gen.generateDropIndexSql(index);
 				this.executeUpdate(sql, (Map<String, Object>) null);
+				if (index.isUnique()) {
+					try {
+						String usql = gen.generateDropUniqueSql(index);
+						this.executeUpdate(usql, (Map<String, Object>) null);
+					} catch (SQLException e) {
+						logger.debug(e.getMessage(), e);
+					}
+				}
 			}
 		}
 	}
@@ -608,6 +617,11 @@ public class TableManagerDao extends Dao {
 		for (Index index: list) {
 			String sql = gen.generateCreateIndexSql(index);
 			this.executeUpdate(sql, (Map<String, Object>) null);
+			if (index.isUnique()) {
+				// ユニークインデックスの場合一意制約も付ける。
+				String usql = gen.generateAddUniqueSql(index);
+				this.executeUpdate(usql, (Map<String, Object>) null);
+			}
 		}
 	}
 	

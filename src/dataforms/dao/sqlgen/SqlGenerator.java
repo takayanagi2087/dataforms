@@ -1689,6 +1689,47 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	}
 
 	/**
+	 * 一意制約を追加するSQLを作成します。
+	 * @param index 一意制約を作成するインデックス。
+	 * @return 一意制約を追加するSQL。
+	 */
+	public String generateAddUniqueSql(final Index index) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(index.getTable().getTableName());
+		sb.append(" add constraint ");
+		sb.append(index.getIndexName().replaceAll("_index$", "_unique"));
+		sb.append(" unique(");
+		StringBuilder fsb = new StringBuilder();
+		for (Field<?> f: index.getFieldList()) {
+			if (fsb.length() > 0) {
+				fsb.append(",");
+			}
+			fsb.append(f.getDbColumnName());
+		}
+		sb.append(fsb.toString());
+		sb.append(")");
+		return sb.toString();
+	}
+	
+
+	/**
+	 * 一意制約を削除するSQLを作成します。
+	 * @param index 一意制約を作成するインデックス。
+	 * @return 一意制約を削除するSQL。
+	 */
+	public String generateDropUniqueSql(final Index index) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(index.getTable().getTableName());
+		sb.append(" drop constraint ");
+		sb.append(index.getIndexName().replaceAll("_index$", "_unique"));
+		return sb.toString();
+	}
+
+
+	
+	/**
 	 * フィールドの並びを作成します。
 	 * @param fidlist フィールドリスト。
 	 * @return フィールドの並び。
