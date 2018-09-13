@@ -10,6 +10,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -632,10 +633,28 @@ public class Dao implements JDBCConnectableObject {
 		} catch (SQLIntegrityConstraintViolationException th) {
 			log.debug(th.getLocalizedMessage(), th);
 			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
+		} catch (SQLException e) {
+			this.checkPsqlException(e);
 		} finally {
 			st.close();
 		} 
 		return ret;
+	}
+
+	/**
+	 * Postgresql用例外処理。
+	 * @param e 例外。
+	 * @throws ApplicationException アプリケーション例外。
+	 * @throws Exception 例外。
+	 */
+	protected void checkPsqlException(final SQLException e) throws ApplicationException, Exception {
+		if ("org.postgresql.util.PSQLException".equals(e.getClass().getName())) {
+			SQLException sqlex = (SQLException) e;
+			log.debug("code=" + sqlex.getErrorCode() + ",msg=" +e.getLocalizedMessage(), e);
+			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
+		} else {
+			throw e;
+		}
 	}
 
 	/**
@@ -667,6 +686,8 @@ public class Dao implements JDBCConnectableObject {
 		} catch (SQLIntegrityConstraintViolationException th) {
 			log.debug(th.getLocalizedMessage(), th);
 			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
+		} catch (SQLException e) {
+			this.checkPsqlException(e);
 		} finally {
 			st.close();
 		}
