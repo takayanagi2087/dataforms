@@ -50,7 +50,9 @@ public class TableInfoForm extends Form {
 		Map<String, Object> arg = this.convertToServerData(p);
 		String className = (String) arg.get("className");
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.dropAllForeignKeys();
 		dao.initTable(className);
+		dao.createAllForeignKeys();
 		JsonResponse r = new JsonResponse(JsonResponse.SUCCESS, dao.getTableInfo(className));
 		this.methodFinishLog(logger, r);
 		return r;
@@ -86,7 +88,9 @@ public class TableInfoForm extends Form {
 		Map<String, Object> arg = this.convertToServerData(p);
 		String className = (String) arg.get("className");
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.dropAllForeignKeys();
 		dao.updateTable(className);
+		dao.createAllForeignKeys();
 		JsonResponse r = new JsonResponse(JsonResponse.SUCCESS, dao.getTableInfo(className));
 		this.methodFinishLog(logger, r);
 		return r;

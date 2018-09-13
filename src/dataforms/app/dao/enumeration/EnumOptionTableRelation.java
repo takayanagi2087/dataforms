@@ -8,6 +8,7 @@ import dataforms.dao.TableRelation;
  *
  */
 public class EnumOptionTableRelation extends TableRelation {
+
 	/**
 	 * コンストラクタ。
 	 * @param table 対象テーブル。

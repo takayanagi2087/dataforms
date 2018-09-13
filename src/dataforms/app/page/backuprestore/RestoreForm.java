@@ -78,6 +78,7 @@ public class RestoreForm extends Form {
 			FileItem fi = (FileItem) p.get("backupFile");
 			String path = this.unpackRestoreFile(fi);
 			TableManagerDao dao = new TableManagerDao(this);
+			dao.dropAllForeignKeys(); // 全外部キーの削除
 			List<String> flist = FileUtil.getFileList(path);
 			for (String fn: flist) {
 				if (Pattern.matches(".*\\.data\\.json$", fn)) {
@@ -87,6 +88,7 @@ public class RestoreForm extends Form {
 					dao.importData(classname, path);
 				}
 			}
+			dao.createAllForeignKeys(); // 全外部キーの作成
 			resp = new JsonResponse(JsonResponse.SUCCESS, MessagesUtil.getMessage(this.getPage(), "message.restored"));
 		} else {
 			resp = new JsonResponse(JsonResponse.INVALID, list);

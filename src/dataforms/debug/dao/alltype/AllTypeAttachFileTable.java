@@ -93,4 +93,11 @@ public class AllTypeAttachFileTable extends Table {
 		this.addField(new DeleteFlagField());
 		this.addUpdateInfoFields();
 	}
+	
+	@Override
+	public String getJoinCondition(final Table joinTable, final String alias) {
+		AllTypeAttachFileTableRelation r = new AllTypeAttachFileTableRelation(this);
+		return r.getJoinCondition(joinTable, alias);
+	}
+
 }

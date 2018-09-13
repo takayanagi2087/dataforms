@@ -395,6 +395,7 @@
 		<param-name>initialize-package-list</param-name>
 		<param-value>
 			dataforms.app
+			,dataforms.debug
 		</param-value>
 	</context-param>
 	<!-- 

@@ -18,6 +18,7 @@ import dataforms.dao.QueryPager;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
 import dataforms.dao.TableList;
+import dataforms.dao.TableRelation.ForeignKey;
 import dataforms.dao.sqldatatype.SqlBigint;
 import dataforms.dao.sqldatatype.SqlBlob;
 import dataforms.dao.sqldatatype.SqlChar;
@@ -1688,12 +1689,72 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	}
 
 	/**
+	 * フィールドの並びを作成します。
+	 * @param fidlist フィールドリスト。
+	 * @return フィールドの並び。
+	 */
+	private String getFieldSeq(final String[] fidlist) {
+		StringBuilder sb = new StringBuilder();
+		for (String fid: fidlist) {
+			if (sb.length() > 0) {
+				sb.append(",");
+			}
+			sb.append(StringUtil.camelToSnake(fid));
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 外部キー作成用SQLを作成します。
+	 * @param fk 外部キー情報。
+	 * @return インデックス作成用SQL。
+	 * @throws Exception 例外。
+	 */
+	public String generateCreateForeignKeySql(final ForeignKey fk) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		Table tbl = fk.getTable();
+		sb.append("alter table " + tbl.getTableName() + " add constraint " + StringUtil.camelToSnake(fk.getConstraintName()));
+		sb.append(" foreign key (");
+		sb.append(this.getFieldSeq(fk.getFieldIdList()));
+		Table reftable = fk.getReferenceTableClass().newInstance();
+		sb.append(") references ");
+		sb.append(reftable.getTableName());
+		sb.append(" (");
+		sb.append(this.getFieldSeq(fk.getReferenceFieldIdList()));
+		sb.append(")");
+		return sb.toString();
+	}
+
+	/**
 	 * インデックス削除用SQLを作成します。
 	 * @param index インデックス。
 	 * @return インデックス削除用SQL。
 	 */
 	public String generateDropIndexSql(final Index index) {
 		return "drop index " + index.getIndexName();
+	}
+
+
+	/**
+	 * 外部キー削除用SQLを作成します。
+	 * @param tableName テーブル名。
+	 * @param constraintName 制約名。
+	 * @return 外部キー削除用SQL。
+	 */
+	public String generateDropForeignKeySql(final String tableName, final String constraintName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table " + tableName + " drop constraint " + constraintName);
+		return sb.toString();
+	}
+
+	/**
+	 * 外部キー削除用SQLを作成します。
+	 * @param fk 外部キー情報。
+	 * @return 外部キー削除SQL。
+	 */
+	public String generateDropForeignKeySql(final ForeignKey fk) {
+		Table tbl = fk.getTable();
+		return this.generateDropForeignKeySql(tbl.getTableName(), StringUtil.camelToSnake(fk.getConstraintName()));
 	}
 
 	

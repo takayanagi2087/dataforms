@@ -28,6 +28,13 @@ public class FuncInfoTable extends Table {
 		this.setSequenceStartValue(Long.valueOf(1000));
 	}
 	
+	@Override
+	public String getJoinCondition(final Table joinTable, final String alias) {
+		FuncInfoTableRelation rel = new FuncInfoTableRelation(this);
+		return rel.getJoinCondition(joinTable, alias);
+	}
+
+	
 	/**
 	 * 機能IDフィールドを取得します。
 	 * @return 機能IDフィールド。

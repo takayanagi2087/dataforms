@@ -110,11 +110,13 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		Map<String, Object> p = this.convertToServerData(params);
 
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.dropAllForeignKeys();
 		@SuppressWarnings("unchecked")
 		List<String> classlist = (List<String>) p.get("checkedClass");
 		for (String cls : classlist) {
 			dao.initTable(cls);
 		}
+		dao.createAllForeignKeys();
 		List<Map<String, Object>> result = dao.getTableInfoList(classlist);
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, result);
 		this.methodFinishLog(log, ret);
@@ -133,11 +135,13 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		Map<String, Object> p = this.convertToServerData(params);
 
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.dropAllForeignKeys();
 		@SuppressWarnings("unchecked")
 		List<String> classlist = (List<String>) p.get("checkedClass");
 		for (String cls: classlist) {
 			dao.updateTable(cls);
 		}
+		dao.createAllForeignKeys();
 		List<Map<String, Object>> result = dao.getTableInfoList(classlist);
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, result);
 		this.methodFinishLog(log, ret);

@@ -29,6 +29,12 @@ public class EnumOptionNameTable extends Table {
 		this.addUpdateInfoFields();
 	}
 	
+	@Override
+	public String getJoinCondition(final Table joinTable, final String alias) {
+		EnumOptionNameTableRelation rel = new EnumOptionNameTableRelation(this);
+		return rel.getJoinCondition(joinTable, alias);
+	}
+	
 	
 	/**
 	 * 列挙型コードフィールドを取得します。

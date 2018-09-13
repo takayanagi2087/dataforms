@@ -16,8 +16,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.log4j.Logger;
@@ -1186,6 +1188,7 @@ public class Dao implements JDBCConnectableObject {
 		return ret;
 
 	}
+
 	
 	/**
 	 * 指定されたテーブルのデータベース中のインデックス情報を取得します。
@@ -1208,6 +1211,95 @@ public class Dao implements JDBCConnectableObject {
 	}
 	
 	
+	/**
+	 * 指定されたテーブルの外部キー情報を取得します。
+	 * @param md データベースメタデータ。
+	 * @param catalog カタログ。
+	 * @param schema スキーマ。
+	 * @param table テーブル。
+	 * @return インデックス情報。
+	 * @throws Exception 例外。
+	 */
+	private List<Map<String, Object>> getCurrentDBForeignKeyInfo(final DatabaseMetaData md, final String catalog, final String schema, final String table) throws Exception {
+		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+		log.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table);
+		ResultSet rset = md.getImportedKeys(catalog, schema, table);
+		try {
+			ResultSetMetaData rmd = rset.getMetaData();
+			while (rset.next()) {
+				Map<String, Object> m = new HashMap<String, Object>();
+				for (int i = 0; i < rmd.getColumnCount(); i++) {
+					String name = StringUtil.snakeToCamel(rmd.getColumnName(i + 1).toLowerCase());
+					Object value = rset.getObject(i + 1);
+					m.put(name, value);
+				}
+				ret.add(m);
+			}
+		} finally {
+			rset.close();
+		}
+		return ret;
+
+	}
+
+
+
+	/**
+	 * 指定されたテーブルのデータベース中の外部キー情報を取得します。
+	 * @param table テーブル。
+	 * @return インデックス情報。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> getCurrentDBForeignKeyInfo(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		Connection conn = this.getConnection();
+		DatabaseMetaData md = conn.getMetaData();
+		String catalog = conn.getCatalog();
+		String schema = getSchema(conn);
+		log.debug("currentSchema=" + schema);
+		String tablename = gen.convertTableNameForDatabaseMetaData(table.getTableName());
+		List<Map<String, Object>> ret = this.getCurrentDBForeignKeyInfo(md, catalog, schema, tablename);
+		log.debug("ForeignKey Info=" + JSON.encode(ret, true));
+		return ret;
+	}
+	
+	/**
+	 * 外部キーの名前の集合を取得します。
+	 * @param table テーブル。
+	 * @return 外部キーの名前の集合。
+	 * @throws Exception 例外。
+	 */
+	protected Set<String> getForeignKeyNameSet(final Table table) throws Exception {
+		List<Map<String, Object>> fklist = this.getCurrentDBForeignKeyInfo(table);
+		Set<String> fkset = new HashSet<String>();
+		for (Map<String, Object> m: fklist) {
+			String fkName = (String) m.get("fkName");
+			fkset.add(fkName);
+		}
+		return fkset;
+	}
+	
+
+	/**
+	 * インデックスが存在するかどうかを確認します。
+	 * @param table テーブル。
+	 * @param fkname インデックス名。
+	 * @return インデックスが存在する場合true。
+	 * @throws Exception 例外。
+	 */
+	protected boolean foreignKeyExists(final Table table, final String fkname) throws Exception {
+		boolean ret = false;
+		List<Map<String, Object>> list = this.getCurrentDBForeignKeyInfo(table);
+		for (Map<String, Object> m: list) {
+			String indexName = (String) m.get("fkName");
+			if (fkname.equalsIgnoreCase(indexName)) {
+				ret = true;
+			}
+		}
+		return ret;
+	}
+
+
 	/**
 	 * インデックスが存在するかどうかを確認します。
 	 * @param table テーブル。
@@ -1652,6 +1744,7 @@ public class Dao implements JDBCConnectableObject {
 	/**
 	 * 明細テーブルの保存を行います。
 	 * <pre>
+	 * PKの配置がヘッダID,明細IDとなっていることを前提条件として、明細を保存します。
 	 * ヘッダテーブルに対応した明細テーブルの保存は、通常対応レコードの
 	 * 全削除、挿入で実装するのが簡単です。
 	 * しかしBLOB項目等を含む場合の更新は毎回ファイルをやり取りするわけでは
@@ -1755,13 +1848,22 @@ public class Dao implements JDBCConnectableObject {
 	}
 
 	/**
-	 * テーブルの全レコードを保存します。
+	 * 明細テーブルの保存を行います。
 	 * <pre>
-	 *
+	 * PKが明細IDのみでヘッダのIDを別途持つことを前提条件として明細を保存します。
+	 * 
+	 * ヘッダテーブルに対応した明細テーブルの保存は、通常対応レコードの
+	 * 全削除、挿入で実装するのが簡単です。
+	 * しかしBLOB項目等を含む場合の更新は毎回ファイルをやり取りするわけでは
+	 * ないので、複雑な更新処理が必要になります。
+	 * このメソッドは以下のロジックでBLOBを含む明細テーブルの更新に対応します。
+	 * 
 	 * 1.listに含まなれない既存レコードを削除します。
 	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
 	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
-	 *
+	 * 
+	 * flistにはヘッダのIDフィールドを指定し、condはヘッダのIDを含むマップである必要があります。
+	 * 
 	 * </pre>
 	 * @param table テーブル。
 	 * @param list 保存するレコードの全リスト。
@@ -1797,10 +1899,13 @@ public class Dao implements JDBCConnectableObject {
 	/**
 	 * テーブルの全レコードを保存します。
 	 * <pre>
+	 * このメソッドは以下のロジックでBLOBを含む明細テーブルの更新に対応します。
+	 * 
 	 * 1.listに含まなれない既存レコードを削除します。
 	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
 	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
 	 * </pre>
+	 * 
 	 * @param table テーブル。
 	 * @param list 保存するレコードの全リスト。
 	 * @throws Exception 例外。

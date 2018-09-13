@@ -2,6 +2,7 @@ package dataforms.dao;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
@@ -700,6 +701,28 @@ public class Table  {
 			}
 		}
 		return ret;
+	}
+	
+	/**
+	 * テーブル関係を取得します。
+	 * @return テーブル関係。
+	 * @throws Exception 例外。
+	 */
+	public TableRelation getTableRelation() throws Exception {
+		String relname = this.getClass().getName() + "Relation";
+		try {
+			@SuppressWarnings("unchecked")
+			Class<? extends TableRelation> cls = (Class<? extends TableRelation>) Class.forName(relname);
+			if (cls != null) {
+				@SuppressWarnings("unchecked")
+				Constructor<TableRelation> cns = (Constructor<TableRelation>) cls.getConstructor(Table.class);
+				TableRelation rel = cns.newInstance(this);
+				return rel;
+			}
+		} catch (ClassNotFoundException e) {
+			logger.debug(e.getMessage(), e);
+		}
+		return null;
 	}
 }
 

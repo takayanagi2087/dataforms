@@ -223,6 +223,8 @@ public class DeveloperEditForm extends EditForm {
 			UserDao dao = new UserDao(this);
 			dao.insertUser(data);
 		}
+		TableManagerDao tmdao = new TableManagerDao(this);
+		tmdao.createAllForeignKeys(); // 全外部キー作成。
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
 import dataforms.dao.SubQuery;
 import dataforms.dao.Table;
+import dataforms.dao.TableRelation;
+import dataforms.dao.TableRelation.ForeignKey;
 import dataforms.dao.file.BlobFileStore;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.FileStore;
@@ -577,6 +580,24 @@ public class TableManagerDao extends Dao {
 	
 	
 	/**
+	 * テーブルに付随するインデックスを全て削除します。
+	 * @param table インデックスを削除するテーブル。
+	 * @throws Exception 例外。
+	 */
+	public void dropForeignKey(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		TableRelation rel = table.getTableRelation();
+		if (rel != null) {
+			Set<String> fkset = this.getForeignKeyNameSet(table);
+			for (String fkName: fkset) {
+				String sql = gen.generateDropForeignKeySql(table.getTableName(), fkName);
+				this.executeUpdate(sql, (Map<String, Object>) null);
+			}
+		}
+	}
+
+
+	/**
 	 * テーブルに付随するインデックスを全て作成します。
 	 * @param table インデックスを作成するテーブル。
 	 * @throws Exception 例外。
@@ -591,6 +612,26 @@ public class TableManagerDao extends Dao {
 	}
 	
 	/**
+	 * テーブルに付随する外部キーを全て作成します。
+	 * @param table テーブル。
+	 * @throws Exception 例外。
+	 */
+	public void createForeignKey(final Table table) throws Exception {
+		SqlGenerator gen = this.getSqlGenerator();
+		TableRelation rel = table.getTableRelation();
+		if (rel != null) {
+			List<ForeignKey> fklist = rel.getForeignKeyList();
+			if (fklist != null) {
+				for (ForeignKey fk: fklist) {
+					String sql = gen.generateCreateForeignKeySql(fk);
+					this.executeUpdate(sql, (Map<String, Object>) null);
+				}
+			}
+		}
+	}
+	
+	
+	/**
 	 * テーブルの初期化を行います。
 	 * @param className テーブルクラス名。
 	 * @throws Exception 例外。
@@ -603,8 +644,8 @@ public class TableManagerDao extends Dao {
 			this.moveToBackupTable(className);
 		}
 		this.createTable(className);
-		this.createIndex(tbl);
 		this.importIntialData(className);
+		this.createIndex(tbl);
 	}
 
 
@@ -629,5 +670,80 @@ public class TableManagerDao extends Dao {
 			this.initTable(className);
 		}
 	}
+	
+	/**
+	 * 初期化するパッケージリストを取得します。
+	 * @return 初期化するパッケージリスト。
+	 */
+	private List<String> getInitializePackageList() {
+		List<String> ret = new ArrayList<String>();
+		String plist = Page.getServlet().getServletContext().getInitParameter("initialize-package-list");
+		String[] a = plist.split(",");
+		for (String pkg: a) {
+			ret.add(pkg.trim());
+		}
+		return ret;
+	}
 
+	/**
+	 * システム中の全テーブルクラスのリストを取得します。
+	 * @return システム中の全テーブルクラスのリスト。
+	 * @throws Exception 例外。
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Class<? extends Table>> getAllTables() throws Exception {
+		List<Class<? extends Table>> list = new ArrayList<Class<? extends Table>>();
+		List<String> pkglist = this.getInitializePackageList();
+		ClassFinder finder = new ClassFinder();
+		for (String pkg: pkglist) {
+			List<Class<?>> tableList = finder.findClasses(pkg, Table.class);
+			for (Class<?> t: tableList) {
+				list.add((Class<? extends Table>) t);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 全テーブルの外部キーを作成します。
+	 * @throws Exception 例外。
+	 */
+	public void createAllForeignKeys() throws Exception {
+		List<Class<? extends Table>> tbllist = this.getAllTables();
+		for (Class<? extends Table> tcls: tbllist) {
+			if (SubQuery.class.isAssignableFrom(tcls)) {
+				continue;
+			}
+			if (tcls.isAnonymousClass()) {
+				continue;
+			}
+/*			if (tcls.getConstructor() == null) {
+				continue;
+			}*/
+			Table table = tcls.newInstance();
+			this.createForeignKey(table);
+		}
+	}
+
+	/**
+	 * 全テーブルの外部キーを削除します。
+	 * @throws Exception 例外。
+	 */
+	public void dropAllForeignKeys() throws Exception {
+		List<Class<? extends Table>> tbllist = this.getAllTables();
+		for (Class<? extends Table> tcls: tbllist) {
+			if (SubQuery.class.isAssignableFrom(tcls)) {
+				continue;
+			}
+			if (tcls.isAnonymousClass()) {
+				continue;
+			}
+/*			if (tcls.getConstructor() == null) {
+				continue;
+			}*/
+			Table table = tcls.newInstance();
+			this.dropForeignKey(table);
+		}
+	}
+	
 }

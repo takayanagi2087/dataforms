@@ -132,6 +132,7 @@ public class AllTypeTable extends Table {
 		this.addUpdateInfoFields();
 	}
 
+	
 	/**
 	 * {@inheritDoc}
 	 * <pre>
@@ -140,9 +141,15 @@ public class AllTypeTable extends Table {
 	 */
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
-		if (joinTable instanceof AllTypeAttachFileTable) {
-			return this.getLinkFieldCondition("recordIdField", joinTable, alias, "recordIdField");
-		}
-		return super.getJoinCondition(joinTable, alias);
+		AllTypeTableRelation r = new AllTypeTableRelation(this);
+		return r.getJoinCondition(joinTable, alias);
 	}
+
+//	@Override
+//	public String getJoinCondition(final Table joinTable, final String alias) {
+//		if (joinTable instanceof AllTypeAttachFileTable) {
+//			return this.getLinkFieldCondition("recordIdField", joinTable, alias, "recordIdField");
+//		}
+//		return super.getJoinCondition(joinTable, alias);
+//	}
 }
