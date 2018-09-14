@@ -3,6 +3,7 @@ package dataforms.dao;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -62,7 +63,7 @@ public class Dao implements JDBCConnectableObject {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(Dao.class.getName());
+    private static Logger logger = Logger.getLogger(Dao.class.getName());
 
 
 	/**
@@ -631,7 +632,7 @@ public class Dao implements JDBCConnectableObject {
 				p.removeBlobTempFile(data);
 			}
 		} catch (SQLIntegrityConstraintViolationException th) {
-			log.debug(th.getLocalizedMessage(), th);
+			logger.debug(th.getLocalizedMessage(), th);
 			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
 		} catch (SQLException e) {
 			this.checkPsqlException(e);
@@ -650,7 +651,7 @@ public class Dao implements JDBCConnectableObject {
 	protected void checkPsqlException(final SQLException e) throws ApplicationException, Exception {
 		if ("org.postgresql.util.PSQLException".equals(e.getClass().getName())) {
 			SQLException sqlex = (SQLException) e;
-			log.debug("code=" + sqlex.getErrorCode() + ",msg=" +e.getLocalizedMessage(), e);
+			logger.debug("code=" + sqlex.getErrorCode() + ",msg=" +e.getLocalizedMessage(), e);
 			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
 		} else {
 			throw e;
@@ -684,7 +685,7 @@ public class Dao implements JDBCConnectableObject {
 				}
 			}
 		} catch (SQLIntegrityConstraintViolationException th) {
-			log.debug(th.getLocalizedMessage(), th);
+			logger.debug(th.getLocalizedMessage(), th);
 			throw new ApplicationException(getPage(), "error.integrityconstraintviolation");
 		} catch (SQLException e) {
 			this.checkPsqlException(e);
@@ -803,7 +804,7 @@ public class Dao implements JDBCConnectableObject {
 						File tf = oldfile.getTempFile();
 						if (tf != null) {
 							ret.add(tf.getAbsolutePath());
-							log.info("deleteFile=" + tf.getAbsolutePath() + "," + kf);
+							logger.info("deleteFile=" + tf.getAbsolutePath() + "," + kf);
 						}
 					}
 				}
@@ -1124,7 +1125,7 @@ public class Dao implements JDBCConnectableObject {
 		if (nullable == 0) {
 			dataType += " not null";
 		}
-		log.debug(cat + " " + schem + " " + name + " " + dataType);
+		logger.debug(cat + " " + schem + " " + name + " " + dataType);
 		colinfo.put("columnName", name.toLowerCase());
 		colinfo.put("dataType", dataType);
 		return colinfo;
@@ -1140,7 +1141,7 @@ public class Dao implements JDBCConnectableObject {
 		try {
 			schema = conn.getSchema();
 		} catch (Exception e) {
-			log.debug(e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		return schema;
 	}
@@ -1155,12 +1156,12 @@ public class Dao implements JDBCConnectableObject {
 		SqlGenerator gen = this.getSqlGenerator();
 		Connection conn = this.getConnection();
 		DatabaseMetaData md = conn.getMetaData();
-		log.debug("currentCatalog=" + conn.getCatalog());
+		logger.debug("currentCatalog=" + conn.getCatalog());
 		String schema = getSchema(conn);
-		log.debug("currentSchema=" + schema);
+		logger.debug("currentSchema=" + schema);
 		List<Map<String, Object>> collist = new ArrayList<Map<String, Object>>();
 		ResultSet rs = md.getColumns(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tblname), "%");
-		log.debug("----\n");
+		logger.debug("----\n");
 		try {
 			while (rs.next()) {
 				Map<String, Object> m = this.getColiumnInfo(rs);
@@ -1169,11 +1170,28 @@ public class Dao implements JDBCConnectableObject {
 		} finally {
 			rs.close();
 		}
-		log.debug("----\n");
+		logger.debug("----\n");
 		return collist;
 	}
 
-	
+
+	/**
+	 * 非一意フラグを取得します。
+	 * <pre>
+	 * OracleのみnonUniqueが数値型(Booleanではない)ので、
+	 * このメソッドでその違いを吸収しています。
+	 * </pre>
+	 * @param nonUnique nonUniqueカラムのオブジェクト。
+	 * @return Boolean型のフラグ。
+	 */
+	private Boolean getNonUnique(final Object nonUnique) {
+		if (nonUnique instanceof BigDecimal) {
+			BigDecimal v = (BigDecimal) nonUnique;
+			return v.compareTo(BigDecimal.valueOf(0.0)) != 0;
+		} else {
+			return (Boolean) nonUnique;
+		}
+	}
 
 	/**
 	 * 指定されたテーブルのインデックスを取得します。
@@ -1187,7 +1205,7 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	private List<Map<String, Object>> getCurrentDBIndexInfo(final DatabaseMetaData md, final String catalog, final String schema, final String table, final boolean unique) throws Exception {
 		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
-		log.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table + ", unique=" + unique);
+		logger.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table + ", unique=" + unique);
 		ResultSet rset = md.getIndexInfo(catalog, schema, table, unique, false);
 		try {
 			ResultSetMetaData rmd = rset.getMetaData();
@@ -1198,7 +1216,9 @@ public class Dao implements JDBCConnectableObject {
 					Object value = rset.getObject(i + 1);
 					m.put(name, value);
 				}
-				Boolean nonUnique = (Boolean) m.get("nonUnique");
+				Object nu = m.get("nonUnique");
+				Boolean nonUnique = this.getNonUnique(nu);
+				logger.debug("nu=" + nu + ", nonUnique=" + nonUnique);
 				if (nonUnique != unique) {
 					ret.add(m);
 				}
@@ -1223,11 +1243,11 @@ public class Dao implements JDBCConnectableObject {
 		DatabaseMetaData md = conn.getMetaData();
 		String catalog = conn.getCatalog();
 		String schema = getSchema(conn);
-		log.debug("currentSchema=" + schema);
+		logger.debug("currentSchema=" + schema);
 		String tablename = gen.convertTableNameForDatabaseMetaData(table.getTableName());
 		List<Map<String, Object>> ret = this.getCurrentDBIndexInfo(md, catalog, schema, tablename, true);
 		ret.addAll(this.getCurrentDBIndexInfo(md, catalog, schema, tablename, false));
-		log.debug("indexInfo=" + JSON.encode(ret, true));
+		logger.debug("indexInfo=" + JSON.encode(ret, true));
 		return ret;
 	}
 	
@@ -1243,7 +1263,7 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	private List<Map<String, Object>> getCurrentDBForeignKeyInfo(final DatabaseMetaData md, final String catalog, final String schema, final String table) throws Exception {
 		List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
-		log.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table);
+		logger.debug("catalog=" + catalog + ", schema=" + schema + ", table=" + table);
 		ResultSet rset = md.getImportedKeys(catalog, schema, table);
 		try {
 			ResultSetMetaData rmd = rset.getMetaData();
@@ -1277,10 +1297,10 @@ public class Dao implements JDBCConnectableObject {
 		DatabaseMetaData md = conn.getMetaData();
 		String catalog = conn.getCatalog();
 		String schema = getSchema(conn);
-		log.debug("currentSchema=" + schema);
+		logger.debug("currentSchema=" + schema);
 		String tablename = gen.convertTableNameForDatabaseMetaData(table.getTableName());
 		List<Map<String, Object>> ret = this.getCurrentDBForeignKeyInfo(md, catalog, schema, tablename);
-		log.debug("ForeignKey Info=" + JSON.encode(ret, true));
+		logger.debug("ForeignKey Info=" + JSON.encode(ret, true));
 		return ret;
 	}
 	
@@ -1373,7 +1393,7 @@ public class Dao implements JDBCConnectableObject {
 		List<String> collist = new ArrayList<String>();
 		List<Short> seqlist = new ArrayList<Short>();
 		String schema = getSchema(conn);
-		log.debug("currentSchema=" + schema);
+		logger.debug("currentSchema=" + schema);
 
 		ResultSet rs = md.getPrimaryKeys(conn.getCatalog(), schema, gen.convertTableNameForDatabaseMetaData(tbl.getTableName()));
 //		ResultSet rs = md.getPrimaryKeys("", "", tbl.getTableName().toLowerCase());
@@ -1438,10 +1458,10 @@ public class Dao implements JDBCConnectableObject {
 				Entity u = new Entity(uinfo);
 				java.sql.Timestamp ut1 = u.getUpdateTimestamp(); //(java.sql.Timestamp) uinfo.get("updateTimestamp");
 //				return /*uid0.equals(uid1) &&*/ ut0.equals(ut1);
-				log.debug("isUpdatable:ut0=" + ut0.toString() + ",ut1=" + ut1.toString());
+				logger.debug("isUpdatable:ut0=" + ut0.toString() + ",ut1=" + ut1.toString());
 				return ut0.getTime() == ut1.getTime();
 			} else {
-				log.warn("There is no updateUserId, updateTimestamp on this page.Therefore the exclusive control does not work.");
+				logger.warn("There is no updateUserId, updateTimestamp on this page.Therefore the exclusive control does not work.");
 				return true;
 			}
 		} else {
