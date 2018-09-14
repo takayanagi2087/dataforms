@@ -15,7 +15,7 @@ public class SmallMasterIndex extends Index {
 		SmallMasterTable table = new SmallMasterTable();
 		this.setUnique(true);
 		this.setTable(table);
-		this.setFieldList(new FieldList(table.getCommentField()));
+		this.setFieldList(new FieldList(table.getComment1Field()));
 	}
 
 }

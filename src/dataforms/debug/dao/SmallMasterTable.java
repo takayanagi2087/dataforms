@@ -25,7 +25,7 @@ public class SmallMasterTable extends Table {
 		this.addField(new Key1Field()); //キー1
 		this.addField(new Key2Field()); //キー2
 		this.addField(new SortOrderField()); //ソート順
-		this.addField(new CommentField()); //コメント
+		this.addField(new CommentField("comment1")); //メモ
 		this.addField(new AttachFileField()); //添付ファイル
 
 		this.addUpdateInfoFields();
@@ -49,8 +49,8 @@ public class SmallMasterTable extends Table {
 		public static final String ID_KEY2 = "key2";
 		/** ソート順のフィールドID。 */
 		public static final String ID_SORT_ORDER = "sortOrder";
-		/** コメントのフィールドID。 */
-		public static final String ID_COMMENT = "comment";
+		/** メモのフィールドID。 */
+		public static final String ID_COMMENT1 = "comment1";
 		/** 添付ファイルのフィールドID。 */
 		public static final String ID_ATTACH_FILE = "attachFile";
 
@@ -132,19 +132,19 @@ public class SmallMasterTable extends Table {
 		}
 
 		/**
-		 * コメントを取得します。
-		 * @return コメント。
+		 * メモを取得します。
+		 * @return メモ。
 		 */
-		public java.lang.String getComment() {
-			return (java.lang.String) this.getMap().get(Entity.ID_COMMENT);
+		public java.lang.String getComment1() {
+			return (java.lang.String) this.getMap().get(Entity.ID_COMMENT1);
 		}
 
 		/**
-		 * コメントを設定します。
-		 * @param comment コメント。
+		 * メモを設定します。
+		 * @param comment1 メモ。
 		 */
-		public void setComment(final java.lang.String comment) {
-			this.getMap().put(Entity.ID_COMMENT, comment);
+		public void setComment1(final java.lang.String comment1) {
+			this.getMap().put(Entity.ID_COMMENT1, comment1);
 		}
 
 		/**
@@ -198,11 +198,11 @@ public class SmallMasterTable extends Table {
 	}
 
 	/**
-	 * コメントフィールドを取得します。
-	 * @return コメントフィールド。
+	 * メモフィールドを取得します。
+	 * @return メモフィールド。
 	 */
-	public CommentField getCommentField() {
-		return (CommentField) this.getField(Entity.ID_COMMENT);
+	public CommentField getComment1Field() {
+		return (CommentField) this.getField(Entity.ID_COMMENT1);
 	}
 
 	/**

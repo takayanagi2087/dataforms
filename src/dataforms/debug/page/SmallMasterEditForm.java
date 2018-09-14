@@ -35,7 +35,7 @@ public class SmallMasterEditForm extends MultiRecordEditForm {
 		SmallMasterTable table = new SmallMasterTable();
 		table.getKey1Field().setReadonly(true);
 		table.getKey2Field().setReadonly(true);
-		table.getCommentField().addValidator(new RequiredValidator());
+		table.getComment1Field().addValidator(new RequiredValidator());
 		EditableHtmlTable htmlTable = new EditableHtmlTable(MultiRecordEditForm.ID_LIST, table.getFieldList());
 		this.addHtmlTable(htmlTable);
 	}
