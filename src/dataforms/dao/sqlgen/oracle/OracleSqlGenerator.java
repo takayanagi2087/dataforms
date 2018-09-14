@@ -220,6 +220,17 @@ public class OracleSqlGenerator extends SqlGenerator {
 		String sql = "select count(*) as cnt from (" + orgsql + ")";
 		return sql;
 	}
+	
+	/**
+	 * レコード数をカウントするsqlを作成します。
+	 * @param orgsql SQL。
+	 * @return レコード数をカウントするsql。
+	 */
+	@Override
+	public String generateHitCountSql(final String orgsql) {
+		String sql = "select count(*) as cnt from (" + orgsql + ") m";
+		return sql;
+	}
 
 	/**
 	 * BLOB等のファイルフィールドの更新用SQLを作成します。
