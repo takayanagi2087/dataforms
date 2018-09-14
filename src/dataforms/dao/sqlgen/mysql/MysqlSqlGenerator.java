@@ -215,5 +215,11 @@ public class MysqlSqlGenerator extends SqlGenerator {
 		return " drop index " + index.getIndexName() + " on " + index.getTable().getTableName();
 	}
 
-	
+	@Override
+	public String generateDropForeignKeySql(final String tableName, final String constraintName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table " + tableName + " drop foreign key " + constraintName);
+		return sb.toString();
+
+	}
 }
