@@ -216,10 +216,53 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	}
 
 	@Override
+	public String generateDropIndexSql(final String indexName, final String tableName) {
+		return "drop index " + indexName + " on " + tableName;
+	}
+
+
+	@Override
 	public String generateDropForeignKeySql(final String tableName, final String constraintName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("alter table " + tableName + " drop foreign key " + constraintName);
 		return sb.toString();
 
+	}
+	
+	
+	/*
+	@Override
+	public String generateAddUniqueSql(final Index index) {
+		return null;
+	}
+*/
+	@Override
+	public String generateDropUniqueSql(final Index index) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(index.getTable().getTableName());
+		sb.append(" drop index ");
+		sb.append(index.getIndexName().replaceAll("_index$", "_unique"));
+		return sb.toString();
+	}
+	
+	@Override
+	public String generateDropUniqueSql(final Table table, final String idxName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(table.getTableName());
+		sb.append(" drop index ");
+		sb.append(idxName.replaceAll("_index$", "_unique"));
+		return sb.toString();
+	}
+
+	
+	/**
+	 * Like文のEscape指定文字列を取得します。
+	 * @return Like文のEscape指定文字列。
+	 */
+	@Override
+	protected String getLikeEscape() {
+		return "";
 	}
 }

@@ -646,11 +646,11 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	 */
 	public String generateInsertSql(final Table table) {
 		String pkid = "";
-		if (!this.isSequenceSupported()) {
+/*		if (!this.isSequenceSupported()) {
 			if (table.isAutoIncrementId()) {
 				pkid = table.getPkFieldList().get(0).getId();
 			}
-		}
+		}*/
 		StringBuilder sb = new StringBuilder();
 		sb.append("insert into ");
 		sb.append(table.getTableName());
@@ -1728,6 +1728,21 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	}
 
 
+	/**
+	 * 一意制約を削除するSQLを作成します。
+	 * @param table テーブル。
+	 * @param idxName 一意制約を作成するインデックス名。
+	 * @return 一意制約を削除するSQL。
+	 */
+	public String generateDropUniqueSql(final Table table, final String idxName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(table.getTableName());
+		sb.append(" drop constraint ");
+		sb.append(idxName.replaceAll("_index$", "_unique"));
+		return sb.toString();
+	}
+
 	
 	/**
 	 * フィールドの並びを作成します。
@@ -1773,6 +1788,16 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	 */
 	public String generateDropIndexSql(final Index index) {
 		return "drop index " + index.getIndexName();
+	}
+
+	/**
+	 * インデックス削除用SQLを作成します。
+	 * @param indexName インデックス名。
+	 * @param tableName テーブル名。
+	 * @return インデックス削除用SQL。
+	 */
+	public String generateDropIndexSql(final String indexName, final String tableName) {
+		return "drop index " + indexName;
 	}
 
 

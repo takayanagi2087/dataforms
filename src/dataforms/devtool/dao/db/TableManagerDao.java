@@ -8,9 +8,11 @@ import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -569,7 +571,33 @@ public class TableManagerDao extends Dao {
 	 */
 	public void dropIndex(final Table table) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
-		List<Index> list = table.getIndexList();
+		List<Map<String, Object>> idxflist = this.getCurrentDBIndexInfo(table);
+		//logger.debug("idxflist=" + JSON.encode(idxflist, true));
+		Set<String> inset = new HashSet<String>();
+		for (Map<String, Object> m: idxflist) {
+			String idxName = (String) m.get("indexName");
+			if (idxName != null) {
+				idxName = idxName.toLowerCase();
+				if (Pattern.matches(".+_index$", idxName)) {
+					logger.debug("idxName=" + idxName);
+					if (!inset.contains(idxName)) {
+						try {
+							String usql = gen.generateDropUniqueSql(table, idxName);
+							if (usql != null) {
+								this.executeUpdate(usql, (Map<String, Object>) null);
+							}
+						} catch (SQLException e) {
+							logger.debug(e.getMessage(), e);
+						}
+						String sql = gen.generateDropIndexSql(idxName, table.getTableName());
+						this.executeUpdate(sql, (Map<String, Object>) null);
+						
+						inset.add(idxName);
+					}
+				}
+			}
+		}
+/*		List<Index> list = table.getIndexList();
 		for (Index index: list) {
 			String idxname = index.getIndexName();
 			if (this.indexExists(table, idxname)) {
@@ -584,7 +612,7 @@ public class TableManagerDao extends Dao {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	
@@ -620,7 +648,9 @@ public class TableManagerDao extends Dao {
 			if (index.isUnique()) {
 				// ユニークインデックスの場合一意制約も付ける。
 				String usql = gen.generateAddUniqueSql(index);
-				this.executeUpdate(usql, (Map<String, Object>) null);
+				if (usql != null) {
+					this.executeUpdate(usql, (Map<String, Object>) null);
+				}
 			}
 		}
 	}
