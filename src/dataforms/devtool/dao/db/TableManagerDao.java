@@ -234,6 +234,7 @@ public class TableManagerDao extends Dao {
 	 */
 	public void dropTable(final String className) throws Exception {
 		Table tbl = Table.newInstance(className);
+		this.dropIndex(tbl);
 		SqlGenerator gen = this.getSqlGenerator();
 		String sql = gen.generateDropTableSql(tbl.getTableName());
 		this.executeUpdate(sql, (Map<String, Object>) null);
@@ -247,15 +248,24 @@ public class TableManagerDao extends Dao {
 	 */
 	public String moveToBackupTable(final String className) throws Exception {
 		Table tbl = Table.newInstance(className);
+		this.dropIndex(tbl);
 		SqlGenerator gen = this.getSqlGenerator();
 		String oldname = tbl.getTableName();
 		String newname = tbl.getBackupTableName();
 		if (this.tableExists(newname)) {
 			String sql = this.getSqlGenerator().generateDropTableSql(newname);
-			this.executeUpdate(sql, (Map<String, Object>) null);
+			try {
+				this.executeUpdate(sql, (Map<String, Object>) null);
+			} catch (SQLException e) {
+				logger.warn(e.getMessage(), e);
+			}
 		}
-		String sql = gen.generateRenameTableSql(oldname, newname);
-		this.executeUpdate(sql, (Map<String, Object>) null);
+		try {
+			String sql = gen.generateRenameTableSql(oldname, newname);
+			this.executeUpdate(sql, (Map<String, Object>) null);
+		} catch (SQLException e) {
+			logger.warn(e.getMessage(), e);
+		}
 		return newname;
 	}
 	
@@ -587,32 +597,19 @@ public class TableManagerDao extends Dao {
 								this.executeUpdate(usql, (Map<String, Object>) null);
 							}
 						} catch (SQLException e) {
-							logger.debug(e.getMessage(), e);
+							logger.warn(e.getMessage(), e);
 						}
-						String sql = gen.generateDropIndexSql(idxName, table.getTableName());
-						this.executeUpdate(sql, (Map<String, Object>) null);
-						
+						try {
+							String sql = gen.generateDropIndexSql(idxName, table.getTableName());
+							this.executeUpdate(sql, (Map<String, Object>) null);
+						} catch (SQLException e) {
+							logger.warn(e.getMessage(), e);
+						}
 						inset.add(idxName);
 					}
 				}
 			}
 		}
-/*		List<Index> list = table.getIndexList();
-		for (Index index: list) {
-			String idxname = index.getIndexName();
-			if (this.indexExists(table, idxname)) {
-				String sql = gen.generateDropIndexSql(index);
-				this.executeUpdate(sql, (Map<String, Object>) null);
-				if (index.isUnique()) {
-					try {
-						String usql = gen.generateDropUniqueSql(index);
-						this.executeUpdate(usql, (Map<String, Object>) null);
-					} catch (SQLException e) {
-						logger.debug(e.getMessage(), e);
-					}
-				}
-			}
-		}*/
 	}
 	
 	
@@ -627,8 +624,12 @@ public class TableManagerDao extends Dao {
 		if (rel != null) {
 			Set<String> fkset = this.getForeignKeyNameSet(table);
 			for (String fkName: fkset) {
-				String sql = gen.generateDropForeignKeySql(table.getTableName(), fkName);
-				this.executeUpdate(sql, (Map<String, Object>) null);
+				try {
+					String sql = gen.generateDropForeignKeySql(table.getTableName(), fkName);
+					this.executeUpdate(sql, (Map<String, Object>) null);
+				} catch (SQLException e) {
+					logger.warn("msg=" + e.getMessage(), e);
+				}
 			}
 		}
 	}
@@ -643,13 +644,21 @@ public class TableManagerDao extends Dao {
 		SqlGenerator gen = this.getSqlGenerator();
 		List<Index> list = table.getIndexList();
 		for (Index index: list) {
-			String sql = gen.generateCreateIndexSql(index);
-			this.executeUpdate(sql, (Map<String, Object>) null);
+			try {
+				String sql = gen.generateCreateIndexSql(index);
+				this.executeUpdate(sql, (Map<String, Object>) null);
+			} catch (SQLException e) {
+				logger.warn("msg=" + e.getMessage(), e);
+			}
 			if (index.isUnique()) {
 				// ユニークインデックスの場合一意制約も付ける。
 				String usql = gen.generateAddUniqueSql(index);
 				if (usql != null) {
-					this.executeUpdate(usql, (Map<String, Object>) null);
+					try {
+						this.executeUpdate(usql, (Map<String, Object>) null);
+					} catch (SQLException e) {
+						logger.warn("msg=" + e.getMessage(), e);
+					}
 				}
 			}
 		}
@@ -667,8 +676,12 @@ public class TableManagerDao extends Dao {
 			List<ForeignKey> fklist = rel.getForeignKeyList();
 			if (fklist != null) {
 				for (ForeignKey fk: fklist) {
-					String sql = gen.generateCreateForeignKeySql(fk);
-					this.executeUpdate(sql, (Map<String, Object>) null);
+					try {
+						String sql = gen.generateCreateForeignKeySql(fk);
+						this.executeUpdate(sql, (Map<String, Object>) null);
+					} catch (Exception e) {
+						logger.warn("msg=" + e.getMessage(), e);
+					}
 				}
 			}
 		}
