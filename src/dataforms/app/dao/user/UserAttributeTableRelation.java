@@ -30,6 +30,7 @@ public class UserAttributeTableRelation extends TableRelation {
 	 * 外部キーリストの作成。
 	 */
 	static {
+		// TODO: MySQLではこの設定で、実テーブルとテーブルクラスの差分が検出されてしまう。原因は不明。
 		UserAttributeTableRelation.foreignKeyList = new ArrayList<ForeignKey>();
 		{
 			String[] flist = {UserAttributeTable.Entity.ID_USER_ATTRIBUTE_TYPE, UserAttributeTable.Entity.ID_USER_ATTRIBUTE_VALUE};
