@@ -30,9 +30,12 @@ public class UserAttributeTableRelation extends TableRelation {
 	 * 外部キーリストの作成。
 	 */
 	static {
-		// TODO: MySQLではこの設定で、実テーブルとテーブルクラスの差分が検出されてしまう。原因は不明。
+		// TODO: MySQLではこの設定で、実テーブルとテーブルクラスの差分が検出されてしまう。
+		// 原因は不明だが、おそらくMySQLの外部キー情報取得機能に問題がある。
+		// また列挙型管理でdelete,insertを行っているためエラーが発生するケースがある。
+		// そのためとりあえずこの外部キーの設定はやめておく。
 		UserAttributeTableRelation.foreignKeyList = new ArrayList<ForeignKey>();
-		{
+/*		{
 			String[] flist = {UserAttributeTable.Entity.ID_USER_ATTRIBUTE_TYPE, UserAttributeTable.Entity.ID_USER_ATTRIBUTE_VALUE};
 			String[] rflist = {EnumOptionTable.Entity.ID_ENUM_TYPE_CODE, EnumOptionTable.Entity.ID_ENUM_OPTION_CODE};
 			ForeignKey fk = new ForeignKey("fkUserAttribute000", flist, EnumOptionTable.class, rflist);
@@ -41,7 +44,7 @@ public class UserAttributeTableRelation extends TableRelation {
 		{
 			ForeignKey fk = new ForeignKey("fkUserAttribute001", UserAttributeTable.Entity.ID_USER_ID, UserInfoTable.class, UserInfoTable.Entity.ID_USER_ID);
 			UserAttributeTableRelation.foreignKeyList.add(fk);
-		}
+		}*/
 	}
 	
 	@Override

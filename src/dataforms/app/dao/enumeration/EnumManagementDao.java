@@ -167,6 +167,7 @@ public class EnumManagementDao extends Dao {
 
 
 
+	// TODO:Delete,Insertだと外部キー違反になる。
 	/**
 	 * データを更新します。
 	 * @param data データ。
