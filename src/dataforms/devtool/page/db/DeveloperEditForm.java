@@ -38,7 +38,8 @@ public class DeveloperEditForm extends EditForm {
 		this.addField(new FlagField("userImportFlag"));
 		UserInfoTable table = new UserInfoTable();
 		this.addTableFields(table);
-		table.getUserNameField().setAutocomplete(false);
+		table.getLoginIdField().setAutocomplete(false).setRelationDataAcquisition(false);
+		table.getUserNameField().setAutocomplete(false).setRelationDataAcquisition(false);
 		this.insertFieldAfter(new PasswordField("passwordCheck"), "password");
 	}
 
