@@ -15,6 +15,7 @@ import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.servlet.DataFormsServlet;
 import net.arnx.jsonic.JSON;
 
+// TODO:autoLoginに失敗した場合の対応を考える必要がある。
 /**
  * 自動ログイン制御クラス。
  *
