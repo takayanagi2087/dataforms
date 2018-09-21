@@ -136,7 +136,14 @@ Field.prototype.getRelationData = function() {
 	m.execute(param, function(ret) {
 		if (ret.status == ServerMethod.SUCCESS) {
 			for (var k in ret.result) {
-				form.setFieldValue(k, ret.result[k]);
+				if (Array.isArray(ret.result[k])) {
+					var t = form.getComponent(k);
+					if (t != null && typeof t.setTableData == "function") {
+						t.setTableData(ret.result[k]);
+					}
+				} else {
+					form.setFieldValue(k, ret.result[k]);
+				}
 			}
 		}
 		thisField.onUpdateRelationField();
