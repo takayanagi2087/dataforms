@@ -48,6 +48,15 @@
 			その中に含まれているderby.jar,derby_ja_JP.jarをTOMCAT_HOME/lib(今回はC:\pleiades-e4.5\tomcat\8\lib)にコピーしてください。
 			これだけでデータベース(apache derby)が使えるようになります。
 		</p>
+		<h2>Java mailのインストール</h2>
+		<p>
+			外部ユーザ登録機能を使う場合、JavaMailをTomcatにインストールします。
+			<a href="https://github.com/javaee/javamail" target="_blank">https://github.com/javaee/javamail</a>のreleasesからjavax.mail.jarをダウンロードし、
+			TOMCAT_HOME/libにコピーしてください。
+			またjava9以上を使う場合は、JavaBeans Activation Framework (JAF)も必要になります。
+			<a href="https://github.com/javaee/activation" target="_blank">https://github.com/javaee/activation</a>のreleasesからactivation.jarをダウンロードし、
+			TOMCAT_HOME/libにコピーしてください。
+		</p>
 		<h2>プロジェクトの作成</h2>
 		<p>
 			<a href="https://github.com/takayanagi2087/dataforms/releases" target="_blank">ブランクアプリケーションダウンロードサイト</a>から、dataforms.jarのブランクアプリケーション(dfblank_xxx.war)をダウンロードして下さい。
