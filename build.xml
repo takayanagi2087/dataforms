@@ -14,8 +14,7 @@
 	<property name="source" value="1.8"/>
 	<property name="jar.name" value="dataforms.jar"/>
 	<property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/>
-	<!--property name="jsdoc.command" value="D:\eclipse\jsdoc-releases-3.3\jsdoc.cmd"/-->
-	<property name="jsdoc.command" value="C:\Users\takayanagi\AppData\Roaming\npm\jsdoc.cmd"/>
+	<property name="jsdoc.command" value="C:\Users\takay\AppData\Roaming\npm\jsdoc.cmd"/>
 	<property name="version.num" value="1.31"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>

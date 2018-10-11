@@ -46,6 +46,7 @@ import dataforms.dao.file.FileObject;
 import dataforms.devtool.dao.db.TableManagerDao;
 import dataforms.devtool.page.base.DeveloperPage;
 import dataforms.mail.MailSender;
+import dataforms.menu.SideMenu;
 import dataforms.util.AutoLoginCookie;
 import dataforms.util.CryptUtil;
 import dataforms.util.HttpRangeInfo;
@@ -421,6 +422,14 @@ public class DataFormsServlet extends HttpServlet {
 		if (apacheFopConfig != null) {
 			DataFormsServlet.setApacheFopConfig(apacheFopConfig);
 		}
+	
+		Boolean multiOpenMenu = Boolean.parseBoolean(
+				this.getServletContext().getInitParameter("multi-open-menu") == null 
+				? "false"
+				: this.getServletContext().getInitParameter("multi-open-menu")
+		);
+		SideMenu.setMultiOpenMenu(multiOpenMenu);
+
 		this.getUserRegistConf();
 		this.setupServletInstanceBean();
 		super.init();

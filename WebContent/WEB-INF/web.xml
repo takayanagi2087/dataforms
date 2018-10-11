@@ -472,6 +472,15 @@
 		<param-name>apache-fop-config</param-name>
 		<param-value>/WEB-INF/apachefop/fop.xconf</param-value>
 	</context-param>
+	<!-- 
+		メニューの開閉設定
+		trueを設定すると複数のメニューを開いた状態にすることができ、
+		falseを設定すると、開いたメニュー以外は自動的に閉じるようになります。
+	 -->
+	<context-param>
+		<param-name>multi-open-menu</param-name>
+		<param-value>true</param-value>
+	</context-param>
 	
 	<!-- セッションタイムアウト -->
 	<session-config>
