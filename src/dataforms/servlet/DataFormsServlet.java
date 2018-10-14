@@ -425,7 +425,7 @@ public class DataFormsServlet extends HttpServlet {
 	
 		Boolean multiOpenMenu = Boolean.parseBoolean(
 				this.getServletContext().getInitParameter("multi-open-menu") == null 
-				? "false"
+				? "true"
 				: this.getServletContext().getInitParameter("multi-open-menu")
 		);
 		SideMenu.setMultiOpenMenu(multiOpenMenu);

@@ -14,7 +14,7 @@ public class SideMenu extends Menu {
 	/**
 	 * メニュー表示設定。
 	 */
-	private static Boolean multiOpenMenu = false;
+	private static Boolean multiOpenMenu = true;
 	
 	/**
 	 * コンストラクタ。
