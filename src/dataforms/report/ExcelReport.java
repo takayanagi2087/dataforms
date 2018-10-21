@@ -369,7 +369,7 @@ public class ExcelReport extends Report {
 	 * セルの位置情報。
 	 *
 	 */
-	private static class CellPosition {
+	protected static class CellPosition {
 		/**
 		 * セルの行。
 		 */
@@ -700,7 +700,7 @@ public class ExcelReport extends Report {
 	 * @param value 値。
 	 * @param p セル位置情報。
 	 */
-	private void setCellValue(final Cell c, final Object value, final CellPosition p) {
+	protected void setCellValue(final Cell c, final Object value, final CellPosition p) {
 		if (value != null) {
 			if (value instanceof Number) {
 				Number n = (Number) value;
