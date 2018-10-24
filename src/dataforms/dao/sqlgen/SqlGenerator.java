@@ -394,7 +394,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 //		log.info("sql=" + sb.toString());
 		return sb.toString();
-	};
+	}
 
 
 

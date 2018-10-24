@@ -26,7 +26,7 @@
 		<param-name>data-source</param-name>
 		<param-value>jdbc/dfdb</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		メールセッション名。
 		メール送信機能を使わない場合は以下の設定をコメントアウトしてください。
 		java9でメール送信機能を使う場合、javaの起動オプションに\-\-add-modules java.activationを指定してください。
@@ -123,7 +123,7 @@
 		<param-name>support-language</param-name>
 		<param-value>ja,xx,yy</param-value>
 	</context-param-->
-	
+
 	<!-- ブラウザの言語設定を無視し、言語を固定する場合は以下の設定を有効にします。	-->
 	<!--context-param>
 		<param-name>fixed-language</param-name>
@@ -161,7 +161,7 @@
 		<param-name>cookie-check</param-name>
 		<param-value>false</param-value>
 	</context-param>
-	
+
 	<!-- クライアントに送信して使用するメッセージリソースの名称を指定します。 -->
 	<!-- context-param>
 		<param-name>client-messages</param-name>
@@ -182,8 +182,8 @@
 		<param-name>app-messages</param-name>
 		<param-value>/frame/messages/AppMessages</param-value>
 	</context-param-->
-	<!-- 
-		メッセージリソースのブラウザ送信設定 
+	<!--
+		メッセージリソースのブラウザ送信設定
 		CLIENT_ONLY:(default)
 			client-message,app-client-messageとXXXPage.propertiesのみ送信します。
 			message, app-messageはJavascriptで使用不可となります。
@@ -243,14 +243,14 @@
 		<param-value>dataforms.app.page.base.HiddenPage</param-value>
 	</context-param>
 	 -->
-	<!-- 
+	<!--
 		ユーザ登録ページのパス。
 	 -->
 	<context-param>
 		<param-name>user-regist-page</param-name>
 		<param-value>/dataforms/app/page/user/UserRegistPage</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		外部ユーザ登録ページ設定情報。
 	 -->
 	<!--  context-param>
@@ -263,21 +263,21 @@
 			}
 		</param-value>
 	</context-param -->
-	<!-- 
+	<!--
 		外部ユーザ有効化ページのパス。
 	 -->
 	<context-param>
 		<param-name>user-enable-page</param-name>
 		<param-value>/dataforms/app/page/user/UserEnablePage</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		ユーザ登録時のメール送信確認フラグ。
 	 -->
 	<context-param>
 		<param-name>send-user-enable-mail</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		パスワードリセットメール送信ページのパス。
 		この設定を有効にすると、ログイン画面のパスワードリセットリンクが表示されます。
 	 -->
@@ -285,7 +285,7 @@
 		<param-name>password-reset-mail-page</param-name>
 		<param-value>/dataforms/app/page/user/PasswordResetMailPage</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		パスワードリセットページのパス。
 	 -->
 	<context-param>
@@ -367,14 +367,14 @@
 	<!-- 開発ツールのjavaソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>java-source-path</param-name>
-		<param-value>/eclipse/pleiades-e4.7.1/workspace/dataforms/src</param-value>
+		<param-value>/eclipse/pleiades-2018-09/workspaceJava8/dataforms/src</param-value>
 	</context-param>
 	<!-- 開発ツールのhtml,javascript等のWEBリソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>web-source-path</param-name>
-		<param-value>/eclipse/pleiades-e4.7.1/workspace/dataforms/WebContent</param-value>
+		<param-value>/eclipse/pleiades-2018-09/workspaceJava8/dataforms/WebContent</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		データベース初期化時に作成するユーザのレベルを指定します。
 	 -->
 	<context-param>
@@ -385,8 +385,8 @@
 		<param-value>admin</param-value>
 		-->
 	</context-param>
-	<!-- 
-		データベースの作成時に、初期化するパッケージリストを指定します。 
+	<!--
+		データベースの作成時に、初期化するパッケージリストを指定します。
 		パッケージ名は,区切りで複数設定することができます。
 		データベースを作成するときに、このパッケージリストを参照し、このパッケージ中のテーブルクラスに対応するテーブルを作成します。
 		なおdataforms.appパッケージは必ず指定してください。
@@ -398,10 +398,10 @@
 			,dataforms.debug
 		</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		DataFormsServlet#init,destoryで何らかの処理が必要な場合、ServletInstanceBeanから派生したクラスを作成し、そのクラスを設定してください。
 	 -->
-	 <!--  
+	 <!--
 	<context-param>
 		<param-name>servlet-instance-bean</param-name>
 		<param-value>
@@ -409,7 +409,7 @@
 		</param-value>
 	</context-param>
 	-->
-	<!-- 
+	<!--
 		html5のvideo,audioタグ空の部分リクエストは大抵 "Range:bytes=0-"のように転送開始位置のみが指定されてきます。
 		Chromeはブラウザは適切なサイズに区切って転送しないと、シーク機能が利用できません。
 		しかしFirefoxの場合、先頭のブロックのみを再生したところで止まってしまうので、指定された位置から最後まで転送するように
@@ -425,7 +425,7 @@
 		</param-value>
 	</context-param>
 	<!--
-		FileFieldの中に保存されたファイルをダウンロードする際に出力するcontent-typeを設定します。 
+		FileFieldの中に保存されたファイルをダウンロードする際に出力するcontent-typeを設定します。
 	 -->
 	<context-param>
 		<param-name>content-type-list</param-name>
@@ -472,7 +472,7 @@
 		<param-name>apache-fop-config</param-name>
 		<param-value>/WEB-INF/apachefop/fop.xconf</param-value>
 	</context-param>
-	<!-- 
+	<!--
 		メニューの開閉設定
 		trueを設定すると複数のメニューを開いた状態にすることができ、
 		falseを設定すると、開いたメニュー以外は自動的に閉じるようになります。
@@ -481,7 +481,7 @@
 		<param-name>multi-open-menu</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
+
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>

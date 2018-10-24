@@ -88,7 +88,7 @@ public abstract class EditForm extends TableUpdateForm {
 	protected Map<String, Object> queryNewData(final Map<String, Object> data) throws Exception {
 		this.init();
 		return this.getFormDataMap();
-	};
+	}
 
 
 	/**
@@ -99,7 +99,7 @@ public abstract class EditForm extends TableUpdateForm {
 	 */
 	protected Map<String, Object> queryReferData(final Map<String, Object> data) throws Exception {
 		throw new ApplicationException(this.getPage(), "error.notimplemetmethod");
-	};
+	}
 
 
 	/**

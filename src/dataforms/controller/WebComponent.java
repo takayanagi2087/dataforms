@@ -183,7 +183,7 @@ public class WebComponent implements JDBCConnectableObject {
 	protected String getViewPath() {
 		String clsname = this.getClass().getName();
 		return clsname.replaceAll("\\.", "/");
-	};
+	}
 
 	/**
 	 * デフォルトのhtml,jsパスを取得します。
@@ -482,7 +482,7 @@ public class WebComponent implements JDBCConnectableObject {
 		} else {
 			return null;
 		}
-	};
+	}
 
 	/**
 	 * テーブルのカラムID部分を取得します。
@@ -496,7 +496,7 @@ public class WebComponent implements JDBCConnectableObject {
 		} else {
 			return id;
 		}
-	};
+	}
 
 	/**
 	 * パラメータのキーから"xxx[x]"の部分を取得します。

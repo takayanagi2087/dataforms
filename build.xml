@@ -13,17 +13,18 @@
 	<property name="target" value="1.8"/>
 	<property name="source" value="1.8"/>
 	<property name="jar.name" value="dataforms.jar"/>
-	<property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/>
+	<!--property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/-->
+	<property name="jar.command" value="../../java/8/bin/jar.exe"/>
 	<property name="jsdoc.command" value="C:\Users\takay\AppData\Roaming\npm\jsdoc.cmd"/>
 	<property name="version.num" value="1.31"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>
 	<property name="jsdoc.dir" value="./HTML/META-INF/resources/doc/jsdoc"/>
 
-	<tstamp> 
-		<format property="build.time" pattern="yyyy/MM/dd HH:mm:ss.SSS" /> 
-	</tstamp> 
-	
+	<tstamp>
+		<format property="build.time" pattern="yyyy/MM/dd HH:mm:ss.SSS" />
+	</tstamp>
+
 	<path id="Web App ライブラリー.libraryclasspath">
 		<pathelement location="WebContent/WEB-INF/lib/commons-codec-1.10.jar"/>
 		<pathelement location="WebContent/WEB-INF/lib/commons-collections4-4.1.jar"/>

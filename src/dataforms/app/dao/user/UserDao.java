@@ -284,7 +284,7 @@ public class UserDao extends Dao {
 
 
 	/**
-	 * ユーザを有効にします
+	 * ユーザを有効にします。
 	 * @param data POSTされたデータ。
 	 * @throws Exception 例外。
 	 */
@@ -308,7 +308,7 @@ public class UserDao extends Dao {
 	}
 
 
-	
+
 	/**
 	 * ユーザ自身が更新できる項目を更新します。
 	 * @param data 更新データ。
@@ -371,7 +371,7 @@ public class UserDao extends Dao {
 		}
 		return rec;
 	}
-	
+
 	/**
 	 * userIdを指定して、そのユーザ情報を取得します。
 	 * @param userId ユーザID。
@@ -384,7 +384,7 @@ public class UserDao extends Dao {
 		p.setUserId(userId);
 		return this.getSelectedData(p.getMap());
 	}
-	
+
 	/**
 	 * loginIdを指定して、そのユーザ情報を取得します。
 	 * @param loginId ユーザID。
@@ -403,7 +403,7 @@ public class UserDao extends Dao {
 			return null;
 		}
 	}
-	
+
 
 	/**
 	 * メールアドレスを指定してユーザを検索します。
@@ -418,5 +418,5 @@ public class UserDao extends Dao {
 		e.setMailAddress(mail);
 		return this.queryUserList(flist, e.getMap());
 	}
-	
+
 }

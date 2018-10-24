@@ -120,15 +120,15 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	public enum SortOrder  {
 		/**
-		 * 昇順
+		 * 昇順。
 		 */
 		ASC,
 		/**
-		 * 降順
+		 * 降順。
 		 */
 		DESC,
 		/**
-		 * ソート無
+		 * ソート無。
 		 */
 		NONE
 	}
@@ -861,7 +861,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	protected List<Map<String, Object>> queryAutocompleteSourceList(final Map<String, Object> data) throws Exception {
 		return new ArrayList<Map<String, Object>>();
-	};
+	}
 
 	/**
 	 * 選択肢ソースのリストを取得する処理.

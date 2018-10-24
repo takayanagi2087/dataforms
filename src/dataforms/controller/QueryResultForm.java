@@ -83,7 +83,7 @@ public abstract class QueryResultForm extends Form {
 	 */
 	protected Map<String, Object> queryPage(final Map<String, Object> data, final FieldList queryFormFieldList) throws Exception {
 		throw new ApplicationException(this.getPage(), "error.notimplemetmethod");
-	};
+	}
 
 	/**
 	 * 問い合わせ結果のページを変更します。

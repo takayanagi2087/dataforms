@@ -710,7 +710,7 @@ public class WebResourceForm extends Form {
 		}
 
 		/**
-		 * カラム幅リスト
+		 * カラム幅リスト。
 		 */
 		private List<Integer> columnWidthList = null;
 		

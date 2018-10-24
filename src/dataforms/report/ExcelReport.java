@@ -431,7 +431,7 @@ public class ExcelReport extends Report {
 		 */
 		private int dy2 = -2;
 		/**
-		 * 縦横比の設定方法(cell:セルに合わせる。image:元画像に合わせる)
+		 * 縦横比の設定方法(cell:セルに合わせる。image:元画像に合わせる)。
 		 */
 		private String aspect = "cell";
 

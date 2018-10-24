@@ -350,7 +350,7 @@ public class AllTypeDao extends Dao {
 			SubQuery aliasSq = new SubQuery(new AliasQuery()) {
 				public String getJoinCondition(final Table joinTable, final String alias) {
 					return this.getLinkFieldCondition("recordIdField", joinTable, alias, "recordIdField");
-				};
+				}
 			};
 			aliasSq.setAlias("msub");
 			SubQuery sumSq = new SubQuery(new SumQuery());
