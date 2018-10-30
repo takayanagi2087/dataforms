@@ -40,6 +40,7 @@ import dataforms.field.common.FileField;
 import dataforms.field.common.RecordIdField;
 import dataforms.field.common.UpdateTimestampField;
 import dataforms.field.sqlfunc.AliasField;
+import dataforms.field.sqlfunc.CountField;
 import dataforms.field.sqlfunc.GroupSummaryField;
 import dataforms.field.sqlfunc.MaxField;
 import dataforms.field.sqlfunc.SqlField;
@@ -104,7 +105,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
      * @return データベースの製品名。
      */
     public abstract String getDatabaseProductName();
-    
+
     /**
      * コメントがサポートされているかどうかを返します。
      * <pre>
@@ -506,8 +507,8 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return null;
 	}
 
-	
-	
+
+
 	/**
 	 * レコードIDの取得SQLを取得します。
 	 * @param table テーブル。
@@ -755,7 +756,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	 */
 	public abstract String generateSysTimestampSql();
 
-	
+
 	/**
 	 * 対象テーブルが主テーブルまでリンクがたどれるかを確認する。
 	 * @param t 全テーブルリスト。
@@ -781,7 +782,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 主テーブル以外の結合条件を検索します。
 	 * @param list 全テーブルリスト。
@@ -1111,7 +1112,12 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 			GroupSummaryField<?> gsf = (GroupSummaryField<?>) field;
 			//String t = query.getFieldTableAliasMap().get(gsf.getTargetField().getId());
 			if (t != null) {
-				String ret = gsf.getFunctionName() + "(" + t + "." + gsf.getTargetField().getDbColumnName() + ")" + this.getAsAliasSql() + field.getDbColumnName() + "\n";
+				boolean distinct = false;
+				if (gsf instanceof CountField) {
+					CountField cf = (CountField) gsf;
+					distinct = cf.isDistinct();
+				}
+				String ret = gsf.getFunctionName() + "(" + (distinct ? "distinct " : "") + t + "." + gsf.getTargetField().getDbColumnName() + ")" + this.getAsAliasSql() + field.getDbColumnName() + "\n";
 				return ret;
 			}
 		} else if (field instanceof AliasField) {
@@ -1589,7 +1595,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	/**
 	 * 更新リスト中に存在しないレコード取得するためのwhere句を作成します。
 	 * @param pklist PKフィールドリスト。
-	 * @param updatedList 更新リスト。 
+	 * @param updatedList 更新リスト。
 	 * @return where句。
 	 */
 	private String generateNotInListConditon(final FieldList pklist, final List<Map<String, Object>> updatedList) {
@@ -1629,7 +1635,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 
 	}
-	
+
 	/**
 	 * リスト中に存在しないレコードを選択するSQLを作成します。
 	 * @param table テーブル。
@@ -1658,8 +1664,8 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 		return sb.toString();
 	}
-	
-	
+
+
 	/**
 	 * Index作成用SQLを作成します。
 	 * @param index インデックス。
@@ -1711,7 +1717,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		sb.append(")");
 		return sb.toString();
 	}
-	
+
 
 	/**
 	 * 一意制約を削除するSQLを作成します。
@@ -1743,7 +1749,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return sb.toString();
 	}
 
-	
+
 	/**
 	 * フィールドの並びを作成します。
 	 * @param fidlist フィールドリスト。
@@ -1759,7 +1765,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 外部キー作成用SQLを作成します。
 	 * @param fk 外部キー情報。
@@ -1823,5 +1829,5 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return this.generateDropForeignKeySql(tbl.getTableName(), StringUtil.camelToSnake(fk.getConstraintName()));
 	}
 
-	
+
 }
