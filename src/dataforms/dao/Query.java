@@ -6,6 +6,7 @@ import java.util.Map;
 
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
+import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.GroupSummaryField;
 import dataforms.util.StringUtil;
 
@@ -353,6 +354,46 @@ public class Query {
 		}
 		return null;
 	}
+
+	/**
+	 * order byフィールドのSQLを生成します。
+	 * @param field フィールドID。
+	 * @return order by フィールドのSQL。
+	 */
+	public String getOrderByFieldSql(final Field<?> field) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(field.getTable().getAlias());
+		sb.append(".");
+		if (field instanceof AliasField) {
+			sb.append(StringUtil.camelToSnake(((AliasField) field).getTargetField().getId()));
+		} else {
+			sb.append(StringUtil.camelToSnake(field.getId()));
+		}
+		if (field.getSortOrder() == Field.SortOrder.ASC) {
+			sb.append(" asc");
+		} else {
+			sb.append(" desc");
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * group byフィールドのSQLを生成します。
+	 * @param field フィールドID。
+	 * @return group by フィールドのSQL。
+	 */
+	public String getGroupByFieldSql(final Field<?> field) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(field.getTable().getAlias());
+		sb.append(".");
+		if (field instanceof AliasField) {
+			sb.append(StringUtil.camelToSnake(((AliasField) field).getTargetField().getId()));
+		} else {
+			sb.append(StringUtil.camelToSnake(field.getId()));
+		}
+		return sb.toString();
+	}
+
 
 	/**
 	 * distinctフラグを取得します。

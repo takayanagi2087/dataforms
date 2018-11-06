@@ -1153,7 +1153,12 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 			if (sb.length() > 0) {
 				sb.append(",");
 			}
-			sb.append(f.getTable().getAlias());
+			if (orderby) {
+				sb.append(query.getOrderByFieldSql(f));
+			} else {
+				sb.append(query.getGroupByFieldSql(f));
+			}
+/*			sb.append(f.getTable().getAlias());
 			sb.append(".");
 			if (f instanceof AliasField) {
 				sb.append(StringUtil.camelToSnake(((AliasField) f).getTargetField().getId()));
@@ -1166,7 +1171,7 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 				} else {
 					sb.append(" desc");
 				}
-			}
+			}*/
 		}
 		return sb.toString();
 	}
