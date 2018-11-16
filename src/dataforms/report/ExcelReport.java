@@ -79,7 +79,7 @@ public class ExcelReport extends Report {
 	 * 出力するシートのインデックス。
 	 */
 	private int sheetIndex = 0;
-	
+
 	/**
 	 * ワークブックを取得します。
 	 * @return ワークブック。
@@ -111,7 +111,7 @@ public class ExcelReport extends Report {
 	protected void setSheet(final Sheet sheet) {
 		this.sheet = sheet;
 	}
-	
+
 	/**
 	 * 出力するシートインデックスを取得します。
 	 * @return シートインデックス。
@@ -189,7 +189,7 @@ public class ExcelReport extends Report {
 		this.setTemplatePath(templatePath);
 	}
 
-	
+
 	/**
 	 * テンプレートファイルのパスを取得する。
 	 * @return テンプレートファイルのパス。
@@ -321,7 +321,7 @@ public class ExcelReport extends Report {
 	}
 
 
-	
+
 	/**
 	 * 1行コピーを行う。
 	 * @param sheet シート。
@@ -350,7 +350,7 @@ public class ExcelReport extends Report {
 	 * @param to コピー先。
 	 */
 	protected void copyRows(final Sheet sheet, final int from, final int rows, final int to) {
-		for (int i = from; i < rows; i++) {
+		for (int i = 0; i < rows; i++) {
 			this.copyRow(sheet, from + i,  to + i);
 		}
 		// 結合情報をコピーする。
@@ -560,7 +560,7 @@ public class ExcelReport extends Report {
 	 */
 	private Map<String, CellPosition> cellPositionMap = null;
 
-	
+
 	/**
 	 * セルの値からフィールドIDを取得します。
 	 * @param value セルの値。
@@ -580,7 +580,7 @@ public class ExcelReport extends Report {
 		log.debug("fieldId=" + ret);
 		return ret;
 	}
-	
+
 
 	/**
 	 * フィールドIDとセルのマップを取得する。
@@ -604,7 +604,7 @@ public class ExcelReport extends Report {
 								String str = value.substring(1);
 								String[]sp = str.split("[\\{\\}]");
 								ret.put(this.getFieldId(value), p);
-								if (Pattern.matches("^\\$(.+?)\\{.+\\}$", value) 
+								if (Pattern.matches("^\\$(.+?)\\{.+\\}$", value)
 									|| Pattern.matches("^\\$\\{(.+?)\\}\\{.+\\}$", value)) {
 									for (String s: sp) {
 										log.debug("s=" + s);
@@ -868,7 +868,7 @@ public class ExcelReport extends Report {
 		}
 		return os.toByteArray();
 	}
-	
+
 	/**
 	 * シートのコピーを作成します。
 	 * @param idx コピー元シートのインデックス。
@@ -891,7 +891,7 @@ public class ExcelReport extends Report {
 		}
 	}
 
-	
+
 	/**
 	 * シートのコピーを作成します。
 	 * @param sheets コピーを作成するシートの数。
@@ -912,7 +912,7 @@ public class ExcelReport extends Report {
 			this.workbook.getSheetAt(i).getFooter().setRight("dataforms.jar " + Page.getDataformsVersion());
 		}
 	}
-	
+
 	/**
 	 * シート名を設定します。
 	 * @param sheetIndex シートインデックス。
@@ -921,7 +921,7 @@ public class ExcelReport extends Report {
 	public void setSheetName(final int sheetIndex, final String name) {
 		this.workbook.setSheetName(sheetIndex, name);
 	}
-	
+
 	/**
 	 * 指定されたシートを指定されたパスワードでロックします。
 	 * @param sh シート。
