@@ -76,14 +76,14 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	private SqlGenerator sqlGenerator = null;
 
-	
+
 	/**
 	 * BLOBの読み込みモード。
-	 * 
+	 *
 	 *
 	 */
 	public enum BlobReadMode {
-		/** 
+		/**
 		 * Webページに表示するための読み込みモードです(デフォルト)
 		 * <pre>
 		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録します。
@@ -91,7 +91,7 @@ public class Dao implements JDBCConnectableObject {
 		 * </pre>
 		 */
 		FOR_DISPLAY_FILE_INFO,
-		/** 
+		/**
 		 * WebページからBLOB中のファイルをダウンロードする際の読み込みモードです。
 		 * <pre>
 		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録し、
@@ -99,7 +99,7 @@ public class Dao implements JDBCConnectableObject {
 		 * </pre>
 		 */
 		FOR_DOWNLOAD,
-		/** 
+		/**
 		 * BLOBを含むテーブルのレコードを他のレコードにコピーする際の読み込みモードです。
 		 * <pre>
 		 * BLOBに記録されたファイル情報ヘッダのみを読み込み、FileObjectのインスタンスに記録し、
@@ -108,16 +108,16 @@ public class Dao implements JDBCConnectableObject {
 		 */
 		FOR_DB_WRITING
 	};
-	
+
 	/**
 	 * BLOB読み込みモード。
 	 */
 	private BlobReadMode blobReadMode = BlobReadMode.FOR_DISPLAY_FILE_INFO;
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * JDBC接続可能オブジェクトを設定設定します。
 	 * @param cobj JDBC接続可能オブジェクト。
@@ -147,7 +147,14 @@ public class Dao implements JDBCConnectableObject {
 	 * @return ページ。
 	 */
 	protected Page getPage() {
-		WebComponent comp = (WebComponent) this.jdbcConnectableObject.get();
+//		WebComponent comp = (WebComponent) this.jdbcConnectableObject.get();
+//		return comp.getPage();
+		JDBCConnectableObject cobj = this.jdbcConnectableObject.get();
+		while (cobj instanceof Dao) {
+			Dao dao = (Dao) cobj;
+			cobj = dao.jdbcConnectableObject.get();
+		}
+		WebComponent comp = (WebComponent) cobj;
 		return comp.getPage();
 	}
 
@@ -159,7 +166,7 @@ public class Dao implements JDBCConnectableObject {
 		return this.jdbcConnectableObject.get();
 	}
 
-	
+
 	/**
 	 * Blobフィールドの読み込みモードを取得します。
 	 * @return Blobフィールドの読み込みモード。
@@ -179,9 +186,9 @@ public class Dao implements JDBCConnectableObject {
 
 	/**
 	 * BLOBダウンロードフラグを取得します。
-	 * 
+	 *
 	 * @return BLOBダウンロードフラグ。
-	 * @deprecated getBlobReadMode()を使用してください。 
+	 * @deprecated getBlobReadMode()を使用してください。
 	 */
 	@Deprecated
 	public boolean isBlobDownload() {
@@ -196,7 +203,7 @@ public class Dao implements JDBCConnectableObject {
 	 * 展開し、ダウンロード可能な状態にします。
 	 * </pre>
 	 * @param blobDownload BLOBダウンロードフラグ.
-	 * @deprecated setBlobDownload(final boolean blobDownload)を使用してください。 
+	 * @deprecated setBlobDownload(final boolean blobDownload)を使用してください。
 	 */
 	@Deprecated
 	public void setBlobDownload(final boolean blobDownload) {
@@ -260,7 +267,7 @@ public class Dao implements JDBCConnectableObject {
 		 * データ型。
 		 */
 		private int type;
-		
+
 		/**
 		 * フィールド長。
 		 */
@@ -270,14 +277,14 @@ public class Dao implements JDBCConnectableObject {
 		 * 小数点以下の桁数。
 		 */
 		private int scale = 0;
-		
+
 		/**
 		 * コンストラクタ。
 		 * @param id フィールドID。
 		 * @param type データタイプ。
 		 * @param precision データタイプ。
 		 * @param scale データタイプ。
-		 * 
+		 *
 		 */
 		public ColumnInfo(final String id, final int type, final int precision, final int scale) {
 			this.id = StringUtil.snakeToCamel(id);
@@ -285,7 +292,7 @@ public class Dao implements JDBCConnectableObject {
 			this.precision = precision;
 			this.scale = scale;
 		}
-		
+
 		/**
 		 * フィールドIDを取得します。
 		 * @return フィールドID。
@@ -293,7 +300,7 @@ public class Dao implements JDBCConnectableObject {
 		public String getId() {
 			return id;
 		}
-		
+
 		/**
 		 * データタイプを取得します。
 		 * @return データタイプ。
@@ -301,8 +308,8 @@ public class Dao implements JDBCConnectableObject {
 		public int getType() {
 			return type;
 		}
-		
-		
+
+
 		/**
 		 * フィールド長を取得します。
 		 * @return フィールド長。
@@ -327,7 +334,7 @@ public class Dao implements JDBCConnectableObject {
 			Field<?> ret = null;
 			if (this.getType() == Types.BIGINT) {
 				ret = new BigintField(this.getId());
-			} else if (this.getType() == Types.BLOB 
+			} else if (this.getType() == Types.BLOB
 					 || this.getType() == Types.BINARY
 					 || this.getType() == Types.LONGVARBINARY
 					 || this.getType() == Types.VARBINARY) {
@@ -361,7 +368,7 @@ public class Dao implements JDBCConnectableObject {
 	 * 問合せ結果のカラムリスト。
 	 */
 	private List<ColumnInfo> resultSetColumnList = null;
-	
+
 	/**
 	 * 問合せ結果のメタデータを取得します。
 	 * @param meta メタデータ。
@@ -382,7 +389,7 @@ public class Dao implements JDBCConnectableObject {
 	 * <pre>
 	 * ResultSetMetaDataの各カラムの情報から想定されるフィールドを作成し、そのリストを返します。
 	 * </pre>
-	 * 
+	 *
 	 * @return フィールドリスト。
 	 */
 	public FieldList getResultSetFieldList() {
@@ -395,7 +402,7 @@ public class Dao implements JDBCConnectableObject {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Queryを実行し、その結果の各レコードをRecordProcessorに渡します。
 	 * @param sql SQL。
@@ -638,7 +645,7 @@ public class Dao implements JDBCConnectableObject {
 			this.checkPsqlException(e);
 		} finally {
 			st.close();
-		} 
+		}
 		return ret;
 	}
 
@@ -1130,7 +1137,7 @@ public class Dao implements JDBCConnectableObject {
 		colinfo.put("dataType", dataType);
 		return colinfo;
 	}
-	
+
 	/**
 	 * Schemaを取得します。
 	 * @param conn JDBC接続情報。
@@ -1230,7 +1237,7 @@ public class Dao implements JDBCConnectableObject {
 
 	}
 
-	
+
 	/**
 	 * 指定されたテーブルのデータベース中のインデックス情報を取得します。
 	 * @param table テーブル。
@@ -1250,8 +1257,8 @@ public class Dao implements JDBCConnectableObject {
 		logger.debug("indexInfo=" + JSON.encode(ret, true));
 		return ret;
 	}
-	
-	
+
+
 	/**
 	 * 指定されたテーブルの外部キー情報を取得します。
 	 * @param md データベースメタデータ。
@@ -1303,7 +1310,7 @@ public class Dao implements JDBCConnectableObject {
 		logger.debug("ForeignKey Info=" + JSON.encode(ret, true));
 		return ret;
 	}
-	
+
 	/**
 	 * 外部キーの名前の集合を取得します。
 	 * @param table テーブル。
@@ -1319,7 +1326,7 @@ public class Dao implements JDBCConnectableObject {
 		}
 		return fkset;
 	}
-	
+
 
 	/**
 	 * インデックスが存在するかどうかを確認します。
@@ -1378,8 +1385,8 @@ public class Dao implements JDBCConnectableObject {
 		}
 		return ret;
 	}
-	
-	
+
+
 	/**
 	 * PKのリストを取得します。
 	 * @param tbl テーブル。
@@ -1539,14 +1546,14 @@ public class Dao implements JDBCConnectableObject {
 	public Map<String, Object> executePageQuery(final String sql, final Map<String, Object> param) throws Exception {
 		return this.executePageQuery(sql, param, 10);
 	}
-	
+
 	/**
 	 * 問合せ結果の指定ページを取得します。
-	 * 
+	 *
 	 * @param sql SQL。
 	 * @param param パラメータ。
 	 * @param defaultLines 1ページの行数のデフォルト値。
-	 * 
+	 *
 	 * @return 問合せ結果。
 	 * @throws Exception 例外。
 	 */
@@ -1572,7 +1579,7 @@ public class Dao implements JDBCConnectableObject {
 		ret.put("queryResult", list);
 		return ret;
 	}
-	
+
 
 	/**
 	 * 問い合わせ結果の件数を求める。
@@ -1656,8 +1663,8 @@ public class Dao implements JDBCConnectableObject {
 		return (tblcnt > 0);
 	}
 
-	
-	
+
+
 
 	/**
 	 * DBから読み込んだマップをアプリケーションで処理しやすい形式に変換します(DBValue→Value変換)。
@@ -1765,7 +1772,7 @@ public class Dao implements JDBCConnectableObject {
 		return (FileObject) ret.get(fieldId);
 	}
 
-	
+
 	/**
 	 * BLOBデータの情報のみを取得します。
 	 * @param table テーブル。
@@ -1892,19 +1899,19 @@ public class Dao implements JDBCConnectableObject {
 	 * 明細テーブルの保存を行います。
 	 * <pre>
 	 * PKが明細IDのみでヘッダのIDを別途持つことを前提条件として明細を保存します。
-	 * 
+	 *
 	 * ヘッダテーブルに対応した明細テーブルの保存は、通常対応レコードの
 	 * 全削除、挿入で実装するのが簡単です。
 	 * しかしBLOB項目等を含む場合の更新は毎回ファイルをやり取りするわけでは
 	 * ないので、複雑な更新処理が必要になります。
 	 * このメソッドは以下のロジックでBLOBを含む明細テーブルの更新に対応します。
-	 * 
+	 *
 	 * 1.listに含まなれない既存レコードを削除します。
 	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
 	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
-	 * 
+	 *
 	 * flistにはヘッダのIDフィールドを指定し、condはヘッダのIDを含むマップである必要があります。
-	 * 
+	 *
 	 * </pre>
 	 * @param table テーブル。
 	 * @param list 保存するレコードの全リスト。
@@ -1936,17 +1943,17 @@ public class Dao implements JDBCConnectableObject {
 			}
 		}
 	}
-	
+
 	/**
 	 * テーブルの全レコードを保存します。
 	 * <pre>
 	 * このメソッドは以下のロジックでBLOBを含む明細テーブルの更新に対応します。
-	 * 
+	 *
 	 * 1.listに含まなれない既存レコードを削除します。
 	 * 2.レコードのIDがnullの場合、レコードのIDを作成し挿入します。
 	 * 3.レコードのIDがnullでない場合、対応レコードを更新します。
 	 * </pre>
-	 * 
+	 *
 	 * @param table テーブル。
 	 * @param list 保存するレコードの全リスト。
 	 * @throws Exception 例外。
@@ -1954,7 +1961,7 @@ public class Dao implements JDBCConnectableObject {
 	public void saveTable(final Table table, final List<Map<String, Object>> list) throws Exception {
 		this.saveTable(table, list, null, null);
 	}
-	
+
 	/**
 	 * レコードを取得します。
 	 *
