@@ -5,14 +5,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.field.base.NumberField;
+import dataforms.field.sqltype.DateField;
+import dataforms.field.sqltype.TimeField;
+import dataforms.field.sqltype.TimestampField;
 import dataforms.util.NumberUtil;
 
 /**
@@ -157,6 +163,27 @@ public class ExcelExportData implements ExportData {
            	    		double dv =NumberUtil.doubleValue(v);
            	    		cell.setCellValue(dv);
            	    	}
+       	    	} else if (f instanceof DateField) {
+           	    	java.sql.Date v = (java.sql.Date) m.get(f.getId());
+           	    	if (v != null) {
+           	    		java.util.Date dv = new java.util.Date(v.getTime());
+           	    		cell.setCellValue(DateUtil.getExcelDate(dv));
+           	    		cell.setCellStyle(this.dateStyle);
+           	    	}
+       	    	} else if (f instanceof TimeField) {
+           	    	java.sql.Time v = (java.sql.Time) m.get(f.getId());
+           	    	if (v != null) {
+           	    		java.util.Date dv = new java.util.Date(v.getTime());
+           	    		cell.setCellValue(DateUtil.getExcelDate(dv));
+           	    		cell.setCellStyle(this.timeStyle);
+           	    	}
+       	    	} else if (f instanceof TimestampField) {
+           	    	java.sql.Timestamp v = (java.sql.Timestamp) m.get(f.getId());
+           	    	if (v != null) {
+           	    		java.util.Date dv = new java.util.Date(v.getTime());
+           	    		cell.setCellValue(DateUtil.getExcelDate(dv));
+           	    		cell.setCellStyle(this.timestampStyle);
+           	    	}
        	    	} else {
            	    	Object v = m.get(f.getId());
            	    	if (v != null) {
@@ -184,6 +211,19 @@ public class ExcelExportData implements ExportData {
     }
 
     /**
+     * 日付フィールドのスタイル。
+     */
+    private XSSFCellStyle dateStyle = null;
+    /**
+     * 時刻フィールドのスタイル。
+     */
+    private XSSFCellStyle timeStyle = null;
+    /**
+     * 日付時刻フィールドのスタイル。
+     */
+    private XSSFCellStyle timestampStyle = null;
+
+    /**
      * Excel形式のエクスポートデータを取得します。
      * @param list エクスポートデータ。
      * @param flist フィールドリスト。
@@ -192,6 +232,19 @@ public class ExcelExportData implements ExportData {
      */
 	protected byte[] getExcelExportData(final List<Map<String, Object>> list, final FieldList flist) throws Exception {
 		Workbook wb = this.getDownloadWorkbook();
+
+
+		// 日付時刻書式を生成
+		XSSFCreationHelper creationHelper = (XSSFCreationHelper) wb.getCreationHelper();
+		this.dateStyle = (XSSFCellStyle) wb.createCellStyle();
+		this.dateStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy/MM/dd"));
+
+		this.timeStyle = (XSSFCellStyle) wb.createCellStyle();
+		this.timeStyle.setDataFormat(creationHelper.createDataFormat().getFormat("HH:mm:ss"));
+
+		this.timestampStyle = (XSSFCellStyle) wb.createCellStyle();
+		this.timestampStyle.setDataFormat(creationHelper.createDataFormat().getFormat("yyyy/MM/dd HH:mm:ss"));
+
 		this.setExportData(list, flist, wb);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
