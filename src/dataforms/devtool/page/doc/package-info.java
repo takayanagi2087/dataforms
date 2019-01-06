@@ -1,8 +1,4 @@
 /**
- * 
- */
-/**
- * @author takayanagi
- *
+ * ドキュメントフレームページパッケージ。
  */
 package dataforms.devtool.page.doc;

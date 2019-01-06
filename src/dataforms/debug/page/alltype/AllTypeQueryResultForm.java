@@ -28,6 +28,9 @@ public class AllTypeQueryResultForm extends QueryResultForm {
 				, tbl.getField("charField").setSortable(true)
 				, tbl.getField("varcharField").setSortable(true)
 				, tbl.getField("numericField").setSortable(true)
+				, tbl.getField("dateField").setSortable(true)
+				, tbl.getField("timeField").setSortable(true)
+				, tbl.getField("timestampField").setSortable(true)
 				);
 		htmltbl.setFixedColumns(2);
 //		htmltbl.setFixedWidth(50.0);

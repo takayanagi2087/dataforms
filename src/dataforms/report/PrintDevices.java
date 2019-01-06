@@ -15,19 +15,19 @@ import org.apache.log4j.Logger;
  *
  */
 public final class PrintDevices {
-	
+
 	/**
-	 * 
+	 * Logger。
 	 */
 	private static Logger logger = Logger.getLogger(PrintDevices.class);
-	
+
 	/**
 	 * コンストラクタ。
 	 */
 	private PrintDevices() {
-		
+
 	}
-	
+
 	/**
 	 * 印刷サービスの名称一覧を取得します。
 	 * @return 印刷サービスの名称一覧。
@@ -40,12 +40,12 @@ public final class PrintDevices {
 		}
 		return ret;
 	}
-	
+
 	// "EPSON PX-M5041F"
-	
+
 	/**
 	 * 印刷サービスを取得します。
-	 * @param printerName プリンタ名。 
+	 * @param printerName プリンタ名。
 	 * @return 印刷JOB。
 	 */
 	public static PrintService getPrintService(final String printerName) {

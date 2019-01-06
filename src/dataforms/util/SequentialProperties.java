@@ -23,7 +23,7 @@ import dataforms.servlet.DataFormsServlet;
  */
 public class SequentialProperties extends Properties {
 	/**
-	 *
+	 * UID。
 	 */
 	private static final long serialVersionUID = 4764311915468513238L;
 

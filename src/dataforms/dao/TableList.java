@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class TableList extends ArrayList<Table> {
 	/**
-	 *
+	 * UID。
 	 */
 	private static final long serialVersionUID = -4469643124552536741L;
 

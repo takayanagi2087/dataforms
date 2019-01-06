@@ -8,7 +8,7 @@ import dataforms.util.MessagesUtil;
  */
 public class ApplicationException extends Exception {
 	/**
-	 *
+	 * UID。
 	 */
 	private static final long serialVersionUID = 7025730004513064767L;
 

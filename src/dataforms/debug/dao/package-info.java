@@ -1,4 +1,4 @@
 /**
- *　デバック用テストプログラムDAOパッケージ。
+ * デバック用テストプログラムDAOパッケージ。
  */
 package dataforms.debug.dao;

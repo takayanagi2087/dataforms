@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class BlobFileHeader implements Serializable {
 	/**
-	 *
+	 * UID。
 	 */
 	private static final long serialVersionUID = -7222388177179295487L;
 	/**

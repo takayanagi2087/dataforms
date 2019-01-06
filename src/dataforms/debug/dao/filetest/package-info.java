@@ -1,8 +1,4 @@
 /**
- * 
- */
-/**
- * @author takayanagi
- *
+ * ファイルフィールドテストDAOパッケージ。
  */
 package dataforms.debug.dao.filetest;

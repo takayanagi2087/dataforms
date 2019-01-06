@@ -1,7 +1,11 @@
 package dataforms.debug.page.alltype;
 
+import java.util.List;
+import java.util.Map;
+
 import dataforms.controller.QueryForm;
 import dataforms.dao.Table;
+import dataforms.debug.dao.alltype.AllTypeDao;
 import dataforms.debug.dao.alltype.AllTypeTable;
 import dataforms.field.base.Field;
 import dataforms.field.base.Field.MatchType;
@@ -34,5 +38,16 @@ public class AllTypeQueryForm extends QueryForm {
 		dropdownCondField.setOptionList(AllTypeTable.getOptionList());
 		this.addField(dropdownCondField).setMatchType(Field.MatchType.IN);
 
+	}
+
+	@Override
+	protected List<Map<String, Object>> queryExportData(Map<String, Object> data) throws Exception {
+		AllTypeDao dao = new AllTypeDao(this);
+		List<Map<String, Object>> list = dao.queryList(data, this.getFieldList());
+		int rowNo = 1;
+		for (Map<String, Object> m: list) {
+			m.put("rowNo", Integer.valueOf(rowNo++));
+		}
+		return list;
 	}
 }

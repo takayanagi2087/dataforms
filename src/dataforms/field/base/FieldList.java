@@ -18,7 +18,7 @@ import dataforms.util.StringUtil;
  */
 public class FieldList extends ArrayList<Field<?>> {
 	/**
-	 *
+	 * UID。
 	 */
 	private static final long serialVersionUID = 7679090688363245776L;
 

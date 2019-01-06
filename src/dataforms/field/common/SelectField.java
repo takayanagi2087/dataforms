@@ -19,26 +19,26 @@ import dataforms.field.base.Field;
 public abstract class SelectField<TYPE> extends Field<TYPE> {
 
 	/**
-	 * 選択肢のエンティティクラス。 
+	 * 選択肢のエンティティクラス。
 	 *
 	 */
 	public static class OptionEntity extends Entity {
 		/**
-		 * 
+		 * 名前。
 		 */
 		public static final String ID_NAME = "name";
 		/**
-		 * 
+		 * 値。
 		 */
 		public static final String ID_VALUE = "value";
-		
+
 		/**
 		 * コンストラクタ。
 		 */
 		public OptionEntity() {
-			
+
 		}
-		
+
 		/**
 		 * コンストラクタ。
 		 * @param m 編集対象マップ。
@@ -46,7 +46,7 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 		public OptionEntity(final Map<String, Object> m) {
 			super(m);
 		}
-		
+
 		/**
 		 * 値を取得します。
 		 * @return 値。
@@ -54,7 +54,7 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 		public String getValue() {
 			return (String) this.getMap().get(ID_VALUE);
 		}
-		
+
 		/**
 		 * 値を設定します。
 		 * @param value 値。
@@ -62,7 +62,7 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 		public void setValue(final String value) {
 			this.getMap().put(ID_VALUE, value);
 		}
-		
+
 		/**
 		 * 名称を設定します。
 		 * @return 名称。
@@ -70,7 +70,7 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 		public String getName() {
 			return (String) this.getMap().get(ID_NAME);
 		}
-		
+
 		/**
 		 * 名称を設定します。
 		 * @param name 名称。
@@ -79,8 +79,8 @@ public abstract class SelectField<TYPE> extends Field<TYPE> {
 			this.getMap().put(ID_NAME, name);
 		}
 	}
-	
-	
+
+
 	/**
 	 * 選択肢。
 	 */

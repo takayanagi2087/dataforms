@@ -6,7 +6,7 @@ package dataforms.controller;
  */
 public class ApplicationError extends Error {
 	/**
-	 * 
+	 * UID。
 	 */
 	private static final long serialVersionUID = -5873669599634950645L;
 

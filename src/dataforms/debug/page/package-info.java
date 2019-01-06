@@ -1,4 +1,4 @@
 /**
- * デバック用ページパッケージ。
+ * テスト用ページクラスパッケージ。
  */
 package dataforms.debug.page;

@@ -34,6 +34,10 @@ QueryForm.prototype.attach = function() {
 		queryForm.reset();
 		return false;
 	});
+	this.find('#exportButton').click(function() {
+		queryForm.exportData();
+		return false;
+	});
 };
 
 /**
@@ -101,3 +105,19 @@ QueryForm.prototype.toConfirmMode = function() {
 	this.find('#resetButton').hide();
 	this.find('#newButton').hide();
 };
+
+/**
+ * 問合せ結果をエクスポートします。
+ */
+QueryForm.prototype.exportData = function() {
+	var queryForm = this;
+	if (queryForm.validate()) {
+		queryForm.submitForDownload("exportData", function(result) {
+			queryForm.parent.resetErrorStatus();
+			if (result.status == ServerMethod.INVALID) {
+				queryForm.parent.setErrorInfo(queryForm.getValidationResult(result), queryForm);
+			}
+		});
+	}
+};
+

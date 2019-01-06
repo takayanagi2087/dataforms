@@ -64,6 +64,44 @@ public class AllTypeDao extends Dao {
 	 * @return クエリ結果。
 	 * @throws Exception 例外。
 	 */
+	public List<Map<String, Object>> queryList(final Map<String, Object> data, final FieldList flist) throws Exception {
+		AllTypeTable tbl = new AllTypeTable();
+		Query query = new Query();
+		query.setFieldList(new FieldList(
+				tbl.getField("recordIdField")
+				, tbl.getField("charField")
+				, tbl.getField("varcharField")
+				, tbl.getField("numericField")
+				, tbl.getField("dateField")
+				, tbl.getField("timeField")
+				, tbl.getField("timestampField")
+				, new SqlField(new NumericField("sqlField", 10, 3), "numeric_field * 100")
+				));
+		query.setMainTable(tbl);
+		query.setQueryFormFieldList(flist);
+		query.setQueryFormData(data);
+
+		String sortOrder = (String) data.get("sortOrder");
+		log.debug("sortOrder=" + sortOrder);
+		FieldList sflist = tbl.getFieldList().getOrderByFieldList(sortOrder);
+		log.debug("sflist.size()=" + sflist.size());
+		if (sflist.size() == 0) {
+			query.setOrderByFieldList(new FieldList(tbl.getField("recordIdField").setSortOrder(Field.SortOrder.DESC)));
+		} else {
+			query.setOrderByFieldList(sflist);
+		}
+		//
+		return executeQuery(query);
+	}
+
+
+	/**
+	 * クエリを実行します。
+	 * @param data パラメータ。
+	 * @param flist フィールドリスト。
+	 * @return クエリ結果。
+	 * @throws Exception 例外。
+	 */
 	public Map<String, Object> getQueryResult(final Map<String, Object> data, final FieldList flist) throws Exception {
 		AllTypeTable tbl = new AllTypeTable();
 		Query query = new Query();
