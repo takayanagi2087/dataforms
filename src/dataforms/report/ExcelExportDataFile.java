@@ -25,7 +25,7 @@ import dataforms.util.NumberUtil;
  * Excel形式のエクスポートデータクラスです。
  *
  */
-public class ExcelExportData implements ExportData {
+public class ExcelExportDataFile implements ExportDataFile {
 
 	/**
 	 * ダウンロードファイル名。
@@ -35,7 +35,7 @@ public class ExcelExportData implements ExportData {
 	/**
 	 * コンストラクタ。
 	 */
-	public ExcelExportData() {
+	public ExcelExportDataFile() {
 
 	}
 
@@ -43,6 +43,7 @@ public class ExcelExportData implements ExportData {
 	 * ファイル名を設定します。
 	 * @param fileName ファイル名。
 	 */
+	@Override
 	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}

@@ -9,7 +9,14 @@ import dataforms.field.base.FieldList;
  * エクスポートデータのインターフェースです。
  *
  */
-public interface ExportData {
+public interface ExportDataFile {
+
+
+	/**
+	 * エクスポートデータのファイル名を取得します。
+	 * @param fileName エクスポートデータのファイル名。
+	 */
+	void setFileName(final String fileName);
 
 	/**
 	 * エクスポートデータのファイル名を取得します。

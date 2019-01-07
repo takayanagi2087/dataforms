@@ -8,7 +8,8 @@ import org.apache.log4j.Logger;
 import dataforms.annotation.WebMethod;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.HtmlTable;
-import dataforms.report.ExcelExportData;
+import dataforms.report.ExcelExportDataFile;
+import dataforms.report.ExportDataFile;
 import dataforms.validator.ValidationError;
 
 /**
@@ -93,6 +94,20 @@ public abstract class QueryForm extends Form {
     }
 
     /**
+     * エクスポートするデータファイルを取得します。
+     * <pre>
+     * ExportDataFileインターフェースを実装したクラスのインスタンスとして
+     * ExcelExportDataFileクラスのインスタンスを返します。
+     * エクスポートデータを別の形式にしたい場合、このメソッドをオーバーライドし
+     * 別のExportDataFileインターフェースを実装したクラスのインスタンスを返すようにします。
+     * </pre>
+     * @return エクスポートするデータファイル。
+     */
+    protected ExportDataFile getExportDataFile() {
+    	return new ExcelExportDataFile();
+    }
+
+    /**
      * 検索結果をエクスポートします。
      * @param p 問合せフォームのデータ。
      * @return ダウンロードデータ。
@@ -109,7 +124,7 @@ public abstract class QueryForm extends Form {
     		Map<String, Object> data = this.convertToServerData(p);
     		FieldList flist = this.getExportDataFieldList(data);
     		List<Map<String, Object>> list = this.queryExportData(data);
-    		ExcelExportData exdata = new ExcelExportData();
+    		ExportDataFile exdata = this.getExportDataFile();
     		byte[] exceldata = exdata.getExportData(list, flist);
     		result = new BinaryResponse(exceldata, exdata.getContentType(), exdata.getFileName());
     	}
