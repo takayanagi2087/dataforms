@@ -20,6 +20,7 @@ import dataforms.field.sqltype.DateField;
 import dataforms.field.sqltype.TimeField;
 import dataforms.field.sqltype.TimestampField;
 import dataforms.util.NumberUtil;
+import dataforms.util.StringUtil;
 
 /**
  * Excel形式のエクスポートデータクラスです。
@@ -138,7 +139,11 @@ public class ExcelExportDataFile implements ExportDataFile {
     	int idx = 0;
     	for (Field<?> f: flist) {
     		Cell cell = row.createCell(idx);
-    		cell.setCellValue(f.getComment());
+    		if (StringUtil.isBlank(f.getComment())) {
+        		cell.setCellValue(f.getId());
+    		} else {
+        		cell.setCellValue(f.getComment());
+    		}
     		idx++;
     	}
     }
