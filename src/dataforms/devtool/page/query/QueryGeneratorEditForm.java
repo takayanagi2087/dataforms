@@ -34,6 +34,8 @@ import dataforms.util.StringUtil;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
 
+// TODO:バリデーションに問題がありQueryを生成できない不具合が存在する。
+
 /**
  * 問合せJavaクラス作成編集フォーム。
  *
@@ -44,7 +46,7 @@ public class QueryGeneratorEditForm extends EditForm {
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(QueryGeneratorEditForm.class);
-	
+
 
 	/**
 	 * コンストラクタ。
@@ -58,12 +60,12 @@ public class QueryGeneratorEditForm extends EditForm {
 
 		this.addField(new FlagField("distinctFlag"));
 		this.addField(new FlagField("forceOverwrite"));
-		
+
 		this.addField((new FunctionSelectField("mainTableFunctionSelect")).setPackageFieldId("mainTablePackageName")).setComment("主テーブルの機能");
 		this.addField(new PackageNameField("mainTablePackageName")).setComment("主テーブルのパッケージ").addValidator(new RequiredValidator());
 		this.addField((new TableClassNameField("mainTableClassName")).setPackageNameFieldId("mainTablePackageName"))
 			.setAutocomplete(true).setRelationDataAcquisition(true).setComment("主テーブルクラス名").addValidator(new RequiredValidator());
-		
+
 		EditableHtmlTable joinTableList = new JoinHtmlTable("joinTableList");
 		joinTableList.setCaption("JOINするテーブルリスト");
 		this.addHtmlTable(joinTableList);
@@ -76,15 +78,15 @@ public class QueryGeneratorEditForm extends EditForm {
 		SelectFieldHtmlTable slectFieldList = new SelectFieldHtmlTable("selectFieldList");
 		slectFieldList.setCaption("選択フィールドリスト");
 		this.addHtmlTable(slectFieldList);
-		
+
 	}
-	
+
 	@Override
 	public void init() throws Exception {
 		super.init();
 		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
 	}
-	
+
 	/**
 	 * JOINテーブルリストのデータを取得します。
 	 * @param list JOINテーブルリスト。
@@ -103,7 +105,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
+
 	@Override
 	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
 		String packageName = (String) data.get("packageName");
@@ -149,7 +151,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		return ret;
 	}
 
-	
+
 	/**
 	 * クラスの存在チェック。
 	 * @param name クラス名。
@@ -163,7 +165,7 @@ public class QueryGeneratorEditForm extends EditForm {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 各種JOINテーブルのバリデーションを行います。
 	 * @param id テーブルID。
@@ -183,9 +185,9 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected List<ValidationError> validateForm(final Map<String, Object> data) throws Exception {
@@ -197,7 +199,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		ret.addAll(this.validateJoinTable("joinTableList", (List<Map<String, Object>>) data.get("joinTableList")));
 		ret.addAll(this.validateJoinTable("leftJoinTableList", (List<Map<String, Object>>) data.get("leftJoinTableList")));
 		ret.addAll(this.validateJoinTable("rightJoinTableList", (List<Map<String, Object>>) data.get("rightJoinTableList")));
-		
+
 		String packageName = (String) data.get("packageName");
 		String queryClassName = (String) data.get("queryClassName");
 		String javaSrc = (String) data.get("javaSourcePath");
@@ -212,7 +214,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 1テーブル中のフィールドリストを取得します。
 	 * @param tableClass テーブルクラス名。
@@ -238,7 +240,7 @@ public class QueryGeneratorEditForm extends EditForm {
 			ret.add(ent);
 		}
 		return ret;
-		
+
 	}
 
 	/**
@@ -277,9 +279,9 @@ public class QueryGeneratorEditForm extends EditForm {
 		ret.addAll(this.queryJoinTableFieldList((List<Map<String, Object>>) data.get("rightJoinTableList")));
 
 		return ret;
-		
+
 	}
-	
+
 	/**
 	 * テーブルのフィールドリストを取得します。
 	 * @param param パラメータ。
@@ -305,7 +307,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		this.methodFinishLog(log, ret);
 		return ret;
 	}
-	
+
 	/**
 	 * 各JOINテーブルの結合条件を取得します。
 	 * @param tlist 関連テーブルの全リスト。
@@ -334,7 +336,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 各種JOINテーブルのリストを取得します。
 	 * @param list POSTされたJOINテーブル情報。
@@ -361,7 +363,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 関連する全てのテーブルリストを取得します。
 	 * <pre>
@@ -394,7 +396,7 @@ public class QueryGeneratorEditForm extends EditForm {
 
 		return list;
 	}
-	
+
 	/**
 	 * 各テーブルのJOIN条件式を取得します。
 	 * @param data POSTされたデータ。
@@ -413,7 +415,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		ret.put("rightJoinTableList", this.queryJoinCondition(list, this.getJoinTableList(rightJoin, "r")));
 		return ret;
 	}
-	
+
 	/**
 	 * 各テーブルのJOIN条件式を取得します。
 	 * @param param POSTされたデータ。
@@ -438,10 +440,10 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		this.methodFinishLog(log, ret);
 		return ret;
-		
+
 	}
-	
-	
+
+
 	@Override
 	protected boolean isUpdate(final Map<String, Object> data) throws Exception {
 		return false;
@@ -462,7 +464,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * テーブルクラスのインポート文を作成。
 	 * @param data POSTされたデータ。
@@ -489,7 +491,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		String ret = classname.substring(0, 1).toLowerCase() + classname.substring(1);
 		return ret;
 	}
-	
+
 	/**
 	 * 各JOINリストのインポート文を作成します。
 	 * @param list  POSTされたデータ。
@@ -502,12 +504,12 @@ public class QueryGeneratorEditForm extends EditForm {
 			sb.append("\t\t" + tableClassName + " " + this.getTableVariableName(tableClassName) + " = new " + tableClassName + "();\n");
 			String aliasName = (String) m.get("aliasName");
 			if (!StringUtil.isBlank(aliasName)) {
-				sb.append("\t\t" + this.getTableVariableName(tableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
+				sb.append("\t\t" + this.getTableVariableName(tableClassName) + ".setAlias(\"" + aliasName + "\");\n");
 			}
 		}
 		return sb.toString();
 	}
-	
+
 
 	/**
 	 * テーブルクラスのインポート文を作成。
@@ -521,7 +523,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		sb.append("\t\t" + mainTableClassName + " " + this.getTableVariableName(mainTableClassName) + " = new " + mainTableClassName + "();\n");
 		String aliasName = (String) data.get("aliasName");
 		if (!StringUtil.isBlank(aliasName)) {
-			sb.append("\t\t" + this.getTableVariableName(mainTableClassName) + ".setAlias(\"" + aliasName + "\");\n"); 
+			sb.append("\t\t" + this.getTableVariableName(mainTableClassName) + ".setAlias(\"" + aliasName + "\");\n");
 		}
 		sb.append(this.generateNewTableList((List<Map<String, Object>>) data.get("joinTableList")));
  		sb.append(this.generateNewTableList((List<Map<String, Object>>) data.get("leftJoinTableList")));
@@ -603,8 +605,8 @@ public class QueryGeneratorEditForm extends EditForm {
 		return sb.toString();
 	}
 
-	
-	
+
+
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
 		String javasrc = this.getStringResourse("template/Query.java.template");
@@ -630,7 +632,7 @@ public class QueryGeneratorEditForm extends EditForm {
 		FileUtil.writeTextFileWithBackup(query, javasrc, DataFormsServlet.getEncoding());
 		log.debug("javasrc=\n" + javasrc);
 	}
-	
+
 	@Override
 	protected String getSavedMessage(final Map<String, Object> data) {
 		return MessagesUtil.getMessage(this.getPage(), "message.javasourcecreated");
