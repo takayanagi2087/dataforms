@@ -1,8 +1,9 @@
 package dataforms.devtool.page.query;
 
-import dataforms.devtool.field.common.FieldClassNameField;
+import dataforms.devtool.field.common.FieldFullClassNameField;
 import dataforms.devtool.field.common.FieldIdField;
 import dataforms.devtool.field.common.TableClassNameField;
+import dataforms.devtool.field.common.TableFullClassNameField;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.FlagField;
 import dataforms.field.sqltype.VarcharField;
@@ -20,12 +21,12 @@ public class SelectFieldHtmlTable extends HtmlTable {
 	public SelectFieldHtmlTable(final String id) {
 		super(id);
 		FieldList flist = new FieldList(
-			new TableClassNameField("selectTableClass")
+			new TableFullClassNameField("selectTableClass")
 			, new TableClassNameField()
-			, new TableClassNameField("selectTableClassName")
+			, new TableFullClassNameField("selectTableClassName")
 			, new FlagField("sel")
 			, (new FieldIdField()).setReadonly(true)
-			, new FieldClassNameField()
+			, new FieldFullClassNameField("fieldClassName")
 			, new VarcharField("comment", 1024));
 		this.setFieldList(flist);
 	}
