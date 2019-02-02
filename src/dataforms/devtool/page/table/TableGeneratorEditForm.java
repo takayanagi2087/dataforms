@@ -25,7 +25,15 @@ import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.ImageData;
 import dataforms.dao.file.VideoData;
+import dataforms.dao.sqldatatype.SqlBigint;
 import dataforms.dao.sqldatatype.SqlChar;
+import dataforms.dao.sqldatatype.SqlDate;
+import dataforms.dao.sqldatatype.SqlDouble;
+import dataforms.dao.sqldatatype.SqlInteger;
+import dataforms.dao.sqldatatype.SqlNumeric;
+import dataforms.dao.sqldatatype.SqlSmallint;
+import dataforms.dao.sqldatatype.SqlTime;
+import dataforms.dao.sqldatatype.SqlTimestamp;
 import dataforms.dao.sqldatatype.SqlVarchar;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
@@ -72,7 +80,7 @@ public class TableGeneratorEditForm extends EditForm {
 	/**
 	 * Logger.
 	 */
-	private Logger log = Logger.getLogger(TableGeneratorEditForm .class);
+	private Logger logger = Logger.getLogger(TableGeneratorEditForm .class);
 
 	/**
 	 * コンストラクタ。
@@ -218,9 +226,9 @@ public class TableGeneratorEditForm extends EditForm {
 		Class<?>[] ptypes = cns.getParameterTypes();
 		Object[] p = new Object[ptypes.length];
 		for (int i = 0; i < p.length; i++) {
-			log.debug("parameter class = " + ptypes[i].getName());
+			logger.debug("parameter class = " + ptypes[i].getName());
 			p[i] = this.newParameterInstance(ptypes[i]);
-			log.debug("parameter value = " + p[i].toString());
+			logger.debug("parameter value = " + p[i].toString());
 		}
 		return (Field<?>) cns.newInstance(p);
 	}
@@ -234,7 +242,7 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	@WebMethod
 	public JsonResponse getFieldClassInfo(final Map<String, Object> param) throws Exception {
-		this.methodStartLog(log, param);
+		this.methodStartLog(logger, param);
 		try {
 			String classname = (String) param.get("classname");
 			Map<String, Object> ret = new HashMap<String, Object>();
@@ -251,14 +259,14 @@ public class TableGeneratorEditForm extends EditForm {
 			ret.put("fieldLength", field.getLengthParameter());
 			ret.put("fieldComment", field.getComment());
 			JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, ret);
-			this.methodFinishLog(log, result);
+			this.methodFinishLog(logger, result);
 			return result;
 		} catch (ClassNotFoundException ex) {
 			// 未定義のフィールドの場合。
 			Map<String, Object> ret = new HashMap<String, Object>();
 			ret.put("isDataformsField", "0");
 			JsonResponse result = new JsonResponse(JsonResponse.SUCCESS, ret);
-			this.methodFinishLog(log, result);
+			this.methodFinishLog(logger, result);
 			return result;
 		}
 	}
@@ -273,7 +281,7 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	@WebMethod
 	public JsonResponse getSuperFieldClassInfo(final Map<String, Object> param) throws Exception {
-		this.methodStartLog(log, param);
+		this.methodStartLog(logger, param);
 		JsonResponse result = null;
 		Map<String, Object> ret = new HashMap<String, Object>();
 		try {
@@ -285,7 +293,7 @@ public class TableGeneratorEditForm extends EditForm {
 		} catch (Exception ex) {
 			result = new JsonResponse(JsonResponse.SUCCESS, ret);
 		}
-		this.methodFinishLog(log, result);
+		this.methodFinishLog(logger, result);
 		return result;
 	}
 
@@ -297,7 +305,7 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	private List<ValidationError> validateSourceExistence(final Map<String, Object> data) throws Exception {
 		List<ValidationError> ret = new ArrayList<ValidationError>();
-		log.debug("data=\n" + JSON.encode(data, true));
+		logger.debug("data=\n" + JSON.encode(data, true));
 		String packageName = (String) data.get("packageName");
 		String javaSrc = (String) data.get("javaSourcePath");
 		{
@@ -379,7 +387,7 @@ public class TableGeneratorEditForm extends EditForm {
 				String className = superPackageName + "." + superSimpleClassName;
 				pat = this.getLengthParameterPattern(className);
 			}
-			log.debug("pattern=" + pat);
+			logger.debug("pattern=" + pat);
 			if (!StringUtil.isBlank(pat)) {
 				String fieldLength = (String) m.get("fieldLength");
 				if (!Pattern.matches(pat, fieldLength)) {
@@ -498,7 +506,7 @@ public class TableGeneratorEditForm extends EditForm {
 			fsrc = fsrc.replaceAll("\\$\\{fieldComment\\}", fieldComment);
 			fsrc = fsrc.replaceAll("\\$\\{fieldLength\\}", fieldLength);
 			fsrc = fsrc.replaceAll("\\$\\{validators\\}", validators);
-			log.debug("fsrc=\n" + fsrc);
+			logger.debug("fsrc=\n" + fsrc);
 		} else {
 			fsrc = null;
 		}
@@ -507,7 +515,7 @@ public class TableGeneratorEditForm extends EditForm {
 
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
-		log.debug("data=" + JSON.encode(data, true));
+		logger.debug("data=" + JSON.encode(data, true));
 		this.writeTableJavaSource(data);
 	}
 
@@ -527,8 +535,8 @@ public class TableGeneratorEditForm extends EditForm {
 		}
 		return fieldId;
 	}
-	
-	
+
+
 	/**
 	 * フィールドIdの定数を展開します。
 	 * @param list フィールドリスト。
@@ -548,13 +556,14 @@ public class TableGeneratorEditForm extends EditForm {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * フィールドに対応する値の型を返します。
 	 * @param field フィールド。
 	 * @return 値の型。
 	 */
 	private Class<?> getFieldValueType(final Class<?> field) {
+		logger.debug("field class=" + field.getName());
 		Class<?> ret = Object.class;
 		if (FileObjectField.class.isAssignableFrom(field)) {
 			ret = FileObject.class;
@@ -562,7 +571,7 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = ImageData.class;
 		} else if (VideoField.class.isAssignableFrom(field)) {
 			ret = VideoData.class;
-		} else 	if (SqlVarchar.class.isAssignableFrom(field) 
+		} else 	if (SqlVarchar.class.isAssignableFrom(field)
 			|| SqlChar.class.isAssignableFrom(field)
 			|| CharField.class.isAssignableFrom(field)
 			|| VarcharField.class.isAssignableFrom(field)
@@ -585,6 +594,23 @@ public class TableGeneratorEditForm extends EditForm {
 			ret = BigDecimal.class;
 		} else if (MultiSelectField.class.isAssignableFrom(field)) {
 			ret = List.class;
+
+		} else if (SqlBigint.class.isAssignableFrom(field)) { //
+			ret = Long.class;
+		} else if (SqlInteger.class.isAssignableFrom(field)) {
+			ret = Integer.class;
+		} else if (SqlSmallint.class.isAssignableFrom(field)) {
+			ret = Short.class;
+		} else if (SqlDouble.class.isAssignableFrom(field)) {
+			ret = Double.class;
+		} else if (SqlNumeric.class.isAssignableFrom(field)) {
+			ret = BigDecimal.class;
+		} else if (SqlDate.class.isAssignableFrom(field)) {
+			ret = java.sql.Date.class;
+		} else if (SqlTime.class.isAssignableFrom(field)) {
+			ret = java.sql.Time.class;
+		} else if (SqlTimestamp.class.isAssignableFrom(field)) {
+			ret = java.sql.Timestamp.class;
 		}
 		return ret;
 	}
@@ -598,11 +624,16 @@ public class TableGeneratorEditForm extends EditForm {
 	private String generateFieldValueGetterSetter(final List<Map<String, Object>> list) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m: list) {
-			String superPackageName = (String) m.get("superPackageName");
+/*			String superPackageName = (String) m.get("superPackageName");
 			String superSimpleClassName = (String) m.get("superSimpleClassName");
-			Class<?> cls = Class.forName(superPackageName + "." + superSimpleClassName);
+			Class<?> cls = Class.forName(superPackageName + "." + superSimpleClassName);*/
+
+			String packageName = (String) m.get("packageName");
+			String fieldClassName = (String) m.get("fieldClassName");
+			Class<?> cls = Class.forName(packageName + "." + fieldClassName);
 			Class<?> valueType = this.getFieldValueType(cls);
-			log.debug(superSimpleClassName + ":" + valueType);
+			logger.debug(packageName + ":" + valueType);
+
 			String fieldId = getFieldId(m);
 			String uFieldId = StringUtil.firstLetterToUpperCase(fieldId);
 			String comment = (String) m.get("comment");
@@ -625,7 +656,7 @@ public class TableGeneratorEditForm extends EditForm {
 		return sb.toString();
 	}
 
-	
+
 	/**
 	 * フィールドIdの定数を展開します。
 	 * @param list フィールドリスト。
@@ -649,8 +680,8 @@ public class TableGeneratorEditForm extends EditForm {
 		return sb.toString();
 	}
 
-	
-	
+
+
 	/**
 	 * Table.javaのソースを作成します。
 	 * @param data POSTされたデータ。
@@ -699,7 +730,7 @@ public class TableGeneratorEditForm extends EditForm {
 				implist.append(fclass);
 				implist.append(";\n");
 				fieldSet.add(fpackage + "." + fclass);
-			} 
+			}
 			if ("1".equals(pkFlag)) {
 				constructor.append("\t\tthis.addPkField(new ");
 			} else {
@@ -724,7 +755,7 @@ public class TableGeneratorEditForm extends EditForm {
 		tsrc = tsrc.replaceAll("\\$\\{idConstants\\}", this.generateFieldIdConstant(fieldList));
 		tsrc = tsrc.replaceAll("\\$\\{valueGetterSetter\\}", this.generateFieldValueGetterSetter(fieldList));
 		tsrc = tsrc.replaceAll("\\$\\{fieldGetter\\}", this.generateFieldGetter(fieldList));
-		log.debug("tsrc=\n" + tsrc);
+		logger.debug("tsrc=\n" + tsrc);
 		if (!OverwriteModeField.SKIP.equals(tableOverwriteMode)) {
 			srcmap.put(packageName + "." + tableClassName, tsrc);
 		}
@@ -735,11 +766,11 @@ public class TableGeneratorEditForm extends EditForm {
 		if (!relationFile.exists()) {
 			srcmap.put(rclass, this.generateRelationJavaSource(data));
 		}
-		log.debug("srcmap=" + JSON.encode(srcmap));
+		logger.debug("srcmap=" + JSON.encode(srcmap));
 		this.writeJavaSource(path, srcmap);
 	}
 
-	
+
 	/**
 	 * Relation.javaのソースを作成します。
 	 * @param data データ。
@@ -755,7 +786,7 @@ public class TableGeneratorEditForm extends EditForm {
 		return rsrc;
 	}
 
-	
+
 	/**
 	 * javaソース出力。
 	 * @param path javaソースパス。
@@ -778,7 +809,7 @@ public class TableGeneratorEditForm extends EditForm {
 	protected String getSavedMessage(final Map<String, Object> data) {
 		return MessagesUtil.getMessage(this.getPage(), "message.javasourcecreated");
 	}
-	
+
 	/**
 	 * テーブル定義書を作成します。
 	 * @param param パラメータ。
@@ -787,11 +818,11 @@ public class TableGeneratorEditForm extends EditForm {
 	 */
 	@WebMethod
 	public Response print(final Map<String, Object> param) throws Exception {
-		this.methodStartLog(log, param);
+		this.methodStartLog(logger, param);
 		Response ret = null;
 		File template = TableReport.makeTemplate(this);
 		try {
-			log.debug("template path=" + template.getAbsolutePath());
+			logger.debug("template path=" + template.getAbsolutePath());
 			TableReport rep = new TableReport(template.getAbsolutePath(), 0);
 			rep.removeSheet(0);
 			rep.setSheetName(0, ((String) param.get("tableClassName")));
@@ -805,7 +836,7 @@ public class TableGeneratorEditForm extends EditForm {
 		} finally {
 			template.delete();
 		}
-		this.methodFinishLog(log, ret);
+		this.methodFinishLog(logger, ret);
 		return ret;
 	}
 
