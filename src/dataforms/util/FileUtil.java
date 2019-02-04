@@ -32,7 +32,7 @@ public final class FileUtil {
 	/**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(FileUtil.class.getName());
+    private static Logger logger = Logger.getLogger(FileUtil.class.getName());
 
 
 	/**
@@ -228,7 +228,7 @@ public final class FileUtil {
 		}
 	}
 
-	
+
 	/**
 	 * 一時フォルダを作成します。
 	 * @param path 作成するパス。
@@ -242,17 +242,17 @@ public final class FileUtil {
 		return temp;
 	}
 
-	
-	
+
+
 	/**
-	 * ディレクトリ削除Visitorクラス。 
+	 * ディレクトリ削除Visitorクラス。
 	 *
 	 */
 	public static class DeleteVisitor extends SimpleFileVisitor<Path> {
 
 		@Override
 		public FileVisitResult visitFile(final Path path, final BasicFileAttributes attributes) throws IOException {
-			log.debug("delete file : " + path.getFileName());
+			logger.debug("delete file : " + path.getFileName());
 			Files.delete(path);
 			return checkNotExist(path);
 		}
@@ -260,7 +260,7 @@ public final class FileUtil {
 		@Override
 		public FileVisitResult postVisitDirectory(final Path path, final IOException exception) throws IOException {
 			if (exception == null) {
-				log.debug("delete directory : " + path.getFileName());
+				logger.debug("delete directory : " + path.getFileName());
 				Files.delete(path);
 				return checkNotExist(path);
 			} else {
@@ -269,7 +269,7 @@ public final class FileUtil {
 
 		}
 
-		
+
 		/**
 		 * 削除結果の確認を行います。
 		 * @param path パス。
@@ -283,7 +283,7 @@ public final class FileUtil {
 				throw new IOException();
 			}
 		}
-	}	
+	}
 
 	/**
 	 * ディレクトリ階層の削除を行います。
@@ -295,7 +295,7 @@ public final class FileUtil {
 		Path backup = fs.getPath(path);
 		Files.walkFileTree(backup, new DeleteVisitor());
 	}
-	
+
 	/**
 	 * Zipファイルにファイルを追加します。
 	 * @param basePath 規定パス。
@@ -306,7 +306,7 @@ public final class FileUtil {
 	private static void addFileToZip(final String basePath, final File file, final ZipOutputStream zos) throws Exception {
 		if (!file.isDirectory()) {
 			String p = file.getAbsolutePath().substring(basePath.length() + 1).replaceAll("\\\\", "/");
-			log.debug("path=" + p);
+			logger.debug("path=" + p);
 			ZipEntry zent = new ZipEntry(p);
 			zos.putNextEntry(zent);
 			FileInputStream is = new FileInputStream(file);
@@ -321,8 +321,8 @@ public final class FileUtil {
 				addFileToZip(basePath, f, zos);
 			}
 		}
-	}	
-	
+	}
+
 	/**
 	 * 指定ディレクトリを圧縮しZipファイルを作成します。
 	 * @param zipfile Zipファイル。
@@ -347,7 +347,7 @@ public final class FileUtil {
 			os.close();
 		}
 	}
-	
+
 	/**
 	 * Zipファイルを展開します。
 	 * @param zipfile Zipファイル名。
@@ -376,11 +376,13 @@ public final class FileUtil {
 			while ((entry = zis.getNextEntry()) != null) {
 				if (entry.isDirectory()) {
 					String relativePath = entry.getName();
-					outDir = new File(outDir, relativePath);
-					outDir.mkdirs();
+					File dir = new File(outDir, relativePath);
+					logger.debug("*** dir=" + dir.getAbsolutePath());
+					dir.mkdirs();
 				} else {
 					String relativePath = entry.getName();
 					File outFile = new File(outDir, relativePath);
+					logger.debug("*** file=" + outFile.getAbsolutePath());
 					// 出力先のディレクトリを作成する
 					File parentFile = outFile.getParentFile();
 					parentFile.mkdirs();
@@ -401,7 +403,7 @@ public final class FileUtil {
 			zis.close();
 		}
 	}
-	
+
 	/**
 	 * ファイルリスト作成Visitorクラスです。
 	 *
@@ -411,7 +413,7 @@ public final class FileUtil {
 		 * ファイル名リスト。
 		 */
 		private List<String> list = null;
-		
+
 		/**
 		 * コンストラクタ。
 		 */
@@ -433,7 +435,7 @@ public final class FileUtil {
 			return FileVisitResult.CONTINUE;
 		}
 	}
-	
+
 	/**
 	 * 指定フォルダ内のファイル一覧を取得します。
 	 * @param path フォルダのバス。
