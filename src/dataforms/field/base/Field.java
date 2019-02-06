@@ -24,7 +24,7 @@ import dataforms.validator.ValidationError;
 /**
  * フィールドの基本クラス。
  *
- * 
+ *
  * @param <TYPE> サーバで処理するJavaのデータ型。
  */
 public abstract class Field<TYPE> extends WebComponent implements Cloneable {
@@ -39,7 +39,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	public static final String ID_CURRENT_FIELD_ID = "currentFieldId";
 
 
-	
+
 	/**
 	 * 条件マッチタイプ。
 	 */
@@ -214,7 +214,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * ソート可能フラグ。
 	 */
 	private boolean sortable = false;
-	
+
 
 
 	/**
@@ -299,7 +299,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	private AjaxParameter ajaxParameter = AjaxParameter.FIELD_ONLY;
 
-	
+
 	/**
 	 * 計算イベント発生フィールドフラグ。
 	 */
@@ -327,7 +327,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		return this;
 	}
 
-	
+
 	/**
 	 * ajaxパラメータモードを取得します。
 	 * @return ajaxパラメータモード。
@@ -346,7 +346,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		return this;
 	}
 
-	
+
 	/**
 	 * コンストラクタ。
 	 * <pre>
@@ -631,6 +631,11 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		} else {
 			map.put("relationDataAcquisition", false);
 		}
+		if (this.getRelationDataEvent() == RelationDataEvent.BLUR) {
+			map.put("relationDataEvent", "BLUR");
+		} else {
+			map.put("relationDataEvent", "CHANGE");
+		}
 		if (this.isAutocomplete()) {
 			map.put("autocomplete", true);
 		} else {
@@ -767,6 +772,41 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		return this;
 	}
 
+	/**
+	 * 関連データの取得イベントの種類。
+	 */
+	public enum RelationDataEvent  {
+		/**
+		 * フォーカスを失ったとき。
+		 */
+		BLUR,
+		/**
+		 * 変更されたとき。
+		 */
+		CHANGE,
+	}
+
+	/**
+	 * 関連データ取得イベント。
+	 */
+	private RelationDataEvent relationDataEvent = RelationDataEvent.BLUR;
+
+
+	/**
+	 * 関連データの取得イベントの種類を取得します。
+	 * @return 関連データの取得イベントの種類。
+	 */
+	public RelationDataEvent getRelationDataEvent() {
+		return relationDataEvent;
+	}
+
+	/**
+	 * 関連データの取得イベントの種類を設定します。
+	 * @param relationDataEvent 関連データの取得イベントの種類。
+	 */
+	public void setRelationDataEvent(final RelationDataEvent relationDataEvent) {
+		this.relationDataEvent = relationDataEvent;
+	}
 
 	/**
 	 * 自動入力補完フラグを取得します。
@@ -834,8 +874,8 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * 関連データを取得します。
 	 * @param param パラメータ。
@@ -1243,8 +1283,8 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	public MatchType getDefaultMatchType() {
 		return MatchType.FULL;
 	}
-	
-	
+
+
 	/**
 	 * データベースごとのタイプマップ。
 	 */
@@ -1260,9 +1300,9 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 * があります。
 	 * あえてこれらのデータ型を使用した場合、このメソッドで、RDBMS毎に使用するデータ型を指定することができます。
 	 * MySQLではtinyblobで運用したいフィールドの場合、コンストラクタで以下のように設定します。
-	 * 
+	 *
 	 * 	setDatabaseType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "tinyblob");
-	 * 
+	 *
 	 * </pre>
 	 * @param databaseProductName データベース製品名。
 	 * @param typeName データタイプ名。
@@ -1273,10 +1313,10 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		}
 		this.dbDependentTypeMap.put(databaseProductName, typeName);
 	}
-	
+
 	/**
 	 * データベース製品名毎の特殊データ型を取得します。
-	 * 
+	 *
 	 * @param databaseProductName データベース製品名。
 	 * @return RDBMS毎の特殊データ型。
 	 */
@@ -1306,7 +1346,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 		}
 		return (label.length() + 2) * 14;
 	}
-	
+
 	/**
 	 * HTML生成フラグ。
 	 * <pre>
@@ -1330,8 +1370,8 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	public void setHtmlGeneration(final boolean htmlGeneration) {
 		this.htmlGeneration = htmlGeneration;
 	}
-	
-	
+
+
 	/**
 	 * ラベル構築用インターフェース。
 	 *
@@ -1364,7 +1404,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	}
 
 
-	
+
 	/**
 	 * オートコンプリート用のリストを取得します。
 	 * <pre>
@@ -1381,7 +1421,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 	 */
 	protected List<Map<String, Object>> queryAutocompleteSourceList(final Map<String, Object> data, final Query query, final AutocompleteLabelBuilder lb, final QueryConditionBuilder qcb, final String... ids) throws Exception {
 		String id = (String) data.get(ID_CURRENT_FIELD_ID); // 対象のフィールドIDを取得する。
-		
+
 		qcb.setCondition(query, id, data, ids);
 		Dao dao = new Dao(this);
 		List<Map<String, Object>> list = dao.executeQuery(query);
@@ -1488,7 +1528,7 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 			return blankMap;
 		}
 	}
-	
+
 	/**
 	 * 関連データを取得します。
 	 * <pre>
@@ -1514,5 +1554,5 @@ public abstract class Field<TYPE> extends WebComponent implements Cloneable {
 			}
 			, ids
 		);
-	}	
+	}
 }

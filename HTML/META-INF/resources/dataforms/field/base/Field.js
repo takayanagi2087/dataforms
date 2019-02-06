@@ -172,10 +172,17 @@ Field.prototype.attach = function() {
 	}
 	this.backupStyle();
 	if (this.relationDataAcquisition) {
-		comp.blur(function() {
-			thisField.id = $(this).attr("id")
-			thisField.getRelationData();
-		});
+		if (this.relationDataEvent == "BLUR") {
+			comp.blur(function() {
+				thisField.id = $(this).attr("id")
+				thisField.getRelationData();
+			});
+		} else {
+			comp.change(function() {
+				thisField.id = $(this).attr("id")
+				thisField.getRelationData();
+			});
+		}
 	}
 	thisField.get().prop("fieldObject", this);
 	if (this.autocomplete) {
