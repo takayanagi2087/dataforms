@@ -15,6 +15,7 @@ import dataforms.controller.Form;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.Response;
 import dataforms.devtool.dao.db.TableManagerDao;
+import dataforms.field.common.FlagField;
 import dataforms.field.common.FolderStoreFileField;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.FileUtil;
@@ -27,7 +28,7 @@ import dataforms.validator.ValidationError;
  *
  */
 public class RestoreForm extends Form {
-	
+
 	/**
 	 * Logger.
 	 */
@@ -38,6 +39,13 @@ public class RestoreForm extends Form {
 	public RestoreForm() {
 		super(null);
 		this.addField(new FolderStoreFileField("backupFile")).addValidator(new RequiredValidator());
+		this.addField(new FlagField("deleteDataFlag"));
+	}
+
+	@Override
+	public void init() throws Exception {
+		super.init();
+		this.setFormData("deleteDataFlag", "1");
 	}
 
 	/**
@@ -75,6 +83,7 @@ public class RestoreForm extends Form {
 		Response resp = null;
 		List<ValidationError> list = this.validate(p);
 		if (list.size() == 0) {
+			String deleteDataFlag = (String) p.get("deleteDataFlag");
 			FileItem fi = (FileItem) p.get("backupFile");
 			String path = this.unpackRestoreFile(fi);
 			TableManagerDao dao = new TableManagerDao(this);
@@ -85,6 +94,9 @@ public class RestoreForm extends Form {
 					log.debug("fn=" + fn);
 					String classname = fn.substring(path.length() + 1).replaceAll("[\\\\/]", ".").replaceAll("\\.data\\.json$", "");
 					log.debug("classname=" + classname);
+					if ("1".equals(deleteDataFlag)) {
+						dao.deleteTableData(classname);
+					}
 					dao.importData(classname, path);
 				}
 			}

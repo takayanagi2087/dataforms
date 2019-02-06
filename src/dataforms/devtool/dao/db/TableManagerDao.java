@@ -268,7 +268,7 @@ public class TableManagerDao extends Dao {
 		}
 		return newname;
 	}
-	
+
 	/**
 	 * ダウンロードパラメータをマップに変換する。
 	 * @param param ダウンロードパラメータ。
@@ -288,7 +288,7 @@ public class TableManagerDao extends Dao {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * フィールドに対応したファイル情報を取得します。
 	 * @param f フィールド。
@@ -347,7 +347,7 @@ public class TableManagerDao extends Dao {
 		final Table tbl = Table.newInstance(classname);
 		String datapath = outdir + "/" + classname.replaceAll("\\.", "/") + ".data.json";
 		logger.debug("datapath=" + datapath);
-		
+
 		String filePath = outdir + "/" + classname.replaceAll("\\.", "/");
 		File ff = new File(filePath);
 		if (ff.exists()) {
@@ -424,7 +424,7 @@ public class TableManagerDao extends Dao {
 
 	/**
 	 * インポートデータのファイルフィールド関連の変換を行います。
-	 * 
+	 *
 	 * @param data インポートデータ。
 	 * @param datadir データディレクトリ。
 	 * @param table テーブル。
@@ -446,8 +446,8 @@ public class TableManagerDao extends Dao {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * 初期データをインポートします。
 	 * @param classname クラス名。
@@ -487,7 +487,18 @@ public class TableManagerDao extends Dao {
 		List<Map<String, Object>> list = this.executeQuery(q);
 		return (list.size() > 0);
 	}
-	
+
+	/**
+	 * テーブルのデータを削除。
+	 * @param classname テーブルクラス名。
+	 * @throws Exception 例外。
+	 */
+	public void deleteTableData(final String classname) throws Exception {
+		final Table table = Table.newInstance(classname);
+		this.deleteAllRecord(table);
+	}
+
+
 	/**
 	 * 指定フォルダのデータをインポートします。
 	 * @param classname テーブルクラス名。
@@ -611,8 +622,8 @@ public class TableManagerDao extends Dao {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * テーブルに付随するインデックスを全て削除します。
 	 * @param table インデックスを削除するテーブル。
@@ -663,7 +674,7 @@ public class TableManagerDao extends Dao {
 			}
 		}
 	}
-	
+
 	/**
 	 * テーブルに付随する外部キーを全て作成します。
 	 * @param table テーブル。
@@ -686,8 +697,8 @@ public class TableManagerDao extends Dao {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * テーブルの初期化を行います。
 	 * @param className テーブルクラス名。
@@ -727,7 +738,7 @@ public class TableManagerDao extends Dao {
 			this.initTable(className);
 		}
 	}
-	
+
 	/**
 	 * 初期化するパッケージリストを取得します。
 	 * @return 初期化するパッケージリスト。
@@ -760,7 +771,7 @@ public class TableManagerDao extends Dao {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 全テーブルの外部キーを作成します。
 	 * @throws Exception 例外。
@@ -802,5 +813,5 @@ public class TableManagerDao extends Dao {
 			this.dropForeignKey(table);
 		}
 	}
-	
+
 }
