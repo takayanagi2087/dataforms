@@ -624,15 +624,15 @@ public class TableGeneratorEditForm extends EditForm {
 	private String generateFieldValueGetterSetter(final List<Map<String, Object>> list) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		for (Map<String, Object> m: list) {
-/*			String superPackageName = (String) m.get("superPackageName");
+			String superPackageName = (String) m.get("superPackageName");
 			String superSimpleClassName = (String) m.get("superSimpleClassName");
-			Class<?> cls = Class.forName(superPackageName + "." + superSimpleClassName);*/
-
-			String packageName = (String) m.get("packageName");
+			Class<?> cls = Class.forName(superPackageName + "." + superSimpleClassName);
+/*			String packageName = (String) m.get("packageName");
 			String fieldClassName = (String) m.get("fieldClassName");
-			Class<?> cls = Class.forName(packageName + "." + fieldClassName);
+			Class<?> cls = Class.forName(packageName + "." + fieldClassName);*/
+
 			Class<?> valueType = this.getFieldValueType(cls);
-			logger.debug(packageName + ":" + valueType);
+//			logger.debug(packageName + ":" + valueType);
 
 			String fieldId = getFieldId(m);
 			String uFieldId = StringUtil.firstLetterToUpperCase(fieldId);
