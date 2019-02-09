@@ -121,7 +121,9 @@ public abstract class QueryForm extends Form {
     	if (err.size() > 0) {
     		result = new JsonResponse(JsonResponse.INVALID, err);
     	} else {
+        	String sortOrder = (String) p.get("sortOrder");
     		Map<String, Object> data = this.convertToServerData(p);
+    		data.put("sortOrder", sortOrder);
     		FieldList flist = this.getExportDataFieldList(data);
     		List<Map<String, Object>> list = this.queryExportData(data);
     		ExportDataFile exdata = this.getExportDataFile();

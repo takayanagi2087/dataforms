@@ -384,3 +384,17 @@ Form.prototype.clearData = function() {
 	this.setFormData(data);
 };
 
+/**
+ * 指定したフォームにHIDDEN項目を追加します。
+ * @param {String} field フィールドID。
+ * @param {String} val 値。
+ */
+Form.prototype.setHiddenField = function(field, val) {
+	var hid = this.find('#' + field);
+	if (hid.length == 0) {
+		this.get().append("<input type='hidden' id='" + field + "' name='" + field + "' value='" + val + "'>");
+		hid = this.find('#' + field);
+	}
+	hid.val(val);
+};
+

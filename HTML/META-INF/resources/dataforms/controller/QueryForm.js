@@ -112,6 +112,8 @@ QueryForm.prototype.toConfirmMode = function() {
 QueryForm.prototype.exportData = function() {
 	var queryForm = this;
 	if (queryForm.validate()) {
+		var sortOrder = this.getSortOrder();
+		this.setHiddenField("sortOrder", sortOrder);
 		queryForm.submitForDownload("exportData", function(result) {
 			queryForm.parent.resetErrorStatus();
 			if (result.status == ServerMethod.INVALID) {
@@ -121,3 +123,18 @@ QueryForm.prototype.exportData = function() {
 	}
 };
 
+/**
+ * QueryResultFormのソート順を取得します。
+ */
+QueryForm.prototype.getSortOrder = function() {
+	var ret = null;
+	var qrf = currentPage.getComponent("queryResultForm");
+	if (qrf != null) {
+		var list = qrf.getComponent("queryResult");
+		if (list != null) {
+			ret = list.sortOrder;
+		}
+	}
+	logger.log("sort order=" + ret);
+	return ret;
+};
