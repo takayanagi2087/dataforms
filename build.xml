@@ -14,9 +14,9 @@
 	<property name="source" value="1.8"/>
 	<property name="jar.name" value="dataforms.jar"/>
 	<!--property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/-->
-	<property name="jar.command" value="../../java/8/bin/jar.exe"/>
+	<property name="jar.command" value="C:\eclipse\pleiades-2018-12\java\8\bin\jar.exe" />
 	<property name="jsdoc.command" value="C:\Users\takay\AppData\Roaming\npm\jsdoc.cmd"/>
-	<property name="version.num" value="1.31"/>
+	<property name="version.num" value="1.32"/>
 	<property name="user" value="Masahiko Takayanagi"/>
 	<property name="javadoc.dir" value="./HTML/META-INF/resources/doc/javadoc"/>
 	<property name="jsdoc.dir" value="./HTML/META-INF/resources/doc/jsdoc"/>
@@ -149,7 +149,9 @@
 			以下のタスクでjarを作るとなぜかダメ...
 			SqlGeneratorのアノテーション取得でエラーとなる.
 		-->
-		<!--jar jarfile="${jar.name}" basedir="build/classes" manifest="dataforms.mf"></jar-->
+		<!--
+		<jar jarfile="${jar.name}" basedir="build/classes" manifest="dataforms.mf"></jar>
+		-->
 		<!--  直接java8のjarコマンドを使うとうまく動作するjarができる。-->
 		<exec executable="${jar.command}" dir=".">
 			<arg value="cvmf"/>
