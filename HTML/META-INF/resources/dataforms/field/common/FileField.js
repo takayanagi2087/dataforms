@@ -121,9 +121,9 @@ FileField.prototype.setValue = function(value) {
 	var delcheck = this.parent.find("#" + this.selectorEscape(ckid));
 	if (value != null) {
 		var form = this.getParentForm();
-		var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + value.downloadParameter;
+		var url = location.pathname + "?dfMethod=" + encodeURIComponent(this.getUniqId()) + ".download"  + "&" + value.downloadParameter;
 		if (currentPage.csrfToken != null) {
-			url += "&csrfToken=" + currentPage.csrfToken; 
+			url += "&csrfToken=" + currentPage.csrfToken;
 		}
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		fnlink.attr("href", url);

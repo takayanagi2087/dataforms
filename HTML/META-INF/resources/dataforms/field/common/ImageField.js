@@ -25,7 +25,7 @@ ImageField.prototype.attach = function() {
 	var thumb = this.parent.find("#" + this.selectorEscape(thumbid));
 	thumb.attr("width", this.thumbnailWidth);
 	thumb.attr("height", this.thumbnailHeight);
-	
+
 	thumb.click(function(e) {
 		logger.log("file=" + thisField.get().val().length);
 		var fval = thisField.get().val();
@@ -104,9 +104,9 @@ ImageField.prototype.showImage = function(img) {
 			if (img.url != null) {
 				window.open(img.url, "_image");
 			} else {
-				var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".download"  + "&" + img.downloadParameter;
+				var url = location.pathname + "?dfMethod=" + encodeURIComponent(this.getUniqId()) + ".download"  + "&" + img.downloadParameter;
 				if (currentPage.csrfToken != null) {
-					url += "&csrfToken=" + currentPage.csrfToken; 
+					url += "&csrfToken=" + currentPage.csrfToken;
 				}
 				window.open(url, "_image");
 			}
@@ -154,9 +154,9 @@ ImageField.prototype.setValue = function(value) {
 		var linkid = this.id + "_link";
 		var fnlink = this.parent.find("#" + this.selectorEscape(linkid));
 		if (value.url == null) {
-			var url = location.pathname + "?dfMethod=" + this.getUniqId() + ".downloadThumbnail"  + "&" + value.downloadParameter;
+			var url = location.pathname + "?dfMethod=" + encodeURIComponent(this.getUniqId()) + ".downloadThumbnail"  + "&" + value.downloadParameter;
 			if (currentPage.csrfToken != null) {
-				url += "&csrfToken=" + currentPage.csrfToken; 
+				url += "&csrfToken=" + currentPage.csrfToken;
 			}
 			thumb.attr("src", url);
 			this.downloadUrl = url;
