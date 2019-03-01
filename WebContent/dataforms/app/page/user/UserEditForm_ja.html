@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>User Edit Form</title>
+	</head>
+	<body>
+		<form id="editForm">
+			<div class="formHeader"><span id="editFormTitle"></span></div>
+			<table class="responsive thtd">
+				<thead></thead>
+				<tbody>
+					<tr>
+						<th>ログインID</th>
+						<td>
+							<input type="hidden" id="userId" value=""/>
+							<input type="hidden" id="updateUserId" value=""/>
+							<input type="hidden" id="updateTimestamp" value=""/>
+							<input type="text" id="loginId" value=""/>
+						</td>
+					</tr>
+					<tr>
+						<th>パスワード</th>
+						<td><input type="password" id="password" value=""/></td>
+					</tr>
+					<tr>
+						<th>パスワード(確認)</th>
+						<td><input type="password" id="passwordCheck" value=""/></td>
+					</tr>
+					<tr>
+						<th>氏名</th>
+						<td><input type="text" id="userName" value=""/></td>
+					</tr>
+					<tr>
+						<th>メールアドレス</th>
+						<td><input type="text" id="mailAddress" value=""/></td>
+					</tr>
+					<tr>
+						<th>郵便番号</th>
+						<td><input type="text" id="zipCode" value="" class="zipCode"/></td>
+					</tr>
+					<tr>
+						<th>住所</th>
+						<td><input type="text" id="address" value=""/></td>
+					</tr>
+					<tr>
+						<th>フラグ</th>
+						<td>
+							<input type="checkbox" id="externalUserFlag" value="1"/><label for="externalUserFlag">外部ユーザ</label>
+							<input type="checkbox" id="enabledFlag" value="1"/><label for="enabledFlag">有効</label>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br/>
+			ユーザ属性(ユーザレベルは必ず1件指定してください。)<br/>
+			<div class="hScrollDiv">
+				<table id="attTable" class="editableTable">
+					<thead>
+						<tr>
+							<th class="buttonColumn">
+							</th>
+							<th class="buttonColumn">
+							</th>
+							<th>No.</th>
+							<th>ユーザ属性</th>
+							<th>値</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input type="button" id="attTable[0].addButton" value="+"/>
+							</td>
+							<td>
+								<input type="button" id="attTable[0].deleteButton" value="-"/>
+							</td>
+							<td>
+								<span id="attTable[0].no"></span>
+								<input type="hidden" id="attTable[0].updateUserId" />
+								<input type="hidden" id="attTable[0].updateTimestamp" />
+							</td>
+							<td>
+								<select id="attTable[0].userAttributeType"></select>
+							</td>
+							<td>
+								<select id="attTable[0].userAttributeValue"></select>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>
+								<input type="button" id="attTable.addButton" value="+"/>
+							</th>
+							<th colspan="4"></th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<br/>
+			<input type="button" id="confirmButton" value="確認"/>
+			<input type="button" id="saveButton" value="登録"/>
+			<input type="button" id="resetButton" value="リセット"/>
+			<input type="button" id="deleteButton" value="削除"/>
+			<input type="button" id="backButton" value="戻る"/>
+		</form>
+	</body>
+</html>

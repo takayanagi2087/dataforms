@@ -10,6 +10,8 @@ import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.MailAddressField;
 import dataforms.app.field.user.UserNameField;
 import dataforms.controller.EditForm;
+import dataforms.field.base.FieldList;
+import dataforms.util.UserAdditionalInfoTableUtil;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
 
@@ -37,6 +39,11 @@ public class UserSelfEditForm extends EditForm {
 		this.addField(new LoginIdField());
 		this.addField(new UserNameField());
 		this.addField(new MailAddressField()).addValidator(new RequiredValidator());
+		// ユーザ追加情報テーブルのフィールドを追加します。
+		FieldList flist = UserAdditionalInfoTableUtil.getFieldList();
+		if (flist != null) {
+			this.addFieldList(flist);
+		}
 	}
 
 
@@ -56,7 +63,7 @@ public class UserSelfEditForm extends EditForm {
 		this.setFormDataMap(data);
 	}
 
-	
+
 	@Override
 	public List<ValidationError> validate(final Map<String, Object> param) throws Exception {
 		List<ValidationError> list =  super.validate(param);

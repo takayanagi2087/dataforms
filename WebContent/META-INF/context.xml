@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Context><Context addWebinfClassesResources="true">
+
+	<Resource name="mail/Session" auth="Container" type="javax.mail.Session"
+		mail.smtp.host="localhost" mail.smtp.port="5525" />
+
 	<Resource auth="Container"
 		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
 		name="jdbc/dfdb" type="javax.sql.DataSource"
@@ -29,5 +33,5 @@
 		username="dfuser" password="password" maxTotal="20" maxIdle="10"
 		 maxWaitMillis="-1"/>
 	-->
-		
+
 </Context>

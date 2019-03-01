@@ -29,7 +29,6 @@
 	<!--
 		メールセッション名。
 		メール送信機能を使わない場合は以下の設定をコメントアウトしてください。
-		java9でメール送信機能を使う場合、javaの起動オプションに\-\-add-modules java.activationを指定してください。
 	 -->
 	<context-param>
 		<param-name>mail-session</param-name>
@@ -367,12 +366,12 @@
 	<!-- 開発ツールのjavaソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>java-source-path</param-name>
-		<param-value>/eclipse/pleiades-2018-09/workspaceJava8/dataforms/src</param-value>
+		<param-value>/eclipse/pleiades-2018-12/workspace/dataforms/src</param-value>
 	</context-param>
 	<!-- 開発ツールのhtml,javascript等のWEBリソース出力フォルダを指定します。 -->
 	<context-param>
 		<param-name>web-source-path</param-name>
-		<param-value>/eclipse/pleiades-2018-09/workspaceJava8/dataforms/WebContent</param-value>
+		<param-value>/eclipse/pleiades-2018-12/workspace/dataforms/WebContent</param-value>
 	</context-param>
 	<!--
 		データベース初期化時に作成するユーザのレベルを指定します。
@@ -481,7 +480,21 @@
 		<param-name>multi-open-menu</param-name>
 		<param-value>true</param-value>
 	</context-param>
-
+	<!--
+		ユーザの追加情報を記録するテーブルクラス。
+		UserIdFieldクラスが主キーとなるテーブルクラスを指定します。
+		このクラスを指定するとUserEditForm.java,UserSelfEditForm.java,
+		UserRegistForm.javaに指定されたテーブルのフィールドが配置されます。
+		UserEditForm.html,UserSelfEditPage.html,UserRegistPage.htmlを
+		jarファイルからプロジェクトにエクスポートし、フィールドを追加
+		することにより追加情報を入力することが可能になります。
+	 -->
+	<context-param>
+		<param-name>user-additional-info-table</param-name>
+		<param-value>
+			dataforms.debug.dao.UserAdditionalInfoTable
+		</param-value>
+	</context-param>
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>

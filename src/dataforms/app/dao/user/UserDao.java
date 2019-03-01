@@ -12,6 +12,7 @@ import dataforms.dao.Query;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.FieldList;
 import dataforms.util.CryptUtil;
+import dataforms.util.UserAdditionalInfoTableUtil;
 
 /**
  *
@@ -113,6 +114,7 @@ public class UserDao extends Dao {
 			UserAttributeTable aftable = new UserAttributeTable();
 			this.executeInsert(aftable, list);
 		}
+		UserAdditionalInfoTableUtil.write(this, data);
 	}
 
 	/**
@@ -194,6 +196,7 @@ public class UserDao extends Dao {
 //		ret.put("password", CryptUtil.decrypt((String) ret.get("password")));
 		e.setPassword(CryptUtil.decrypt(e.getPassword()));
 		ret.put("passwordCheck", e.getPassword());
+		UserAdditionalInfoTableUtil.read(this, ret);
 		return ret;
 	}
 
@@ -257,6 +260,7 @@ public class UserDao extends Dao {
 			}
 			this.executeInsert(atbl, list);
 		}
+		UserAdditionalInfoTableUtil.write(this, data);
 	}
 
 	/**
@@ -333,6 +337,7 @@ public class UserDao extends Dao {
 				, tbl.getUpdateTimestampField()
 			),
 			new FieldList(tbl.getField(UserInfoTable.Entity.ID_USER_ID)), data, true);
+		UserAdditionalInfoTableUtil.write(this, data);
 	}
 
 	/**
@@ -341,6 +346,7 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void deleteUser(final Map<String, Object> data) throws Exception {
+		UserAdditionalInfoTableUtil.delete(this, data);
 		SqlGenerator gen = this.getSqlGenerator();
 		UserInfoTable tbl = new UserInfoTable();
 		String sql = gen.generateDeleteSql(tbl, new FieldList(tbl.getField(UserInfoTable.Entity.ID_USER_ID)));

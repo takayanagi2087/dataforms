@@ -9,7 +9,9 @@ import dataforms.app.dao.user.UserDao;
 import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.user.PasswordField;
 import dataforms.controller.EditForm;
+import dataforms.field.base.FieldList;
 import dataforms.htmltable.EditableHtmlTable;
+import dataforms.util.UserAdditionalInfoTableUtil;
 import dataforms.validator.ValidationError;
 
 /**
@@ -41,6 +43,12 @@ public class UserEditForm extends EditForm {
 		this.admin = isAdmin;
 		this.addTableFields(new UserInfoTable());
 		this.insertFieldAfter(new PasswordField("passwordCheck"), "password");
+		// ユーザ追加情報テーブルのフィールドを追加します。
+		FieldList flist = UserAdditionalInfoTableUtil.getFieldList();
+		if (flist != null) {
+			this.addFieldList(flist);
+		}
+		// ユーザ属性テーブルの追加。
 		UserAttributeTable atbl = new UserAttributeTable();
 		EditableHtmlTable at = new EditableHtmlTable("attTable", atbl.getFieldList());
 		this.addHtmlTable(at);
@@ -76,8 +84,7 @@ public class UserEditForm extends EditForm {
 	 * </pre>
 	 */
 	@Override
-	protected Map<String, Object> queryData(final Map<String, Object> data)
-			throws Exception {
+	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
 		UserDao dao = new UserDao(this);
 		Map<String, Object> ret = dao.getSelectedData(data);
 		return ret;

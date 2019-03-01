@@ -18,10 +18,12 @@ import dataforms.app.field.user.PasswordField;
 import dataforms.controller.EditForm;
 import dataforms.controller.WebComponent;
 import dataforms.field.base.Field;
+import dataforms.field.base.FieldList;
 import dataforms.mail.MailSender;
 import dataforms.mail.MailTemplate;
 import dataforms.servlet.DataFormsServlet;
 import dataforms.util.CryptUtil;
+import dataforms.util.UserAdditionalInfoTableUtil;
 import dataforms.validator.MailAddressValidator;
 import dataforms.validator.RequiredValidator;
 import dataforms.validator.ValidationError;
@@ -36,18 +38,18 @@ public class UserRegistForm extends EditForm {
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(UserRegistForm.class);
-	
-	
+
+
 	/**
 	 * ユーザ有効化ページ。
 	 */
 	private static String userEnablePage = null;
-	
+
 	/**
 	 * ユーザ登録時のメール送信確認フラグ。
 	 */
 	private static Map<String, Object> config = null;
-	
+
 	/**
 	 * コンストラクタ。
 	 */
@@ -69,9 +71,15 @@ public class UserRegistForm extends EditForm {
 		}*/
 		this.addField(table.getPasswordField());
 		this.addField(new PasswordField("passwordCheck"));
-		
+
+		// ユーザ追加情報テーブルのフィールドを追加します。
+		FieldList flist = UserAdditionalInfoTableUtil.getFieldList();
+		if (flist != null) {
+			this.addFieldList(flist);
+		}
+
 	}
-	
+
 	/**
 	 * ユーザ有効化ページのパスを取得します。
 	 * @return ユーザ有効化ページ。
@@ -87,7 +95,7 @@ public class UserRegistForm extends EditForm {
 	public static void setUserEnablePage(final String userEnablePage) {
 		UserRegistForm.userEnablePage = userEnablePage;
 	}
-	
+
 
 	/**
 	 * 設定情報を取得します。
@@ -153,10 +161,10 @@ public class UserRegistForm extends EditForm {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 確認メール送信。
-	 * 
+	 *
 	 * @param data 登録データ。
 	 * @throws Exception 例外。
 	 */
@@ -170,13 +178,13 @@ public class UserRegistForm extends EditForm {
 		template.setFrom(MailSender.getMailFrom());
 		template.setReplyTo(MailSender.getMailFrom());
 		template.setArg(UserInfoTable.Entity.ID_USER_NAME, e.getUserName());
-		
+
 		HttpServletRequest req = this.getPage().getRequest();
 		String url = req.getRequestURL().toString();
 		String uri = req.getRequestURI();
-		url = url.replaceAll(uri, req.getContextPath()) + UserRegistForm.getUserEnablePage() + 
+		url = url.replaceAll(uri, req.getContextPath()) + UserRegistForm.getUserEnablePage() +
 				"." + WebComponent.getServlet().getPageExt();
-		
+
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put(UserInfoTable.Entity.ID_USER_ID, data.get(UserInfoTable.Entity.ID_USER_ID));
 //		m.put(UserInfoTable.Entity.ID_LOGIN_ID, data.get(UserInfoTable.Entity.ID_LOGIN_ID));
@@ -191,8 +199,8 @@ public class UserRegistForm extends EditForm {
 		MailSender sender = new MailSender();
 		sender.send(template, session);
 	}
-	
-	
+
+
 	@Override
 	protected void insertData(final Map<String, Object> data) throws Exception {
 		this.setUserInfo(data);
