@@ -16,8 +16,8 @@ FuncEditForm = createSubclass("FuncEditForm", {}, "EditForm");
 FuncEditForm.prototype.attach = function() {
 	EditForm.prototype.attach.call(this);
 	var thisForm = this;
-	this.find("#exportButton").click(function() {
-		thisForm.exportData()
+	this.find("#exportInitDataButton").click(function() {
+		thisForm.exportInitData()
 	});
 
 };
@@ -25,7 +25,7 @@ FuncEditForm.prototype.attach = function() {
 /**
  * データのエクスポートを行います。
  */
-FuncEditForm.prototype.exportData = function() {
+FuncEditForm.prototype.exportInitData = function() {
 	var thisForm = this;
 	currentPage.confirm(null, MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"), function() {
 		thisForm.submit("export", function(data) {

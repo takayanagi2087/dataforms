@@ -7,11 +7,12 @@ import dataforms.app.dao.user.UserInfoTable;
 import dataforms.app.field.enumeration.EnumOptionNameField;
 import dataforms.controller.Page;
 import dataforms.controller.QueryResultForm;
+import dataforms.field.base.Field;
 import dataforms.field.base.Field.SortOrder;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.RowNoField;
-import dataforms.htmltable.HtmlTable;
 import dataforms.htmltable.PageScrollHtmlTable;
+import dataforms.util.UserAdditionalInfoTableUtil;
 
 /**
  * ユーザの検索結果フォームクラス。
@@ -21,25 +22,35 @@ public class UserQueryResultForm extends QueryResultForm {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(UserQueryResultForm.class.getName());
+//    private static Logger logger = Logger.getLogger(UserQueryResultForm.class.getName());
+
+	/**
+	 * 問合せ結果テーブル。
+	 */
+	private PageScrollHtmlTable queryResult = null;
+
 	/**
 	 * コンストラクタ。
 	 */
 	public UserQueryResultForm() {
 		UserInfoTable tbl = new UserInfoTable();
-		//Table atbl = new UserAttributeTable();
-
 		this.addPkField(tbl.getUserIdField());
-		HtmlTable htmltbl = new PageScrollHtmlTable(Page.ID_QUERY_RESULT
-			, new RowNoField()
-			, tbl.getUserIdField()
-			, tbl.getLoginIdField().setSortable(true, SortOrder.DESC)
-			, tbl.getUserNameField().setSortable(true)
-			, new EnumOptionNameField("userLevelName").setSortable(true)
-		);
-		this.addHtmlTable(htmltbl);
-	}
+		FieldList flist = new FieldList();
+		flist.addField(new RowNoField());
+		flist.addField(tbl.getUserIdField());
+		flist.addField(tbl.getLoginIdField()).setSortable(true, SortOrder.DESC);
+		flist.addField(tbl.getUserNameField()).setSortable(true);
+		FieldList aflist = 	UserAdditionalInfoTableUtil.getFieldList();
+		for (Field<?> f: aflist) {
+			flist.addField(f).setSortable(true);
+		}
+		for (int i = 0; i < 10; i++) {
+			flist.addField(new EnumOptionNameField("attribute" + i)).setSortable(true);
+		}
+		this.queryResult = new PageScrollHtmlTable(Page.ID_QUERY_RESULT, flist);
+		this.addHtmlTable(this.queryResult);
 
+	}
 
 	/**
 	 * {@inheritDoc}

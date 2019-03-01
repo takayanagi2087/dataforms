@@ -1,5 +1,6 @@
 package dataforms.app.dao.user;
 
+import dataforms.app.dao.user.UserQuery.UserAttributeSubQuery;
 import dataforms.dao.Table;
 import dataforms.dao.TableRelation;
 
@@ -15,7 +16,7 @@ public class UserInfoTableRelation extends TableRelation {
 	public UserInfoTableRelation(final Table table) {
 		super(table);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * <pre>
@@ -28,9 +29,11 @@ public class UserInfoTableRelation extends TableRelation {
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		if (joinTable instanceof UserAttributeTable
-				|| "ua".equals(alias) || "ul".equals(alias)) {
+		 || joinTable instanceof UserAttributeSubQuery
+		 || "ua".equals(alias)
+		 || "ai".equals(alias)) {
 			return (
-					this.getTable().getLinkFieldCondition(UserInfoTable.Entity.ID_USER_ID/*"userId"*/, joinTable, alias, UserAttributeTable.Entity.ID_USER_ID/*"userId"*/)
+					this.getTable().getLinkFieldCondition(UserInfoTable.Entity.ID_USER_ID, joinTable, alias, UserAttributeTable.Entity.ID_USER_ID)
 			);
 		}
 		return null;

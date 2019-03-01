@@ -1,10 +1,13 @@
 package dataforms.app.dao.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import dataforms.app.dao.enumeration.EnumGroupDao;
+import dataforms.app.dao.enumeration.EnumGroupTable;
 import dataforms.controller.ApplicationException;
 import dataforms.dao.Dao;
 import dataforms.dao.JDBCConnectableObject;
@@ -37,6 +40,26 @@ public class UserDao extends Dao {
 	}
 
 	/**
+	 * ユーザ属性のリストを取得します。
+	 * @return ユーザ属性のリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<String> queryUserAttributeList() throws Exception {
+		List<String> ret = new ArrayList<String>();
+		EnumGroupDao dao = new EnumGroupDao(this);
+		EnumGroupTable.Entity p = new EnumGroupTable.Entity();
+		p.setEnumGroupCode("userAttribute");
+		EnumGroupTable table = new EnumGroupTable();
+		List<Map<String, Object>> list = dao.query(p.getMap(), new FieldList(table.getEnumGroupCodeField()));
+		for (Map<String, Object> m: list) {
+			EnumGroupTable.Entity e = new EnumGroupTable.Entity(m);
+			ret.add(e.getEnumTypeCode());
+		}
+		return ret;
+	}
+
+
+	/**
 	 * ユーザの問い合わせを行います。
 	 * @param flist 問い合わせフォームのフィールドリスト。
 	 * @param data 問い合わせフォームのフィール入力データ。
@@ -45,9 +68,7 @@ public class UserDao extends Dao {
 	 *
 	 */
 	public Map<String, Object> queryUser(final FieldList flist, final Map<String, Object> data) throws Exception {
-//		AQuery query = new AQuery(new UserQuery(flist, data));
-//		query.setQueryFormFieldList(flist);
-//		query.setQueryFormData(data);
+		data.put("userAttributeList", this.queryUserAttributeList());
 		Query query = new UserQuery(flist, data);
 		String sortOrder = (String) data.get("sortOrder");
 		FieldList sflist = query.getFieldList().getOrderByFieldList(sortOrder);
@@ -69,6 +90,7 @@ public class UserDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public List<Map<String, Object>> queryUserList(final FieldList flist, final Map<String, Object> data) throws Exception {
+		data.put("userAttributeList", this.queryUserAttributeList());
 		UserQuery query = new UserQuery(flist, data);
 		return this.executeQuery(query);
 	}
@@ -369,6 +391,7 @@ public class UserDao extends Dao {
 		query.setCondition("m.enabled_flag='1'");
 		Map<String, Object> rec = this.executeRecordQuery(query);
 		if (rec != null) {
+			UserAdditionalInfoTableUtil.read(this, rec);
 			data.put(UserInfoTable.Entity.ID_USER_ID, rec.get(UserInfoTable.Entity.ID_USER_ID));
 			List<Map<String, Object>> attTable = this.executeQuery(new GetUserAttributeQuery(data));
 			rec.put("attTable", attTable);

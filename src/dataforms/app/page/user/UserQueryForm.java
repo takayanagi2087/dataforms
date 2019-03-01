@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import dataforms.annotation.WebMethod;
+import dataforms.app.dao.user.UserDao;
 import dataforms.app.field.user.LoginIdField;
 import dataforms.app.field.user.UserAttributeTypeField;
 import dataforms.app.field.user.UserAttributeValueField;
@@ -17,6 +20,7 @@ import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.htmltable.EditableHtmlTable;
 import dataforms.util.MessagesUtil;
+import net.arnx.jsonic.JSON;
 
 /**
  * ユーザ検索フォームクラス。
@@ -26,7 +30,7 @@ public class UserQueryForm extends QueryForm {
     /**
      * Logger.
      */
-//    private static Logger log = Logger.getLogger(UserQueryForm.class.getName());
+    private static Logger logger = Logger.getLogger(UserQueryForm.class.getName());
 
 	/**
 	 * コンストラクタ。
@@ -70,5 +74,29 @@ public class UserQueryForm extends QueryForm {
 			ret = new JsonResponse(JsonResponse.INVALID, MessagesUtil.getMessage(this.getPage(), "error.permission"));
 		}
 		return ret;
+	}
+
+	@Override
+	protected FieldList getExportDataFieldList(Map<String, Object> data) throws Exception {
+		FieldList flist = super.getExportDataFieldList(data);
+		for (Field<?> f: flist) {
+			f.setComment(f.getId());
+		}
+		return flist;
+	}
+
+
+	@Override
+	protected List<Map<String, Object>> queryExportData(Map<String, Object> data) throws Exception {
+		String lang = this.getPage().getRequest().getLocale().getLanguage();
+		data.put("currentLangCode", lang);
+		UserDao dao = new UserDao(this);
+		List<Map<String, Object>> list = dao.queryUserList(this.getFieldList(), data);
+		int rowNo = 1;
+		for (Map<String, Object> m: list) {
+			m.put("rowNo", Integer.valueOf(rowNo++));
+		}
+		logger.debug("userList=" + JSON.encode(list));
+		return list;
 	}
 }

@@ -18,18 +18,18 @@ EnumGroupQueryForm.prototype.attach = function() {
 	logger.log("userInfo=" + JSON.stringify(currentPage.userInfo));
 	if (currentPage.userInfo.userLevel == "developer") {
 		var thisForm = this;
-		this.find("#exportButton").click(function() {
-			thisForm.exportData()
+		this.find("#exportInitDataButton").click(function() {
+			thisForm.exportInitData()
 		});
 	} else {
-		this.find("#exportButton").remove();
+		this.find("#exportInitDataButton").remove();
 	}
 };
 
 /**
  * データのエクスポートを行います。
  */
-EnumGroupQueryForm.prototype.exportData = function() {
+EnumGroupQueryForm.prototype.exportInitData = function() {
 	var thisForm = this;
 	currentPage.confirm(null, MessagesUtil.getMessage("message.dexportAsInitialDataConfirm"), function() {
 		thisForm.submit("export", function(data) {

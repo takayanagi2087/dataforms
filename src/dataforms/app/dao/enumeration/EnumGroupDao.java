@@ -130,9 +130,10 @@ public class EnumGroupDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public List<Map<String, Object>> query(final Map<String, Object> data, final FieldList flist) throws Exception {
-		Query query = new EnumGroupTableQuery();
+		EnumGroupTableQuery query = new EnumGroupTableQuery();
 		query.setQueryFormFieldList(flist);
 		query.setQueryFormData(data);
+		query.setOrderByFieldList(new FieldList(query.getMainTable().getField(EnumGroupTable.Entity.ID_SORT_ORDER)));
 		return this.executeQuery(query);
 	}
 

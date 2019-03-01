@@ -6,19 +6,17 @@
 	</head>
 	<body>
 		<form id="queryResultForm">
-			<div class="formHeader">検索結果</div>
+			<div class="formHeader">Query result</div>
 			<input type="hidden" id="userId" value=""/>
 			<div class="hScrollDiv">
 				<table id="queryResult">
 					<thead>
 						<tr>
 							<th>No.</th>
-							<th>ログインID</th>
-							<th>氏名</th>
-							<th>ユーザレベル</th>
-							<th>部署</th>
-							<th>役職</th>
-							<th class="deleteColumn">削除</th>
+							<th>Login ID</th>
+							<th>Name</th>
+							<th>User level</th>
+							<th class="deleteColumn">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -31,11 +29,9 @@
 								<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].loginId"></span></a>&nbsp;
 							</td>
 							<td><span id="queryResult[0].userName"></span></td>
-							<td><span id="queryResult[0].attribute0"></span></td>
-							<td><span id="queryResult[0].attribute1"></span></td>
-							<td><span id="queryResult[0].attribute2"></span></td>
+							<td><span id="queryResult[0].userLevelName"></span></td>
 							<td class="deleteColumn">
-								<input type="button" id="queryResult[0].deleteButton" value="削除">
+								<input type="button" id="queryResult[0].deleteButton" value="Delete">
 							</td>
 						</tr>
 					</tbody>
