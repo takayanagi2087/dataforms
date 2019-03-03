@@ -120,6 +120,7 @@ QueryForm.prototype.exportData = function() {
 				queryForm.parent.setErrorInfo(queryForm.getValidationResult(result), queryForm);
 			}
 		});
+		this.find("#sortOrder").remove();
 	}
 };
 
