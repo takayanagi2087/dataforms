@@ -1653,7 +1653,7 @@ public class Dao implements JDBCConnectableObject {
 	 * @return 存在する場合true。
 	 * @throws Exception 例外。
 	 */
-	protected boolean tableExists(final String tablename) throws Exception {
+	public boolean tableExists(final String tablename) throws Exception {
 		final SqlGenerator gen = this.getSqlGenerator();
 		Dao dao = new Dao(this);
 		String sql = gen.generateTableExistsSql();

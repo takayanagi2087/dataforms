@@ -119,12 +119,14 @@ public class UserAdditionalInfoTableUtil {
 		Class<? extends Table> clazz = UserAdditionalInfoTableUtil.getUserAdditionalInfoTable();
 		if (clazz != null) {
 			Table table = clazz.newInstance();
-			Query query = new Query();
-			query.setFieldList(table.getFieldList());
-			query.setMainTable(table);
-			query.setQueryFormFieldList(table.getPkFieldList());
-			query.setQueryFormData(data);
-			ret = dao.executeRecordQuery(query);
+			if (dao.tableExists(table.getTableName())) {
+				Query query = new Query();
+				query.setFieldList(table.getFieldList());
+				query.setMainTable(table);
+				query.setQueryFormFieldList(table.getPkFieldList());
+				query.setQueryFormData(data);
+				ret = dao.executeRecordQuery(query);
+			}
 		}
 		return ret;
 	}
