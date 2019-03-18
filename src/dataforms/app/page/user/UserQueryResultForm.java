@@ -41,8 +41,10 @@ public class UserQueryResultForm extends QueryResultForm {
 		flist.addField(tbl.getLoginIdField()).setSortable(true, SortOrder.DESC);
 		flist.addField(tbl.getUserNameField()).setSortable(true);
 		FieldList aflist = 	UserAdditionalInfoTableUtil.getFieldList();
-		for (Field<?> f: aflist) {
-			flist.addField(f).setSortable(true);
+		if (aflist != null) {
+			for (Field<?> f: aflist) {
+				flist.addField(f).setSortable(true);
+			}
 		}
 		for (int i = 0; i < 10; i++) {
 			flist.addField(new EnumOptionNameField("attribute" + i)).setSortable(true);

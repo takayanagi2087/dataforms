@@ -76,6 +76,7 @@
 		<pathelement location="../../tomcat/9/lib/tomcat-util.jar"/>
 		<pathelement location="../../tomcat/9/lib/tomcat-websocket.jar"/>
 		<pathelement location="../../tomcat/9/lib/websocket-api.jar"/>
+		<pathelement location="../../tomcat/9/lib/javax.activation.jar"/>
 		<pathelement location="../../tomcat/9/lib/javax.mail.jar"/>
 	</path>
 	<path id="dataforms.classpath">
