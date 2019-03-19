@@ -27,11 +27,19 @@ public abstract class QueryForm extends Form {
     private static Logger log = Logger.getLogger(QueryForm.class.getName());
 
 
+    /**
+     * コンストラクタ。
+     */
+    public QueryForm() {
+    	this(DataForms.ID_QUERY_FORM);
+    }
+
 	/**
 	 * コンストラクタ。
+	 * @param id フォームID。
 	 */
-	public QueryForm() {
-		super(DataForms.ID_QUERY_FORM);
+	public QueryForm(final String id) {
+		super(id);
 	}
 
 	/**

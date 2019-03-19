@@ -31,9 +31,17 @@ public abstract class EditForm extends TableUpdateForm {
 	 * コンストラクタ。
 	 */
 	public EditForm() {
-		super(DataForms.ID_EDIT_FORM);
+		this(DataForms.ID_EDIT_FORM);
+	}
+
+	/**
+	 * コンストラクタ。
+	 * @param id フォームID。
+	 */
+	public EditForm(final String id) {
+		super(id);
 		this.addField(new TextField("saveMode")).setHidden(true);
-		
+
 	}
 
 	/**
@@ -48,7 +56,7 @@ public abstract class EditForm extends TableUpdateForm {
 		this.setPkFieldIdList(table.getPkFieldList());
 	}
 
-	
+
 	/**
 	 * 新規データを取得します。
 	 * @param param パラメータ。

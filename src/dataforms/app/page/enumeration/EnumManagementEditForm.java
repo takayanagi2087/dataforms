@@ -13,6 +13,7 @@ import dataforms.app.dao.enumeration.EnumOptionNameTable;
 import dataforms.app.dao.enumeration.EnumOptionTable;
 import dataforms.app.dao.enumeration.EnumTypeNameTable;
 import dataforms.controller.ApplicationException;
+import dataforms.controller.DataForms;
 import dataforms.controller.EditForm;
 import dataforms.controller.QueryForm;
 import dataforms.dao.Table;
@@ -26,24 +27,42 @@ import net.arnx.jsonic.JSON;
  */
 public class EnumManagementEditForm extends EditForm {
 	/**
+	 * タイプ名リスト。
+	 */
+	public static final String ID_TYPE_NAME_LIST = "typeNameList";
+	/**
+	 * オプション名リスト。
+	 */
+	public static final String ID_OPTION_NAME_LIST = "optionNameList";
+	/**
 	 * Log.
 	 */
 	private static Logger log = Logger.getLogger(EnumManagementEditForm.class);
+
 	/**
 	 * コンストラクタ。
 	 */
 	public EnumManagementEditForm() {
+		this(DataForms.ID_EDIT_FORM);
+	}
+
+	/**
+	 * コンストラクタ。
+	 * @param id フォームID。
+	 */
+	public EnumManagementEditForm(final String id) {
+		super(id);
 		EnumOptionTable table = new EnumOptionTable();
 //		this.addTableFields(table);
 		this.addField(table.getEnumTypeCodeField()).addValidator(new RequiredValidator());
 		Table typeNameTable = new EnumTypeNameTable();
 		this.setPkFieldIdList(typeNameTable.getPkFieldList());
-		EditableHtmlTable typeNameList = new EditableHtmlTable("typeNameList", typeNameTable.getFieldList());
+		EditableHtmlTable typeNameList = new EditableHtmlTable(ID_TYPE_NAME_LIST, typeNameTable.getFieldList());
 		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
 		typeNameList.getFieldList().get(EnumTypeNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
 		this.addHtmlTable(typeNameList);
 		Table optionNameTable = new EnumOptionNameTable();
-		EditableHtmlTable optionNameList = new EditableHtmlTable("optionNameList", optionNameTable.getFieldList());
+		EditableHtmlTable optionNameList = new EditableHtmlTable(ID_OPTION_NAME_LIST, optionNameTable.getFieldList());
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_TYPE_CODE).removeRequiredValidator();
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_ENUM_OPTION_CODE).addValidator(new RequiredValidator());
 		optionNameList.getFieldList().get(EnumOptionNameTable.Entity.ID_LANG_CODE).addValidator(new RequiredValidator());
@@ -96,7 +115,7 @@ public class EnumManagementEditForm extends EditForm {
 	private List<ValidationError> validateTypeNameLangCode(final Map<String, Object> data) throws Exception {
 		List<ValidationError> ret = new ArrayList<ValidationError>();
 		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get("typeNameList");
+		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get(ID_TYPE_NAME_LIST);
 		HashSet<String> set = new HashSet<String>();
 		boolean dflg = false;
 		for (int i = 0; i < typeNameList.size(); i++) {
@@ -113,7 +132,7 @@ public class EnumManagementEditForm extends EditForm {
 			set.add(lang);
 		}
 		if (!dflg) {
-			ValidationError err = new ValidationError("typeNameList", this.getPage().getMessage("error.nodefaultlangcode"));
+			ValidationError err = new ValidationError(ID_TYPE_NAME_LIST, this.getPage().getMessage("error.nodefaultlangcode"));
 			ret.add(err);
 		}
 		return ret;
@@ -128,7 +147,7 @@ public class EnumManagementEditForm extends EditForm {
 	private List<ValidationError> validateOptionNameLangCode(final Map<String, Object> data) throws Exception {
 		List<ValidationError> ret = new ArrayList<ValidationError>();
 		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get("optionNameList");
+		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get(ID_OPTION_NAME_LIST);
 		HashSet<String> set = new HashSet<String>();
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < optionNameList.size(); i++) {
@@ -183,13 +202,13 @@ public class EnumManagementEditForm extends EditForm {
 	@Override
 	protected void updateData(final Map<String, Object> data) throws Exception {
 		String enumTypeCode = (String) data.get("enumTypeCode");
-		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get("typeNameList");
+		List<Map<String, Object>> typeNameList = (List<Map<String, Object>>) data.get(ID_TYPE_NAME_LIST);
 		for (Map<String, Object> m: typeNameList) {
 			EnumTypeNameTable.Entity e = new EnumTypeNameTable.Entity(m);
 //			m.put("enumTypeCode", enumTypeCode);
 			e.setEnumTypeCode(enumTypeCode);
 		}
-		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get("optionNameList");
+		List<Map<String, Object>> optionNameList = (List<Map<String, Object>>) data.get(ID_OPTION_NAME_LIST);
 		for (Map<String, Object> m: optionNameList) {
 			EnumOptionNameTable.Entity e = new EnumOptionNameTable.Entity(m);
 			//m.put("enumTypeCode", enumTypeCode);

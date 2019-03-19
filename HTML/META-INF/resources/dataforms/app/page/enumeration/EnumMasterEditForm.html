@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<form id="editForm">
+			<input type="hidden" id="saveMode" />
+			<table class="responsive" style="display:none;">
+				<tbody>
+					<tr>
+						<th>列挙型コード.</th>
+						<td><input type="text" id="enumTypeCode" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="hScrollDiv"  style="display:none;">
+				<table id="typeNameList" class="editableTable">
+					<thead>
+						<tr>
+							<th colspan="2" nowrap>
+
+							</th>
+							<th nowrap>
+								No.
+							</th>
+							<th>
+								コード.
+							</th>
+							<th>
+								言語コード
+							</th>
+							<th>
+								名称.
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="buttonColumn">
+								<input type="button" id="typeNameList[0].addButton" value="+"/>
+							</td>
+							<td class="buttonColumn">
+								<input type="button" id="typeNameList[0].deleteButton" value="-"/>
+							</td>
+							<td style="text-align: right;" class="rowno">
+								<span id="typeNameList[0].no"></span>
+							</td>
+							<td>
+								<input type="text" id="typeNameList[0].enumTypeCode" />
+								<input type="hidden" id="typeNameList[0].createUserId" />
+								<input type="hidden" id="typeNameList[0].createTimestamp" />
+								<input type="hidden" id="typeNameList[0].updateUserId" />
+								<input type="hidden" id="typeNameList[0].updateTimestamp" />
+							</td>
+							<td>
+								<select id="typeNameList[0].langCode"></select>
+							</td>
+							<td>
+								<input type="text" id="typeNameList[0].enumTypeName" />
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th class="buttonColumn">
+								<input type="button" id="typeNameList.addButton" value="+"/>
+							</th>
+							<th colspan="5">
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="hScrollDiv">
+				<table id="optionNameList" class="editableTable">
+					<thead>
+						<tr>
+							<th colspan="2" nowrap>
+
+							</th>
+							<th nowrap>
+								No.
+							</th>
+							<th>
+								コード
+							</th>
+							<th class="langCode">
+								言語コード
+							</th>
+							<th>
+								名称
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="buttonColumn">
+								<input type="button" id="optionNameList[0].addButton" value="+"/>
+							</td>
+							<td class="buttonColumn">
+								<input type="button" id="optionNameList[0].deleteButton" value="-"/>
+							</td>
+							<td style="text-align: right;" class="rowno">
+								<span id="optionNameList[0].no"></span>
+							</td>
+							<td>
+								<input type="hidden" id="optionNameList[0].enumTypeCode" />
+								<input type="hidden" id="optionNameList[0].createUserId" />
+								<input type="hidden" id="optionNameList[0].createTimestamp" />
+								<input type="hidden" id="optionNameList[0].updateUserId" />
+								<input type="hidden" id="optionNameList[0].updateTimestamp" />
+								<input type="text" id="optionNameList[0].enumOptionCode" />
+							</td>
+							<td class="langCode">
+								<select id="optionNameList[0].langCode"></select>
+							</td>
+							<td>
+								<input type="text" id="optionNameList[0].enumOptionName" />
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th class="buttonColumn">
+								<input type="button" id="optionNameList.addButton" value="+"/>
+							</th>
+							<th colspan="6">
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<input type="button" id="confirmButton" value="確認"/>
+			<input type="button" id="saveButton" value="登録"/>
+			<input type="button" id="resetButton" value="リセット"/>
+			<input type="button" id="deleteButton" value="削除"/>
+			<input type="button" id="backButton" value="戻る"/>
+		</form>
+
+	</body>
+</html>
