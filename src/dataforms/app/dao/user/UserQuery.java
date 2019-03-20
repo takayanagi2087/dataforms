@@ -51,6 +51,8 @@ public class UserQuery extends Query {
 		}
 	}
 
+
+	// TODO:クラス名が重複しているので、クラス名の変更を検討。
 	/**
 	 * ユーザ属性副問合せ。
 	 */
