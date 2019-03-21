@@ -1,24 +1,25 @@
 package dataforms.field.common;
 
-import dataforms.dao.sqldatatype.SqlChar;
+import dataforms.dao.sqldatatype.SqlVarchar;
 
 /**
- * CHAR型の単一選択フィールドクラス。
+ * VARCHAR型の単一選択フィールドクラス。
  * <pre>
  * optionList中の選択肢を単一選択の&lt;select&gt;や&lt;input type=&quot;radio&quot; ...&gt;に
  * 表示し、選択するためのフィールドです。
  * </pre>
  *
  */
-public class CharSingleSelectField extends SingleSelectField<String> implements SqlChar {
+public class VarcharSingleSelectField extends SingleSelectField<String> implements SqlVarchar {
 	/**
 	 * コンストラクタ。
 	 * @param id フィールドID。
 	 * @param length 長さ。
 	 */
-	public CharSingleSelectField(final String id, final int length) {
+	public VarcharSingleSelectField(final String id, final int length) {
 		super(id, length);
 	}
+
 
 	@Override
 	protected String getLengthParameterSample() throws Exception {
@@ -34,7 +35,6 @@ public class CharSingleSelectField extends SingleSelectField<String> implements 
 		return "^[0-9]+$";
 	}
 
-	
 	@Override
 	public String getFieldOption() {
 		return Integer.toString(this.getLength());
