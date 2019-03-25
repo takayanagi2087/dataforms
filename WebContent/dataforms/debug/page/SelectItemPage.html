@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="mainDiv">
+			<form id="queryForm">
+				<div class="formHeader">検索条件</div>
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>Charフィールド</th>
+							<td><select id="charItem"></select></td>
+						</tr>
+						<tr>
+							<th>Varcharフィールド</th>
+							<td><select id="varcharItem"></select></td>
+						</tr>
+						<tr>
+							<th>Smallintフィールド</th>
+							<td><select id="smallintItem"></select></td>
+						</tr>
+						<tr>
+							<th>Integerフィールド</th>
+							<td><select id="integerIetm"></select></td>
+						</tr>
+						<tr>
+							<th>Bigintフィールド</th>
+							<td><select id="bigintItem"></select></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" id="queryButton" value="検索">
+				<input type="button" id="resetButton" value="リセット">&nbsp;
+				<input type="button" id="newButton" value="新規登録">
+			</form>
+			<form id="queryResultForm">
+				<div class="formHeader">検索結果</div>
+				<table class="responsive">
+					<tbody>
+					</tbody>
+				</table>
+				<div class="hScrollDiv">
+					<table id="queryResult">
+						<thead>
+							<tr>
+								<th>
+									No.
+								</th>
+								<th>
+									Charフィールド
+								</th>
+								<th>
+									Varcharフィールド
+								</th>
+								<th>
+									Smallintフィールド
+								</th>
+								<th>
+									Integerフィールド
+								</th>
+								<th>
+									Bigintフィールド
+								</th>
+								<th>
+									操作
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span id="queryResult[0].rowNo"></span>
+									<input type="hidden" id="queryResult[0].singleSelectId" />
+									<input type="hidden" id="queryResult[0].createUserId" />
+									<input type="hidden" id="queryResult[0].createTimestamp" />
+									<input type="hidden" id="queryResult[0].updateUserId" />
+									<input type="hidden" id="queryResult[0].updateTimestamp" />
+								</td>
+								<td>
+									<span id="queryResult[0].charItem"></span>
+								</td>
+								<td>
+									<a id="queryResult[0].updateButton" href="javascript:void(0);"><span id="queryResult[0].varcharItem"></span></a>
+								</td>
+								<td>
+									<span id="queryResult[0].smallintItem"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].integerIetm"></span>
+								</td>
+								<td>
+									<span id="queryResult[0].bigintItem"></span>
+								</td>
+								<td>
+									<input type="button" id="queryResult[0].viewButton" value="表示">
+									<input type="button" id="queryResult[0].referButton" value="参照登録">
+									<input type="button" id="queryResult[0].deleteButton" value="削除">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<form id="editForm">
+				<div class="formHeader"><span id="editFormTitle"></span></div>
+				<input type="hidden" id="saveMode" />
+				<input type="hidden" id="singleSelectId" />
+				<input type="hidden" id="createUserId" />
+				<input type="hidden" id="createTimestamp" />
+				<input type="hidden" id="updateUserId" />
+				<input type="hidden" id="updateTimestamp" />
+				<table class="responsive">
+					<tbody>
+						<tr>
+							<th>Charフィールド</th>
+							<td><select id="charItem"></select></td>
+						</tr>
+						<tr>
+							<th>Varcharフィールド</th>
+							<td><select id="varcharItem"></select></td>
+						</tr>
+						<tr>
+							<th>Smallintフィールド</th>
+							<td><select id="smallintItem"></select></td>
+						</tr>
+						<tr>
+							<th>Integerフィールド</th>
+							<td><select id="integerIetm"></select></td>
+						</tr>
+						<tr>
+							<th>Bigintフィールド</th>
+							<td><select id="bigintItem"></select></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="button" id="confirmButton" value="確認"/>
+				<input type="button" id="saveButton" value="登録"/>
+				<input type="button" id="resetButton" value="リセット"/>
+				<input type="button" id="deleteButton" value="削除"/>
+				<input type="button" id="backButton" value="戻る"/>
+			</form>
+
+		</div>
+	</body>
+</html>

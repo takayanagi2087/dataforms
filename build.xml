@@ -135,6 +135,7 @@
 		<delete file="build/classes/log4j.dtd"/>
 		<delete dir="build/classes/proj"/>
 		<delete dir="build/classes/test"/>
+		<delete dir="build/classes/dataforms/debug"/>
 		<delete dir="build/classes/META-INF/MANIFEST.MF"/>
 		<manifest file="dataforms.mf">
 			<attribute name="Built-By" value="${user}"/>
@@ -149,8 +150,6 @@
 		<!--　
 			以下のタスクでjarを作るとなぜかダメ...
 			SqlGeneratorのアノテーション取得でエラーとなる.
-		-->
-		<!--
 		<jar jarfile="${jar.name}" basedir="build/classes" manifest="dataforms.mf"></jar>
 		-->
 		<!--  直接java8のjarコマンドを使うとうまく動作するjarができる。-->
@@ -160,6 +159,14 @@
 			<arg value="${jar.name}"/>
 			<arg value="-C"/>
 			<arg value="build/classes"/>
+			<arg value="."/>
+		</exec>
+		<!-- javaソースを追加 -->
+		<exec executable="${jar.command}" dir=".">
+			<arg value="uvf"/>
+			<arg value="${jar.name}"/>
+			<arg value="-C"/>
+			<arg value="src"/>
 			<arg value="."/>
 		</exec>
 	</target>
