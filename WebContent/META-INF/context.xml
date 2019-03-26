@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Context><Context addWebinfClassesResources="true">
 
-
 	<Resource name="mail/Session" auth="Container" type="javax.mail.Session"
 		mail.smtp.host="localhost" mail.smtp.port="5525" />
 
 <!--
 	<Resource auth="Container"
-		driverClassName="org.postgresql.Driver"
-		name="jdbc/dfdb" type="javax.sql.DataSource"
-		url="jdbc:postgresql://192.168.56.101:5432/tfc"
-		username="postgres" password="" />
--->
-	<Resource auth="Container"
 		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
 		name="jdbc/dfdb" type="javax.sql.DataSource"
 		url="jdbc:derby:/javadb/dfdbB;create=true"
 		username="" password="" />
+-->
+
+	<Resource auth="Container"
+		driverClassName="org.postgresql.Driver"
+		name="jdbc/dfdb" type="javax.sql.DataSource"
+		url="jdbc:postgresql://192.168.56.101:5432/tfc"
+		username="postgres" password="" />
 
 	<!--
 	<Resource auth="Container"

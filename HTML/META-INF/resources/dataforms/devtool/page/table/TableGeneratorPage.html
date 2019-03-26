@@ -100,23 +100,27 @@
 			</form>
 			<form id="editForm">
 				<div class="formHeader"><span id="editFormTitle"></span></div>
-				<table class="responsive thtd">
+				<table class="responsive thtdthtd">
 					<tbody>
+						<tr>
+							<td colspan="4"><a id="showImportButton" href="javascript:void(0);">Import existing table ...</a></td>
+						</tr>
+						<tr class="importFields" style="display: none;">
+							<th>Import table name</th>
+							<td><input type="text" id="importTable"/></td>
+							<td colspan="2"><input type="button" id="importButton" value="インポート"/></td>
+						</tr>
 						<tr>
 							<th>Java source path</th>
 							<td>
 								<input type="text" id="javaSourcePath"/>
 							</td>
-						</tr>
-						<tr>
 							<th>Function</th>
 							<td><select id="functionSelect"></select></td>
 						</tr>
 						<tr>
 							<th>Package</th>
 							<td><input type="text" id="packageName"/></td>
-						</tr>
-						<tr>
 							<th>Table class</th>
 							<td>
 								<input type="text" id="tableClassName"/>
@@ -127,8 +131,6 @@
 							<td>
 								<input type="text" id="tableComment"/>
 							</td>
-						</tr>
-						<tr>
 							<th>Overwrite mode</th>
 							<td>
 								<select id="overwriteMode"></select>
@@ -137,6 +139,8 @@
 						<tr>
 							<th>Automatic primary key generation</th>
 							<td><input type="checkbox" id="autoIncrementId" value="1"/></td>
+							<th>Update information field generation</th>
+							<td><input type="checkbox" id="updateInfoFlag" value="1"/></td>
 						</tr>
 					</tbody>
 				</table>
