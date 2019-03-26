@@ -35,10 +35,12 @@ import dataforms.field.base.Field;
 import dataforms.field.base.Field.MatchType;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.CreateTimestampField;
+import dataforms.field.common.CreateUserIdField;
 import dataforms.field.common.DoNotUpdateField;
 import dataforms.field.common.FileField;
 import dataforms.field.common.RecordIdField;
 import dataforms.field.common.UpdateTimestampField;
+import dataforms.field.common.UpdateUserIdField;
 import dataforms.field.sqlfunc.AliasField;
 import dataforms.field.sqlfunc.CountField;
 import dataforms.field.sqlfunc.GroupSummaryField;
@@ -731,6 +733,17 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 				}
 				sb.append(f.getDbColumnName());
 				flg = true;
+			} else {
+				if (f instanceof CreateUserIdField
+					|| f instanceof CreateTimestampField
+					|| f instanceof UpdateUserIdField
+					|| f instanceof UpdateTimestampField) {
+					if (flg) {
+						sb.append(",");
+					}
+					sb.append(f.getDbColumnName());
+					flg = true;
+				}
 			}
 		}
 		sb.append(" ) select ");
@@ -743,6 +756,19 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 				}
 				sb.append(f.getDbColumnName());
 				flg = true;
+			} else {
+				if (f instanceof CreateUserIdField || f instanceof UpdateUserIdField) {
+					if (flg) {
+						sb.append(",");
+					}
+					sb.append("0");
+				}
+				if (f instanceof CreateTimestampField || f instanceof UpdateTimestampField) {
+					if (flg) {
+						sb.append(",");
+					}
+					sb.append(this.generateSysTimestampSql());
+				}
 			}
 		}
 		sb.append(" from ");
