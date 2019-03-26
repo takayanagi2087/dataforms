@@ -1143,7 +1143,7 @@ public class Dao implements JDBCConnectableObject {
 	 * @param conn JDBC接続情報。
 	 * @return 接続しているSchema。
 	 */
-	private String getSchema(final Connection conn) {
+	protected String getSchema(final Connection conn) {
 		String schema = null;
 		try {
 			schema = conn.getSchema();
@@ -1151,6 +1151,116 @@ public class Dao implements JDBCConnectableObject {
 			logger.debug(e.getMessage());
 		}
 		return schema;
+	}
+
+	/**
+	 * テーブル情報クラス。
+	 *
+	 */
+	public static class TableInfoEntity extends Entity {
+		/**
+		 * テーブル名。
+		 */
+		public static final String ID_TABLE_NAME = "tableName";
+		/**
+		 * 注釈。
+		 */
+		public static final String ID_REMARKS = "remarks";
+
+		/**
+		 * コンストラクタ。
+		 */
+		public TableInfoEntity() {
+
+		}
+
+		/**
+		 * コンストラクタ。
+		 * @param m マップ。
+		 */
+		public TableInfoEntity(final Map<String, Object> m) {
+			super(m);
+		}
+
+		/**
+		 * テーブル名を取得します。
+		 * @return テーブル名。
+		 */
+		public String getTableName() {
+			return (String) this.getMap().get(ID_TABLE_NAME);
+		}
+
+		/**
+		 * テーブル名を設定します。
+		 * @param tableName テーブル名。
+		 */
+		public void setTableName(final String tableName) {
+			this.getMap().put(ID_TABLE_NAME, tableName);
+		}
+
+		/**
+		 * 注釈を取得します。
+		 * @return 注釈。
+		 */
+		public String getRemarks() {
+			return (String) this.getMap().get(ID_REMARKS);
+		}
+
+		/**
+		 * 注釈を設定します。
+		 * @param remarks 注釈。
+		 */
+		public void setRemarks(final String remarks) {
+			this.getMap().put(ID_REMARKS, remarks);
+		}
+
+	}
+
+
+	/**
+	 * データベース中に存在するテーブルリストを取得します。
+	 *
+	 * @return テーブルリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> queryTableInfo() throws Exception {
+		Connection conn = this.getConnection();
+		DatabaseMetaData md = conn.getMetaData();
+		logger.debug("currentCatalog=" + conn.getCatalog());
+		String schema = conn.getSchema();
+		logger.debug("currentSchema=" + schema);
+		List<Map<String, Object>> tableList = new ArrayList<Map<String, Object>>();
+		try (ResultSet rs = md.getTables(conn.getCatalog(), schema, "%", new String[]{"TABLE"})) {
+			while (rs.next()) {
+				TableInfoEntity e = new TableInfoEntity();
+				e.setTableName(rs.getString("TABLE_NAME"));
+				e.setRemarks(rs.getString("REMARKS"));
+				tableList.add(e.getMap());
+			}
+		}
+		return tableList;
+	}
+
+	/**
+	 * 指定されたテーブルの情報を取得します。
+	 * @param table テーブル名。
+	 * @return 指定されたテーブルの情報。
+	 * @throws Exception 例外。
+	 */
+	public Map<String, Object> queryTableInfo(final String table) throws Exception {
+		Connection conn = this.getConnection();
+		DatabaseMetaData md = conn.getMetaData();
+		logger.debug("currentCatalog=" + conn.getCatalog());
+		String schema = conn.getSchema();
+		logger.debug("currentSchema=" + schema);
+		TableInfoEntity e = new TableInfoEntity();
+		try (ResultSet rs = md.getTables(conn.getCatalog(), schema, table, new String[]{"TABLE"})) {
+			if (rs.next()) {
+				e.setTableName(rs.getString("TABLE_NAME"));
+				e.setRemarks(rs.getString("REMARKS"));
+			}
+		}
+		return e.getMap();
 	}
 
 	/**

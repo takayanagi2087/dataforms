@@ -50,8 +50,70 @@ TableGeneratorEditForm.prototype.attach = function() {
 		thisForm.print();
 	});
 
+	this.find("#showImportButton").click(function() {
+		thisForm.showImportField();
+	});
+
+	this.find("#importButton").click(function() {
+		thisForm.importTable();
+	});
+
+	this.find("#functionSelect").change(function() {
+		thisForm.onChangeFunction();
+	});
 };
 
+/**
+ * 機能変更時のパッケージ設定。
+ */
+TableGeneratorEditForm.prototype.onChangeFunction = function() {
+	var func = this.find("#functionSelect").val();
+	if (func != null && func.length > 0) {
+		var fieldList = this.getComponent("fieldList");
+		for (var i = 0; i < fieldList.getRowCount(); i++) {
+			var pkgf = fieldList.getRowField(i, "packageName");
+			var oldv = pkgf.getValue();
+			if (oldv.length == 0) {
+				pkgf.setValue(func.substr(1) + ".field");
+			}
+		}
+	}
+};
+
+
+/**
+ * インポート関連フィールドの表示。
+ */
+TableGeneratorEditForm.prototype.showImportField = function() {
+	this.find(".importFields").toggle();
+};
+
+/**
+ * インポート情報をフォームに設定します。
+ * @param {Object} data インポートデータ。
+ */
+TableGeneratorEditForm.prototype.setTableInfo = function(data) {
+	this.find("#tableClassName").val(data.tableClassName);
+	this.find("#tableComment").val(data.tableComment);
+	var fieldList = this.getComponent("fieldList");
+	fieldList.setTableData(data.fieldList);
+};
+
+/**
+ * インポート関連フィールドの表示。
+ */
+TableGeneratorEditForm.prototype.importTable = function() {
+	var thisForm = this;
+	var m = this.getAsyncServerMethod("importTable");
+	var importTable = this.find("#importTable").val();
+	var func = this.find("#functionSelect").val();
+	m.execute("importTable=" + importTable + "&functionSelect=" + func, function(r) {
+		if (r.status == ServerMethod.SUCCESS) {
+			thisForm.setTableInfo(r.result);
+			thisForm.find(".importFields").toggle();
+		}
+	});
+};
 
 /**
  * 編集モードにします。

@@ -21,6 +21,7 @@ import dataforms.controller.EditForm;
 import dataforms.controller.JsonResponse;
 import dataforms.controller.Response;
 import dataforms.dao.Dao;
+import dataforms.dao.Dao.TableInfoEntity;
 import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.ImageData;
@@ -35,6 +36,8 @@ import dataforms.dao.sqldatatype.SqlSmallint;
 import dataforms.dao.sqldatatype.SqlTime;
 import dataforms.dao.sqldatatype.SqlTimestamp;
 import dataforms.dao.sqldatatype.SqlVarchar;
+import dataforms.devtool.dao.db.TableManagerDao;
+import dataforms.devtool.field.common.DbTableNameField;
 import dataforms.devtool.field.common.FunctionSelectField;
 import dataforms.devtool.field.common.JavaSourcePathField;
 import dataforms.devtool.field.common.OverwriteModeField;
@@ -78,6 +81,23 @@ import net.arnx.jsonic.JSON;
 public class TableGeneratorEditForm extends EditForm {
 
 	/**
+	 * 更新情報フラグ。
+	 */
+	private static final String ID_UPDATE_INFO_FLAG = "updateInfoFlag";
+
+	/**
+	 * 主キー自動生成フラグ。
+	 */
+	private static final String ID_AUTO_INCREMENT_ID = "autoIncrementId";
+
+
+	/**
+	 * インポートテーブル名。
+	 */
+	public static final String ID_IMPORT_TABLE = "importTable";
+
+
+	/**
 	 * Logger.
 	 */
 	private Logger logger = Logger.getLogger(TableGeneratorEditForm .class);
@@ -93,7 +113,9 @@ public class TableGeneratorEditForm extends EditForm {
 		this.addField(new VarcharField("tableComment", 256));
 		this.addField(new TableClassNameField()).setComment("テーブルクラス名").setAutocomplete(false).addValidator(new RequiredValidator());
 		this.addField(new OverwriteModeField());
-		this.addField(new FlagField("autoIncrementId")).setComment("主キー自動生成フラグ");
+		this.addField(new FlagField(ID_AUTO_INCREMENT_ID)).setComment("主キー自動生成フラグ");
+		this.addField(new FlagField(ID_UPDATE_INFO_FLAG)).setComment("更新情報フィールド");
+		this.addField(new DbTableNameField(ID_IMPORT_TABLE)).setAutocomplete(true);
 		FieldListHtmlTable htmltbl = new FieldListHtmlTable();
 		this.addHtmlTable(htmltbl);
 		this.setFormData(htmltbl.getId(), new ArrayList<Map<String, Object>>());
@@ -104,6 +126,8 @@ public class TableGeneratorEditForm extends EditForm {
 		super.init();
 		this.setFormData("overwriteMode", OverwriteModeField.ERROR);
 		this.setFormData("javaSourcePath", DeveloperPage.getJavaSourcePath());
+		this.setFormData(ID_AUTO_INCREMENT_ID, "1");
+		this.setFormData(ID_UPDATE_INFO_FLAG, "1");
 	}
 
 	@Override
@@ -117,9 +141,9 @@ public class TableGeneratorEditForm extends EditForm {
 		Class<?> cls = Class.forName(fullClassName);
 		Table tbl = (Table) cls.newInstance();
 		if (tbl.isAutoIncrementId()) {
-			ret.put("autoIncrementId", "1");
+			ret.put(ID_AUTO_INCREMENT_ID, "1");
 		} else {
-			ret.put("autoIncrementId", "0");
+			ret.put(ID_AUTO_INCREMENT_ID, "0");
 		}
 		ret.put("tableComment", tbl.getComment());
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -692,7 +716,7 @@ public class TableGeneratorEditForm extends EditForm {
 		String tableOverwriteMode = (String) data.get("overwriteMode");
 		String packageName = (String) data.get("packageName");
 		String tableClassName = (String) data.get("tableClassName");
-		String autoIncrementId = (String) data.get("autoIncrementId");
+		String autoIncrementId = (String) data.get(ID_AUTO_INCREMENT_ID);
 		String tableComment = (String) data.get("tableComment");
 		tsrc = tsrc.replaceAll("\\$\\{packageName\\}", packageName);
 		tsrc = tsrc.replaceAll("\\$\\{tableComment\\}", tableComment);
@@ -836,6 +860,46 @@ public class TableGeneratorEditForm extends EditForm {
 		} finally {
 			template.delete();
 		}
+		this.methodFinishLog(logger, ret);
+		return ret;
+	}
+
+	/**
+	 * 指定されたテーブルのフィールドリストを取得します。
+	 * @param func 機能(パッケージ)名。
+	 * @param tableName テーブル名。
+	 * @return フィールドリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> queryFieldList(final String func, final String tableName) throws Exception {
+		TableManagerDao dao = new TableManagerDao(this);
+		List<Map<String, Object>> ret = dao.getTableColumnList(func, tableName);
+		logger.debug("ret=" + JSON.encode(ret, true));
+		return ret;
+	}
+
+	/**
+	 * 既存テーブルのインポートを行います。
+	 * @param param パラメータ。
+	 * @return テーブル構造情報。
+	 * @throws Exception 例外。
+	 */
+	@WebMethod
+	public Response importTable(final Map<String, Object> param) throws Exception {
+		this.methodStartLog(logger, param);
+		String importTable = (String) param.get(ID_IMPORT_TABLE);
+		logger.debug("importTable=" + importTable);
+		String func = (String) param.get("functionSelect");
+		logger.debug("func=" + func);
+		TableManagerDao dao = new TableManagerDao(this);
+		Map<String, Object> m = dao.queryTableInfo(importTable);
+		TableInfoEntity e = new TableInfoEntity(m);
+		String tblname = importTable + "_table";
+		m.put("tableClassName", StringUtil.firstLetterToUpperCase(StringUtil.snakeToCamel(tblname)));
+		m.put("tableComment", e.getRemarks());
+		List<Map<String, Object>> fieldList = this.queryFieldList(func, importTable);
+		m.put("fieldList", fieldList);
+		Response ret = new JsonResponse(JsonResponse.SUCCESS, m);
 		this.methodFinishLog(logger, ret);
 		return ret;
 	}
