@@ -14,15 +14,14 @@ public class ${TableClassShortName} extends Table {
 	 */
 	public ${TableClassShortName}() {
 ${constructor}
-		this.addUpdateInfoFields();
 	}
-	
+
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		${TableClassShortName}Relation r = new ${TableClassShortName}Relation(this);
 		return r.getJoinCondition(joinTable, alias);
 	}
-	
+
 	/**
 	 * Entity操作クラスです。
 	 */
@@ -32,7 +31,7 @@ ${idConstants}
 		 * コンストラクタ。
 		 */
 		public Entity() {
-			
+
 		}
 		/**
 		 * コンストラクタ。

@@ -22,6 +22,7 @@ import dataforms.controller.JsonResponse;
 import dataforms.controller.Response;
 import dataforms.dao.Dao;
 import dataforms.dao.Dao.TableInfoEntity;
+import dataforms.dao.Entity;
 import dataforms.dao.Table;
 import dataforms.dao.file.FileObject;
 import dataforms.dao.file.ImageData;
@@ -181,6 +182,13 @@ public class TableGeneratorEditForm extends EditForm {
 		}
 		ret.put("fieldList", list);
 		ret.put("javaSourcePath", DeveloperPage.getJavaSourcePath());
+
+
+		if (tbl.getField(Entity.ID_UPDATE_TIMESTAMP) == null) {
+			ret.put("updateInfoFlag", "0");
+		} else {
+			ret.put("updateInfoFlag", "1");
+		}
 
 		return ret;
 	}
@@ -774,6 +782,10 @@ public class TableGeneratorEditForm extends EditForm {
 			String comment = (String) m.get("comment");
 			constructor.append(")); //" + comment + "\n");
 		}
+		String flg = (String) data.get(ID_UPDATE_INFO_FLAG);
+		if ("1".equals(flg)) {
+			constructor.append("\t\tthis.addUpdateInfoFields();");
+		}
 		tsrc = tsrc.replaceAll("\\$\\{importList\\}", implist.toString());
 		tsrc = tsrc.replaceAll("\\$\\{constructor\\}", constructor.toString());
 		tsrc = tsrc.replaceAll("\\$\\{idConstants\\}", this.generateFieldIdConstant(fieldList));
@@ -897,6 +909,7 @@ public class TableGeneratorEditForm extends EditForm {
 		String tblname = importTable + "_table";
 		m.put("tableClassName", StringUtil.firstLetterToUpperCase(StringUtil.snakeToCamel(tblname)));
 		m.put("tableComment", e.getRemarks());
+		m.put("updateInfoFlag", "0");
 		List<Map<String, Object>> fieldList = this.queryFieldList(func, importTable);
 		m.put("fieldList", fieldList);
 		Response ret = new JsonResponse(JsonResponse.SUCCESS, m);

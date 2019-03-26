@@ -95,6 +95,11 @@ TableGeneratorEditForm.prototype.showImportField = function() {
 TableGeneratorEditForm.prototype.setTableInfo = function(data) {
 	this.find("#tableClassName").val(data.tableClassName);
 	this.find("#tableComment").val(data.tableComment);
+	if (data.updateInfoFlag == "0") {
+		this.find("#updateInfoFlag").prop("checked", false);
+	} else {
+		this.find("#updateInfoFlag").prop("checked", true);
+	}
 	var fieldList = this.getComponent("fieldList");
 	fieldList.setTableData(data.fieldList);
 };

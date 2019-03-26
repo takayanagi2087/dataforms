@@ -17,7 +17,7 @@ public class CharItemField extends CharSingleSelectField {
 	/**
 	 * フィールド長。
 	 */
-	private static final int LENGTH = 64;
+	private static final int LENGTH = 5;
 
 	/**
 	 * フィールドコメント。

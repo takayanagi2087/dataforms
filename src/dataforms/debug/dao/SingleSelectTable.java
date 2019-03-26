@@ -1,13 +1,14 @@
 package dataforms.debug.dao;
 
 import java.util.Map;
+
 import dataforms.dao.Table;
-import dataforms.debug.field.SingleSelectIdField;
-import dataforms.debug.field.CharItemField;
-import dataforms.debug.field.VarcharItemField;
-import dataforms.debug.field.SmallintItemField;
-import dataforms.debug.field.IntegerIetmField;
 import dataforms.debug.field.BigintItemField;
+import dataforms.debug.field.CharItemField;
+import dataforms.debug.field.IntegerIetmField;
+import dataforms.debug.field.SingleSelectIdField;
+import dataforms.debug.field.SmallintItemField;
+import dataforms.debug.field.VarcharItemField;
 
 
 /**
@@ -27,16 +28,15 @@ public class SingleSelectTable extends Table {
 		this.addField(new SmallintItemField()); //Smallintフィールド
 		this.addField(new IntegerIetmField()); //Integerフィールド
 		this.addField(new BigintItemField()); //Bigintフィールド
-
-		this.addUpdateInfoFields();
+//		this.addUpdateInfoFields();
 	}
-	
+
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		SingleSelectTableRelation r = new SingleSelectTableRelation(this);
 		return r.getJoinCondition(joinTable, alias);
 	}
-	
+
 	/**
 	 * Entity操作クラスです。
 	 */
@@ -58,7 +58,7 @@ public class SingleSelectTable extends Table {
 		 * コンストラクタ。
 		 */
 		public Entity() {
-			
+
 		}
 		/**
 		 * コンストラクタ。

@@ -830,6 +830,7 @@ public class TableManagerDao extends Dao {
 		SqlGenerator gen = this.getSqlGenerator();
 		Map<String, Object> colinfo = new HashMap<String, Object>();
 		String name = rs.getString("COLUMN_NAME");
+		colinfo.put("columnName", name);
 		String fieldClassName = StringUtil.firstLetterToUpperCase(StringUtil.snakeToCamel(name + "_field"));
 		colinfo.put("fieldClassName", fieldClassName);
 		if (func != null && func.length() > 0) {
@@ -845,9 +846,15 @@ public class TableManagerDao extends Dao {
 		if (t == Types.CHAR) {
 			colinfo.put("superSimpleClassName", "CharField");
 			colinfo.put("fieldLength", size);
-		} else if (t == Types.VARCHAR || t == Types.LONGVARCHAR) {
-			colinfo.put("superSimpleClassName", "VarcharField");
-			colinfo.put("fieldLength", size);
+		} else if (t == Types.VARCHAR) {
+			if ("text".equalsIgnoreCase(type)) {
+				colinfo.put("superSimpleClassName", "ClobField");
+			} else {
+				colinfo.put("superSimpleClassName", "VarcharField");
+				colinfo.put("fieldLength", size);
+			}
+		} else if (t == Types.LONGVARCHAR) {
+			colinfo.put("superSimpleClassName", "ClobField");
 		} else if (t == Types.SMALLINT) {
 			colinfo.put("superSimpleClassName", "SmallintField");
 		} else if (t == Types.INTEGER) {
@@ -876,6 +883,32 @@ public class TableManagerDao extends Dao {
 		return colinfo;
 	}
 
+
+	/**
+	 * カラムリストにPKリストに設定します。
+	 * @param tblname テーブル名称。
+	 * @param collist カラムリスト。
+	 * @return PKフラグを設定したフィールドリスト。
+	 * @throws Exception 例外。
+	 */
+	public List<Map<String, Object>> setPkFlag(final String tblname, final List<Map<String, Object>> collist) throws Exception {
+		Connection conn = this.getConnection();
+		DatabaseMetaData md = conn.getMetaData();
+		String schema = getSchema(conn);
+		try (ResultSet rs = md.getPrimaryKeys(conn.getCatalog(), schema, tblname)) {
+			while (rs.next()) {
+				String colname = rs.getString("COLUMN_NAME");
+				for (Map<String, Object> m: collist) {
+					String name = (String) m.get("columnName");
+					if (name.equals(colname)) {
+						m.put("pkFlag", "1");
+					}
+				}
+			}
+		}
+		return collist;
+	}
+
 	/**
 	 * テーブル構造取得します。
 	 * @param func 機能(パッケージ)名。
@@ -898,6 +931,8 @@ public class TableManagerDao extends Dao {
 		} finally {
 			rs.close();
 		}
+
+		this.setPkFlag(tblname, collist);
 		return collist;
 	}
 

@@ -1566,6 +1566,10 @@ public class Dao implements JDBCConnectableObject {
 	 */
 	public boolean isUpdatable(final Table table, final Map<String, Object> param) throws Exception {
 		SqlGenerator gen = this.getSqlGenerator();
+		if (table.getField(Entity.ID_UPDATE_TIMESTAMP) == null) {
+			logger.warn("There is no updateUserId, updateTimestamp on this page.Therefore the exclusive control does not work.");
+			return true;
+		}
 		String sql = gen.generateIsUpdatableSql(table);
 		Map<String, Object> uinfo = this.executeRecordQuery(sql, param);
 		if (uinfo != null) {
