@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dataforms.dao.sqldatatype.SqlClob;
+import dataforms.dao.sqlgen.mysql.MysqlSqlGenerator;
+import dataforms.dao.sqlgen.pgsql.PgsqlSqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
@@ -65,6 +67,8 @@ public class MultiSelectField<TYPE> extends SelectField<List<TYPE>> implements S
 	 */
 	public MultiSelectField(final String id) {
 		super(id);
+		this.setDbDependentType(PgsqlSqlGenerator.DATABASE_PRODUCT_NAME, "text");
+		this.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "longtext");
 	}
 
 
@@ -75,10 +79,12 @@ public class MultiSelectField<TYPE> extends SelectField<List<TYPE>> implements S
 	 */
 	public MultiSelectField(final String id, final int len) {
 		super(id, len);
+		this.setDbDependentType(PgsqlSqlGenerator.DATABASE_PRODUCT_NAME, "text");
+		this.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "longtext");
 	}
 
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setClientValue(final Object v) {

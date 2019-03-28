@@ -306,14 +306,18 @@ public class Table  {
 	 * @return PK定義のSQL。
 	 */
 	public String getPkSql() {
-		StringBuilder sb = new StringBuilder();
-		for (Field<?> pk : this.pkFieldList) {
-			if (sb.length() > 0) {
-				sb.append(",");
+		if (this.pkFieldList.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			for (Field<?> pk : this.pkFieldList) {
+				if (sb.length() > 0) {
+					sb.append(",");
+				}
+				sb.append(StringUtil.camelToSnake(pk.getId()));
 			}
-			sb.append(StringUtil.camelToSnake(pk.getId()));
+			return "primary key(" + sb.toString() + ")";
+		} else {
+			return null;
 		}
-		return "primary key(" + sb.toString() + ")";
 	}
 
 	/**
@@ -526,7 +530,7 @@ public class Table  {
 		return sb.toString();
 	}
 
-	
+
 	/**
 	 * フィールド単位のリンク条件を作成します。
 	 * <pre>
@@ -558,7 +562,7 @@ public class Table  {
 		return this.getLinkFieldCondition(field, joinTable, alias, field);
 	}
 
-	
+
 	/**
 	 * 削除フラグフィールドを取得します。
 	 * @return 削除フラグフィールド。
@@ -598,7 +602,7 @@ public class Table  {
 		return ret;
 	}
 
-	
+
 	/**
 	 * 更新日時フィールドを取得します。
 	 * @return 更新日時フィールド。
@@ -629,7 +633,7 @@ public class Table  {
 		return ret;
 	}
 
-	
+
 	/**
 	 * 更新ユーザIDフィールドを取得します。
 	 * @return 更新ユーザIDフィールド。
@@ -701,7 +705,7 @@ public class Table  {
 	public Map<String, Object> convertImportData(final Map<String, Object> data) {
 		return data;
 	}
-	
+
 	/**
 	 * テーブルに付随するインデックスの一覧を取得します。
 	 * @return テーブルに付随するインデックスの一覧。
@@ -721,7 +725,7 @@ public class Table  {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * テーブル関係を取得します。
 	 * @return テーブル関係。

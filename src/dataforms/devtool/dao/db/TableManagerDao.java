@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -41,6 +42,7 @@ import dataforms.field.base.Field;
 import dataforms.field.base.FieldList;
 import dataforms.field.common.FileField;
 import dataforms.util.ClassFinder;
+import dataforms.util.FileUtil;
 import dataforms.util.NumberUtil;
 import dataforms.util.StringUtil;
 import net.arnx.jsonic.JSON;
@@ -936,4 +938,45 @@ public class TableManagerDao extends Dao {
 		return collist;
 	}
 
+	/**
+	 * SQLスクリプトの実行。
+	 * @param script SQLスクリプトファイル。
+	 * @throws Exception 例外。
+	 */
+	public void executeSqlScript(final String script) throws Exception {
+		File f = new File(script);
+		if (f.exists()) {
+			String sql = FileUtil.readTextFile(script, "utf-8");
+			// logger.debug("script=" + sql);
+			String [] scriptList = sql.split(";");
+			Connection conn = this.getConnection();
+			for (String s: scriptList) {
+				String sc = s.trim();
+				if (sc.length() > 0) {
+					logger.debug("script=" + s);
+					try (PreparedStatement st = conn.prepareStatement(s)) {
+						st.execute();
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * テーブル再構築前のSQLの実行。
+	 * @throws Exception 例外。
+	 */
+	public void executeBeforeRebuildSql() throws Exception {
+		String beforeSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/before.sql");
+		this.executeSqlScript(beforeSql);
+	}
+
+	/**
+	 * テーブル再構築後のSQLの実行。
+	 * @throws Exception 例外。
+	 */
+	public void executeAfterRebuildSql() throws Exception {
+		String afterSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/after.sql");
+		this.executeSqlScript(afterSql);
+	}
 }

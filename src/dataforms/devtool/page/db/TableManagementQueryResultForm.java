@@ -110,6 +110,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		Map<String, Object> p = this.convertToServerData(params);
 
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.executeBeforeRebuildSql();
 		dao.dropAllForeignKeys();
 		@SuppressWarnings("unchecked")
 		List<String> classlist = (List<String>) p.get("checkedClass");
@@ -117,6 +118,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 			dao.initTable(cls);
 		}
 		dao.createAllForeignKeys();
+		dao.executeAfterRebuildSql();
 		List<Map<String, Object>> result = dao.getTableInfoList(classlist);
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, result);
 		this.methodFinishLog(log, ret);
@@ -135,6 +137,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		Map<String, Object> p = this.convertToServerData(params);
 
 		TableManagerDao dao = new TableManagerDao(this);
+		dao.executeBeforeRebuildSql();
 		dao.dropAllForeignKeys();
 		@SuppressWarnings("unchecked")
 		List<String> classlist = (List<String>) p.get("checkedClass");
@@ -142,6 +145,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 			dao.updateTable(cls);
 		}
 		dao.createAllForeignKeys();
+		dao.executeAfterRebuildSql();
 		List<Map<String, Object>> result = dao.getTableInfoList(classlist);
 		JsonResponse ret = new JsonResponse(JsonResponse.SUCCESS, result);
 		this.methodFinishLog(log, ret);
@@ -192,7 +196,7 @@ public class TableManagementQueryResultForm extends QueryResultForm {
 		this.methodFinishLog(log, ret);
 		return ret;
 	}
-	
+
 	/**
 	 * 選択されたテーブルの初期化データを作成します。
 	 * @param params パラメータ。

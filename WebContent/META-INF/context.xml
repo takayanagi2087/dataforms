@@ -4,19 +4,19 @@
 	<Resource name="mail/Session" auth="Container" type="javax.mail.Session"
 		mail.smtp.host="localhost" mail.smtp.port="5525" />
 
-<!--
 	<Resource auth="Container"
 		driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
 		name="jdbc/dfdb" type="javax.sql.DataSource"
 		url="jdbc:derby:/javadb/dfdbB;create=true"
 		username="" password="" />
--->
 
+<!--
 	<Resource auth="Container"
 		driverClassName="org.postgresql.Driver"
 		name="jdbc/dfdb" type="javax.sql.DataSource"
 		url="jdbc:postgresql://192.168.56.101:5432/tfc"
 		username="postgres" password="" />
+-->
 
 	<!--
 	<Resource auth="Container"
@@ -31,16 +31,14 @@
 	<Resource name="jdbc/dfdb" type="javax.sql.DataSource"
 		auth="Container" driverClassName="org.postgresql.Driver"
 		url="jdbc:postgresql://192.168.56.102:5432/dfdb" username="postgres"
-		password="" maxActive="20" maxIdel="5" maxWait="5000" />
+		password="" />
 	<Resource name="jdbc/dfdb" auth="Container" type="javax.sql.DataSource"
 		username="dfuser" password="password" driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://192.168.56.102/dfdb?generateSimpleParameterMetadata=true&amp;useInformationSchema=true&amp;useOldAliasMetadataBehavior=true&amp;characterEncoding=utf8"
-		maxActive="8" maxIdle="8" />
+		url="jdbc:mysql://192.168.56.102/dfdb?generateSimpleParameterMetadata=true&amp;useInformationSchema=true&amp;useOldAliasMetadataBehavior=true&amp;characterEncoding=utf8" />
 	<Resource name="jdbc/dfdb" auth="Container"
 		type="javax.sql.DataSource" driverClassName="oracle.jdbc.OracleDriver"
 		url="jdbc:oracle:thin:@192.168.56.102:1521:xe"
-		username="dfuser" password="password" maxTotal="20" maxIdle="10"
-		 maxWaitMillis="-1"/>
+		username="dfuser" />
 	-->
 
 </Context>

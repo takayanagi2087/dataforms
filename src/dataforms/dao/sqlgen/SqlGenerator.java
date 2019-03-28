@@ -251,7 +251,14 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 	 */
 	public String getDatabaseType(final Field<?> field) {
 		String ret = null;
-		if (field instanceof SqlVarchar) {
+		String dtype = field.getDbDependentType(this.getDatabaseProductName());
+//		log.debug("dtype=" + dtype);
+		if (dtype != null) {
+			ret = dtype;
+			if (field instanceof SqlVarchar || field instanceof SqlChar) {
+				ret += "(" + field.getLength() + ")";
+			}
+		} else if (field instanceof SqlVarchar) {
 			ret = "varchar(" + field.getLength() + ")";
 		} else if (field instanceof SqlChar) {
 			ret = "char(" + field.getLength() + ")";
@@ -387,8 +394,11 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 
 		sb.append(" (\n");
 		sb.append(cols);
-		sb.append(",");
-		sb.append(table.getPkSql());
+		String pk = table.getPkSql();
+		if (pk != null) {
+			sb.append(",");
+			sb.append(pk);
+		}
 		sb.append("\n)");
 		if (this.getCommentSyntax() == CommentSyntax.CREATE_COMMENT) {
 			if (table.getComment() != null) {

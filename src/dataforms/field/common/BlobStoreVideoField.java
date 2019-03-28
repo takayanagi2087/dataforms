@@ -1,6 +1,8 @@
 package dataforms.field.common;
 
 import dataforms.dao.sqldatatype.SqlBlob;
+import dataforms.dao.sqlgen.mysql.MysqlSqlGenerator;
+import dataforms.dao.sqlgen.pgsql.PgsqlSqlGenerator;
 
 /**
  * BLOB保存動画ファイルフィールドクラス。
@@ -16,7 +18,7 @@ public class BlobStoreVideoField extends VideoField implements SqlBlob {
 	 * コンストラクタ。
 	 */
 	public BlobStoreVideoField() {
-		super(null);
+		this(null);
 	}
 
 	/**
@@ -25,5 +27,7 @@ public class BlobStoreVideoField extends VideoField implements SqlBlob {
 	 */
 	public BlobStoreVideoField(final String id) {
 		super(id);
+		this.setDbDependentType(PgsqlSqlGenerator.DATABASE_PRODUCT_NAME, "bytea");
+		this.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "longblob");
 	}
 }

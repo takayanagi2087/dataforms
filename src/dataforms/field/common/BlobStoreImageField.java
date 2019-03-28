@@ -1,6 +1,8 @@
 package dataforms.field.common;
 
 import dataforms.dao.sqldatatype.SqlBlob;
+import dataforms.dao.sqlgen.mysql.MysqlSqlGenerator;
+import dataforms.dao.sqlgen.pgsql.PgsqlSqlGenerator;
 
 /**
  * BLOB保存画像ファイルフィールドクラス。
@@ -16,7 +18,7 @@ public class BlobStoreImageField extends ImageField implements SqlBlob {
 	 * コンストラクタ。
 	 */
 	public BlobStoreImageField() {
-		super(null);
+		this(null);
 	}
 
 	/**
@@ -25,5 +27,7 @@ public class BlobStoreImageField extends ImageField implements SqlBlob {
 	 */
 	public BlobStoreImageField(final String id) {
 		super(id);
+		this.setDbDependentType(PgsqlSqlGenerator.DATABASE_PRODUCT_NAME, "bytea");
+		this.setDbDependentType(MysqlSqlGenerator.DATABASE_PRODUCT_NAME, "longblob");
 	}
 }

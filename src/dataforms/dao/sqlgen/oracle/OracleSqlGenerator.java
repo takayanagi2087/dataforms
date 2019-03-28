@@ -24,12 +24,12 @@ import dataforms.util.StringUtil;
  */
 @SqlGeneratorImpl(databaseProductName = OracleSqlGenerator.DATABASE_PRODUCT_NAME)
 public class OracleSqlGenerator extends SqlGenerator {
-	
+
 	/**
 	 * データベースシステムの名称。
 	 */
 	public static final String DATABASE_PRODUCT_NAME = "Oracle";
-			
+
 
 	/**
 	 * コンストラクタ.
@@ -39,7 +39,7 @@ public class OracleSqlGenerator extends SqlGenerator {
 		super(conn);
 	}
 
-	
+
 	@Override
 	public String getDatabaseProductName() {
 		return DATABASE_PRODUCT_NAME;
@@ -67,7 +67,7 @@ public class OracleSqlGenerator extends SqlGenerator {
 	public String generateAdjustSequenceSql(final Table table) throws Exception {
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * テーブル情報を取得するときには、DatabaseMetadataに対し、大文字のテーブル名を渡す必要があるので
@@ -105,12 +105,11 @@ public class OracleSqlGenerator extends SqlGenerator {
 	 */
 	@Override
 	public String getDatabaseType(final Field<?> field) {
+		String ret = "";
 		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
 		if (type != null) {
-			return type;
-		}
-		String ret = "";
-		if (field instanceof SqlVarchar) {
+			ret = type;
+		} else if (field instanceof SqlVarchar) {
 			ret = "nvarchar2(" + field.getLength() + ")";
 		} else if (field instanceof SqlChar) {
 			ret = "nchar(" + field.getLength() + ")";
@@ -220,7 +219,7 @@ public class OracleSqlGenerator extends SqlGenerator {
 		String sql = "select count(*) as cnt from (" + orgsql + ")";
 		return sql;
 	}
-	
+
 	/**
 	 * レコード数をカウントするsqlを作成します。
 	 * @param orgsql SQL。

@@ -5,8 +5,6 @@ import java.sql.Connection;
 import dataforms.annotation.SqlGeneratorImpl;
 import dataforms.dao.QueryPager;
 import dataforms.dao.Table;
-import dataforms.dao.sqldatatype.SqlBlob;
-import dataforms.dao.sqldatatype.SqlClob;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
 import dataforms.util.StringUtil;
@@ -26,7 +24,7 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 	 * データベースシステムの名称。
 	 */
 	public static final String DATABASE_PRODUCT_NAME = "PostgreSQL";
-			
+
 
 	/**
 	 * コンストラクタ.
@@ -40,7 +38,7 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 	public String getDatabaseProductName() {
 		return DATABASE_PRODUCT_NAME;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * シーケンスをサポートしているのでtrueを返します。
@@ -61,7 +59,7 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 		String seqName = table.getSequenceName();
 		Field<?> idField = table.getIdField();
 		String tableName = table.getTableName();
-		String ret = "select setval('" + seqName + 
+		String ret = "select setval('" + seqName +
 				"', (select max(" + StringUtil.camelToSnake(idField.getId()) +
 				") + 1 from " + tableName + "))";
 		return ret;
@@ -113,12 +111,13 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 	 * SqlBlobの実装クラスはbytea型のカラムを作成します。
 	 * </pre>
 	 */
-	@Override
+/*	@Override
 	public String getDatabaseType(final Field<?> field) {
 		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
 		if (type != null) {
 			return type;
 		}
+		// TODO:DB依存型で実装しなおす。
 		if (field instanceof SqlBlob) {
 			return "bytea";
 		} else if (field instanceof SqlClob) {
@@ -126,7 +125,7 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 		} else {
 			return super.getDatabaseType(field);
 		}
-	}
+	}*/
 
 	/**
 	 * {@inheritDoc}

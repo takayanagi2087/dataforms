@@ -41,13 +41,13 @@ public class FileFieldTestTable extends Table {
 
 		this.addUpdateInfoFields();
 	}
-	
+
 	@Override
 	public String getJoinCondition(final Table joinTable, final String alias) {
 		FileFieldTestTableRelation r = new FileFieldTestTableRelation(this);
 		return r.getJoinCondition(joinTable, alias);
 	}
-	
+
 	/**
 	 * Entity操作クラスです。
 	 */
@@ -73,7 +73,7 @@ public class FileFieldTestTable extends Table {
 		 * コンストラクタ。
 		 */
 		public Entity() {
-			
+
 		}
 		/**
 		 * コンストラクタ。

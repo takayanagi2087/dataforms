@@ -9,8 +9,6 @@ import dataforms.controller.ApplicationError;
 import dataforms.dao.Index;
 import dataforms.dao.QueryPager;
 import dataforms.dao.Table;
-import dataforms.dao.sqldatatype.SqlBlob;
-import dataforms.dao.sqldatatype.SqlClob;
 import dataforms.dao.sqldatatype.SqlTimestamp;
 import dataforms.dao.sqlgen.SqlGenerator;
 import dataforms.field.base.Field;
@@ -30,7 +28,7 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	 * データベースシステムの名称。
 	 */
 	public static final String DATABASE_PRODUCT_NAME = "MySQL";
-			
+
 	/**
 	 * コンストラクタ.
 	 * @param conn JDBC接続情報.
@@ -38,7 +36,7 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	public MysqlSqlGenerator(final Connection conn) {
 		super(conn);
 	}
-	
+
 	@Override
 	public String getDatabaseProductName() {
 		return DATABASE_PRODUCT_NAME;
@@ -193,15 +191,7 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	 */
 	@Override
 	public String getDatabaseType(final Field<?> field) {
-		String type = field.getDbDependentType(DATABASE_PRODUCT_NAME);
-		if (type != null) {
-			return type;
-		}
-		if (field instanceof SqlBlob) {
-			return "longblob";
-		} else if (field instanceof SqlClob) {
-			return "longtext";
-		} else if (field instanceof SqlTimestamp) {
+		if (field instanceof SqlTimestamp) {
 			// MySQLのTimestampフィールドは何故かNOT NULLになる。
 			field.setNotNull(true);
 			return super.getDatabaseType(field);
@@ -228,8 +218,8 @@ public class MysqlSqlGenerator extends SqlGenerator {
 		return sb.toString();
 
 	}
-	
-	
+
+
 	/*
 	@Override
 	public String generateAddUniqueSql(final Index index) {
@@ -245,7 +235,7 @@ public class MysqlSqlGenerator extends SqlGenerator {
 		sb.append(index.getIndexName().replaceAll("_index$", "_unique"));
 		return sb.toString();
 	}
-	
+
 	@Override
 	public String generateDropUniqueSql(final Table table, final String idxName) {
 		StringBuilder sb = new StringBuilder();
@@ -256,7 +246,7 @@ public class MysqlSqlGenerator extends SqlGenerator {
 		return sb.toString();
 	}
 
-	
+
 	/**
 	 * Like文のEscape指定文字列を取得します。
 	 * @return Like文のEscape指定文字列。
