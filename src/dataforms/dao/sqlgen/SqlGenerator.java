@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import dataforms.annotation.SqlGeneratorImpl;
+import dataforms.controller.Page;
 import dataforms.dao.Index;
 import dataforms.dao.JDBCConnectableObject;
 import dataforms.dao.Query;
@@ -1870,5 +1871,32 @@ public abstract class SqlGenerator implements JDBCConnectableObject {
 		return this.generateDropForeignKeySql(tbl.getTableName(), StringUtil.camelToSnake(fk.getConstraintName()));
 	}
 
+
+	/**
+	 * DB再構築前後のスクリプトを記録するフォルダを取得します。
+	 * <pre>
+	 * 	"/WEB-INF/dbRebuild/[DB毎のフォルダ]"の形式の文字列を取得します。
+	 * </pre>
+	 * @return リビルド前後のスクリプトを記録するフォルダ。
+	 */
+	public abstract String getRebildSqlFolder();
+
+	/**
+	 * DB再構築前のスクリプトを取得します。
+	 * @return DB再構築前のスクリプト。
+	 * @throws Exception 例外。
+	 */
+	public String getBeforeRebildSql() throws Exception {
+		return Page.getServlet().getServletContext().getRealPath(this.getRebildSqlFolder() + "/before.sql");
+	}
+
+	/**
+	 * DB再構築後のスクリプトを取得します。
+	 * @return DB再構築前のスクリプト。
+	 * @throws Exception 例外。
+	 */
+	public String getAfterRebildSql() throws Exception {
+		return Page.getServlet().getServletContext().getRealPath(this.getRebildSqlFolder() + "/after.sql");
+	}
 
 }

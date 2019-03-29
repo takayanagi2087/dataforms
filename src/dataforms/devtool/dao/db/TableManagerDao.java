@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -947,7 +948,10 @@ public class TableManagerDao extends Dao {
 		File f = new File(script);
 		if (f.exists()) {
 			String sql = FileUtil.readTextFile(script, "utf-8");
-			// logger.debug("script=" + sql);
+
+			Pattern p = Pattern.compile("--.*$", Pattern.MULTILINE);
+			Matcher m = p.matcher(sql);
+			sql = m.replaceAll("");
 			String [] scriptList = sql.split(";");
 			Connection conn = this.getConnection();
 			for (String s: scriptList) {
@@ -967,7 +971,8 @@ public class TableManagerDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void executeBeforeRebuildSql() throws Exception {
-		String beforeSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/before.sql");
+//		String beforeSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/before.sql");
+		String beforeSql = this.getSqlGenerator().getBeforeRebildSql();
 		this.executeSqlScript(beforeSql);
 	}
 
@@ -976,7 +981,8 @@ public class TableManagerDao extends Dao {
 	 * @throws Exception 例外。
 	 */
 	public void executeAfterRebuildSql() throws Exception {
-		String afterSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/after.sql");
+//		String afterSql = Page.getServlet().getServletContext().getRealPath("/WEB-INF/dbRebuild/after.sql");
+		String afterSql = this.getSqlGenerator().getAfterRebildSql();
 		this.executeSqlScript(afterSql);
 	}
 }

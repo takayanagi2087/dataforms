@@ -210,5 +210,9 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 		return " {escape '\\\\'} ";
 	}*/
 
+	@Override
+	public String getRebildSqlFolder() {
+		return "/WEB-INF/dbRebuild/pgsql";
+	}
 
 }

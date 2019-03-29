@@ -255,4 +255,10 @@ public class MysqlSqlGenerator extends SqlGenerator {
 	protected String getLikeEscape() {
 		return "";
 	}
+
+	@Override
+	public String getRebildSqlFolder() {
+		return "/WEB-INF/dbRebuild/mysql";
+	}
+
 }

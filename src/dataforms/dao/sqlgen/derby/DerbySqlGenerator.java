@@ -127,4 +127,10 @@ public class DerbySqlGenerator extends SqlGenerator {
 		String sql = "select * from (select row_number() over() as row_no, m.* from (" + orgsql + ") as m) as m where (:row_from + 1) <= m.row_no and m.row_no <= (:row_to + 1)";
 		return sql;
 	}
+
+
+	@Override
+	public String getRebildSqlFolder() {
+		return "/WEB-INF/dbRebuild/derby";
+	}
 }

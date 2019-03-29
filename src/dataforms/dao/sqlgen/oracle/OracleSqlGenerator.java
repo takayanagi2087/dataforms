@@ -247,4 +247,9 @@ public class OracleSqlGenerator extends SqlGenerator {
 		return ret;
 	}
 
+	@Override
+	public String getRebildSqlFolder() {
+		return "/WEB-INF/dbRebuild/oracle";
+	}
+
 }
