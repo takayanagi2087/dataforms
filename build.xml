@@ -8,13 +8,15 @@
 <project basedir="." default="build" name="dataforms">
 	<!-- javadoc, jsdocとdataforms.jarを作成します。-->
 	<property environment="env"/>
+	<property name="PLEIADES_HOME" value="C:/eclipse/pleiades-2019-03"/>
 	<property name="ECLIPSE_HOME" value="../../eclipse/"/>
+	<property name="TOMCAT_HOME" value="${PLEIADES_HOME}/tomcat/9"/>
 	<property name="debuglevel" value="source,lines,vars"/>
 	<property name="target" value="1.8"/>
 	<property name="source" value="1.8"/>
 	<property name="jar.name" value="dataforms.jar"/>
 	<!--property name="jar.command" value="D:\eclipse\pleiades-e4.7.1\java\8\bin\jar.exe"/-->
-	<property name="jar.command" value="C:\eclipse\pleiades-2018-12\java\8\bin\jar.exe" />
+	<property name="jar.command" value="${PLEIADES_HOME}/java/8/bin/jar.exe" />
 	<property name="jsdoc.command" value="C:\Users\takay\AppData\Roaming\npm\jsdoc.cmd"/>
 	<property name="version.num" value="1.32"/>
 	<property name="user" value="Masahiko Takayanagi"/>
@@ -46,38 +48,38 @@
 	</path>
 	<path id="EAR ライブラリー.libraryclasspath"/>
 	<path id="Apache Tomcat v9.0 [Apache Tomcat v9.0].libraryclasspath">
-		<pathelement location="../../tomcat/9/lib/annotations-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/catalina-ant.jar"/>
-		<pathelement location="../../tomcat/9/lib/catalina-ha.jar"/>
-		<pathelement location="../../tomcat/9/lib/catalina-storeconfig.jar"/>
-		<pathelement location="../../tomcat/9/lib/catalina-tribes.jar"/>
-		<pathelement location="../../tomcat/9/lib/catalina.jar"/>
-		<pathelement location="../../tomcat/9/lib/derby.jar"/>
-		<pathelement location="../../tomcat/9/lib/derbyclient.jar"/>
-		<pathelement location="../../tomcat/9/lib/derbyLocale_ja_JP.jar"/>
-		<pathelement location="../../tomcat/9/lib/ecj-P20140317-1600.jar"/>
-		<pathelement location="../../tomcat/9/lib/el-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/jasper-el.jar"/>
-		<pathelement location="../../tomcat/9/lib/jasper.jar"/>
-		<pathelement location="../../tomcat/9/lib/jsp-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/mysql-connector-java.jar"/>
-		<pathelement location="../../tomcat/9/lib/postgresql-jdbc.jar"/>
-		<pathelement location="../../tomcat/9/lib/servlet-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-coyote.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-dbcp.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-i18n-es.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-i18n-fr.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-i18n-ja.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-jdbc.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-jni.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-spdy.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-util-scan.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-util.jar"/>
-		<pathelement location="../../tomcat/9/lib/tomcat-websocket.jar"/>
-		<pathelement location="../../tomcat/9/lib/websocket-api.jar"/>
-		<pathelement location="../../tomcat/9/lib/javax.activation.jar"/>
-		<pathelement location="../../tomcat/9/lib/javax.mail.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/annotations-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/catalina-ant.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/catalina-ha.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/catalina-storeconfig.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/catalina-tribes.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/catalina.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/derby.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/derbyclient.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/derbyLocale_ja_JP.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/ecj-P20140317-1600.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/el-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/jasper-el.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/jasper.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/jsp-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/mysql-connector-java.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/postgresql-jdbc.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/servlet-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-coyote.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-dbcp.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-i18n-es.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-i18n-fr.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-i18n-ja.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-jdbc.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-jni.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-spdy.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-util-scan.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-util.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/tomcat-websocket.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/websocket-api.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/javax.activation.jar"/>
+		<pathelement location="${TOMCAT_HOME}/lib/javax.mail.jar"/>
 	</path>
 	<path id="dataforms.classpath">
 		<pathelement location="build/classes"/>
