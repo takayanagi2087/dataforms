@@ -53,7 +53,7 @@ public class DeveloperEditForm extends EditForm {
 			userLevel = "admin";
 		}
 		return userLevel;
-		
+
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class DeveloperEditForm extends EditForm {
 		ret.put("userInfoDataExists", exists);
 		return ret;
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 * <pre>
@@ -127,7 +127,7 @@ public class DeveloperEditForm extends EditForm {
 		return (!StringUtil.isBlank(userId));
 	}
 
-	
+
 	/**
 	 * 初期化するパッケージリストを取得します。
 	 * @return 初期化するパッケージリスト。
@@ -141,7 +141,7 @@ public class DeveloperEditForm extends EditForm {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * ユーザ情報の初期化データが存在するかチェックします。
 	 * @return 存在する場合true。
@@ -158,8 +158,8 @@ public class DeveloperEditForm extends EditForm {
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * データベースの初期化を行います。
 	 * <pre>
@@ -168,11 +168,12 @@ public class DeveloperEditForm extends EditForm {
 	 * </pre>
 	 * @param userImportFlag ユーザ情報インポートフラグ。
 	 * @throws Exception 例外。
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	private void initDb(final String userImportFlag) throws Exception {
 		TableManagerDao tmdao = new TableManagerDao(this);
+		tmdao.executeBeforeRebuildSql();
 		List<String> plist = this.getInitializePackageList();
 		for (String pkg: plist) {
 			Map<String, Object> p = new HashMap<String, Object>();
@@ -195,6 +196,7 @@ public class DeveloperEditForm extends EditForm {
 				}
 			}
 		}
+		tmdao.executeAfterRebuildSql();
 	}
 
 	/**
