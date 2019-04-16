@@ -70,7 +70,8 @@ Menu.prototype.update = function() {
  * @returns {String} HTML.
  */
 Menu.prototype.getMenuHtml = function(mglist) {
-	var ret = "";
+    logger.dir(mglist);
+    var ret = "";
 	var pat = new RegExp(this.id + "\\[0\\]", "g");
 	var patl = new RegExp("pageList\\[0\\]", "g");
 	for (var i = 0; i < mglist.length; i++) {
@@ -85,7 +86,10 @@ Menu.prototype.getMenuHtml = function(mglist) {
 		q.find("#" + this.id + "\\[" + i + "\\]\\.name").html(mglist[i].name);
 		q.find("#" + this.id + "\\[" + i + "\\]\\.name").attr("data-menu-group-id", mglist[i].id);
 		for (var j = 0; j < mglist[i].pageList.length; j++) {
-			plist.find("[id$='\\.pageList\\[" + j + "\\]\\.url']").attr("href", mglist[i].pageList[j].url);
+            plist.find("[id$='\\.pageList\\[" + j + "\\]\\.url']").attr("href", mglist[i].pageList[j].url);
+            if (mglist[i].pageList[j].menuTarget != null) {
+                plist.find("[id$='\\.pageList\\[" + j + "\\]\\.url']").attr("target", mglist[i].pageList[j].menuTarget);
+            }
 			plist.find("[id$='\\.pageList\\[" + j + "\\]\\.name']").html(mglist[i].pageList[j].menuName);
 			plist.find("[id$='\\.pageList\\[" + j + "\\]\\.description']").html(mglist[i].pageList[j].description);
 		}

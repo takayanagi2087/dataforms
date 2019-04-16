@@ -475,7 +475,7 @@ public class Page extends DataForms {
 		"\t\t});\n" +
 		"\t\t-->\n" +
 		"\t\t</script>\n";
-    
+
     /**
      * CSRF対策のTOKENを取得します。
      * @return CSRF対策のTOKEN。
@@ -492,7 +492,7 @@ public class Page extends DataForms {
 		}
 		log.debug("csrfToken=" + token);
 		return token;
-    	
+
     }
 
     /**
@@ -517,7 +517,7 @@ public class Page extends DataForms {
     	}
     	return ret;
     }
-    
+
 	/**
 	 * HTMLにcssとscriptを追加します。
 	 * @param html HTML。
@@ -577,9 +577,9 @@ public class Page extends DataForms {
 	 * @throws Exception 例外。
 	 */
 	protected void processQueryString(final Map<String, Object> p) throws Exception {
-		
+
 	}
-	
+
 
     /**
      * ページのHTMLを取得します。
@@ -637,8 +637,8 @@ public class Page extends DataForms {
     public MessagesUtil.ClientMessageTransfer getClientMessageTransfer() {
     	return MessagesUtil.getClientMessageTransfer();
     }
-    
-    
+
+
     /**
      * ページに対応したメッセージマップを取得します。
      * @return ページに対応したメッセージマップ。
@@ -711,7 +711,7 @@ public class Page extends DataForms {
 		this.dialogMap.put(dlg.getId(), dlg);
 		this.addComponent(dlg);
 	}
-	
+
 	/**
 	 * クッキーチェックフラグを取得します。
 	 * <pre>
@@ -732,7 +732,7 @@ public class Page extends DataForms {
 		// フレーム情報の設定。
 		if (!this.isNoFrame()) {
 			String htmlpath = this.getAppropriatePath(this.getPage().getPageFramePath() + "/Frame.html", this.getPage().getRequest());
-			String htmltext = this.getWebResource(htmlpath); 
+			String htmltext = this.getWebResource(htmlpath);
 			if (htmltext != null) {
 				String frameHead = this.getHtmlHead(htmltext);
 				map.put("frameHead", frameHead);
@@ -954,7 +954,7 @@ public class Page extends DataForms {
 		return ret;
 	}
 
-	
+
 	/**
 	 * フレームのパスを取得する.
 	 * @return レイアウトのパス.
@@ -1058,7 +1058,7 @@ public class Page extends DataForms {
 	public String decorateMenuName(final String menuName) {
 		return menuName;
 	}
-	
+
 	/**
 	 * ブラウザの戻るボタンの許可状態を取得します。
 	 * @return ブラウザの戻るボタンの許可状態。
@@ -1135,18 +1135,45 @@ public class Page extends DataForms {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * 自動ログインを実行します。
-	 * 
+	 *
 	 * <pre>
 	 * Cookieに自動ログイン情報が設定されている場合、自動的にログインします。
 	 * </pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws Exception 例外。
 	 */
 	public void autoLogin() throws Exception {
 		AutoLoginCookie.autoLogin(this);
+	}
+
+
+	/**
+	 * メニューに設定するURLを取得します。
+	 * <pre>
+	 * メニューに設定するURLを強制的に変更したい場合、
+	 * このメソッドをオーバライドします。
+	 * メニューから他サイトなどのURLに遷移させたい場合、
+	 * このこのメソットで所定のURLを指定します。
+	 * </pre>
+	 * @return メニューに設定するURL。
+	 */
+	public String getMenuUrl() {
+		return null;
+	}
+
+	/**
+	 * メニューの&lt;a&gt;&lt;/a&gt;タグのtargetアトリビュートを取得します。
+	 * <pre>
+	 * メニューから別ウィンドウへのページ表示を行いたい場合指定します。
+	 * </pre>
+	 * @return メニューの&lt;a&gt;&lt;/a&gt;タグのtargetアトリビュート。
+	 *
+	 */
+	public String getMenuTarget() {
+		return null;
 	}
 }

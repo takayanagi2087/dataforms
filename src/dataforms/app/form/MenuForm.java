@@ -129,6 +129,14 @@ public class MenuForm extends Form {
 			    		String menuName = (String) m.get("menuName");
 			    		log.debug("menuName=" + menuName);
 			    		m.put("menuName", page.decorateMenuName(menuName));
+			    		String menuUrl = page.getMenuUrl();
+			    		if (menuUrl != null) {
+			    			m.put("menuUrl", menuUrl);
+			    		}
+			    		String menuTarget = page.getMenuTarget();
+			    		if (menuTarget != null) {
+			    			m.put("menuTarget", menuTarget);
+			    		}
 			    		mlist.add(m);
 			    	}
 		    	}

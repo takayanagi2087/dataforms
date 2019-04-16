@@ -72,10 +72,14 @@ public class Menu extends WebComponent {
 		this.pageList = pageList;
 		String cpath = Menu.getServlet().getServletContext().getContextPath();
 		for (Map<String, Object> m : pageList) {
-			String clazz = (String) m.get("pageClass");
-			m.put("url", cpath + "/" + clazz.replaceAll("\\.", "/") + "." + this.getPage().getPageExt());
+			String menuUrl = (String) m.get("menuUrl");
+			if (menuUrl == null) {
+				String clazz = (String) m.get("pageClass");
+				m.put("url", cpath + "/" + clazz.replaceAll("\\.", "/") + "." + this.getPage().getPageExt());
+			} else {
+				m.put("url", menuUrl);
+			}
 		}
-
 	}
 
 	/**
@@ -102,6 +106,7 @@ public class Menu extends WebComponent {
 			}
 			Map<String, Object> link = new HashMap<String, Object>();
 			link.put("url", p.get("url"));
+			link.put("menuTarget", p.get("menuTarget"));
 			link.put("menuName", p.get("menuName"));
 			link.put("description", p.get("description"));
 			linklist.add(link);
