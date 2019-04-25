@@ -215,4 +215,18 @@ public class PgsqlSqlGenerator extends SqlGenerator {
 		return "/WEB-INF/dbRebuild/pgsql";
 	}
 
+	@Override
+	public String generateDropUniqueSql(Table table, String idxName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("alter table ");
+		sb.append(table.getTableName());
+		sb.append(" drop constraint if exists ");
+		sb.append(idxName.replaceAll("_index$", "_unique"));
+		return sb.toString();
+	}
+
+	@Override
+	public String generateDropIndexSql(String indexName, String tableName) {
+		return "drop index if exists " + indexName;
+	}
 }
