@@ -40,11 +40,11 @@ public class ImageData extends FileObject {
 
 	/**
 	 * 画像データを読み込みます。
-	 * @param buf 画像データイメージ。
+	 * @param buf 画像データ。
 	 * @return イメージ。
 	 * @throws Exception 例外。
 	 */
-	private BufferedImage readImage(final byte[] buf) throws Exception {
+	public BufferedImage readImage(final byte[] buf) throws Exception {
 		BufferedImage image = null;
 		ByteArrayInputStream is = new ByteArrayInputStream(buf);
 		try {
@@ -55,13 +55,23 @@ public class ImageData extends FileObject {
 		return image;
 	}
 
+
+	/**
+	 * 画像を取得します。
+	 * @return 画像。
+	 * @throws Exception 例外。
+	 */
+	public BufferedImage getImage() throws Exception {
+		return this.readImage(this.readContents());
+	}
+
 	/**
 	 * 画像データを書き出します。
 	 * @param img イメージ。
 	 * @return 出力されたバイト列。
 	 * @throws Exception 例外。
 	 */
-	private byte[] writeImage(final BufferedImage img) throws Exception {
+	public byte[] writeImage(final BufferedImage img) throws Exception {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
 			ImageWriter writer = ImageIO.getImageWritersByMIMEType(CONTENT_TYPE_PNG).next();
@@ -75,6 +85,15 @@ public class ImageData extends FileObject {
 			os.close();
 		}
 		return os.toByteArray();
+	}
+
+	/**
+	 * 画像を設定します。
+	 * @param img 画像。
+	 * @throws Exception 例外。
+	 */
+	public void setImage(final BufferedImage img) throws Exception {
+		this.setContents(this.writeImage(img));
 	}
 
 	/**
