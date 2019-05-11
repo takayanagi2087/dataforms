@@ -497,6 +497,15 @@
 		</param-value>
 	</context-param>
 	-->
+	<!--
+		HTML5のキャッシュ・マニフェストファイルのパスを指定します。
+	 -->
+	<!--
+	<context-param>
+		<param-name>appcache-file</param-name>
+		<param-value>/frame/dataforms.appcache</param-value>
+	</context-param>
+	-->
 	<!-- セッションタイムアウト -->
 	<session-config>
 		<session-timeout>30</session-timeout>

@@ -112,6 +112,12 @@ public class Page extends DataForms {
     private static String topPage = "/dataforms/app/page/top/TopPage.df";
 
 
+    /**
+     * キャッシュ・マニフェストファイルのパス。
+     */
+    private static String appcacheFile = null;
+
+
 	/**
 	 * JDBC接続。
 	 */
@@ -136,6 +142,22 @@ public class Page extends DataForms {
 		this.addDialog(new ConfirmDialog());
 	}
 
+
+	/**
+	 * キャッシュ・マニフェストファイルのパスを取得します。
+	 * @return キャッシュ・マニフェストファイルのパス。
+	 */
+	public static String getAppcacheFile() {
+		return appcacheFile;
+	}
+
+	/**
+	 * キャッシュ・マニフェストファイルのパスを設定します。
+	 * @param appcacheFile キャッシュ・マニフェストファイルのパス。
+	 */
+	public static void setAppcacheFile(final String appcacheFile) {
+		Page.appcacheFile = appcacheFile;
+	}
 
 	/**
 	 * クラスを継承関係を元にソートします。
@@ -580,6 +602,29 @@ public class Page extends DataForms {
 
 	}
 
+	/**
+	 * &lt;html&gt;タグにキャッシュマニフェストファイルの設定を追加します。
+	 * @param html HTML文字列。
+	 * @param context contextパス。
+	 * @return キャッシュマニフェストファイルの設定を追加したHTML。
+	 */
+	protected String addAppcacheFile(final String html, final String context) {
+		String ret = html;
+		if (Page.getAppcacheFile() != null) {
+//			ret = html.replace("<html", "<html manifest=\"" + context + Page.getAppcacheFile() + "\"");
+			Pattern pt = Pattern.compile("<html", Pattern.CASE_INSENSITIVE);
+			Matcher m = pt.matcher(html);
+			if (m.find()) {
+				StringBuilder sb = new StringBuilder();
+				int start = m.start();
+				sb.append(html.substring(0, start));
+				sb.append("<html manifest=\"" + context + Page.getAppcacheFile() + "\"");
+				sb.append(html.substring(m.end()));
+				ret = sb.toString();
+			}
+		}
+		return ret;
+	}
 
     /**
      * ページのHTMLを取得します。
@@ -599,6 +644,7 @@ public class Page extends DataForms {
 		htmlpath = this.getAppropriatePath(htmlpath, req);
 		log.info("sendHtml=" + htmlpath);
 		String htmltext = this.getWebResource(htmlpath);
+		htmltext = this.addAppcacheFile(htmltext, context);
 		String scripts = this.getWebResource(DataFormsServlet.getCssAndScript());
 		scripts = scripts.replaceAll("\\$\\{context\\}", req.getContextPath());
 

@@ -175,7 +175,7 @@ public class DataFormsServlet extends HttpServlet {
 	 * QueryStringを暗号化する際に使用するパスワード。
 	 */
 	private static String queryStringCryptPassword = "yyy_password_yyy";
-	
+
 	/**
 	 * 設定の状態.
 	 */
@@ -190,23 +190,23 @@ public class DataFormsServlet extends HttpServlet {
 	 * サーブレットインスタンス設定Bean.
 	 */
 	private static ServletInstanceBean servletInstanceBean = null;
-	
-	
+
+
 	/**
 	 * CSRF対策用暗号化キー。
-	 * 
+	 *
 	 * <pre>
 	 * CSRF対策のため送信する照合情報は、セッションIDを以下のパスワードで暗号化して送信します。
 	 * </pre>
 	 */
 	private static String csrfSessionidCrypPassword = null;
-	
-	
+
+
 	/**
 	 * Apache-FOPの設定ファイルのバス。
 	 */
 	private static String apacheFopConfig = "/WEB-INF/apachefop/fop.xconf";
-	
+
 	/**
 	 * Pageの拡張子を取得します。
 	 * <pre>
@@ -220,7 +220,7 @@ public class DataFormsServlet extends HttpServlet {
 		return uplist[0].substring(2);
 	}
 
-	
+
 	/**
 	 * CSRF対策用暗号化キーを取得します。
 	 * @return CSRF対策用暗号化キー。
@@ -278,7 +278,7 @@ public class DataFormsServlet extends HttpServlet {
 
 	/**
 	 * WEBリソースアクセス用のURLを取得します。
-	 * 
+	 *
 	 * @return WEBリソースアクセス用のURL。
 	 */
 	public static String getWebResourceUrl() {
@@ -370,7 +370,7 @@ public class DataFormsServlet extends HttpServlet {
 		DataFormsServlet.setQueryStringCryptPassword(this.getServletContext().getInitParameter("query-string-crypt-password") == null ? "d@d@f0ms"
 				: this.getServletContext().getInitParameter("query-string-crypt-password"));
 		DataFormsServlet.csrfSessionidCrypPassword = this.getServletContext().getInitParameter("csrf-sessionid-crypt-password");
-		
+
 		DataFormsServlet.cookieCheck = Boolean.parseBoolean(
 				this.getServletContext().getInitParameter("cookie-check") == null ? "false"
 				: this.getServletContext().getInitParameter("cookie-check")
@@ -378,6 +378,7 @@ public class DataFormsServlet extends HttpServlet {
 		Page.setFramePath(this.getServletContext().getInitParameter("frame-path") == null ? "/frame/default"
 				: this.getServletContext().getInitParameter("frame-path"));
 		log.info("init:framePath=" + Page.getFramePath());
+		Page.setAppcacheFile(this.getServletContext().getInitParameter("appcache-file"));
 		this.getMessageProperties();
 		String topPage = this.getServletContext().getInitParameter("top-page");
 		if (!StringUtil.isBlank(topPage)) {
@@ -404,7 +405,7 @@ public class DataFormsServlet extends HttpServlet {
 			List<LinkedHashMap<String, Object>> bslist = (List<LinkedHashMap<String, Object>>) JSON.decode(streamingBlockSize, ArrayList.class);
 			HttpRangeInfo.setBlockSizeList(bslist);
 		}
-		
+
 		String contentTypeList = this.getServletContext().getInitParameter("content-type-list");
 		log.debug("contentTypeList=" + contentTypeList);
 		if (!StringUtil.isBlank(contentTypeList)) {
@@ -422,9 +423,9 @@ public class DataFormsServlet extends HttpServlet {
 		if (apacheFopConfig != null) {
 			DataFormsServlet.setApacheFopConfig(apacheFopConfig);
 		}
-	
+
 		Boolean multiOpenMenu = Boolean.parseBoolean(
-				this.getServletContext().getInitParameter("multi-open-menu") == null 
+				this.getServletContext().getInitParameter("multi-open-menu") == null
 				? "true"
 				: this.getServletContext().getInitParameter("multi-open-menu")
 		);
@@ -496,7 +497,7 @@ public class DataFormsServlet extends HttpServlet {
 		MessagesUtil.setAppClientMessagesName(appClientMessages);
 		MessagesUtil.setMessagesName(messages);
 		MessagesUtil.setAppMessagesName(appMessages);
-		
+
 		String clientMessagesTransfer = this.getServletContext().getInitParameter("client-message-transfer");
 		if (clientMessagesTransfer == null) {
 			clientMessagesTransfer = "CLIENT_ONLY";
@@ -522,9 +523,9 @@ public class DataFormsServlet extends HttpServlet {
 		}
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * DBの接続チェックを行ないます。
 	 */
@@ -553,12 +554,12 @@ public class DataFormsServlet extends HttpServlet {
 		}
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * データベースの構造チェック。
-	 * 
+	 *
 	 */
 	private void checkDBStructure() {
 		try {
@@ -590,7 +591,7 @@ public class DataFormsServlet extends HttpServlet {
 			log.error(e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * JDBC接続を取得します。
 	 * @return JDBC接続。
@@ -727,7 +728,7 @@ public class DataFormsServlet extends HttpServlet {
 	public static void setDisableDeveloperTools(final boolean disableDeveloperTools) {
 		DataFormsServlet.disableDeveloperTools = disableDeveloperTools;
 	}
-	
+
 	/**
 	 * QueryStringを暗号化する際のパスワードを取得します。
 	 * @return QueryStringを暗号化する際のパスワード。
@@ -890,13 +891,13 @@ public class DataFormsServlet extends HttpServlet {
 					if (JsonResponse.class.getName().equals(mt.getName())) {
 						isJsonResponse = true;
 					}
-					
+
 					if (!GET_HTML_METHOD_NAME.equals(method)) {
 						if (!page.isValidRequest(param)) {
 							throw new ApplicationException(page, "error.csrftoken");
 						}
 					}
-					
+
 					WebMethod wma = m.getAnnotation(WebMethod.class);
 					if (wma == null) {
 						log.error(MessagesUtil.getMessage(page, "error.notwebmethod", method));
@@ -1088,7 +1089,7 @@ public class DataFormsServlet extends HttpServlet {
 	public static String getClientLogLevel() {
 		return clientLogLevel;
 	}
-	
+
 	@Override
 	public void destroy() {
 		log.debug("DataFormsServlet destroy");
@@ -1105,7 +1106,7 @@ public class DataFormsServlet extends HttpServlet {
 
 	/**
 	 * ブラウザのクッキー受け入れチェックフラグ。
-	 * 
+	 *
 	 */
 	private static boolean cookieCheck = false;
 
@@ -1142,5 +1143,5 @@ public class DataFormsServlet extends HttpServlet {
 	public static void setApacheFopConfig(final String apacheFopConfig) {
 		DataFormsServlet.apacheFopConfig = apacheFopConfig;
 	}
-	
+
 }
