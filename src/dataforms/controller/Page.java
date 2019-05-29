@@ -626,6 +626,37 @@ public class Page extends DataForms {
 		return ret;
 	}
 
+	/**
+	 * htmlに対応するPageクラスを返します。
+	 * <pre>
+	 * 基本的に自分自身のクラス(this.getClass()の値)を返します。
+	 * このメソットが返すクラスに対応した*.htmlファイルをページのHTMLとします。
+	 * ページクラスと異なるクラスのHTMLを使用したい場合、このメソッド
+	 * をオーバーライドします。
+	 * </pre>
+	 * @return Pageクラス。
+	 */
+	protected Class<?> getHtmlPageClass() {
+		return this.getClass();
+	}
+
+	/**
+	 * このページのHTMLを取得します。
+	 * @param req HTTP要求情報。
+	 * @param context コンテキスト。
+	 * @return HTMLのテキスト。
+	 * @throws Exception 例外。
+	 */
+	protected String getHtmlText(final HttpServletRequest req, final String context) throws Exception {
+		String htmlpath = this.getWebResourcePath(this.getHtmlPageClass()) + ".html";
+		htmlpath = this.getAppropriatePath(htmlpath, req);
+		log.info("sendHtml=" + htmlpath);
+		String htmltext = this.getWebResource(htmlpath);
+		htmltext = this.addAppcacheFile(htmltext, context);
+		htmltext = htmltext.replaceAll("\\</[Bb][Oo][Dd][Yy]\\>", "\t<noscript><br/><div class='noscriptDiv'><b>" + MessagesUtil.getMessage(this.getPage(), "message.noscript") + "</b></div></noscript>\n\t</body>");
+		return htmltext;
+	}
+
     /**
      * ページのHTMLを取得します。
      * @param params パラメータ。
@@ -640,18 +671,16 @@ public class Page extends DataForms {
 		String context = req.getContextPath();
 		log.info("context=" + context + ", uri=" + uri);
 		log.info("path=" + req.getServletPath());
-		String htmlpath = this.getWebResourcePath(this.getClass()) + ".html";
-		htmlpath = this.getAppropriatePath(htmlpath, req);
-		log.info("sendHtml=" + htmlpath);
-		String htmltext = this.getWebResource(htmlpath);
-		htmltext = this.addAppcacheFile(htmltext, context);
+
+		String htmltext = this.getHtmlText(req, context);
+
 		String scripts = this.getWebResource(DataFormsServlet.getCssAndScript());
 		scripts = scripts.replaceAll("\\$\\{context\\}", req.getContextPath());
 
-		htmltext = htmltext.replaceAll("\\</[Bb][Oo][Dd][Yy]\\>", "\t<noscript><br/><div class='noscriptDiv'><b>" + MessagesUtil.getMessage(this.getPage(), "message.noscript") + "</b></div></noscript>\n\t</body>");
     	HtmlResponse resp = new HtmlResponse(this.editHtml(htmltext, scripts, context));
     	return resp;
     }
+
 
     /**
      * ログインダイアログのID。
