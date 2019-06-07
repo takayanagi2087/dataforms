@@ -52,7 +52,7 @@ public  class Form extends WebComponent {
 	 * 変換後のサーバデータ。
 	 */
 	private Map<String, Object> convertedServerData = null;
-	
+
 	/**
 	 * コンストラクタ。
 	 * @param id フォームID.
@@ -125,7 +125,7 @@ public  class Form extends WebComponent {
 			this.addField(f);
 		}
 	}
-	
+
 	/**
 	 * HTMLテーブルを追加します。
 	 * @param table HTMLテーブル構造リスト。
@@ -206,6 +206,20 @@ public  class Form extends WebComponent {
 		return map;
 	}
 
+	/**
+	 * htmlに対応するFormクラスを返します。
+	 * <pre>
+	 * 基本的に自分自身のクラス(this.getClass()の値)を返します。
+	 * このメソットが返すクラスに対応した*.htmlファイルをフォームのHTMLとします。
+	 * ページクラスと異なるクラスのHTMLを使用したい場合、このメソッド
+	 * をオーバーライドします。
+	 * </pre>
+	 * @return Pageクラス。
+	 */
+	protected Class<?> getHtmlFormClass() {
+		return this.getClass();
+	}
+
 
 	/**
 	 * クラスに対応するHTMLが存在する場合、そのPathを返します。
@@ -213,7 +227,7 @@ public  class Form extends WebComponent {
 	 * @throws Exception 例外。
 	 */
 	public String getHtmlPath() throws Exception {
-		String htmlpath = this.getWebResourcePath(this.getClass()) + ".html";
+		String htmlpath = this.getWebResourcePath(this.getHtmlFormClass()) + ".html";
 		String html = this.getWebResource("/" + htmlpath);
 		if (StringUtil.isBlank(html)) {
 			htmlpath = null;
