@@ -1641,7 +1641,7 @@ public class Dao implements JDBCConnectableObject {
 	 * @return 結果件数。
 	 * @throws Exception 例外。
 	 */
-	private Long countQueryResoult(final Query query) throws Exception {
+	public Long countQueryResoult(final Query query) throws Exception {
 		String csql = this.getSqlGenerator().generateHitCountSql(query);
 		// FieldList qflist = query.getQueryFormFieldList();
 		// Long hitCount = NumberUtil.longValue(this.executeScalarQuery(csql, qflist.convertServerToDb(query.getQueryFormData())));
