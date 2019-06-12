@@ -80,6 +80,16 @@ public class QueryPager {
 	}
 
 	/**
+	 * 取得行開始。
+	 */
+	private Integer rowFrom = null;
+	/**
+	 * 取得行終了。
+	 */
+	private Integer rowTo = null;
+
+
+	/**
 	 * 指定したページの範囲パラメータを取得します。
 	 * @param page ページ。
 	 * @return パラメータのマップ。
@@ -88,6 +98,40 @@ public class QueryPager {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put("rowFrom", page * this.linesParPage);
 		ret.put("rowTo", (page + 1) * this.linesParPage - 1);
+		this.setRowFrom(page * this.linesParPage);
+		this.setRowTo((page + 1) * this.linesParPage - 1);
 		return ret;
+	}
+
+	/**
+	 * 取得開始行を取得します。
+	 * @return 取得開始行。
+	 */
+	public Integer getRowFrom() {
+		return rowFrom;
+	}
+
+	/**
+	 * 取得開始行を取得します。
+	 * @param rowFrom 設定します。
+	 */
+	public void setRowFrom(final Integer rowFrom) {
+		this.rowFrom = rowFrom;
+	}
+
+	/**
+	 * 取得終了行を取得します。
+	 * @return 取得終了行。
+	 */
+	public Integer getRowTo() {
+		return rowTo;
+	}
+
+	/**
+	 * 取得終了行を設定します。
+	 * @param rowTo 取得終了行。
+	 */
+	public void setRowTo(final Integer rowTo) {
+		this.rowTo = rowTo;
 	}
 }
