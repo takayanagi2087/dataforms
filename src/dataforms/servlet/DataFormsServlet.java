@@ -947,7 +947,7 @@ public class DataFormsServlet extends HttpServlet {
 					JsonResponse r = new JsonResponse(JsonResponse.APPLICATION_EXCEPTION, einfo);
 					r.send(resp);
 				} else {
-					this.redirectErrorPage(req, resp, e.getMessage());
+					this.redirectErrorPage(page, req, resp, e.getMessage());
 				}
 			}
 		} catch (Exception e) {
@@ -1066,14 +1066,19 @@ public class DataFormsServlet extends HttpServlet {
 
 	/**
 	 * エラーページにリダイレクトします。
+	 * @param page ページ。
 	 * @param req 要求情報。
 	 * @param resp 応答情報。
 	 * @param message メッセージ。
 	 * @throws Exception 例外。
 	 */
-	private void redirectErrorPage(final HttpServletRequest req, final HttpServletResponse resp, final String message) throws Exception {
+	private void redirectErrorPage(final Page page, final HttpServletRequest req, final HttpServletResponse resp, final String message) throws Exception {
 		String context = req.getContextPath();
-		String url = context + DataFormsServlet.errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
+		String errorPage = DataFormsServlet.errorPage;
+		if (page != null) {
+			errorPage = page.getErrorPage();
+		}
+		String url = context + errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
 		log.info("errorPage=" + url);
 		try {
 			resp.sendRedirect(url);

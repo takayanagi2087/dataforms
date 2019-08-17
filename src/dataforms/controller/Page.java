@@ -641,6 +641,15 @@ public class Page extends DataForms {
 	}
 
 	/**
+	 * HTMLのパスを取得します。
+	 * @return HTMLのパス。
+	 */
+	protected String getHtmlPath() {
+		String htmlpath = this.getWebResourcePath(this.getHtmlPageClass()) + ".html";
+		return htmlpath;
+	}
+
+	/**
 	 * このページのHTMLを取得します。
 	 * @param req HTTP要求情報。
 	 * @param context コンテキスト。
@@ -648,7 +657,8 @@ public class Page extends DataForms {
 	 * @throws Exception 例外。
 	 */
 	protected String getHtmlText(final HttpServletRequest req, final String context) throws Exception {
-		String htmlpath = this.getWebResourcePath(this.getHtmlPageClass()) + ".html";
+		//String htmlpath = this.getWebResourcePath(this.getHtmlPageClass()) + ".html";
+		String htmlpath = this.getHtmlPath();
 		htmlpath = this.getAppropriatePath(htmlpath, req);
 		log.info("sendHtml=" + htmlpath);
 		String htmltext = this.getWebResource(htmlpath);
@@ -798,6 +808,14 @@ public class Page extends DataForms {
 		return DataFormsServlet.isCookieCheck();
 	}
 
+	/**
+	 * エラーページのURLを取得します。
+	 * @return エラーページ。
+	 */
+	public String getErrorPage() {
+		return DataFormsServlet.getErrorPage();
+	}
+
 	@Override
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> map = super.getProperties();
@@ -825,7 +843,7 @@ public class Page extends DataForms {
 		map.put("framePath", this.getPageFramePath());
 		map.put("noFrame", this.isNoFrame());
 		map.put("pageExt", this.getPageExt());
-		map.put("errorPage", DataFormsServlet.getErrorPage());
+		map.put("errorPage", this.getErrorPage());
 		map.put("pageTitle", this.getPageTitle());
 		map.put("topPage", Page.getTopPage());
 		map.put("browserBackButton", Page.getBrowserBackButton());
