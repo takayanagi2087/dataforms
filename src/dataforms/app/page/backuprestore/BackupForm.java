@@ -26,18 +26,18 @@ import dataforms.validator.ValidationError;
  * バックアップフォームクラス。
  */
 public class BackupForm extends Form {
-	
-	
+
+
 	/**
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(BackupForm.class);
-	
+
 	/**
 	 * バックアップファイル名。
 	 */
 	private static String backupFileName = null;
-	
+
 	/**
 	 * バックアップファイル名を取得します。
 	 * @return バックアップファイル名。
@@ -78,7 +78,7 @@ public class BackupForm extends Form {
 		}
 		this.setFormData("functionMultiSelect", sel);
 	}
-	
+
 	@Override
 	protected List<ValidationError> validateForm(final Map<String, Object> data) throws Exception {
 		List<ValidationError> ret = super.validateForm(data);
@@ -89,8 +89,8 @@ public class BackupForm extends Form {
 		}
 		return ret;
 	}
-	
-	
+
+
 	/**
 	 * データのバックアップを行います。
 	 * @param p パラメータ。

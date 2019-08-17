@@ -1,0 +1,4 @@
+/**
+ * dataformsコマンドラインツールパッケージ。
+ */
+package dataforms.cmd;
