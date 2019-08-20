@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 
 import dataforms.annotation.WebMethod;
 import dataforms.app.errorpage.ConfigErrorPage;
+import dataforms.app.errorpage.ErrorPage;
 import dataforms.app.form.LoginInfoForm;
 import dataforms.app.page.backuprestore.BackupForm;
 import dataforms.app.page.login.LoginForm;
@@ -1078,9 +1079,11 @@ public class DataFormsServlet extends HttpServlet {
 		if (page != null) {
 			errorPage = page.getErrorPage();
 		}
-		String url = context + errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
+//		String url = context + errorPage + "?msg=" + java.net.URLEncoder.encode(message, DataFormsServlet.encoding);
+		String url = context + errorPage;
 		log.info("errorPage=" + url);
 		try {
+			req.getSession().setAttribute(ErrorPage.ID_ERROR_MESSAGE, message);
 			resp.sendRedirect(url);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

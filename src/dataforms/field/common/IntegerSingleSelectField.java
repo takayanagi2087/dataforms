@@ -35,4 +35,4 @@ public class IntegerSingleSelectField extends SingleSelectField<Integer> impleme
 		this.setValue(NumberUtil.integerValueObject(value));
 	}
 
-};
+}

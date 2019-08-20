@@ -19,10 +19,9 @@ ErrorPage = createSubclass("ErrorPage", {}, "BasePage");
  */
 ErrorPage.prototype.attach = function() {
 	Page.prototype.attach.call(this);
-	var query = this.getQueryString();
 	var title = MessagesUtil.getMessage("errorpage.title");
 	var backButton = MessagesUtil.getMessage("errorpage.backbutton");
-	var message = decodeURIComponent(query["msg"]);
+	var message = this.errorMessage;
 	this.find('title').html(title);
 	this.find('h1').html(title);
 	this.find('#errorMessages').html(message);
