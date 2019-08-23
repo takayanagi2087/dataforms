@@ -667,6 +667,28 @@ public class Page extends DataForms {
 		return htmltext;
 	}
 
+	/**
+	 * QueryStringをマップに展開したものを保持します。
+	 */
+	private Map<String, Object> queryString = null;
+
+
+	/**
+	 * QueryStringマップを設定します。
+	 * @param map マップ。
+	 */
+	public void setQueryString(final Map<String, Object> map) {
+		this.queryString = map;
+	}
+
+	/**
+	 * QueryStringマップを取得します。
+	 * @return QueryStringマップ。
+	 */
+	public Map<String, Object> getQueryString() {
+		return this.queryString;
+	}
+
     /**
      * ページのHTMLを取得します。
      * @param params パラメータ。

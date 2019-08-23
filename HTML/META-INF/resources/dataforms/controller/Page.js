@@ -219,7 +219,7 @@ DataForms.prototype.isBrowserBackEnabled = function() {
  * @param {Object} state 状態。
  * @param {String} title タイトル。
  * @param {String} url タイトル。
- * 
+ *
  */
 Page.prototype.pushState = function(state, title, url) {
 	if (this.browserBackButton == "enabled") {
@@ -237,7 +237,7 @@ Page.prototype.pushState = function(state, title, url) {
  * @param {Object} state 状態。
  * @param {String} title タイトル。
  * @param {String} url タイトル。
- * 
+ *
  */
 Page.prototype.replaceState = function(state, title, url) {
 	if (this.browserBackButton == "enabled") {
@@ -302,6 +302,14 @@ Page.prototype.configureBrowserBackButton = function() {
 Page.prototype.init = function() {
 	DataForms.prototype.init.call(this);
 	this.configureLogger();
+	logger.debug("queryString=" + window.location.search);
+	if (window.location.search != null && window.location.search.length > 1) {
+		$.ajaxSetup({
+			headers: {
+				queryString: window.location.search.substring(1)
+			}
+		});
+	}
 	logger.info("language=" + this.getLanguage());
 	$.datepicker.setDefaults($.datepicker.regional[this.getLanguage()]);
 	var thisPage = this;
@@ -336,7 +344,7 @@ Page.prototype.init = function() {
 			}
 			thisPage.setCookie("cookiecheck", "");
 		}
-		// 
+		//
 		thisPage.attach();
 	});
 };
@@ -431,7 +439,7 @@ Page.prototype.isLocked = function() {
 
 /**
  * alertの代替えメソッドです。
- * 
+ *
  * @param {String} title ダイアログタイトル(nullの場合システム名称)。
  * @param {String} msg ダイアログメッセージ。
  * @param {Functuion} func OKボタンが押された際の処理。

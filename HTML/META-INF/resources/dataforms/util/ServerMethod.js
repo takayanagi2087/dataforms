@@ -90,7 +90,7 @@ ServerMethod.prototype.callMethod = function(method, param, success, as) {
     }
     param = "dfMethod=" + method + "&" + param;
     if (currentPage.csrfToken != null) {
-    	param = "csrfToken=" + currentPage.csrfToken + "&" + param; 
+    	param = "csrfToken=" + currentPage.csrfToken + "&" + param;
     }
     var me = this;
     var errorfunc = this.onAjaxError;
@@ -132,7 +132,7 @@ ServerMethod.prototype.callMethod = function(method, param, success, as) {
  * </pre>
  * @extends ServerMethod
  * @param {String} m メソッド名。
- * @deprecated 
+ * @deprecated
  */
 var SyncServerMethod = function() {
 	ServerMethod.apply(this, arguments);
@@ -323,10 +323,16 @@ AsyncServerMethod.prototype.uploadForm = function(form, method, success) {
 	if (currentPage.csrfToken != null) {
 		this.setHiddenField(form, "csrfToken", currentPage.csrfToken);
 	}
+	if (window.location.search != null && window.location.search.length > 1) {
+		this.setHiddenField(form, "dfQueryString", window.location.search.substring(1));
+	}
 	form.submit();
 	form.find("#dfMethod").remove();
 	if (currentPage.csrfToken != null) {
 		form.find("#csrfToken").remove();
+	}
+	if (window.location.search != null && window.location.search.length > 1) {
+		this.find("#dfQueryString").remove();
 	}
 };
 

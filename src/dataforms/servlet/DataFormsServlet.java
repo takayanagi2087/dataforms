@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -845,6 +846,47 @@ public class DataFormsServlet extends HttpServlet {
 	}
 
 	/**
+	 * QueryStringを解析しMapに展開します。
+	 * @param queryString 問合せ文字列。
+	 * @return 解析結果のMap。
+	 * @throws Exception 例外。
+	 */
+	private Map<String, Object> parseQueryString(final String queryString) throws Exception {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		if (!StringUtil.isBlank(queryString)) {
+			String[] pairs = queryString.split("&");
+			for (String pair: pairs) {
+				String[] sp = pair.split("=");
+				if (sp.length == 2) {
+					this.addParamMap(ret, URLDecoder.decode(sp[0], DataFormsServlet.getEncoding()), URLDecoder.decode(sp[1], DataFormsServlet.getEncoding()));
+				}
+			}
+		}
+		log.debug("queryString=" + JSON.encode(ret, true));
+		return ret;
+
+	}
+
+	/**
+	 * QyeryStringをマップに展開します。
+	 * @param req 要求情報。
+	 * @param param パラメータ。
+	 * @return QueryStringを展開したマップ。
+	 * @throws Exception 例外。
+	 */
+	private Map<String, Object> getQueryString(final HttpServletRequest req, final Map<String, Object> param) throws Exception {
+		// ajax呼び出しの場合はヘッダにqueryStringが設定されてくる。
+		String queryString = req.getHeader("queryString");
+		log.debug("header queryString=" + queryString);
+		if (queryString == null) {
+			// formのsubmitの場合はPOSTされた情報にqueryStringを入れておく。
+			queryString = (String) param.get("dfQueryString");
+		}
+		log.debug("other queryString=" + queryString);
+		return this.parseQueryString(queryString);
+	}
+
+	/**
 	 * servletの処理を実装します。
 	 * @param req 要求情報。
 	 * @param resp 応答情報。
@@ -865,6 +907,11 @@ public class DataFormsServlet extends HttpServlet {
 					String method = (String) param.get("dfMethod");
 					if (method == null) {
 						method = GET_HTML_METHOD_NAME;
+						String queryString = req.getQueryString();
+						log.debug("getHtml queryString=" + queryString);
+						page.setQueryString(this.parseQueryString(queryString));
+					} else {
+						page.setQueryString(this.getQueryString(req, param));
 					}
 					log.info("method=" + method);
 					Map<String, Object> userinfo = page.getUserInfo();
