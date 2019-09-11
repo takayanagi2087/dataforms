@@ -61,7 +61,7 @@ public class ImageData extends FileObject {
 	 * @return 画像。
 	 * @throws Exception 例外。
 	 */
-	public BufferedImage getImage() throws Exception {
+	public BufferedImage readImage() throws Exception {
 		return this.readImage(this.readContents());
 	}
 
@@ -84,17 +84,11 @@ public class ImageData extends FileObject {
 		} finally {
 			os.close();
 		}
-		return os.toByteArray();
+		byte[] ret = os.toByteArray();
+		this.setContents(ret);
+		return ret;
 	}
 
-	/**
-	 * 画像を設定します。
-	 * @param img 画像。
-	 * @throws Exception 例外。
-	 */
-	public void setImage(final BufferedImage img) throws Exception {
-		this.setContents(this.writeImage(img));
-	}
 
 	/**
 	 * 画像を縮小します。
