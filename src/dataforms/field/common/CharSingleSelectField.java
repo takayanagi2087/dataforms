@@ -34,9 +34,9 @@ public class CharSingleSelectField extends SingleSelectField<String> implements 
 		return "^[0-9]+$";
 	}
 
-	
+
 	@Override
 	public String getFieldOption() {
 		return Integer.toString(this.getLength());
 	}
-};
+}

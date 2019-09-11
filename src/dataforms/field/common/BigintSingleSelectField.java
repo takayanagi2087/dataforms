@@ -35,4 +35,4 @@ public class BigintSingleSelectField extends SingleSelectField<Long> implements 
 		this.setValue(NumberUtil.longValueObject(value));
 	}
 
-};
+}

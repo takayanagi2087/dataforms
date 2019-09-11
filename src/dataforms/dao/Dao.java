@@ -252,7 +252,7 @@ public class Dao implements JDBCConnectableObject {
 		 * @throws Exception 例外。
 		 */
 		public abstract boolean process(final Map<String, Object> rec) throws Exception;
-	};
+	}
 
 	/**
 	 * カラム情報。

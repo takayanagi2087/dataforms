@@ -379,7 +379,7 @@ public abstract class Report {
 		}
 	}
 
-	
+
 	/**
 	 * レポートを出力します。
 	 * @param data 出力データ。
@@ -391,5 +391,5 @@ public abstract class Report {
 		return this.getReport();
 	}
 
-	
+
 }

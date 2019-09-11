@@ -37,7 +37,7 @@ public class FileTestEditForm extends EditForm {
 	protected Map<String, Object> queryData(final Map<String, Object> data) throws Exception {
 		FileFieldTestDao dao = new FileFieldTestDao(this);
 		Map<String, Object> ret = dao.queryEditData(data);
-		log.debug("formData=" + JSON.encode(ret, true));
+//		log.debug("formData=" + JSON.encode(ret, true));
 		return ret;
 	}
 

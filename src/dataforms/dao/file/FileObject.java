@@ -111,8 +111,8 @@ public class FileObject implements Serializable {
 	 * mp4のコンテントタイプ。
 	 */
 	public static final String CONTENT_TYPE_MP4 = "video/mp4";
-	
-	
+
+
 	/**
 	 * 拡張子とContent-typeの対応表。
 	 */
@@ -127,13 +127,13 @@ public class FileObject implements Serializable {
 	};
 
 
-	
+
 	/**
 	 * content-typeリスト。
 	 */
 	private static List<LinkedHashMap<String, String>> contentTypeList = null;
 
-	
+
 	/**
 	 * content-typeリストを取得します。
 	 * @return content-typeリスト。
@@ -225,7 +225,7 @@ public class FileObject implements Serializable {
 						log.debug("fileName=" + fileName + ",fnPattern=" + fnPattern + ",contentType=" + this.getContentType());
 						break;
 					}
-					
+
 				}
 			}
 		}

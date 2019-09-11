@@ -39,4 +39,4 @@ public class VarcharSingleSelectField extends SingleSelectField<String> implemen
 	public String getFieldOption() {
 		return Integer.toString(this.getLength());
 	}
-};
+}

@@ -35,4 +35,4 @@ public class SmallintSingleSelectField extends SingleSelectField<Short> implemen
 		this.setValue(NumberUtil.shortValueObject(value));
 	}
 
-};
+}
