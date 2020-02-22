@@ -34,7 +34,7 @@ public class LoginForm extends Form {
 	 */
 	private static String passwordResetMailPage = null;
 
-	
+
 	/**
 	 * コンストラクタ。
 	 */
@@ -51,7 +51,7 @@ public class LoginForm extends Form {
 		super.init();
 		this.setFormData(AutoLoginCookie.ID_KEEP_LOGIN, AutoLoginCookie.getKeepLoginFlag(this.getPage()));
 	}
-	
+
 	/**
 	 * 自動ログイン処理を行います。
 	 * @throws Exception 例外。
@@ -59,8 +59,8 @@ public class LoginForm extends Form {
 	public void autoLogin() throws Exception {
 		AutoLoginCookie.autoLogin(this.getPage());
 	}
-	
-	
+
+
 	/**
 	 * ログインの処理を行います。
 	 * @param params パラメータ。
@@ -91,7 +91,7 @@ public class LoginForm extends Form {
 		this.methodFinishLog(logger, ret);
 		return ret;
 	}
-	
+
 	@Override
 	public Map<String, Object> getProperties() throws Exception {
 		Map<String, Object> ret = super.getProperties();
@@ -101,7 +101,7 @@ public class LoginForm extends Form {
 		ret.put("autoLogin", AutoLoginCookie.isAutoLogin());
 		return ret;
 	}
-	
+
 	/**
 	 * パスワードリセットメール送信ページを取得します。
 	 * @return パスワードリセットメール送信ページ。
@@ -113,11 +113,11 @@ public class LoginForm extends Form {
 	/**
 	 * パスワードリセットメール送信ページを設定します。
 	 * @param passwordResetMailPage パスワードリセットメール送信ページ。
-	 * 
+	 *
 	 */
 	public static void setPasswordResetMailPage(final String passwordResetMailPage) {
 		LoginForm.passwordResetMailPage = passwordResetMailPage;
 	}
 
-};
+}
 

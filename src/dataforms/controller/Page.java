@@ -650,6 +650,41 @@ public class Page extends DataForms {
 	}
 
 	/**
+	 * htmlのformタグを置き換える。
+	 * @param html HTML文字列。
+	 * @param formId フォームID。
+	 * @param form フォーム。
+	 * @return 返還後のHTML文字列。
+	 * @throws Exception 例外。
+	 */
+	protected String replaceFormHtml(final String html, final String formId, final Form form) throws Exception {
+//		Form form = (Form) this.getFormMap().get(formId);
+		String htmlpath = this.getAppropriatePath(form.getHtmlPath(), this.getPage().getRequest());
+		String htmltext = this.getWebResource(htmlpath); // FileUtil.readTextFile(htmlpath,
+		if (htmltext != null) {
+			htmltext = this.getHtmlBody(htmltext);
+			// 先頭のFormタグを削除
+			Pattern p = Pattern.compile("\\<form.*?\\>", Pattern.DOTALL);
+			Matcher m = p.matcher(htmltext);
+			htmltext = m.replaceAll("");
+		}
+		String orgFormTag = "<form id=\"" + formId + "\">";
+		{
+			Pattern p = Pattern.compile("\\<form.*?id=\"" + formId + "\".*?\\>", Pattern.DOTALL);
+			Matcher m = p.matcher(html);
+			if (m.find()) {
+				orgFormTag = m.group();
+			}
+		}
+		Pattern p = Pattern.compile("\\<form.*?id=\"" + formId + "\".*?\\>.*?\\</form\\>", Pattern.DOTALL);
+		Matcher m = p.matcher(html);
+		String ret  = m.replaceAll(orgFormTag + htmltext);
+		return ret;
+	}
+
+
+
+	/**
 	 * このページのHTMLを取得します。
 	 * @param req HTTP要求情報。
 	 * @param context コンテキスト。
@@ -664,6 +699,15 @@ public class Page extends DataForms {
 		String htmltext = this.getWebResource(htmlpath);
 		htmltext = this.addAppcacheFile(htmltext, context);
 		htmltext = htmltext.replaceAll("\\</[Bb][Oo][Dd][Yy]\\>", "\t<noscript><br/><div class='noscriptDiv'><b>" + MessagesUtil.getMessage(this.getPage(), "message.noscript") + "</b></div></noscript>\n\t</body>");
+		for (String key: this.getFormMap().keySet()) {
+			WebComponent comp = this.getFormMap().get(key);
+			if (comp instanceof Form) {
+				Form f = (Form) comp;
+				if (f.getDeployOnServer()) {
+					htmltext = this.replaceFormHtml(htmltext, f.getId(), f);
+				}
+			}
+		}
 		return htmltext;
 	}
 

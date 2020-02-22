@@ -54,6 +54,38 @@ public  class Form extends WebComponent {
 	private Map<String, Object> convertedServerData = null;
 
 	/**
+	 * サーバ展開フラグ。
+	 *
+	 */
+	private Boolean deployOnServer = false;
+
+
+
+	/**
+	 * サーバ展開フラグを取得します。
+	 * @return サーバ展開フラグ。
+	 */
+	public Boolean getDeployOnServer() {
+		return deployOnServer;
+	}
+
+	/**
+	 * サーバー展開フラグを設定します。
+	 * <pre>
+	 * このフラグをtrueに設定すると、フォーム単位にHTMLを作成した場合でも
+	 * サーバ側でPageのHTMLにフォームのHTMLを展開しクライアントに送信します。
+	 * このフラグをtrueにすると、クライアントのjavascriptの負荷を下げること
+	 * ができます。
+	 * デフォルト値はfalseです。
+	 * </pre>
+	 * @param deployOnServer サーバ展開フラグ。
+	 */
+	public void setDeployOnServer(final Boolean deployOnServer) {
+		this.deployOnServer = deployOnServer;
+	}
+
+
+	/**
 	 * コンストラクタ。
 	 * @param id フォームID.
 	 */
@@ -181,9 +213,11 @@ public  class Form extends WebComponent {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		String htmlPath = this.getHtmlPath();
-		if (htmlPath != null) {
-			this.setAdditionalHtml(htmlPath);
+		if (!this.deployOnServer) {
+			String htmlPath = this.getHtmlPath();
+			if (htmlPath != null) {
+				this.setAdditionalHtml(htmlPath);
+			}
 		}
 	}
 
@@ -198,10 +232,11 @@ public  class Form extends WebComponent {
 		}
 		map.put("htmlTableList", tlist);
 		map.put("formData", this.convertToClientData(this.formDataMap));
-//		map.put("formData", this.formDataMap);
-		String htmlPath = this.getHtmlPath();
-		if (htmlPath != null) {
-			map.put("htmlPath", htmlPath);
+		if (!this.deployOnServer) {
+			String htmlPath = this.getHtmlPath();
+			if (htmlPath != null) {
+				map.put("htmlPath", htmlPath);
+			}
 		}
 		return map;
 	}
@@ -529,5 +564,6 @@ public  class Form extends WebComponent {
 			this.setUserInfo(m);
 		}
 	}
+
 
 }
