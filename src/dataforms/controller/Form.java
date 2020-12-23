@@ -271,6 +271,18 @@ public  class Form extends WebComponent {
 	}
 
 	/**
+	 * FormのHTMLを取得します。
+	 * @return HTMLテキスト。
+	 * @throws Exception 例外。
+	 */
+	public String getHtmlText() throws Exception {
+		String htmlpath = this.getAppropriatePath(this.getHtmlPath(), this.getPage().getRequest());
+		String htmltext = this.getWebResource(htmlpath);
+		return htmltext;
+	}
+
+
+	/**
 	 * フィールド単位のバリデーションを行います。
 	 * @param param パラメータ。
 	 * @return バリデーションの結果。

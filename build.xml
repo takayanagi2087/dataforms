@@ -8,7 +8,7 @@
 <project basedir="." default="build" name="dataforms">
 	<!-- javadoc, jsdocとdataforms.jarを作成します。-->
 	<property environment="env"/>
-	<property name="PLEIADES_HOME" value="C:/eclipse/pleiades-2019-06"/>
+	<property name="PLEIADES_HOME" value="C:/eclipse/pleiades"/>
 	<property name="ECLIPSE_HOME" value="../../eclipse/"/>
 	<property name="TOMCAT_HOME" value="${PLEIADES_HOME}/tomcat/9"/>
 	<property name="debuglevel" value="source,lines,vars"/>

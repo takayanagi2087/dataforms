@@ -658,9 +658,9 @@ public class Page extends DataForms {
 	 * @throws Exception 例外。
 	 */
 	protected String replaceFormHtml(final String html, final String formId, final Form form) throws Exception {
-//		Form form = (Form) this.getFormMap().get(formId);
-		String htmlpath = this.getAppropriatePath(form.getHtmlPath(), this.getPage().getRequest());
-		String htmltext = this.getWebResource(htmlpath); // FileUtil.readTextFile(htmlpath,
+//		String htmlpath = this.getAppropriatePath(form.getHtmlPath(), this.getPage().getRequest());
+//		String htmltext = this.getWebResource(htmlpath); // FileUtil.readTextFile(htmlpath,
+		String htmltext = form.getHtmlText();
 		if (htmltext != null) {
 			htmltext = this.getHtmlBody(htmltext);
 			// 先頭のFormタグを削除

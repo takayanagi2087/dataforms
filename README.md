@@ -1,6 +1,8 @@
 # dataforms.jar Java web application framework.
 
 ## Description
+このフレームワークの後継[dataforms2.jar](https://github.com/takayanagi2087/dataforms2)をリリースしました。
+
 Java Webアプリケーションフレームワークと、その開発ツールです。
 Javaのクラスライブラリ、Javascriptのクラスライブラリ、開発ツール、ドキュメントが全て1つのjarファイルに入っています。
 
