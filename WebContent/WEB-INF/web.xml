@@ -24,7 +24,7 @@
 	<!-- 使用するJNDIデータソースを指定する -->
 	<context-param>
 		<param-name>data-source</param-name>
-		<param-value>jdbc/dfdb</param-value>
+		<param-value>jdbc/dfdb1</param-value>
 	</context-param>
 	<!--
 		メールセッション名。
@@ -50,10 +50,12 @@
 	またHTTPClientを適切に設定をしても、SSL経由のため効率は良くありません。
 	SSLを使用する場合はアプリケーションサーバのhttpポートを指定したURLを指定してください。
 	 -->
+	 <!--
 	<context-param>
 		<param-name>web-resource-url</param-name>
 		<param-value>http://localhost:8080</param-value>
 	</context-param>
+	  -->
 	<!-- 使用する文字コードを指定します。-->
 	<!--  context-param>
 		<param-name>encoding</param-name>
